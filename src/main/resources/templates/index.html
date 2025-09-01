@@ -129,21 +129,30 @@
     const logiLabels   = /*[[${logiLabels}]]*/ ["1월","2월"];
     const logiValues   = /*[[${logiValues}]]*/ [0,0];
 
-    const colors = {
-      orange:'#fb6340',
-      green:'#2dce89',
-      purple:'#9966FF',
-      grid:'rgba(0,0,0,0.06)'
-    };
+    const colors = { orange:'#fb6340', green:'#2dce89', purple:'#9966FF', grid:'rgba(0,0,0,0.06)' };
+
+    // 데이터 구간에 패딩을 준 y축 범위 계산
+    function paddedRange(arr, padPct = 0.08) {
+      const vals = (arr || []).map(Number).filter(Number.isFinite);
+      if (!vals.length) return {};
+      const lo = Math.min(...vals), hi = Math.max(...vals);
+      if (lo === hi) {
+        const pad = Math.max(1, hi * padPct);
+        return { suggestedMin: hi - pad, suggestedMax: hi + pad };
+      }
+      const span = hi - lo, pad = span * padPct;
+      return { suggestedMin: lo - pad, suggestedMax: hi + pad };
+    }
 
     const common = {
       responsive:true,
       maintainAspectRatio:false,
       plugins:{ legend:{ display:false }, tooltip:{ intersect:false, mode:'index' } },
-      scales:{ x:{ offset: true, grid:{ display:false } }, y:{ beginAtZero:true, grid:{ color: colors.grid } } }
-
+      scales:{ x:{ offset:true, grid:{ display:false } } }
     };
 
+    // 1) 월별 매출
+    const yRangeSales = paddedRange(salesValues);
     new Chart(document.getElementById('salesChart'),{
       type:'line',
       data:{
@@ -152,15 +161,26 @@
           data:salesValues,
           borderColor:colors.orange,
           backgroundColor:colors.orange + '20',
-          borderWidth:3,
-          pointRadius:4,
-          tension:0.35,
-          fill:false
+          borderWidth:3, pointRadius:4, tension:0.35, fill:false
         }]
       },
-      options: common
+      options:{
+        ...common,
+        scales:{
+          ...common.scales,
+          y:{
+            beginAtZero:false,
+            ...yRangeSales,
+            grace:'5%',
+            grid:{ color:colors.grid },
+            ticks:{ callback:(v)=> new Intl.NumberFormat('ko-KR',{ notation:'compact' }).format(v) }
+          }
+        }
+      }
     });
 
+    // 2) 주간 매출
+    const yRangeWeekly = paddedRange(weeklyValues);
     new Chart(document.getElementById('weeklyChart'),{
       type:'bar',
       data:{
@@ -169,14 +189,26 @@
           data:weeklyValues,
           backgroundColor:colors.green,
           borderColor:colors.green,
-          borderWidth:1,
-          borderRadius:6,
-          borderSkipped:false
+          borderWidth:1, borderRadius:6, borderSkipped:false
         }]
       },
-      options: common
+      options:{
+        ...common,
+        scales:{
+          ...common.scales,
+          y:{
+            beginAtZero:false,
+            ...yRangeWeekly,
+            grace:'5%',
+            grid:{ color:colors.grid },
+            ticks:{ callback:(v)=> new Intl.NumberFormat('ko-KR',{ notation:'compact' }).format(v) }
+          }
+        }
+      }
     });
 
+    // 3) 물류 매출
+    const yRangeLogi = paddedRange(logiValues);
     new Chart(document.getElementById('logiChart'),{
       type:'bar',
       data:{
@@ -185,9 +217,7 @@
           data:logiValues,
           backgroundColor:colors.purple,
           borderColor:colors.purple,
-          borderWidth:1,
-          borderRadius:6,
-          borderSkipped:false
+          borderWidth:1, borderRadius:6, borderSkipped:false
         }]
       },
       options:{
@@ -195,22 +225,26 @@
         plugins:{
           ...common.plugins,
           tooltip:{
-            callbacks:{
-              label:(ctx)=>{
-                const v = ctx.parsed.y ?? 0;
-                return new Intl.NumberFormat('ko-KR',{ style:'currency', currency:'KRW', minimumFractionDigits:0 }).format(v);
-              }
-            }
+            callbacks:{ label:(ctx)=>{
+              const v = ctx.parsed.y ?? 0;
+              return new Intl.NumberFormat('ko-KR',{ style:'currency', currency:'KRW', minimumFractionDigits:0 }).format(v);
+            }}
           }
         },
         scales:{
-          x:{ grid:{ display:false } },
-          y:{ beginAtZero:true, grid:{ color:colors.grid },
-              ticks:{ callback:(v)=> (Number(v)/1_000_000)+'M' } }
+          ...common.scales,
+          y:{
+            beginAtZero:false,
+            ...yRangeLogi,
+            grace:'5%',
+            grid:{ color:colors.grid },
+            ticks:{ callback:(v)=> new Intl.NumberFormat('ko-KR',{ notation:'compact' }).format(v) }
+          }
         }
       }
     });
     /*]]>*/
 </script>
+
 </body>
 </html>
