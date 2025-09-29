@@ -24,8 +24,8 @@ public class NoticeRestController {
 
     @PostMapping("/notice/write")
     @Operation(summary = "공지사항 등록", description = "본사에서 새로운 공지사항을 등록하는 API")
-    public ResponseEntity<Notice> addOfficeNotice(@RequestBody NoticeWriteFormDTO dto) {
-        Notice notice = noticeService.insertOfficeNotice(dto);
-        return ResponseEntity.ok().body(notice);
+    public ResponseEntity<Long> addOfficeNotice(@RequestBody NoticeWriteFormDTO dto) {
+        Long id = noticeService.insertOfficeNotice(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 }
