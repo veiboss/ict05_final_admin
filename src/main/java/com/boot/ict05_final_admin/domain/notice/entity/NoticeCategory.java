@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.notice.entity;
 
+
 public enum NoticeCategory {
     NORMAL("일반"),
     SYSTEM("시스템"),
