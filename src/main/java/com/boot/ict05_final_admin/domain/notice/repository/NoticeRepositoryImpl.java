@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.notice.repository;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
+
 import com.boot.ict05_final_admin.domain.notice.entity.QNotice;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
