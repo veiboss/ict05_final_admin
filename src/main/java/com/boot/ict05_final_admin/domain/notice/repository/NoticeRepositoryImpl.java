@@ -1,11 +1,11 @@
 package com.boot.ict05_final_admin.domain.notice.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 
 import com.boot.ict05_final_admin.domain.notice.entity.QNotice;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
