@@ -1,5 +1,9 @@
 package com.boot.ict05_final_admin.domain.notice.repository;
 
+<<<<<<< HEAD
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+=======
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.QNotice;
 import com.querydsl.core.types.Projections;
@@ -8,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+>>>>>>> e0564bad210a88f7e3e32abb726c8bf65e0fcb88
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +22,8 @@ import java.util.List;
 public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+<<<<<<< HEAD
+=======
 
     @Override
     public Page<NoticeListDTO> listNotice(String writer, Pageable pageable) {
@@ -43,4 +50,5 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
 
         return new PageImpl<>(content, pageable, total);
     }
+>>>>>>> e0564bad210a88f7e3e32abb726c8bf65e0fcb88
 }
