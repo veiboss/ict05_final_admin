@@ -1,18 +1,8 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
-import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
-import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
-import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
