@@ -27,11 +27,7 @@ public class NoticeController {
         return "notice/write";
     }
 
-    @PostMapping("/notice/write")
-    public ResponseEntity<Notice> addOfficeNotice(@RequestBody NoticeWriteFormDTO dto) {
-        Notice notice = noticeService.insertOfficeNotice(dto);
-        return ResponseEntity.ok().body(notice);
-    }
+
 //
 //    @GetMapping("/notice/list")
 //    public String listOfficeNotice(@RequestParam(value = "writer", required = false) String writer,
