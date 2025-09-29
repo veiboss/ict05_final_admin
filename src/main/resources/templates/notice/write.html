@@ -5,7 +5,16 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/admin/ckeditor/style.css">
+    <link rel="stylesheet" href="/admin/ckeditor/ckeditor5.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+
     <title>Document</title>
+    <style>
+        .ck-editor__editable:not(.ck-editor__nested-editable) {
+            height: 450px;
+        }
+    </style>
 </head>
 <body>
 <form name="frm" id="frm" action="/admin/notice/write" method="post">
@@ -43,6 +52,15 @@
 </form>
 <button type="button" onclick="window.location='/admin/notice/list';">목록</button>
 <script>
+    ClassicEditor.create(document.querySelector(".body"), {
+        language: "ko",
+        ckfinder: {
+            uploadUrl: "${path}/image/upload",
+            withCredentials: true
+        }
+    });
+</script>
+<script>
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault(); // 폼 기본 제출 막기
 
@@ -50,9 +68,11 @@
 
         // JSON 객체 직접 구성 (하나씩 넣기)
         const obj = {};
+        obj.noticeCategory = formData.get("noticeCategory");
+        obj.noticePriority = formData.get("noticePriority");
         obj.writer = formData.get("writer");
         obj.title = formData.get("title");
-        obj.content = formData.get("content");
+        obj.body = formData.get("body");
 
         fetch("/admin/notice/write", {
             method: "POST",
