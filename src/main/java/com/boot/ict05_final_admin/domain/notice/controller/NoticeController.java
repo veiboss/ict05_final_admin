@@ -1,15 +1,56 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
+import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
 public class NoticeController {
 
-     private final NoticeService noticeService;
+    private final NoticeService noticeService;
 
-     //@GetMapping("notice/write")
+    @GetMapping("/notice/write")
+    public String addOfficeNotice() {
+        return "notice/write";
+    }
+//
+//    @GetMapping("/notice/list")
+//    public String listOfficeNotice(@RequestParam(value = "writer", required = false) String writer,
+//                             @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)
+//                             Pageable pageable,
+//                             Model model) {
+//
+//        PageRequest request = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
+//
+//        //Page<NoticeListDTO> notices = noticeService.selectAllOfficeNotice(writer, request);
+//        model.addAttribute("notices", notices);
+//        return "notice/list";
+//    }
+//
+//    @GetMapping("/notice/detail/{id}")
+//    public String detailOfficeNotice(@PathVariable Long id, Model model) {
+//        //Notice notice = noticeService;
+//        model.addAttribute("notice", notice);
+//        return "notice/detail";
+//    }
+//
+//    @GetMapping("/notice/modify/{id}")
+//    public String modifyOfficeNotice(@PathVariable Long id, Model model) {
+//        Notice notice = noticeService.;
+//        model.addAttribute("notice", notice);
+//        return "notice/modify";
+//    }
+
 }

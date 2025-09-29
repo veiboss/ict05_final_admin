@@ -1,0 +1,66 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<form name="frm" id="frm" action="/API/notice/modify" method="post">
+    <input type="hidden" name="id" id="id" th:value="${notice.id}">
+    <table>
+        <tr>
+            <td>이름</td>
+            <td><input type="text" name="writer" th:value="${notice.writer}" /></td>
+        </tr>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="title" th:value="${notice.title}" /></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td><input type="text" name="body" th:value="${notice.body}" /></td>
+        </tr>
+    </table>
+    <input type="submit" value="전송"/>
+</form>
+<button type="button" onclick="window.location='/notice/list';">목록</button>
+<script>
+    document.getElementById("frm").addEventListener("submit", function(e) {
+        e.preventDefault(); // 폼 기본 제출 막기
+
+        const formData = new FormData(this);
+
+        // JSON 객체 직접 구성 (하나씩 넣기)
+        const obj = {};
+        obj.id = formData.get("id");
+        obj.writer = formData.get("writer");
+        obj.title = formData.get("title");
+        obj.content = formData.get("content");
+
+        fetch("/API/notice/modify", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(obj) // JSON 전송
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("서버 응답 오류: " + response.status);
+                }
+                return response.json();
+            })
+            .then(result => {
+                alert("등록 성공: " + JSON.stringify(result));
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+                alert("등록 실패");
+            });
+    });
+</script>
+</body>
+</html>
