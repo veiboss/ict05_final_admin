@@ -71,3 +71,8 @@ tasks.withType(JavaCompile) {
 clean.doLast {
     file(querydslDir).deleteDir()
 }
+
+dependencies {
+    // SpringDoc OpenAPI (Swagger UI 포함)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+}
