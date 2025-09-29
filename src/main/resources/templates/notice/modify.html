@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-<form name="frm" id="frm" action="/API/notice/modify" method="post">
+<form name="frm" id="frm" action="/admin/notice/modify" method="post">
     <input type="hidden" name="id" id="id" th:value="${notice.id}">
     <table>
         <tr>
@@ -26,7 +26,7 @@
     </table>
     <input type="submit" value="전송"/>
 </form>
-<button type="button" onclick="window.location='/notice/list';">목록</button>
+<button type="button" onclick="window.location='/admin/notice/list';">목록</button>
 <script>
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault(); // 폼 기본 제출 막기
@@ -40,7 +40,7 @@
         obj.title = formData.get("title");
         obj.content = formData.get("content");
 
-        fetch("/API/notice/modify", {
+        fetch("/admin/notice/modify", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

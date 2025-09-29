@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +10,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/admin")
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -24,6 +25,12 @@ public class NoticeController {
     @GetMapping("/notice/write")
     public String addOfficeNotice() {
         return "notice/write";
+    }
+
+    @PostMapping("/notice/write")
+    public ResponseEntity<Notice> addOfficeNotice(@RequestBody NoticeWriteFormDTO dto) {
+        Notice notice = noticeService.insertOfficeNotice(dto);
+        return ResponseEntity.ok().body(notice);
     }
 //
 //    @GetMapping("/notice/list")
