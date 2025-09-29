@@ -1,6 +1,5 @@
 package com.boot.ict05_final_admin.domain.notice.service;
 
-import com.boot.ict05_final_admin.domain.notice.dto.NoticeDetailDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
