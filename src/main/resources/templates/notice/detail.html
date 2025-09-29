@@ -13,10 +13,10 @@
 <p>Title : <span th:text="${notice.title}">title</span></p>
 <p>Content : <span th:text="${notice.body}">content</span></p>
 <button type="button"
-        th:onclick="'window.location=\'/notice/modify/' + ${notice.id} + '\';'">
+        th:onclick="'window.location=\'/admin/notice/modify/' + ${notice.id} + '\';'">
     수정
 </button>
-<button type="button" onclick="window.location='/notice/list';">목록</button>
-<button type="button" onclick="window.location='/notice/write';">게시물작성</button>
+<button type="button" onclick="window.location='/admin/notice/list';">목록</button>
+<button type="button" onclick="window.location='/admin/notice/write';">게시물작성</button>
 </body>
 </html>
