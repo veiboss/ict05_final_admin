@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<p>ID : <span th:text="${notice.id}">999</span></p>
+<p>이름 : <span th:text="${notice.writer}">writer</span></p>
+<p>Title : <span th:text="${notice.title}">title</span></p>
+<p>Content : <span th:text="${notice.body}">content</span></p>
+<button type="button"
+        th:onclick="'window.location=\'/notice/modify/' + ${notice.id} + '\';'">
+    수정
+</button>
+<button type="button" onclick="window.location='/notice/list';">목록</button>
+<button type="button" onclick="window.location='/notice/write';">게시물작성</button>
+</body>
+</html>
