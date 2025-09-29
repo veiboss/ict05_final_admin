@@ -14,10 +14,7 @@
             <td>카테고리</td>
             <td>
                 <select name="noticeCategory" id="noticeCategory">
-                    <option value="NORMAL">일반</option>
-                    <option value="SYSTEM">시스템</option>
-                    <option value="EVENT">이벤트</option>
-                    <option value="POLICY">공지</option>
+                    <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
             </td>
         </tr>
@@ -25,9 +22,7 @@
             <td>상태</td>
             <td>
                 <select name="noticePriority" id="noticePriority">
-                    <option value="NORMAL">일반</option>
-                    <option value="IMPORTANT">중요</option>
-                    <option value="URGENT">긴급</option>
+                    <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
             </td>
         </tr>

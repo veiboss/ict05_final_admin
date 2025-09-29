@@ -26,7 +26,6 @@
         <th scope="col">ID</th>
         <th scope="col">제목</th>
         <th scope="col">내용</th>
-        <th scope="col">작성자</th>
     </tr>
     </thead>
     <tbody>
@@ -34,7 +33,6 @@
         <td scope="row" th:text="${notice.id}">ID</td>
         <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
         <td th:text="${notice.body}">내용</td>
-        <td th:text="${notice.writer}">작성자</td>
     </tr>
     </tbody>
 </table>

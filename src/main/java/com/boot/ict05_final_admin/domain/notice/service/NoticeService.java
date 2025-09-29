@@ -1,11 +1,14 @@
 package com.boot.ict05_final_admin.domain.notice.service;
 
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,5 +38,11 @@ public class NoticeService {
         Long id = saved.getId();
 
         return id;
+    }
+
+
+    public Page<NoticeListDTO> selectAllOfficeNotice(String writer, Pageable pageable) {
+
+        return noticeRepository.listNotice(writer, pageable);
     }
 }

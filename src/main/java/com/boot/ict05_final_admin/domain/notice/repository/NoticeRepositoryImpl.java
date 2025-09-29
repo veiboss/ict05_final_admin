@@ -26,11 +26,16 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
         // 데이터 목록 조회
         List<NoticeListDTO> content = queryFactory
                 .select(Projections.constructor(NoticeListDTO.class,
-                        notice.id
+                        notice.id,
+                        notice.noticeCategory,
+                        notice.noticePriority,
+                        notice.isShow,
+                        notice.title,
+                        notice.body,
+                        notice.writer,
+                        notice.writerdate
                         )) // member.name 매핑
                 .from(notice)
-                .where(
-                )
                 .orderBy(notice.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
