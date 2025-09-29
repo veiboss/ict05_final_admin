@@ -16,8 +16,6 @@ public class NoticeService {
     public NoticeWriteFormDTO insertOfficeNotice(NoticeWriteFormDTO noticeDetailDTO) {
         System.out.println("NoticeService - insertOfficeNotice");
 
-        noticeRepository
-
 
         return null;
     }
