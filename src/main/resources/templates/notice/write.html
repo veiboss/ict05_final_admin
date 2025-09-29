@@ -51,8 +51,9 @@
                 }
                 return response.json();
             })
-            .then(result => {
-                alert("등록 성공: " + JSON.stringify(result));
+            .then(id => {
+                alert("등록 성공! 글 번호: " + id);
+                window.location.href = "/admin/notice/detail/" + id;
             })
             .catch(error => {
                 console.error("에러 발생:", error);
