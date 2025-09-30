@@ -45,4 +45,9 @@ public class NoticeService {
 
         return noticeRepository.listNotice(writer, pageable);
     }
+
+
+    public Notice detailNotice(Long id) {
+        return noticeRepository.findById(id).orElse(null);
+    }
 }

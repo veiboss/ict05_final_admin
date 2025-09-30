@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static com.boot.ict05_final_admin.domain.notice.entity.QNotice.notice;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -46,14 +48,14 @@ public class NoticeController {
 
         return "notice/list";
     }
-//
-//    @GetMapping("/notice/detail/{id}")
-//    public String detailOfficeNotice(@PathVariable Long id, Model model) {
-//        //Notice notice = noticeService;
-//        model.addAttribute("notice", notice);
-//        return "notice/detail";
-//    }
-//
+
+    @GetMapping("/notice/detail/{id}")
+    public String detailOfficeNotice(@PathVariable Long id, Model model) {
+        Notice notice = noticeService.detailNotice(id);
+        model.addAttribute("notice", notice);
+        return "notice/detail";
+    }
+
 //    @GetMapping("/notice/modify/{id}")
 //    public String modifyOfficeNotice(@PathVariable Long id, Model model) {
 //        Notice notice = noticeService.;
