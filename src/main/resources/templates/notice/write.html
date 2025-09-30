@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-<form name="frm" th:object="${noticeWriteFormDTO}">
+<form name="frm" id="frm" th:object="${noticeWriteFormDTO}">
     <table>
         <tr>
             <td>카테고리</td>
@@ -26,7 +26,7 @@
                     <option value="">선택</option>
                     <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
-                <p th:if="${#fields.hasErrors('noticeCategory')}" th:errors="*{noticeCategory}" style="color:red"></p>
+                <p id="noticeCategoryError" style="color:red"></p>
             </td>
         </tr>
         <tr>
@@ -36,34 +36,33 @@
                     <option value="">선택</option>
                     <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
-                <p th:if="${#fields.hasErrors('noticePriority')}" th:errors="*{noticePriority}" style="color:red"></p>
+                <p id="noticePriorityError" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>이름</td>
             <td>
                 <input type="text" th:field="*{writer}" />
-                <p th:if="${#fields.hasErrors('writer')}" th:errors="*{writer}" style="color:red"></p>
+                <p id="writerError" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>제목</td>
             <td>
                 <input type="text" th:field="*{title}" />
-                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:red"></p>
+                <p id="titleError" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>내용</td>
             <td>
                 <textarea th:field="*{body}" class="body"></textarea>
-                <p th:if="${#fields.hasErrors('body')}" th:errors="*{body}" style="color:red"></p>
+                <p id="bodyError" style="color:red"></p>
             </td>
         </tr><tr>
             <td>첨부파일</td>
             <td>
                 <input type="file" th:field="*{files}" multiple />
-                <p th:if="${#fields.hasErrors('files')}" th:errors="*{files}" style="color:red"></p>
             </td>
         </tr>
     </table>
@@ -95,8 +94,7 @@
 
         fetch("/API/notice/write", {
             method: "POST",
-            body: formData // JSON 대신 FormData 전송
-            // Content-Type은 fetch가 자동으로 multipart/form-data로 설정
+            body: formData
         })
             .then(async response => {
                 const data = await response.json();

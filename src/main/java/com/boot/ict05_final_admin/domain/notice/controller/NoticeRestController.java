@@ -36,13 +36,6 @@ public class NoticeRestController {
     public ResponseEntity<Map<String, Object>> addOfficeNotice(@Validated @ModelAttribute NoticeWriteFormDTO dto,
                                                                BindingResult bindingResult) throws Exception {
 
-//        NoticeWriteFormDTO dto = new NoticeWriteFormDTO();
-//        dto.setNoticeCategory(noticeCategory);
-//        dto.setNoticePriority(noticePriority);
-//        dto.setWriter(writer);
-//        dto.setTitle(title);
-//        dto.setBody(body);
-
         // 검증 오류 체크
         if (bindingResult.hasErrors()) {
             // FieldError 정보를 Map으로 변환해서 전달
