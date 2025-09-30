@@ -25,14 +25,16 @@
     <tr>
         <th scope="col">ID</th>
         <th scope="col">제목</th>
-        <th scope="col">내용</th>
+        <th scope="col">작성자</th>
+        <th scope="col">작성일</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="notice : ${notices.content}">
         <td scope="row" th:text="${notice.id}">ID</td>
         <td><a th:href="@{/admin/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
-        <td th:utext="${notice.body}">내용</td>
+        <td th:text="${notice.writer}">작성자</td>
+        <td th:text="${notice.getWriteDate}">00.00.00</td>
     </tr>
     </tbody>
 </table>

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +22,10 @@ public class NoticeListDTO {
     private String body;
     private String writer;
     private LocalDateTime writerdate;
+
+    public String getWriteDate() {
+        if (writerdate == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return writerdate.format(formatter);
+    }
 }
