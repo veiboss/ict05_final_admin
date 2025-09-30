@@ -31,8 +31,8 @@
     <tbody>
     <tr th:each="notice : ${notices.content}">
         <td scope="row" th:text="${notice.id}">ID</td>
-        <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
-        <td th:text="${notice.body}">내용</td>
+        <td><a th:href="@{/admin/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
+        <td th:utext="${notice.body}">내용</td>
     </tr>
     </tbody>
 </table>

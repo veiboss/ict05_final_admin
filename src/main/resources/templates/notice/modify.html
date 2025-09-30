@@ -5,12 +5,49 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/ckeditor/style.css">
+    <link rel="stylesheet" href="/ckeditor/ckeditor5.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+
     <title>Document</title>
+    <style>
+        .ck-editor__editable:not(.ck-editor__nested-editable) {
+            height: 450px;
+        }
+    </style>
 </head>
 <body>
-<form name="frm" id="frm" action="/admin/notice/modify" method="post">
+<form name="frm" id="frm" action="/API/notice/write" method="post">
     <input type="hidden" name="id" id="id" th:value="${notice.id}">
     <table>
+        <tr>
+            <td>카테고리</td>
+            <td>
+                <select name="noticeCategory" id="noticeCategory">
+                    <option>선택</option>
+                    <option th:each="c : ${NoticeCategory}"
+                            th:value="${c.name()}"
+                            th:text="${c.description}"
+                            th:selected="${c == notice.noticeCategory}">
+                        일반
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>상태</td>
+            <td>
+                <select name="noticePriority" id="noticePriority">
+                    <option>선택</option>
+                    <option th:each="c : ${NoticePriority}"
+                            th:value="${c.name()}"
+                            th:text="${c.description}"
+                            th:selected="${c == notice.noticePriority}">
+                        일반
+                    </option>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td>이름</td>
             <td><input type="text" name="writer" th:value="${notice.writer}" /></td>
@@ -21,12 +58,21 @@
         </tr>
         <tr>
             <td>내용</td>
-            <td><input type="text" name="body" th:value="${notice.body}" /></td>
+            <td><textarea name="body" class="body" th:text="${notice.body}"></textarea></td>
         </tr>
     </table>
     <input type="submit" value="전송"/>
 </form>
 <button type="button" onclick="window.location='/admin/notice/list';">목록</button>
+<script>
+    ClassicEditor.create(document.querySelector(".body"), {
+        language: "ko",
+        ckfinder: {
+            uploadUrl: "/admin/image/upload",
+            withCredentials: true
+        }
+    });
+</script>
 <script>
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault(); // 폼 기본 제출 막기
@@ -36,11 +82,13 @@
         // JSON 객체 직접 구성 (하나씩 넣기)
         const obj = {};
         obj.id = formData.get("id");
+        obj.noticeCategory = formData.get("noticeCategory");
+        obj.noticePriority = formData.get("noticePriority");
         obj.writer = formData.get("writer");
         obj.title = formData.get("title");
-        obj.content = formData.get("content");
+        obj.body = formData.get("body");
 
-        fetch("/admin/notice/modify", {
+        fetch("/API/notice/modify", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -53,8 +101,9 @@
                 }
                 return response.json();
             })
-            .then(result => {
-                alert("등록 성공: " + JSON.stringify(result));
+            .then(id => {
+                alert("등록 성공! 글 번호: " + id);
+                window.location.href = "/admin/notice/detail/" + id;
             })
             .catch(error => {
                 console.error("에러 발생:", error);

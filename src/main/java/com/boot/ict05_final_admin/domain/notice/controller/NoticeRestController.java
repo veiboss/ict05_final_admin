@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -30,4 +31,14 @@ public class NoticeRestController {
         Long id = noticeService.insertOfficeNotice(dto);
         return ResponseEntity.status(HttpStatus.OK).body(id);
     }
+
+    @PostMapping("/notice/modify")
+    public ResponseEntity<Long> boardModify(@RequestBody NoticeModifyFormDTO dto) {
+
+        Notice notice = noticeService.noticeModify(dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(notice.getId());
+    }
+
+
 }

@@ -56,11 +56,14 @@ public class NoticeController {
         return "notice/detail";
     }
 
-//    @GetMapping("/notice/modify/{id}")
-//    public String modifyOfficeNotice(@PathVariable Long id, Model model) {
-//        Notice notice = noticeService.;
-//        model.addAttribute("notice", notice);
-//        return "notice/modify";
-//    }
+    @GetMapping("/notice/modify/{id}")
+    public String modifyOfficeNotice(@PathVariable Long id, Model model) {
+        Notice notice = noticeService.detailNotice(id);
+        model.addAttribute("notice", notice);
+        model.addAttribute("NoticeCategory", NoticeCategory.values());
+        model.addAttribute("NoticePriority", NoticePriority.values());
+
+        return "notice/modify";
+    }
 
 }

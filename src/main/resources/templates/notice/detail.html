@@ -11,7 +11,7 @@
 <p>ID : <span th:text="${notice.id}">999</span></p>
 <p>이름 : <span th:text="${notice.writer}">writer</span></p>
 <p>Title : <span th:text="${notice.title}">title</span></p>
-<p>Content : <span th:text="${notice.body}">content</span></p>
+<p>Content : <span th:utext="${notice.body}">content</span></p>
 <button type="button"
         th:onclick="'window.location=\'/admin/notice/modify/' + ${notice.id} + '\';'">
     수정

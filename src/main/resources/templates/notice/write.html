@@ -23,6 +23,7 @@
             <td>카테고리</td>
             <td>
                 <select name="noticeCategory" id="noticeCategory">
+                    <option>선택</option>
                     <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
             </td>
@@ -31,6 +32,7 @@
             <td>상태</td>
             <td>
                 <select name="noticePriority" id="noticePriority">
+                    <option>선택</option>
                     <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
             </td>
