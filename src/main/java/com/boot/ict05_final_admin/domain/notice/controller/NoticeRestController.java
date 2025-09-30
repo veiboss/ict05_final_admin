@@ -64,11 +64,34 @@ public class NoticeRestController {
     }
 
     @PostMapping("/notice/modify")
-    public ResponseEntity<Long> boardModify(@RequestBody NoticeModifyFormDTO dto) {
+    public ResponseEntity<Map<String, Object>> boardModify(@Validated @ModelAttribute NoticeModifyFormDTO dto,
+                                            BindingResult bindingResult) throws Exception {
 
-        Notice notice = noticeService.noticeModify(dto);
+        // 검증 오류 체크
+        if (bindingResult.hasErrors()) {
+            // FieldError 정보를 Map으로 변환해서 전달
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(
+                            fieldError -> fieldError.getField(),
+                            fieldError -> fieldError.getDefaultMessage()
+                    ));
 
-        return ResponseEntity.status(HttpStatus.OK).body(notice.getId());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST) // 400
+                    .body(Map.of(
+                            "success", false,
+                            "errors", errors
+                    ));
+        }
+
+        // 검증 통과 시 DB 저장
+        Long id = noticeService.noticeModify(dto, dto.getFiles()).getId();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Map.of(
+                        "success", true,
+                        "id", id
+                ));
     }
 
 

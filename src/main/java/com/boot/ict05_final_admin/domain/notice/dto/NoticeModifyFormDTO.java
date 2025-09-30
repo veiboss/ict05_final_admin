@@ -3,6 +3,9 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Data
 public class NoticeModifyFormDTO {
@@ -13,4 +16,5 @@ public class NoticeModifyFormDTO {
     private String title;
     private String body;
     private String writer;
+    private List<MultipartFile> files;
 }

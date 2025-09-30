@@ -72,11 +72,22 @@ public class NoticeService {
     }
 
 
-    public Notice noticeModify(NoticeModifyFormDTO dto) {
+    public Notice noticeModify(NoticeModifyFormDTO dto, List<MultipartFile> files) throws Exception {
         Notice notice = findById(dto.getId());
         if (notice == null) throw new IllegalArgumentException("게시물이 없습니다.");
 
         notice.updateNotice(dto);
+
+        // 첨부파일 저장
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = noticeAttachmentService.uploadFile(file); // S3, 로컬 등
+                NoticeAttachment attachment = new NoticeAttachment();
+                attachment.setNoticeId(notice.getId());
+                attachment.setUrl(fileUrl);
+                noticeAttachmentRepository.save(attachment);
+            }
+        }
 
         return notice;
     }

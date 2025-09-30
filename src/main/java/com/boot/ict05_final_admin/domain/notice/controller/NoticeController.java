@@ -67,9 +67,12 @@ public class NoticeController {
     @GetMapping("/notice/modify/{id}")
     public String modifyOfficeNotice(@PathVariable Long id, Model model) {
         Notice notice = noticeService.detailNotice(id);
+        List<NoticeAttachment> attachments = noticeAttachmentService.findByNoticeId(id);
+
         model.addAttribute("notice", notice);
         model.addAttribute("NoticeCategory", NoticeCategory.values());
         model.addAttribute("NoticePriority", NoticePriority.values());
+        model.addAttribute("attachments", attachments);
 
         return "notice/modify";
     }
