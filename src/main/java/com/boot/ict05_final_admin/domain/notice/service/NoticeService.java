@@ -11,14 +11,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
@@ -60,16 +60,9 @@ public class NoticeService {
         Notice notice = findById(dto.getId());
         if (notice == null) throw new IllegalArgumentException("게시물이 없습니다.");
 
-        Notice modifiedNotice = notice.toBuilder()
-            .id(dto.getId()) // 기존 엔티티 ID 꼭 넣기
-            .noticeCategory(NoticeCategory.valueOf(String.valueOf(dto.getNoticeCategory())))
-            .noticePriority(NoticePriority.valueOf(String.valueOf(dto.getNoticePriority())))
-            .title(dto.getTitle())
-            .body(dto.getBody())
-            .writerdate(LocalDateTime.now())
-            .build();
+        notice.updateNotice(dto);
 
-        return noticeRepository.save(modifiedNotice);
+        return notice;
     }
 
 

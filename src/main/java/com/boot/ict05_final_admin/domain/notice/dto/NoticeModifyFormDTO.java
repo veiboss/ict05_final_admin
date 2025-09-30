@@ -9,6 +9,7 @@ public class NoticeModifyFormDTO {
     private Long id;
     private NoticeCategory noticeCategory;
     private NoticePriority noticePriority;
+    private Boolean isShow;
     private String title;
     private String body;
     private String writer;
