@@ -34,7 +34,6 @@ public class NoticeRestController {
     @PostMapping("/notice/write")
     @Operation(summary = "공지사항 등록", description = "본사에서 새로운 공지사항을 등록하는 API")
     public ResponseEntity<Map<String, Object>> addOfficeNotice(@Validated @RequestBody NoticeWriteFormDTO dto, BindingResult bindingResult) {
-        log.info(dto.toString());;
         // 검증 오류 체크
         if (bindingResult.hasErrors()) {
             // FieldError 정보를 Map으로 변환해서 전달

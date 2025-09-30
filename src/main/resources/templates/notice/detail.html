@@ -9,7 +9,9 @@
 </head>
 <body>
 <div>ID : <span th:text="${notice.id}">999</span></div>
-<div>이름 : <span th:text="${notice.writer}">writer</span></div>
+<div>Category : <span th:text="${notice.noticeCategory}">일반</span></div>
+<div>Priority : <span th:text="${notice.noticePriority}">일반</span></div>
+<div>Writer : <span th:text="${notice.writer}">writer</span></div>
 <div>Title : <span th:text="${notice.title}">title</span></div>
 <div>Content : <span th:utext="${notice.body}">content</span></div>
 <button type="button"
