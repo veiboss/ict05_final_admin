@@ -35,6 +35,7 @@ public class NoticeController {
         model.addAttribute("noticeWriteFormDTO", new NoticeWriteFormDTO());
         model.addAttribute("NoticeCategory", NoticeCategory.values());
         model.addAttribute("NoticePriority", NoticePriority.values());
+
         return "notice/write";
     }
 
@@ -59,6 +60,7 @@ public class NoticeController {
         List<NoticeAttachment> attachments = noticeAttachmentService.findByNoticeId(notice.getId());
         model.addAttribute("notice", notice);
         model.addAttribute("attachments", attachments);
+
         return "notice/detail";
     }
 
