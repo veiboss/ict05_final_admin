@@ -67,7 +67,7 @@ public class Notice {
     public void updateNotice(NoticeModifyFormDTO dto) {
         this.noticeCategory = NoticeCategory.valueOf(String.valueOf(dto.getNoticeCategory()));
         this.noticePriority = NoticePriority.valueOf(String.valueOf(dto.getNoticePriority()));
-        this.isShow = true;
+        this.isShow = dto.getIsShow();
         this.title = dto.getTitle();
         this.body = dto.getBody();
         this.writer = dto.getWriter();

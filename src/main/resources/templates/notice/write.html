@@ -40,6 +40,13 @@
             </td>
         </tr>
         <tr>
+            <td>노출여부</td>
+            <td>
+                <input type="checkbox" th:field="*{isShow}" />
+                <p id="isShowError" style="color:red"></p>
+            </td>
+        </tr>
+        <tr>
             <td>이름</td>
             <td>
                 <input type="text" th:field="*{writer}" />

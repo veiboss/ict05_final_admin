@@ -49,6 +49,13 @@
             </td>
         </tr>
         <tr>
+            <td>노출여부</td>
+            <td>
+                <input type="checkbox" name="isShow" id="isShow" value="1"/>
+                <p id="isShowError" style="color:red"></p>
+            </td>
+        </tr>
+        <tr>
             <td>이름</td>
             <td><input type="text" name="writer" th:value="${notice.writer}" /></td>
         </tr>
@@ -91,15 +98,6 @@
         const files = filesInput.files;
 
         const formData = new FormData(this);
-
-        // JSON 객체 직접 구성 (하나씩 넣기)
-        const obj = {};
-        obj.id = formData.get("id");
-        obj.noticeCategory = formData.get("noticeCategory");
-        obj.noticePriority = formData.get("noticePriority");
-        obj.writer = formData.get("writer");
-        obj.title = formData.get("title");
-        obj.body = formData.get("body");
 
         // 여러 파일 추가
         for (let i = 0; i < files.length; i++) {

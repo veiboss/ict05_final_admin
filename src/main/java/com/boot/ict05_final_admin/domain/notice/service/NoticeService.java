@@ -35,7 +35,7 @@ public class NoticeService {
         Notice notice = Notice.builder()
                 .noticeCategory(NoticeCategory.valueOf(String.valueOf(dto.getNoticeCategory())))
                 .noticePriority(NoticePriority.valueOf(String.valueOf(dto.getNoticePriority())))
-                .isShow(true)
+                .isShow(dto.getIsShow())
                 .title(dto.getTitle())
                 .body(dto.getBody())
                 .writer(dto.getWriter())
@@ -47,13 +47,15 @@ public class NoticeService {
         Long id = saved.getId();
 
         // 첨부파일 저장
-        if (files != null) {
+        if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                String fileUrl = noticeAttachmentService.uploadFile(file); // S3, 로컬 등
-                NoticeAttachment attachment = new NoticeAttachment();
-                attachment.setNoticeId(saved.getId());
-                attachment.setUrl(fileUrl);
-                noticeAttachmentRepository.save(attachment);
+                if (file != null && !file.isEmpty()) {
+                    String fileUrl = noticeAttachmentService.uploadFile(file); // S3, 로컬 등
+                    NoticeAttachment attachment = new NoticeAttachment();
+                    attachment.setNoticeId(saved.getId());
+                    attachment.setUrl(fileUrl);
+                    noticeAttachmentRepository.save(attachment);
+                }
             }
         }
 
@@ -79,13 +81,15 @@ public class NoticeService {
         notice.updateNotice(dto);
 
         // 첨부파일 저장
-        if (files != null) {
+        if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                String fileUrl = noticeAttachmentService.uploadFile(file); // S3, 로컬 등
-                NoticeAttachment attachment = new NoticeAttachment();
-                attachment.setNoticeId(notice.getId());
-                attachment.setUrl(fileUrl);
-                noticeAttachmentRepository.save(attachment);
+                if (file != null && !file.isEmpty()) {
+                    String fileUrl = noticeAttachmentService.uploadFile(file); // S3, 로컬 등
+                    NoticeAttachment attachment = new NoticeAttachment();
+                    attachment.setNoticeId(notice.getId());
+                    attachment.setUrl(fileUrl);
+                    noticeAttachmentRepository.save(attachment);
+                }
             }
         }
 
