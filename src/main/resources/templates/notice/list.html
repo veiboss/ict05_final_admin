@@ -17,7 +17,7 @@
         .pagination .front{background:url(/images/common/btn_front.png) no-repeat center center; font-size:0;}
         .pagination .back{background:url(/images/common/btn_back.png) no-repeat center center; font-size:0;}
     </style>
-    <head th:replace="fragments/bootstrap :: bootstrap-head('메인 페이지')"></head>
+    <th:block th:replace="~{fragments/bootstrap :: bootstrap-head('메인 페이지')}"></th:block>
 </head>
 <body>
 <table class="table">

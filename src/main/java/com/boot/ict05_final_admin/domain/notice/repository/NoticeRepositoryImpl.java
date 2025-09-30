@@ -25,7 +25,7 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
 
         // 데이터 목록 조회
         List<NoticeListDTO> content = queryFactory
-                .select(Projections.constructor(NoticeListDTO.class,
+                .select(Projections.fields(NoticeListDTO.class,
                         notice.id,
                         notice.noticeCategory,
                         notice.noticePriority,

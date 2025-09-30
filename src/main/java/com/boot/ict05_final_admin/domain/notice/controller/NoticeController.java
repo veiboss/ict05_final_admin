@@ -40,11 +40,8 @@ public class NoticeController {
                              Model model) {
 
         PageRequest request = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
-
         Page<NoticeListDTO> notices = noticeService.selectAllOfficeNotice(writer, request);
         model.addAttribute("notices", notices);
-
-        System.out.println(notices);
 
         return "notice/list";
     }

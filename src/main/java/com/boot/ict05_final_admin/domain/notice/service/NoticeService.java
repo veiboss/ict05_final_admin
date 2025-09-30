@@ -56,7 +56,6 @@ public class NoticeService {
 
 
     public Notice noticeModify(NoticeModifyFormDTO dto) {
-        System.out.println(dto);
         Notice notice = findById(dto.getId());
         if (notice == null) throw new IllegalArgumentException("게시물이 없습니다.");
 

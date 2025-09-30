@@ -13,20 +13,21 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private NoticeCategory noticeCategory;
+    @Enumerated(EnumType.STRING)
     private NoticePriority noticePriority;
     private Boolean isShow;
     private String title;
     private String body;
     private String writer;
-
     private LocalDateTime writerdate;
 
     // 엔티티 내부에서 상태 변경

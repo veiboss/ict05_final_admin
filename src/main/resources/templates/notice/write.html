@@ -26,6 +26,7 @@
                     <option>선택</option>
                     <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
+                <p id="noticeCategoryError" style="color:red"></p>
             </td>
         </tr>
         <tr>
@@ -35,19 +36,29 @@
                     <option>선택</option>
                     <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
+                <p id="noticePriorityError" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>이름</td>
-            <td><input type="text" name="writer" value="" /></td>
+            <td>
+                <input type="text" name="writer" value="" />
+                <p id="writerError" style="color:red"></p>
+            </td>
         </tr>
         <tr>
             <td>제목</td>
-            <td><input type="text" name="title" value="" /></td>
+            <td>
+                <input type="text" name="title" value="" />
+                <p id="titleError" style="color:red"></p>
+            </td>
         </tr>
         <tr>
             <td>내용</td>
-            <td><textarea name="body" class="body"></textarea></td>
+            <td>
+                <textarea name="body" class="body"></textarea>
+                <p id="bodyError" style="color:red"></p>
+            </td>
         </tr>
     </table>
     <input type="submit" value="전송"/>
@@ -64,40 +75,48 @@
 </script>
 <script>
     document.getElementById("frm").addEventListener("submit", function(e) {
-        e.preventDefault(); // 폼 기본 제출 막기
+        e.preventDefault();
 
         const formData = new FormData(this);
-
-        // JSON 객체 직접 구성 (하나씩 넣기)
-        const obj = {};
-        obj.noticeCategory = formData.get("noticeCategory");
-        obj.noticePriority = formData.get("noticePriority");
-        obj.writer = formData.get("writer");
-        obj.title = formData.get("title");
-        obj.body = formData.get("body");
+        const obj = {
+            noticeCategory: formData.get("noticeCategory"),
+            noticePriority: formData.get("noticePriority"),
+            writer: formData.get("writer"),
+            title: formData.get("title"),
+            body: formData.get("body")
+        };
 
         fetch("/API/notice/write", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(obj) // JSON 전송
+            body: JSON.stringify(obj)
         })
-            .then(response => {
+            .then(async response => {
+                const data = await response.json(); // 항상 JSON 파싱
                 if (!response.ok) {
-                    throw new Error("서버 응답 오류: " + response.status);
+                    // 검증 오류일 경우 (400)
+                    if (response.status === 400 && data.errors) {
+                        Object.keys(data.errors).forEach(field => {
+                            const errorMsg = data.errors[field];
+                            const errorElement = document.getElementById(field + 'Error');
+                            if (errorElement) errorElement.textContent = errorMsg;
+                        });
+                    }
+                    throw new Error("서버 검증 오류"); // catch로 넘어가긴 하지만, 에러 메시지 표시용
+                } else {
+                    if (data.success) {
+                        alert('저장 완료!');
+                        window.location.href = '/admin/notice/detail/' + data.id;
+                    }
                 }
-                return response.json();
-            })
-            .then(id => {
-                alert("등록 성공! 글 번호: " + id);
-                window.location.href = "/admin/notice/detail/" + id;
             })
             .catch(error => {
                 console.error("에러 발생:", error);
-                alert("등록 실패");
             });
     });
+
 </script>
 </body>
 </html>
