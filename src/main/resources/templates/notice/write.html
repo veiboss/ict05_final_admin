@@ -5,8 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/admin/ckeditor/style.css">
-    <link rel="stylesheet" href="/admin/ckeditor/ckeditor5.css">
+    <link rel="stylesheet" href="/ckeditor/style.css">
+    <link rel="stylesheet" href="/ckeditor/ckeditor5.css">
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
 
     <title>Document</title>
@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-<form name="frm" id="frm" action="/admin/notice/write" method="post">
+<form name="frm" id="frm" action="/API/notice/write" method="post">
     <table>
         <tr>
             <td>카테고리</td>
@@ -55,7 +55,7 @@
     ClassicEditor.create(document.querySelector(".body"), {
         language: "ko",
         ckfinder: {
-            uploadUrl: "${path}/image/upload",
+            uploadUrl: "/admin/image/upload",
             withCredentials: true
         }
     });
@@ -74,7 +74,7 @@
         obj.title = formData.get("title");
         obj.body = formData.get("body");
 
-        fetch("/admin/notice/write", {
+        fetch("/API/notice/write", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

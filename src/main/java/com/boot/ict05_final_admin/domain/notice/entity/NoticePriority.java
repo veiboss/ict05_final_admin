@@ -1,7 +1,7 @@
 package com.boot.ict05_final_admin.domain.notice.entity;
 
 public enum NoticePriority {
-    NOMAL("일반"),
+    NORMAL("일반"),
     IMPORTANT("중요"),
     EMERGENCY("긴급");
 
