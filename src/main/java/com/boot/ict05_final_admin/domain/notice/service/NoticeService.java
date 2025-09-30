@@ -4,16 +4,20 @@ import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticeAttachment;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import com.boot.ict05_final_admin.domain.notice.repository.NoticeAttachmentRepository;
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -22,8 +26,10 @@ import java.time.LocalDateTime;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final NoticeAttachmentRepository noticeAttachmentRepository;
+    private final NoticeAttachmentService noticeAttachmentService;
 
-    public Long insertOfficeNotice(NoticeWriteFormDTO dto) {
+    public Long insertOfficeNotice(NoticeWriteFormDTO dto, List<MultipartFile> files) throws Exception {
         System.out.println("NoticeService - insertOfficeNotice");
 
         Notice notice = Notice.builder()
@@ -39,6 +45,17 @@ public class NoticeService {
         // DB 저장
         Notice saved = noticeRepository.save(notice);
         Long id = saved.getId();
+
+        // 첨부파일 저장
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = noticeAttachmentService.uploadFile(file); // S3, 로컬 등
+                NoticeAttachment attachment = new NoticeAttachment();
+                attachment.setNoticeId(saved.getId());
+                attachment.setUrl(fileUrl);
+                noticeAttachmentRepository.save(attachment);
+            }
+        }
 
         return id;
     }

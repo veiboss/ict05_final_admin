@@ -1,6 +1,8 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -11,14 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,7 +33,16 @@ public class NoticeRestController {
 
     @PostMapping("/notice/write")
     @Operation(summary = "공지사항 등록", description = "본사에서 새로운 공지사항을 등록하는 API")
-    public ResponseEntity<Map<String, Object>> addOfficeNotice(@Validated @RequestBody NoticeWriteFormDTO dto, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> addOfficeNotice(@Validated @ModelAttribute NoticeWriteFormDTO dto,
+                                                               BindingResult bindingResult) throws Exception {
+
+//        NoticeWriteFormDTO dto = new NoticeWriteFormDTO();
+//        dto.setNoticeCategory(noticeCategory);
+//        dto.setNoticePriority(noticePriority);
+//        dto.setWriter(writer);
+//        dto.setTitle(title);
+//        dto.setBody(body);
+
         // 검증 오류 체크
         if (bindingResult.hasErrors()) {
             // FieldError 정보를 Map으로 변환해서 전달
@@ -52,7 +61,7 @@ public class NoticeRestController {
         }
 
         // 검증 통과 시 DB 저장
-        Long id = noticeService.insertOfficeNotice(dto);
+        Long id = noticeService.insertOfficeNotice(dto, dto.getFiles());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of(

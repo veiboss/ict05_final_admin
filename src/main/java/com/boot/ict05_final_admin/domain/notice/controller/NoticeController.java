@@ -1,9 +1,12 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticeAttachment;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import com.boot.ict05_final_admin.domain.notice.service.NoticeAttachmentService;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.boot.ict05_final_admin.domain.notice.entity.QNotice.notice;
 
 @Controller
@@ -23,9 +28,11 @@ import static com.boot.ict05_final_admin.domain.notice.entity.QNotice.notice;
 public class NoticeController {
 
     private final NoticeService noticeService;
+    private final NoticeAttachmentService noticeAttachmentService;
 
     @GetMapping("/notice/write")
     public String addOfficeNotice(Model model) {
+        model.addAttribute("noticeWriteFormDTO", new NoticeWriteFormDTO());
         model.addAttribute("NoticeCategory", NoticeCategory.values());
         model.addAttribute("NoticePriority", NoticePriority.values());
         return "notice/write";
@@ -49,7 +56,9 @@ public class NoticeController {
     @GetMapping("/notice/detail/{id}")
     public String detailOfficeNotice(@PathVariable Long id, Model model) {
         Notice notice = noticeService.detailNotice(id);
+        List<NoticeAttachment> attachments = noticeAttachmentService.findByNoticeId(notice.getId());
         model.addAttribute("notice", notice);
+        model.addAttribute("attachments", attachments);
         return "notice/detail";
     }
 

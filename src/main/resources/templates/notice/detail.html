@@ -14,6 +14,10 @@
 <div>Writer : <span th:text="${notice.writer}">writer</span></div>
 <div>Title : <span th:text="${notice.title}">title</span></div>
 <div>Content : <span th:utext="${notice.body}">content</span></div>
+<div>첨부파일목록 : </div>
+<ul>
+    <li th:each="attachment : ${attachments}" th:text="${attachment.url}"></li>
+</ul>
 <button type="button"
         th:onclick="'window.location=\'/admin/notice/modify/' + ${notice.id} + '\';'">
     수정

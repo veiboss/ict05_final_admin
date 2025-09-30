@@ -17,47 +17,53 @@
     </style>
 </head>
 <body>
-<form name="frm" id="frm" action="/API/notice/write" method="post">
+<form name="frm" th:object="${noticeWriteFormDTO}">
     <table>
         <tr>
             <td>카테고리</td>
             <td>
-                <select name="noticeCategory" id="noticeCategory">
-                    <option>선택</option>
+                <select th:field="*{noticeCategory}">
+                    <option value="">선택</option>
                     <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
-                <p id="noticeCategoryError" style="color:red"></p>
+                <p th:if="${#fields.hasErrors('noticeCategory')}" th:errors="*{noticeCategory}" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>상태</td>
             <td>
-                <select name="noticePriority" id="noticePriority">
-                    <option>선택</option>
+                <select th:field="*{noticePriority}">
+                    <option value="">선택</option>
                     <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반</option>
                 </select>
-                <p id="noticePriorityError" style="color:red"></p>
+                <p th:if="${#fields.hasErrors('noticePriority')}" th:errors="*{noticePriority}" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>이름</td>
             <td>
-                <input type="text" name="writer" value="" />
-                <p id="writerError" style="color:red"></p>
+                <input type="text" th:field="*{writer}" />
+                <p th:if="${#fields.hasErrors('writer')}" th:errors="*{writer}" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>제목</td>
             <td>
-                <input type="text" name="title" value="" />
-                <p id="titleError" style="color:red"></p>
+                <input type="text" th:field="*{title}" />
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:red"></p>
             </td>
         </tr>
         <tr>
             <td>내용</td>
             <td>
-                <textarea name="body" class="body"></textarea>
-                <p id="bodyError" style="color:red"></p>
+                <textarea th:field="*{body}" class="body"></textarea>
+                <p th:if="${#fields.hasErrors('body')}" th:errors="*{body}" style="color:red"></p>
+            </td>
+        </tr><tr>
+            <td>첨부파일</td>
+            <td>
+                <input type="file" th:field="*{files}" multiple />
+                <p th:if="${#fields.hasErrors('files')}" th:errors="*{files}" style="color:red"></p>
             </td>
         </tr>
     </table>
@@ -77,26 +83,24 @@
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault();
 
-        const formData = new FormData(this);
-        const obj = {
-            noticeCategory: formData.get("noticeCategory"),
-            noticePriority: formData.get("noticePriority"),
-            writer: formData.get("writer"),
-            title: formData.get("title"),
-            body: formData.get("body")
-        };
+        const filesInput = document.getElementById('files');
+        const files = filesInput.files;
+
+        const formData = new FormData(this); // 폼의 모든 input 포함
+
+        // 여러 파일 추가
+        for (let i = 0; i < files.length; i++) {
+            formData.append("files", files[i]); // name="files" 로 서버와 매칭
+        }
 
         fetch("/API/notice/write", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(obj)
+            body: formData // JSON 대신 FormData 전송
+            // Content-Type은 fetch가 자동으로 multipart/form-data로 설정
         })
             .then(async response => {
-                const data = await response.json(); // 항상 JSON 파싱
+                const data = await response.json();
                 if (!response.ok) {
-                    // 검증 오류일 경우 (400)
                     if (response.status === 400 && data.errors) {
                         Object.keys(data.errors).forEach(field => {
                             const errorMsg = data.errors[field];
@@ -104,7 +108,7 @@
                             if (errorElement) errorElement.textContent = errorMsg;
                         });
                     }
-                    throw new Error("서버 검증 오류"); // catch로 넘어가긴 하지만, 에러 메시지 표시용
+                    throw new Error("서버 검증 오류");
                 } else {
                     if (data.success) {
                         alert('저장 완료!');
@@ -116,6 +120,7 @@
                 console.error("에러 발생:", error);
             });
     });
+
 
 </script>
 </body>
