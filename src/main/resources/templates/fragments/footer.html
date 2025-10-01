@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer</title>
+</head>
+<body>
+<th:block th:fragment="footer">
+    <footer style="background-color:#f8f9fa; padding:20px; text-align:center; border-top:1px solid #e5e5e5;">
+        <p>&copy; 2025 MyCompany. All Rights Reserved.</p>
+        <nav>
+            <a href="/" style="margin:0 10px;">Home</a> |
+            <a href="/admin/notice/list" style="margin:0 10px;">공지사항</a> |
+            <a href="/admin/contact" style="margin:0 10px;">Contact</a>
+        </nav>
+    </footer>
+</th:block>
+</body>
+</html>

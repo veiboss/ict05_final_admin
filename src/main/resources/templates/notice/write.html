@@ -17,6 +17,7 @@
     </style>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <form name="frm" id="frm" th:object="${noticeWriteFormDTO}">
     <table>
         <tr>
@@ -76,6 +77,7 @@
     <input type="submit" value="전송"/>
 </form>
 <button type="button" onclick="window.location='/admin/notice/list';">목록</button>
+<div th:replace="fragments/footer :: footer"></div>
 <script>
     ClassicEditor.create(document.querySelector(".body"), {
         language: "ko",

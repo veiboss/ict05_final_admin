@@ -8,6 +8,7 @@
     <title>Document</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div>ID : <span th:text="${notice.id}">999</span></div>
 <div>Category : <span th:text="${notice.noticeCategory}">일반</span></div>
 <div>Priority : <span th:text="${notice.noticePriority}">일반</span></div>
@@ -29,5 +30,6 @@
 </button>
 <button type="button" onclick="window.location='/admin/notice/list';">목록</button>
 <button type="button" onclick="window.location='/admin/notice/write';">게시물작성</button>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

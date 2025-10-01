@@ -20,6 +20,7 @@
     <th:block th:replace="~{fragments/bootstrap :: bootstrap-head('메인 페이지')}"></th:block>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <form name="frm" id="frm" method="get">
     <select name="type">
         <option value="" th:selected="${noticeSearchDTO.type == null or noticeSearchDTO.type == ''}">선택</option>
@@ -52,5 +53,6 @@
 </table>
 <div th:replace="~{fragments/pagination :: pagination (${notices})}"></div>
 <button type="button" onclick="window.location='/admin/notice/write';">글쓰기</button>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
