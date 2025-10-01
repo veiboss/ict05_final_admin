@@ -96,15 +96,7 @@
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault(); // 폼 기본 제출 막기
 
-        const filesInput = document.getElementById('files');
-        const files = filesInput.files;
-
         const formData = new FormData(this);
-
-        // 여러 파일 추가
-        for (let i = 0; i < files.length; i++) {
-            formData.append("files", files[i]); // name="files" 로 서버와 매칭
-        }
 
         fetch("/admin/API/notice/modify", {
             method: "POST",

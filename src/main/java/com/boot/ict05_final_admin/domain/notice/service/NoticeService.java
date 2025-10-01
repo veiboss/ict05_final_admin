@@ -9,6 +9,7 @@ import com.boot.ict05_final_admin.domain.notice.entity.NoticeAttachment;
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeAttachmentRepository;
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
@@ -41,8 +43,6 @@ public class NoticeService {
      * @throws Exception 파일 업로드 실패 시 예외 발생 가능
      */
     public Long insertOfficeNotice(NoticeWriteFormDTO dto, List<MultipartFile> files) throws Exception {
-        System.out.println("NoticeService - insertOfficeNotice");
-
         Notice notice = Notice.builder()
                 .noticeCategory(dto.getNoticeCategory())
                 .noticePriority(dto.getNoticePriority())
@@ -76,7 +76,7 @@ public class NoticeService {
     /**
      * 작성자 이름으로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
      *
-     * @param s   작성자 이름 (선택, null 가능)
+     * @param noticeSearchDTO   작성자 이름 (선택, null 가능)
      * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 공지사항 리스트 DTO
      */

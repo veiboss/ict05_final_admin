@@ -91,15 +91,7 @@
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault();
 
-        const filesInput = document.getElementById('files');
-        const files = filesInput.files;
-
         const formData = new FormData(this); // 폼의 모든 input 포함
-
-        // 여러 파일 추가
-        for (let i = 0; i < files.length; i++) {
-            formData.append("files", files[i]); // name="files" 로 서버와 매칭
-        }
 
         fetch("/admin/API/notice/write", {
             method: "POST",

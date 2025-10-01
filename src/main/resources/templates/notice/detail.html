@@ -18,7 +18,7 @@
 <div>Content : <span th:utext="${notice.body}">content</span></div>
 <div>첨부파일목록 : </div>
 <ul>
-    <li th:each="attachment : ${attachments}" th:text="${attachment.url}"></li>
+    <li th:each="attachment : ${attachments}"><span th:text="${attachment.url}">첨부파일</span><button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button></li>
 </ul>
 <button type="button"
         th:onclick="'window.location=\'/admin/notice/modify/' + ${notice.id} + '\';'">
@@ -31,5 +31,32 @@
 <button type="button" onclick="window.location='/admin/notice/list';">목록</button>
 <button type="button" onclick="window.location='/admin/notice/write';">게시물작성</button>
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script>
+    function deleteAttachment(id) {
+        const formData = new FormData();
+        formData.append("id", id);
+
+        fetch("/admin/API/notice/delete/attachment", {
+            method: "POST",
+            body: formData
+        })
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok) {
+                    if (response.status === 400 && data.errors) {
+                        console.log("첨부파일 삭제 실패");
+                    }
+                    throw new Error("서버 검증 오류");
+                } else {
+                    if (data.success) {
+                        window.location.href = '/admin/notice/detail/' + [[${notice.id}]];
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
+    }
+</script>
 </body>
 </html>

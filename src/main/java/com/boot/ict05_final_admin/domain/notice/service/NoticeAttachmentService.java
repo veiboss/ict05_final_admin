@@ -110,4 +110,9 @@ public class NoticeAttachmentService {
         List<NoticeAttachment> lists = noticeAttachmentRepository.findByNoticeId(noticeId);
         return lists;
     }
+
+
+    public void deleteAttachment(Long id) {
+        noticeAttachmentRepository.deleteById(id);
+    }
 }

@@ -3,6 +3,7 @@ package com.boot.ict05_final_admin.domain.notice.controller;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import com.boot.ict05_final_admin.domain.notice.service.NoticeAttachmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -46,6 +47,7 @@ import java.util.stream.Collectors;
 public class NoticeRestController {
 
     private final NoticeService noticeService;
+    private final NoticeAttachmentService noticeAttachmentService;
 
     /**
      * 공지사항 등록 API
@@ -100,6 +102,7 @@ public class NoticeRestController {
         }
 
         Long id = noticeService.insertOfficeNotice(dto, dto.getFiles());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of(
@@ -161,6 +164,18 @@ public class NoticeRestController {
         }
 
         Long id = noticeService.noticeModify(dto, dto.getFiles()).getId();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Map.of(
+                        "success", true,
+                        "id", id
+                ));
+    }
+
+
+    @PostMapping("/notice/delete/attachment")
+    public ResponseEntity<Map<String, Object>> deleteAttachment(@RequestParam("id") Long id) {
+        noticeAttachmentService.deleteAttachment(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of(
