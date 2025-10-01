@@ -2,6 +2,8 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,22 +34,27 @@ public class NoticeModifyFormDTO {
     private Long id;
 
     /** 공지사항 카테고리 */
+    @NotNull(message = "카테고리를 선택해주세요")
     private NoticeCategory noticeCategory;
 
     /** 공지사항 우선순위 */
+    @NotNull(message = "상태를 선택해주세요")
     private NoticePriority noticePriority;
 
     /** 공지사항 공개 여부 */
     private Boolean isShow;
 
+    /** 작성자 이름 */
+    @NotBlank(message = "작성자를 입력해주세요")
+    private String writer;
+
     /** 공지사항 제목 */
+    @NotBlank(message = "제목을 입력해주세요")
     private String title;
 
     /** 공지사항 내용 */
+    @NotBlank(message = "내용을 입력해주세요")
     private String body;
-
-    /** 작성자 이름 */
-    private String writer;
 
     /** 새로 첨부할 파일 리스트 */
     private List<MultipartFile> files;
