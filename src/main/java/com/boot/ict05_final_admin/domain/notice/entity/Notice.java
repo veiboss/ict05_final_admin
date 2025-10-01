@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.notice.entity;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,16 +45,17 @@ public class Notice {
     /** 공지사항 노출 여부 */
     private Boolean isShow;
 
+    /** 작성자 이름 */
+    private String writer;
+
     /** 공지사항 제목 */
     private String title;
 
     /** 공지사항 본문 내용 */
     private String body;
 
-    /** 작성자 이름 */
-    private String writer;
-
     /** 작성일자 */
+    @Schema(type="string", format="date-time")
     private LocalDateTime writerdate;
 
     /**

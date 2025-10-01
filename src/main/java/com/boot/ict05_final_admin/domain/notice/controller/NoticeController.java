@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
+import com.boot.ict05_final_admin.config.ProjectAttribute;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
@@ -8,6 +9,7 @@ import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeAttachmentService;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class NoticeController {
 
     private final NoticeService noticeService;
     private final NoticeAttachmentService noticeAttachmentService;
+    private final ProjectAttribute projectAttribute;
 
     /**
      * 공지사항 작성 화면을 표시한다.
@@ -62,12 +66,14 @@ public class NoticeController {
     public String listOfficeNotice(@RequestParam(value = "writer", required = false) String writer,
                                    @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)
                                    Pageable pageable,
-                                   Model model) {
+                                   Model model,
+                                   HttpServletRequest request) {
 
-        PageRequest request = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
-        Page<NoticeListDTO> notices = noticeService.selectAllOfficeNotice(writer, request);
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
+        Page<NoticeListDTO> notices = noticeService.selectAllOfficeNotice(writer, pageRequest);
 
         model.addAttribute("notices", notices);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
 
         return "notice/list";
     }

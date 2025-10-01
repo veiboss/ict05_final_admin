@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,7 @@ public class NoticeListDTO {
     private String writer;
 
     /** 작성일시 */
+    @Schema(type="string", format="date-time")
     private LocalDateTime writerdate;
 
     /**

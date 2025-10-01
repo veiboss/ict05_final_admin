@@ -2,6 +2,8 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -59,5 +61,6 @@ public class NoticeWriteFormDTO {
     private String body;
 
     /** 첨부파일 리스트 (없을 수 있음) */
+    @Parameter(hidden = true)
     private List<MultipartFile> files;
 }

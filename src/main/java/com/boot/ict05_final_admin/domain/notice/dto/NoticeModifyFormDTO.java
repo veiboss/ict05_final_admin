@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -57,5 +58,6 @@ public class NoticeModifyFormDTO {
     private String body;
 
     /** 새로 첨부할 파일 리스트 */
+    @Parameter(hidden = true)
     private List<MultipartFile> files;
 }
