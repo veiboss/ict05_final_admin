@@ -20,6 +20,12 @@
         <option value="all" th:selected="${noticeSearchDTO.type == 'all'}">제목 + 내용</option>
     </select>
     <input type="text" name="s" th:value="${noticeSearchDTO.s}" />
+    <select th:field="${noticeSearchDTO.size}">
+        <option value="10">10</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+    </select>
     <input type="submit" value="검색" />
 </form>
 <table class="table">

@@ -6,4 +6,5 @@ import lombok.Data;
 public class NoticeSearchDTO {
     private String s;
     private String type;
+    private String size = "10";
 }
