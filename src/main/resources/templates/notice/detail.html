@@ -23,6 +23,10 @@
         th:onclick="'window.location=\'/admin/notice/modify/' + ${notice.id} + '\';'">
     수정
 </button>
+<button type="button"
+        th:onclick="'window.location=\'/admin/notice/delete/' + ${notice.id} + '\';'">
+    삭제
+</button>
 <button type="button" onclick="window.location='/admin/notice/list';">목록</button>
 <button type="button" onclick="window.location='/admin/notice/write';">게시물작성</button>
 </body>

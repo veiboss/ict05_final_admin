@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.notice.service;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeSearchDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeAttachment;
@@ -75,12 +76,12 @@ public class NoticeService {
     /**
      * 작성자 이름으로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
      *
-     * @param writer   작성자 이름 (선택, null 가능)
+     * @param s   작성자 이름 (선택, null 가능)
      * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 공지사항 리스트 DTO
      */
-    public Page<NoticeListDTO> selectAllOfficeNotice(String writer, Pageable pageable) {
-        return noticeRepository.listNotice(writer, pageable);
+    public Page<NoticeListDTO> selectAllOfficeNotice(NoticeSearchDTO noticeSearchDTO, Pageable pageable) {
+        return noticeRepository.listNotice(noticeSearchDTO, pageable);
     }
 
     /**
@@ -131,5 +132,10 @@ public class NoticeService {
      */
     public Notice detailNotice(Long id) {
         return noticeRepository.findById(id).orElse(null);
+    }
+
+
+    public void deleteNotice(Long id) {
+        noticeRepository.deleteById(id);
     }
 }

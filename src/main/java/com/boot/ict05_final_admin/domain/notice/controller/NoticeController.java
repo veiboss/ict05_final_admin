@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.notice.controller;
 
 import com.boot.ict05_final_admin.config.ProjectAttribute;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeSearchDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeAttachment;
@@ -56,23 +57,24 @@ public class NoticeController {
     /**
      * 공지사항 목록을 페이징 처리하여 조회한다.
      *
-     * @param writer   (선택) 작성자 이름으로 검색할 경우 전달되는 값
+     * @param s   (선택) 작성자 이름으로 검색할 경우 전달되는 값
      * @param pageable 페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
      * @param model    뷰에 전달할 모델 객체
      * @return 공지사항 목록 페이지 뷰 이름
      */
     @GetMapping("/notice/list")
-    public String listOfficeNotice(@RequestParam(value = "writer", required = false) String writer,
+    public String listOfficeNotice(NoticeSearchDTO noticeSearchDTO,
                                    @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)
                                    Pageable pageable,
                                    Model model,
                                    HttpServletRequest request) {
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
-        Page<NoticeListDTO> notices = noticeService.selectAllOfficeNotice(writer, pageRequest);
+        Page<NoticeListDTO> notices = noticeService.selectAllOfficeNotice(noticeSearchDTO, pageRequest);
 
         model.addAttribute("notices", notices);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
+        model.addAttribute("noticeSearchDTO", noticeSearchDTO);
 
         return "notice/list";
     }
@@ -113,6 +115,13 @@ public class NoticeController {
         model.addAttribute("attachments", attachments);
 
         return "notice/modify";
+    }
+
+
+    @GetMapping("/notice/delete/{id}")
+    public String deleteOfficeNotice(@PathVariable Long id, Model model) {
+        noticeService.deleteNotice(id);
+        return "redirect:/notice/list";
     }
 
 }

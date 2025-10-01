@@ -20,9 +20,20 @@
     <th:block th:replace="~{fragments/bootstrap :: bootstrap-head('메인 페이지')}"></th:block>
 </head>
 <body>
+<form name="frm" id="frm" method="get">
+    <select name="type">
+        <option value="" th:selected="${noticeSearchDTO.type == null or noticeSearchDTO.type == ''}">선택</option>
+        <option value="title" th:selected="${noticeSearchDTO.type == 'title'}">제목</option>
+        <option value="content" th:selected="${noticeSearchDTO.type == 'content'}">내용</option>
+        <option value="all" th:selected="${noticeSearchDTO.type == 'all'}">제목 + 내용</option>
+    </select>
+    <input type="text" name="s" th:value="${noticeSearchDTO.s}" />
+    <input type="submit" value="검색" />
+</form>
 <table class="table">
     <thead>
     <tr>
+        <th scope="col">순번</th>
         <th scope="col">ID</th>
         <th scope="col">제목</th>
         <th scope="col">작성자</th>
@@ -30,7 +41,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="notice : ${notices.content}">
+    <tr th:each="notice, stat : ${notices.content}">
+        <td th:text="${notices.totalElements - (notices.number * notices.size) - stat.index}">1</td>
         <td scope="row" th:text="${notice.id}">ID</td>
         <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
         <td th:text="${notice.writer}">작성자</td>
