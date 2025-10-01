@@ -8,9 +8,11 @@
     <title>Document</title>
 </head>
 <body>
-<p>Home</p>
-<p><a href="/admin/notice/list">Notice</a></p>
-<p><a href="/login">Login</a></p>
-
+<div th:replace="~{fragments/header :: header}"></div>
+<ul>
+    <li><a href="/admin/notice/list">Notice</a></li>
+    <li><a href="/login">Login</a></li>
+</ul>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
