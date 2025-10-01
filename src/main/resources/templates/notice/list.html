@@ -32,7 +32,7 @@
     <tbody>
     <tr th:each="notice : ${notices.content}">
         <td scope="row" th:text="${notice.id}">ID</td>
-        <td><a th:href="@{/admin/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
+        <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
         <td th:text="${notice.writer}">작성자</td>
         <td th:text="${notice.getWriteDate}">00.00.00</td>
     </tr>

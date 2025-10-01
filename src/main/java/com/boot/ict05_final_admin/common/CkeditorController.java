@@ -100,7 +100,7 @@ public class CkeditorController {
 	
 	
 	@ResponseBody
-	@PostMapping("/admin/image/upload")
+	@PostMapping("/image/upload")
 	public Map<String, Object> uploadSftpImage(MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
 	    Map<String, Object> result = new HashMap<>();
 	    MultipartFile file = request.getFile("upload");

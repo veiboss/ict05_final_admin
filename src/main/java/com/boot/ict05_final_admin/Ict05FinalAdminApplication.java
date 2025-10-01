@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.boot.ict05_final_admin")
+@SpringBootApplication
 public class Ict05FinalAdminApplication {
 
     public static void main(String[] args) {

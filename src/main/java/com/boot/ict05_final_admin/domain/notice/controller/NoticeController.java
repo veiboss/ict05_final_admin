@@ -32,7 +32,6 @@ import java.util.List;
  */
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin")
 public class NoticeController {
 
     private final NoticeService noticeService;
