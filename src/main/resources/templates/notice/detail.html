@@ -18,9 +18,12 @@
 <div>Title : <span th:text="${notice.title}">title</span></div>
 <div>Content : <span th:utext="${notice.body}">content</span></div>
 <div>첨부파일목록 : </div>
-<ul>
-    <li th:each="attachment : ${attachments}"><span th:text="${attachment.url}">첨부파일</span><button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button></li>
-</ul>
+<table>
+    <tr th:each="attachment : ${attachments}">
+        <td><a th:href="${attachment.url}" target="_blank"><span th:text="${attachment.url}">첨부파일</span></a></td>
+        <td><button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button></td>
+    </tr>
+</table>
 <a th:href="@{/notice/modify/{id}(id=${notice.id})}" class="btn btn-secondary">수정</a>
 <a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn btn-secondary">삭제</a>
 <a href="/admin/notice/list" class="btn btn-secondary">목록</a>
