@@ -57,15 +57,14 @@ public class NoticeController {
     /**
      * 공지사항 목록을 페이징 처리하여 조회한다.
      *
-     * @param s   (선택) 작성자 이름으로 검색할 경우 전달되는 값
+     * @param noticeSearchDTO   (선택) 작성자 이름으로 검색할 경우 전달되는 값
      * @param pageable 페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
      * @param model    뷰에 전달할 모델 객체
      * @return 공지사항 목록 페이지 뷰 이름
      */
     @GetMapping("/notice/list")
     public String listOfficeNotice(NoticeSearchDTO noticeSearchDTO,
-                                   @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)
-                                   Pageable pageable,
+                                   @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                    Model model,
                                    HttpServletRequest request) {
 
