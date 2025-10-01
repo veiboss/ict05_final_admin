@@ -10,6 +10,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
 
     <title>Document</title>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
     <style>
         .ck-editor__editable:not(.ck-editor__nested-editable) {
             height: 450px;
@@ -79,9 +80,9 @@
     <ul>
         <li th:each="attachment : ${attachments}" th:text="${attachment.url}"></li>
     </ul>
-    <input type="submit" value="전송"/>
+    <input type="submit" class="btn btn-primary" value="전송"/>
 </form>
-<button type="button" onclick="window.location='/admin/notice/list';">목록</button>
+<a href="/admin/notice/list" class="btn btn-secondary">목록</a>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     ClassicEditor.create(document.querySelector(".body"), {

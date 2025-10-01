@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -20,16 +21,10 @@
 <ul>
     <li th:each="attachment : ${attachments}"><span th:text="${attachment.url}">첨부파일</span><button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button></li>
 </ul>
-<button type="button"
-        th:onclick="'window.location=\'/admin/notice/modify/' + ${notice.id} + '\';'">
-    수정
-</button>
-<button type="button"
-        th:onclick="'window.location=\'/admin/notice/delete/' + ${notice.id} + '\';'">
-    삭제
-</button>
-<button type="button" onclick="window.location='/admin/notice/list';">목록</button>
-<button type="button" onclick="window.location='/admin/notice/write';">게시물작성</button>
+<a th:href="@{/notice/modify/{id}(id=${notice.id})}" class="btn btn-secondary">수정</a>
+<a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn btn-secondary">삭제</a>
+<a href="/admin/notice/list" class="btn btn-secondary">목록</a>
+<a href="/admin/notice/write" class="btn btn-secondary">게시물작성</a>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     function deleteAttachment(id) {
