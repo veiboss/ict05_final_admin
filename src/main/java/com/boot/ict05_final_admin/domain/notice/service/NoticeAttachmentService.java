@@ -9,11 +9,19 @@ import com.jcraft.jsch.Session;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.InputStream;
 import java.util.*;
 
+/**
+ * 공지사항 첨부파일 관련 서비스 클래스
+ *
+ * <p>이 클래스는 다음 기능을 제공합니다:</p>
+ * <ul>
+ *     <li>SFTP 서버로 첨부파일 업로드</li>
+ *     <li>공지사항 ID 기준 첨부파일 조회</li>
+ * </ul>
+ */
 @Service
 @Transactional
 public class NoticeAttachmentService {
@@ -24,12 +32,23 @@ public class NoticeAttachmentService {
     private static final String SFTP_PASSWORD = "admin*1472";
     private static final String SFTP_BASE_DIR = "/httpdocs/"; // 서버 내 업로드 경로
     private static final String URL_BASE = "http://ict05.wwwbiz.kr";
+
     private final NoticeAttachmentRepository noticeAttachmentRepository;
 
     public NoticeAttachmentService(NoticeAttachmentRepository noticeAttachmentRepository) {
         this.noticeAttachmentRepository = noticeAttachmentRepository;
     }
 
+    /**
+     * 첨부파일을 SFTP 서버에 업로드하고 접근 가능한 URL을 반환한다.
+     *
+     * <p>파일명은 UUID 기반으로 생성하며 원본 확장자를 유지한다.
+     * 업로드 후 파일 URL을 반환하며, 업로드 실패 시 예외 발생.</p>
+     *
+     * @param file 업로드할 MultipartFile 객체
+     * @return 업로드된 파일 URL
+     * @throws Exception SFTP 연결 실패, 업로드 실패 등 예외 발생
+     */
     public String uploadFile(MultipartFile file) throws Exception {
         Session session = null;
         Channel channel = null;
@@ -81,11 +100,14 @@ public class NoticeAttachmentService {
         }
     }
 
-
+    /**
+     * 공지사항 ID를 기준으로 첨부파일 목록을 조회한다.
+     *
+     * @param noticeId 조회할 공지사항 ID
+     * @return 해당 공지사항에 첨부된 파일 목록
+     */
     public List<NoticeAttachment> findByNoticeId(Long noticeId) {
-
         List<NoticeAttachment> lists = noticeAttachmentRepository.findByNoticeId(noticeId);
-
         return lists;
     }
 }

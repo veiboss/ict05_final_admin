@@ -65,8 +65,8 @@ public class Notice {
      * @param dto 수정할 공지사항 정보를 담고 있는 DTO 객체
      */
     public void updateNotice(NoticeModifyFormDTO dto) {
-        this.noticeCategory = NoticeCategory.valueOf(String.valueOf(dto.getNoticeCategory()));
-        this.noticePriority = NoticePriority.valueOf(String.valueOf(dto.getNoticePriority()));
+        this.noticeCategory = dto.getNoticeCategory();
+        this.noticePriority = dto.getNoticePriority();
         this.isShow = dto.getIsShow();
         this.title = dto.getTitle();
         this.body = dto.getBody();

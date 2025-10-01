@@ -115,7 +115,7 @@
                 return response.json();
             })
             .then(data => {
-                alert("등록 성공! 글 번호: " + id);
+                alert("수정 성공 : " + id);
                 window.location.href = "/admin/notice/detail/" + data.id;
             })
             .catch(error => {
