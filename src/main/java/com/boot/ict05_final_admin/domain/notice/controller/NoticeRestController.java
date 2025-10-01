@@ -59,14 +59,32 @@ public class NoticeRestController {
      * @throws Exception 파일 처리 오류 또는 DB 저장 오류
      */
     @PostMapping("/notice/write")
-    @Operation(summary = "공지사항 등록", description = "본사에서 새로운 공지사항을 등록하는 API (첨부파일 포함)")
+    @Operation(
+            summary = "공지사항 등록",
+            description = "본사에서 새로운 공지사항을 등록하는 API입니다. 첨부파일도 함께 업로드 가능합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "공지사항 등록 정보",
+                    required = true
+            ),
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "등록 성공",
+                            content = @io.swagger.v3.oas.annotations.media.Content(
+                                    mediaType = "application/json"
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "400",
+                            description = "검증 오류 발생"
+                    )
+            }
+    )
     public ResponseEntity<Map<String, Object>> addOfficeNotice(
             @Validated @ModelAttribute NoticeWriteFormDTO dto,
             BindingResult bindingResult) throws Exception {
 
-        // 검증 오류 체크
         if (bindingResult.hasErrors()) {
-            // FieldError 정보를 Map으로 변환해서 전달
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.toMap(
                             fieldError -> fieldError.getField(),
@@ -74,14 +92,13 @@ public class NoticeRestController {
                     ));
 
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST) // 400
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(Map.of(
                             "success", false,
                             "errors", errors
                     ));
         }
 
-        // 검증 통과 시 DB 저장
         Long id = noticeService.insertOfficeNotice(dto, dto.getFiles());
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -103,14 +120,32 @@ public class NoticeRestController {
      * @throws Exception 파일 처리 오류 또는 DB 저장 오류
      */
     @PostMapping("/notice/modify")
-    @Operation(summary = "공지사항 수정", description = "기존 공지사항을 수정하는 API (첨부파일 포함)")
+    @Operation(
+            summary = "공지사항 수정",
+            description = "기존 공지사항을 수정하는 API입니다. 첨부파일 변경/추가도 가능합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "공지사항 수정 정보",
+                    required = true
+            ),
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "수정 성공",
+                            content = @io.swagger.v3.oas.annotations.media.Content(
+                                    mediaType = "application/json"
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "400",
+                            description = "검증 오류 발생"
+                    )
+            }
+    )
     public ResponseEntity<Map<String, Object>> boardModify(
             @Validated @ModelAttribute NoticeModifyFormDTO dto,
             BindingResult bindingResult) throws Exception {
 
-        // 검증 오류 체크
         if (bindingResult.hasErrors()) {
-            // FieldError 정보를 Map으로 변환해서 전달
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.toMap(
                             fieldError -> fieldError.getField(),
@@ -118,14 +153,13 @@ public class NoticeRestController {
                     ));
 
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST) // 400
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(Map.of(
                             "success", false,
                             "errors", errors
                     ));
         }
 
-        // 검증 통과 시 DB 저장
         Long id = noticeService.noticeModify(dto, dto.getFiles()).getId();
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -134,5 +168,4 @@ public class NoticeRestController {
                         "id", id
                 ));
     }
-
 }
