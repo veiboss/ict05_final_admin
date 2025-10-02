@@ -145,6 +145,10 @@ public class NoticeService {
     }
 
 
+    /**
+     * 공지사항 id 를 받아 삭제하는 프로세스
+     * @param id
+     */
     public void deleteNotice(Long id) {
         noticeRepository.deleteById(id);
     }
