@@ -10,24 +10,62 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div>ID : <span th:text="${notice.id}">999</span></div>
-<div>Category : <span th:text="${notice.noticeCategory}">일반</span></div>
-<div>Priority : <span th:text="${notice.noticePriority}">일반</span></div>
-<div>IsShow : <span th:text="${notice.isShow}">isShow</span></div>
-<div>Writer : <span th:text="${notice.writer}">writer</span></div>
-<div>Title : <span th:text="${notice.title}">title</span></div>
-<div>Content : <span th:utext="${notice.body}">content</span></div>
-<div>첨부파일목록 : </div>
-<table>
-    <tr th:each="attachment : ${attachments}">
-        <td><a th:href="${attachment.url}" target="_blank"><span th:text="${attachment.originalFilename}">첨부파일</span></a></td>
-        <td><button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button></td>
-    </tr>
-</table>
-<a th:href="@{/notice/modify/{id}(id=${notice.id})}" class="btn btn-secondary">수정</a>
-<a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn btn-secondary">삭제</a>
-<a href="/admin/notice/list" class="btn btn-secondary">목록</a>
-<a href="/admin/notice/write" class="btn btn-secondary">게시물작성</a>
+<div class="container mt-5">
+    <table class="table">
+        <tr>
+            <td style="width:100px;">ID</td>
+            <td th:text="${notice.id}">999</td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td th:text="${notice.noticeCategory}">일반</td>
+        </tr>
+        <tr>
+            <td>Priority</td>
+            <td th:text="${notice.noticePriority}">일반</td>
+        </tr>
+        <tr>
+            <td>IsShow</td>
+            <td th:text="${notice.isShow}">isShow</td>
+        </tr>
+        <tr>
+            <td>Writer</td>
+            <td th:text="${notice.writer}">writer</td>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td th:text="${notice.title}">Title</td>
+        </tr>
+        <tr>
+            <td>Content</td>
+            <td th:utext="${notice.body}">Content</td>
+        </tr>
+        <tr>
+            <td>첨부파일</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <table>
+                    <tr th:each="attachment : ${attachments}">
+                        <td><a th:href="${attachment.url}" target="_blank"><span
+                                th:text="${attachment.originalFilename}">첨부파일</span></a></td>
+                        <td>
+                            <button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+        </tr>
+
+    </table>
+    <a href="/admin/notice/list" class="btn btn-secondary">목록</a>
+    <a th:href="@{/notice/modify/{id}(id=${notice.id})}" class="btn btn-secondary">수정</a>
+    <a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn btn-secondary">삭제</a>
+    <a href="/admin/notice/write" class="btn btn-secondary">게시물작성</a>
+</div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     function deleteAttachment(id) {
