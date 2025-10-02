@@ -10,12 +10,20 @@ import com.boot.ict05_final_admin.domain.notice.repository.NoticeAttachmentRepos
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -139,5 +147,45 @@ public class NoticeService {
 
     public void deleteNotice(Long id) {
         noticeRepository.deleteById(id);
+    }
+
+
+    /**
+     * 공지사항 액셀 다운로드
+     * @return
+     * @throws IOException
+     */
+    public byte[] downloadExcel(NoticeSearchDTO noticeSearchDTO, Pageable pageable)
+            throws IOException {
+
+        Workbook workbook = new XSSFWorkbook();
+
+        Sheet sheet = workbook.createSheet("Sheet1");
+
+        Row sheet_row = sheet.createRow(0);
+        sheet_row.createCell(0).setCellValue("ID");
+        sheet_row.createCell(1).setCellValue("제목");
+        sheet_row.createCell(2).setCellValue("작성자");
+        sheet_row.createCell(3).setCellValue("작성일");
+
+        long count = noticeRepository.countNotice(noticeSearchDTO);
+        PageRequest pageRequest = PageRequest.of(0, (int) count, Sort.by("id").descending());
+        Page<NoticeListDTO> lists = noticeRepository.listNotice(noticeSearchDTO, pageRequest);
+
+        int i = 1;
+        for (NoticeListDTO notice : lists) {
+            Row sheet1_row = sheet.createRow(i);
+            sheet1_row.createCell(0).setCellValue(notice.getId());
+            sheet1_row.createCell(1).setCellValue(notice.getTitle());
+            sheet1_row.createCell(2).setCellValue(notice.getWriter());
+            sheet1_row.createCell(3).setCellValue(notice.getWriterdate());
+            i++;
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        return outputStream.toByteArray();
     }
 }

@@ -78,4 +78,20 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
                 return null;
         }
     }
+
+
+    @Override
+    public long countNotice(NoticeSearchDTO noticeSearchDTO) {
+        QNotice notice = QNotice.notice;
+
+        long total = queryFactory
+                .select(notice.count())
+                .from(notice)
+                .where(
+                        eqTitleOrBody(noticeSearchDTO, notice)
+                )
+                .fetchOne();
+
+        return total;
+    }
 }

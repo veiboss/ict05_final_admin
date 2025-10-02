@@ -123,4 +123,6 @@ public class NoticeController {
         return "redirect:/notice/list";
     }
 
+
+
 }

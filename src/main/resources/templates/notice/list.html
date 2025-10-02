@@ -25,6 +25,7 @@
     </select>
     <input type="submit" value="검색" />
 </form>
+<button type="button" class="btn btn-secondary" onclick="excelDownload()">액셀다운로드</button>
 <table class="table table-bordered" style="width:1024px;">
     <thead>
     <tr>
@@ -52,7 +53,6 @@
 </div>
 <a href="/admin/notice/write" class="btn btn-secondary">글쓰기</a>
 <div th:replace="~{fragments/footer :: footer}"></div>
-</script>
 <script>
     const selectAll = document.getElementById('selectAll');
 
@@ -90,6 +90,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', updateSelectAllState);
+</script>
+<script>
+    function excelDownload() {
+        const formData = new FormData(document.getElementById('frm'));
+        const type = formData.get("type");
+        const s = formData.get("s");
+        window.location = `/admin/API/notice/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}`;
+    }
 </script>
 </body>
 </html>

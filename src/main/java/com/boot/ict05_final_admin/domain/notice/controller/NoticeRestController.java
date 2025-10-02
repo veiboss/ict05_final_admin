@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.notice.controller;
 
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
+import com.boot.ict05_final_admin.domain.notice.dto.NoticeSearchDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeAttachmentService;
@@ -10,15 +11,23 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.service.NoticeService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -183,4 +192,24 @@ public class NoticeRestController {
                         "id", id
                 ));
     }
+
+
+    @GetMapping("/notice/download")
+    public ResponseEntity<?> downloadNotice(NoticeSearchDTO noticeSearchDTO,
+                                            @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                            Model model,
+                                            HttpServletRequest request) throws IOException {
+
+        byte[] excelBytes = noticeService.downloadExcel(noticeSearchDTO, pageable);
+
+        String filename = "공지사항.xlsx";
+        String encodeFilename = java.net.URLEncoder.encode(filename, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=" + encodeFilename);
+        headers.add("Cache-Control", "no-cache");
+
+        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+    }
+
 }

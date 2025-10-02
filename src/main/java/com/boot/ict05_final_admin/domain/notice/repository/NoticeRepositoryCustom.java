@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface NoticeRepositoryCustom {
     Page<NoticeListDTO> listNotice(NoticeSearchDTO noticeSearchDTO, Pageable pageable);
+    long countNotice(NoticeSearchDTO noticeSearchDTO);
 }
