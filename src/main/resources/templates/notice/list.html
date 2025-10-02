@@ -9,49 +9,60 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<form name="frm" id="frm" method="get">
-    <select name="type">
-        <option value="" th:selected="${noticeSearchDTO.type == null or noticeSearchDTO.type == ''}">선택</option>
-        <option value="title" th:selected="${noticeSearchDTO.type == 'title'}">제목</option>
-        <option value="content" th:selected="${noticeSearchDTO.type == 'content'}">내용</option>
-        <option value="all" th:selected="${noticeSearchDTO.type == 'all'}">제목 + 내용</option>
-    </select>
-    <input type="text" name="s" th:value="${noticeSearchDTO.s}" />
-    <select th:field="${noticeSearchDTO.size}">
-        <option value="10">10</option>
-        <option value="30">30</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-    </select>
-    <input type="submit" value="검색" />
-</form>
-<button type="button" class="btn btn-secondary" onclick="excelDownload()">액셀다운로드</button>
-<table class="table table-bordered" style="width:1024px;">
-    <thead>
-    <tr>
-        <th scope="col"><input type="checkbox" name="" id="selectAll"/></th>
-        <th scope="col">순번</th>
-        <th scope="col">ID</th>
-        <th scope="col">제목</th>
-        <th scope="col">작성자</th>
-        <th scope="col">작성일</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="notice, stat : ${notices.content}">
-        <td><input type="checkbox" class="row-checkbox" name="selectedIds" th:id="'chk-'+${stat.index}" th:value="${notice.id}" /></td>
-        <td th:text="${notices.totalElements - (notices.number * notices.size) - stat.index}">1</td>
-        <td scope="row" th:text="${notice.id}">ID</td>
-        <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
-        <td th:text="${notice.writer}">작성자</td>
-        <td th:text="${notice.getWriteDate}">00.00.00</td>
-    </tr>
-    </tbody>
-</table>
-<div style="text-align: center;width:1024px;">
-<div th:replace="~{fragments/pagination :: pagination (${notices})}"></div>
+<div class="container mt-5">
+    <form name="frm" id="frm" method="get" style="margin-bottom:10px;">
+        <div class="input-group" style="width:500px;">
+            <select name="type" class="custom-select">
+                <option value="" th:selected="${noticeSearchDTO.type == null or noticeSearchDTO.type == ''}">선택</option>
+                <option value="title" th:selected="${noticeSearchDTO.type == 'title'}">제목</option>
+                <option value="content" th:selected="${noticeSearchDTO.type == 'content'}">내용</option>
+                <option value="all" th:selected="${noticeSearchDTO.type == 'all'}">제목 + 내용</option>
+            </select>
+            <input type="text" name="s" th:value="${noticeSearchDTO.s}" class="form-control"/>
+            <select th:field="${noticeSearchDTO.size}" class="custom-select">
+                <option value="10">10</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <div class="input-group-append">
+                <input type="submit" value="검색" class="btn btn-outline-secondary"/>
+            </div>
+        </div>
+    </form>
+    <div style="text-align:right;margin-bottom:10px;">
+        <button type="button" class="btn btn-secondary" onclick="excelDownload()">액셀다운로드</button>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col"><input type="checkbox" name="" id="selectAll"/></th>
+            <th scope="col">순번</th>
+            <th scope="col">ID</th>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="notice, stat : ${notices.content}">
+            <td><input type="checkbox" class="row-checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
+                       th:value="${notice.id}"/></td>
+            <td th:text="${notices.totalElements - (notices.number * notices.size) - stat.index}">1</td>
+            <td scope="row" th:text="${notice.id}">ID</td>
+            <td><a th:href="@{/notice/detail/{id}(id=${notice.id})}" th:text="${notice.title}">제목</a></td>
+            <td th:text="${notice.writer}">작성자</td>
+            <td th:text="${notice.getWriteDate}">00.00.00</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <div th:replace="~{fragments/pagination :: pagination (${notices})}"></div>
+    </div>
+    <div style="text-align:right;margin-bottom:10px;">
+        <a href="/admin/notice/write" class="btn btn-secondary">글쓰기</a>
+    </div>
 </div>
-<a href="/admin/notice/write" class="btn btn-secondary">글쓰기</a>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     const selectAll = document.getElementById('selectAll');

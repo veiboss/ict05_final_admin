@@ -196,9 +196,7 @@ public class NoticeRestController {
 
     @GetMapping("/notice/download")
     public ResponseEntity<?> downloadNotice(NoticeSearchDTO noticeSearchDTO,
-                                            @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                            Model model,
-                                            HttpServletRequest request) throws IOException {
+                                            Pageable pageable) throws IOException {
 
         byte[] excelBytes = noticeService.downloadExcel(noticeSearchDTO, pageable);
 
