@@ -20,7 +20,7 @@
 <div>첨부파일목록 : </div>
 <table>
     <tr th:each="attachment : ${attachments}">
-        <td><a th:href="${attachment.url}" target="_blank"><span th:text="${attachment.url}">첨부파일</span></a></td>
+        <td><a th:href="${attachment.url}" target="_blank"><span th:text="${attachment.originalFilename}">첨부파일</span></a></td>
         <td><button type="button" th:onclick="deleteAttachment([[${attachment.id}]])">삭제</button></td>
     </tr>
 </table>

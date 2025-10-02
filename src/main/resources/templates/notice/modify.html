@@ -23,7 +23,7 @@
     <input type="hidden" name="id" id="id" th:value="${notice.id}">
     <table>
         <tr>
-            <td>카테고리</td>
+            <td style="width:100px;">카테고리</td>
             <td>
                 <select name="noticeCategory" id="noticeCategory">
                     <option>선택</option>
@@ -53,7 +53,7 @@
         <tr>
             <td>노출여부</td>
             <td>
-                <input type="checkbox" name="isShow" id="isShow" value="1"/>
+                <input type="checkbox" name="isShow" id="isShow" value="1" th:checked="${notice.isShow}"/>
                 <p id="isShowError" style="color:red"></p>
             </td>
         </tr>

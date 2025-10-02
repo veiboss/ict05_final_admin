@@ -65,6 +65,7 @@ public class NoticeService {
                     NoticeAttachment attachment = new NoticeAttachment();
                     attachment.setNoticeId(saved.getId());
                     attachment.setUrl(fileUrl);
+                    attachment.setOriginalFilename(file.getOriginalFilename());
                     noticeAttachmentRepository.save(attachment);
                 }
             }
@@ -116,6 +117,7 @@ public class NoticeService {
                     NoticeAttachment attachment = new NoticeAttachment();
                     attachment.setNoticeId(notice.getId());
                     attachment.setUrl(fileUrl);
+                    attachment.setOriginalFilename(file.getOriginalFilename());
                     noticeAttachmentRepository.save(attachment);
                 }
             }
