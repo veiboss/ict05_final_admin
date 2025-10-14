@@ -34,7 +34,7 @@ public class StaffController {
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
                             Model model,
                             HttpServletRequest request) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
         Page<StaffListDTO> staffs = staffService.selectAllStaff(staffSearchDTO, pageable);
 
         model.addAttribute("staffs", staffs);
