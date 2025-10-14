@@ -1,18 +1,276 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <title>토스트랩 관리자</title>
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
 </head>
 <body>
+<div id="wrap" class="frame">
 <div th:replace="~{fragments/header :: header}"></div>
-<ul>
-    <li><a href="/admin/notice/list">Notice</a></li>
-    <li><a href="/login">Login</a></li>
-</ul>
-<div th:replace="~{fragments/footer :: footer}"></div>
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목</h2>
+        </div>
+
+        <main id="content">
+
+            <div id="search" class="search box-wrap">
+                <form>
+                    <fieldset>
+                        <legend class="blind">검색</legend>
+                        <div class="field insert">
+                            <select class="select medium" title="검색조건" id="searchSel">
+                                <option>작성자</option>
+                                <option>한줄후기</option>
+                            </select>
+                        </div>
+                        <div class="field insert">
+                            <input type="text" id="searchTxt" class="input-text medium" title="검색어" placeholder="검색어를 입력해 주세요" />
+                        </div>
+
+                        <div class="button-area pack-left">
+                            <button type="button" class="btn medium color1">검색</button>
+                            <button type="reset" class="btn medium bdr-color1">초기화</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <section class="box-wrap">
+                <div class="list-header pack-both">
+                    <div></div>
+                    <div>
+                        <select class="select medium" title="*개씩 보기">
+                            <option>20개씩 보기</option>
+                            <option>50개씩 보기</option>
+                            <option>100개씩 보기</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>성명</th>
+                        <th>프로필</th>
+                        <th>유형</th>
+                        <th>이메일</th>
+                        <th>전화번호</th>
+                        <th>등록일</th>
+                        <th>공개여부</th>
+                        <th>버튼</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td data-th="번호">261</td>
+                        <td data-th="성명">김신운</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgxh2HVUAAq_V7?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">gwkang@partner.com</td>
+                        <td data-th="전화번호">061-724-0701</td>
+                        <td data-th="등록일">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">260</td>
+                        <td data-th="성명">김명지</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/CpgxhjVUkAA-Amu?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">kasdngmj@partner.com</td>
+                        <td data-th="전화번호">02-6207-1654</td>
+                        <td data-th="번호">2017-05-07 00:00</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1">공개</option>
+                                <option value="0" selected>비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">259</td>
+                        <td data-th="성명">김민제</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgy6fTVYAERQbn?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">mjasdfkang@partner.com</td>
+                        <td data-th="전화번호">02-6207-1778</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">258</td>
+                        <td data-th="성명">김상원</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgy7lhVUAAabOc?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">sasdfwkang@partner.com</td>
+                        <td data-th="전화번호">02-6932-5418</td>
+                        <td data-th="번호">2017-04-28 00:00</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">256</td>
+                        <td data-th="성명">김원일</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgy77mVUAAVrBY?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">wiksdfang@partner.com</td>
+                        <td data-th="전화번호">02-6207-1951</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">254</td>
+                        <td data-th="성명">김재우</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/CpgyQWXVMAAuaqy?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">jyka12ng2@partner.com</td>
+                        <td data-th="전화번호">02-6207-1816</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">253</td>
+                        <td data-th="성명">김호정</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/CpgyQuLUIAANQkY?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">khjsdfyer2003@partner.com</td>
+                        <td data-th="전화번호">051-072-0708</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">252</td>
+                        <td data-th="성명">신지동</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/EgZypfMUMAIIK8O?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">외국	</td>
+                        <td data-th="이메일">ydjdfing@partner.com</td>
+                        <td data-th="전화번호">+86-21-5408-2818</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">257</td>
+                        <td data-th="성명">김우주</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/EghgJxDUMAEUTsS?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">고문</td>
+                        <td data-th="이메일">casa3@hanmail.net</td>
+                        <td data-th="전화번호">02-6207-1600</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-th="번호">255</td>
+                        <td data-th="성명">김율리</td>
+                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/EgArCSvUwAAJing?format=jpg&name=large" class="profile"></td>
+                        <td data-th="유형">한국</td>
+                        <td data-th="이메일">ylkadfng@partner.com</td>
+                        <td data-th="전화번호">02-6207-1711</td>
+                        <td data-th="번호">2017-04-26 16:50</td>
+                        <td data-th="공개여부">
+                            <select class="select small">
+                                <option value="1" selected>공개</option>
+                                <option value="0">비공개</option>
+                            </select>
+                        </td>
+                        <td data-th="버튼">
+                            <button class="btn small normal">수정</button>
+                            <button class="btn small accent">삭제</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
 </body>
 </html>

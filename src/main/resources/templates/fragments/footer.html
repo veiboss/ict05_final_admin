@@ -6,14 +6,17 @@
 </head>
 <body>
 <th:block th:fragment="footer">
-    <footer style="background-color:#f8f9fa; padding:20px; text-align:center; border-top:1px solid #e5e5e5;">
-        <p>&copy; 2025 MyCompany. All Rights Reserved.</p>
-        <nav>
-            <a href="/" style="margin:0 10px;">Home</a> |
-            <a href="/admin/notice/list" style="margin:0 10px;">공지사항</a> |
-            <a href="/admin/swagger-ui/index.html" style="margin:0 10px;">Swagger</a>
-            <a href="/admin/javadoc/index.html" style="margin:0 10px;">Javadoc</a>
-        </nav>
+    <footer id="footer">
+        <div class="pack-down-center fs-s ta-c" style="gap:4px">
+            <p class="copyright">&copy; 2025 ToastLab. 모든 권리 보유.</p>
+            <p>토스트 전문점을 위한 통합 관리 솔루션</p>
+            <nav>
+                <a href="/" style="margin:0 10px;">Home</a> |
+                <a href="/admin/notice/list" style="margin:0 10px;">공지사항</a> |
+                <a href="/admin/swagger-ui/index.html" style="margin:0 10px;">Swagger</a> |
+                <a href="/admin/javadoc/index.html" style="margin:0 10px;">Javadoc</a>
+            </nav>
+        </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </th:block>

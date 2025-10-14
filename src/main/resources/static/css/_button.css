@@ -1,0 +1,52 @@
+@charset "UTF-8";
+/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20250818 */
+a,
+a:link,
+a:visited,
+a:active,
+a:hover						{text-decoration: none; color: inherit;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+button 						{border: 0 none; font: inherit; color: inherit;
+	-webkit-appearance:none; -moz-appearance: none; appearance: none;
+}
+button:focus,
+a:focus						{outline-color: transparent; outline-style: none;}
+.btn 						{width: fit-content; font-size: inherit; text-align: center; vertical-align: middle; border: 0 none; outline: none; cursor: pointer; background-color: transparent; box-sizing: border-box; border-radius: 0; gap: 8px;
+	display: inline-flex; justify-content: center; align-items: center;
+	word-break: keep-all; white-space: normal;
+}
+
+a.btn						{text-decoration: none;}
+input.btn,
+button.btn					{overflow: visible; margin: 0;}
+
+/* button size */
+.btn.xsmall					{height: var(--xsmall); padding: 0 4px; font-size: .75rem; line-height: var(--xsmall); border-radius: 2px;}
+.btn.small:not(.transparent)		{height: var(--small); padding: 0 8px; font-size: .875rem; line-height: var(--small); border-radius: 2px;}
+.btn.medium					{height: var(--medium); padding: 0 16px; font-size: 1rem; line-height: var(--medium); border-radius: 4px;}
+.btn.large					{height: var(--large); padding: 0 20px; font-size: 1.125rem; line-height: var(--large); border-radius: 8px;}
+
+
+/* button color */
+.btn.color1					{background: var(--color1); color: #fff;}
+.btn.color1:hover			{}
+.btn.color2					{background: var(--color2-dark); color: #fff;}
+.btn.color2:hover			{}
+.btn.bdr-color1,
+.btn.bdr-color2				{border-style: inset;}
+.btn.bdr-color1				{border: 1px solid var(--color1);}
+.btn.bdr-color1:hover		{}
+.btn.bdr-color2				{border: 1px solid var(--color2);}
+.btn.bdr-color2:hover		{}
+
+/* button etc */
+
+/* btn disabled */
+.btn[disabled]				{filter: grayscale(100%); opacity: .85;}
+
+/* btn inner */
+
+/* button-area */
+.button-area				{}
