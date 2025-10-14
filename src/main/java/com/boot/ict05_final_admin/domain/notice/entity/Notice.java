@@ -32,30 +32,38 @@ public class Notice {
     /** 공지사항 고유 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private Long id;
 
     /** 공지사항 카테고리 */
     @Enumerated(EnumType.STRING)
+    @Column(name = "notice_category")
     private NoticeCategory noticeCategory;
 
     /** 공지사항 우선순위 */
     @Enumerated(EnumType.STRING)
+    @Column(name = "notice_priority")
     private NoticePriority noticePriority;
 
     /** 공지사항 노출 여부 */
+    @Column(name = "is_show")
     private Boolean isShow;
 
     /** 작성자 이름 */
+    @Column(name = "writer")
     private String writer;
 
     /** 공지사항 제목 */
+    @Column(name = "notice_title")
     private String title;
 
     /** 공지사항 본문 내용 */
+    @Column(name = "notice_content")
     private String body;
 
     /** 작성일자 */
     @Schema(type="string", format="date-time")
+    @Column(name = "notice_reg_date")
     private LocalDateTime writerdate;
 
     /**
