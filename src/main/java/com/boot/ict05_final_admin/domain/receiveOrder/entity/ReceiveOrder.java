@@ -40,17 +40,9 @@ public class ReceiveOrder {
     @Column(name = "purchase_order_date", nullable = false)
     private LocalDate orderDate;
 
-    /** 수주 상태 */
-    @Enumerated(EnumType.STRING)
-    private ReceiveOrderStatus status;
-
     /** 수주 총액 */
     @Column(name = "purchase_order_total_price", precision = 12, scale = 2)
     private BigDecimal totalPrice = BigDecimal.ZERO;
-
-    /** 수주 우선순위 */
-    @Enumerated(EnumType.STRING)
-    private ReceiveOrderPriority priority;
 
     /** 수주 비고 */
     @Column(name = "purchase_order_remark", columnDefinition = "TEXT")
@@ -60,10 +52,22 @@ public class ReceiveOrder {
     @Column(name = "purchase_order_supplier", length = 100, nullable = false)
     private String supplier;
 
+    /** 수주 상태 */
+    @Column(name = "purchase_order_status")
+    @Enumerated(EnumType.STRING)
+    private ReceiveOrderStatus status;
+
+    /** 수주 우선순위 */
+    @Column(name = "purchase_order_priority")
+    @Enumerated(EnumType.STRING)
+    private ReceiveOrderPriority priority;
+
     /** 수주 배송 예정일 */
+    @Column(name = "purchase_order_delivery_date")
     private LocalDate deliveryDate;
 
     /** 수주 실제 납기일 */
+    @Column(name = "purchase_order_actual_delivery_date")
     private LocalDate actualDeliveryDate;
 
 }

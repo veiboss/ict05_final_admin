@@ -76,51 +76,51 @@
                             <th scope="col">상태</th>
                             <th scope="col">우선순위</th>
                             <th scope="col">주문액</th>
-                            <th scope="col">품목수</th>
+<!--                            <th scope="col">품목수</th>-->
                             <th scope="col">배송예정일</th>
                             <th scope="col">관리</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="receiveOrder, stat : ${receiveOrder.content}">
-                            <td><input type="checkbox" class="row-checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
-                                       th:value="${receiveOrder.id}"/></td>
+<!--                            <td><input type="checkbox" class="row-checkbox" th:id="'chk-'+${stat.index}" th:value="${receiveOrder.id}" /></td>&ndash;&gt;-->
                             <td th:text="${receiveOrder.storeName}">가맹점명</td>
                             <td th:text="${receiveOrder.orderCode}">주문번호</td>
                             <td th:text="${receiveOrder.storeLocation}">지역</td>
                             <td th:text="${receiveOrder.status}">상태</td>
                             <td th:text="${receiveOrder.priority}">우선순위</td>
-                            <td th:text="${receiveOrder.totalPrice}">주문액</td>
-<!--                            <td th:text="${receiveOrder.}">품목수</td>-->
-                            <td th:text="${receiveOrder.deliveryDate}">배송예정일</td>
+                            <td th:text="${#numbers.formatInteger(receiveOrder.totalPrice, 0, 'COMMA')} + '원'">주문액</td>
+<!--                            <td th:text="${receiveOrder.itemCount}">품목수</td> &lt;!&ndash; 필요 시 DTO에 itemCount 추가 &ndash;&gt;-->
+                            <td th:text="${#temporals.format(receiveOrder.deliveryDate, 'yyyy-MM-dd')}">배송예정일</td>
+                            <td><a th:href="@{'/admin/receive/detail/' + ${receiveOrder.id}}" class="btn small normal">상세</a></td>
                         </tr>
 
-                        <tr>
-                            <td data-th="가맹점명">이삭토스트 강남점</td>
-                            <td data-th="주문번호">ORD-20240120-001</td>
-                            <td data-th="지역">서울 강남구</td>
-                            <td data-th="상태">접수</td>
-                            <td data-th="우선순위">일반</td>
-                            <td data-th="주문액">450,000원</td>
-                            <td data-th="품목수">15개</td>
-                            <td data-th="배송예정일">2024년 1월 22일</td>
-                            <td data-th="관리">
-                                <button class="btn small normal">상세</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-th="가맹점명">이삭토스트 홍대점</td>
-                            <td data-th="주문번호">ORD-20240119-002</td>
-                            <td data-th="지역">서울 마포구	</td>
-                            <td data-th="상태">배송중</td>
-                            <td data-th="우선순위">우선</td>
-                            <td data-th="주문액">320,000원</td>
-                            <td data-th="품목수">12개</td>
-                            <td data-th="배송예정일">2024년 1월 21일</td>
-                            <td data-th="관리">
-                                <button class="btn small normal">상세</button>
-                            </td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td data-th="가맹점명">이삭토스트 강남점</td>-->
+<!--                            <td data-th="주문번호">ORD-20240120-001</td>-->
+<!--                            <td data-th="지역">서울 강남구</td>-->
+<!--                            <td data-th="상태">접수</td>-->
+<!--                            <td data-th="우선순위">일반</td>-->
+<!--                            <td data-th="주문액">450,000원</td>-->
+<!--                            <td data-th="품목수">15개</td>-->
+<!--                            <td data-th="배송예정일">2024년 1월 22일</td>-->
+<!--                            <td data-th="관리">-->
+<!--                                <button class="btn small normal">상세</button>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td data-th="가맹점명">이삭토스트 홍대점</td>-->
+<!--                            <td data-th="주문번호">ORD-20240119-002</td>-->
+<!--                            <td data-th="지역">서울 마포구	</td>-->
+<!--                            <td data-th="상태">배송중</td>-->
+<!--                            <td data-th="우선순위">우선</td>-->
+<!--                            <td data-th="주문액">320,000원</td>-->
+<!--                            <td data-th="품목수">12개</td>-->
+<!--                            <td data-th="배송예정일">2024년 1월 21일</td>-->
+<!--                            <td data-th="관리">-->
+<!--                                <button class="btn small normal">상세</button>-->
+<!--                            </td>-->
+<!--                        </tr>-->
                         </tbody>
                     </table>
                     <div style="text-align: center;">
