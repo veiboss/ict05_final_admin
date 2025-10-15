@@ -12,11 +12,11 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
  * </ul>
  */
 public enum MaterialStatus {
-    /** 상온 */
-    USE("상온"),
+    /** 사용중 */
+    USE("사용중"),
 
-    /** 냉동 */
-    STOP("냉동");
+    /** 사용중단 */
+    STOP("사용중단");
 
     /** 한글 설명 */
     private final String description;
