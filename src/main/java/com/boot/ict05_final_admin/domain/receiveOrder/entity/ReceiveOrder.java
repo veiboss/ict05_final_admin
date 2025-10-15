@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 
+import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

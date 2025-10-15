@@ -1,5 +1,7 @@
-package com.boot.ict05_final_admin.domain.receiveOrder.entity;
+package com.boot.ict05_final_admin.domain.store.entity;
 
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.StoreStatus;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.StoreType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,19 +11,26 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * 가맹점(Store) 엔티티 클래스
+ *
+ * <p>본 클래스는 공지사항 테이블과 매핑되며,
+ * 가맹점의 매장명,</p>
+ * */
+
 @Entity
-@Table(name = "store")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "store")
 public class Store {
 
-    /** 가맹점 시퀀스 */
+    /** 매장 고유 Id */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_id", columnDefinition = "BIGINT UNSIGNED")
-    private Long id;
+    @Column(name = "store_id ")
+    private Long storeId;
 
     /** 매장 점주 시퀀스 */
     @Column(name = "staff_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
@@ -31,9 +40,9 @@ public class Store {
     @Column(name = "member_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long memberId;  // FK 후보 - 본사 담당자
 
-    /** 가맹점명 */
-    @Column(name = "store_name", length = 150, nullable = false)
-    private String name;
+    /** 매장명 */
+    @Column(name = "store_name")
+    private String storeName;
 
     /** 가맹점 주소 */
     @Column(name = "store_location", length = 255)
@@ -85,4 +94,6 @@ public class Store {
     @Column(name = "store_royalty", precision = 8, scale = 4)
     private BigDecimal royalty;
 
+
+    private int storeTotalEmployees;
 }

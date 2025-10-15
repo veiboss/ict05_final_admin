@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.QStore;
+import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -30,7 +30,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
         List<ReceiveOrderListDTO> content = queryFactory
                 .select(Projections.fields(ReceiveOrderListDTO.class,
                         receiveOrder.id,
-                        receiveOrder.store.name.as("storeName"),
+                        receiveOrder.store.storeName.as("storeName"),
                         receiveOrder.store.location.as("storeLocation"),
                         receiveOrder.orderCode,
                         receiveOrder.orderDate,
@@ -76,7 +76,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
             case "orderCode":
                 return receiveOrder.orderCode.containsIgnoreCase(keyword);
             case "storeName":
-                return receiveOrder.store.name.containsIgnoreCase(keyword);
+                return receiveOrder.store.storeName.containsIgnoreCase(keyword);
             case "storeLocation":
                 return receiveOrder.store.location.containsIgnoreCase(keyword);
             default:

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <title>가맹점 목록</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+</head>
+<body class="scroll-up">
+<div id="wrap" class="frame">
+<div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">가맹점 목록</h2>
+        </div>
+
+        <main id="content">
+            <div id="search" class="search box-wrap">
+                <form>
+                    <fieldset>
+                        <legend class="blind">검색</legend>
+                        <div class="field insert">
+                            <input type="text" id="searchTxt" class="input-text medium" title="검색어" placeholder="검색어를 입력해 주세요">
+                        </div>
+
+                        <div class="button-area pack-left">
+                            <button type="button" class="btn medium color1">검색</button>
+                            <button type="reset" class="btn medium bdr-color1">초기화</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <section class="box-wrap">
+                <div class="list-header pack-both">
+                    <div></div>
+                    <div>
+                        <select class="select medium" title="*개씩 보기">
+                            <option>20개씩 보기</option>
+                            <option>50개씩 보기</option>
+                            <option>100개씩 보기</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>매장번호</th>
+                        <th>매장명</th>
+                        <th>운영상태</th>
+                        <th>점주명</th>
+                        <th>연락처</th>
+                        <th>월매출</th>
+                        <th>직원수</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="store, idx : ${store.content}">
+                        <td th:text="${store.storeId}">매장번호</td>
+                        <td th:text="${store.storeName}">매장명</td>
+                        <td th:text="${store.staffDepartment}">점주명</td>
+                        <td th:text="${store.storePhone}">연락처</td>
+                        <td th:text="${store.storeMonthlySales}">월매출</td>
+                        <td th:text="${store.storeTotalEmployees}">직원수</td>
+                        <td th:text="${store.storeStatus != null} ? '운영중' : '개점준비' : '폐점'">운영상태</td>
+                        <td>
+                            <button class="btn small normal">상세</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer id="footer">
+            <address class="copyright">©TeamOne</address>
+            <p>허가없는 해당 사이트의 접근은 민.형사상 처벌을 받을 수 있습니다.</p>
+        </footer>
+    </div><!-- // #container  -->
+    </div><!-- // #wrap  -->
+</body>
+</html>
