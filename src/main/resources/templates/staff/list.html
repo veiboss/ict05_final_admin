@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<html lang="ko" style="--vh: 9.540000000000001px;"><head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <title>토스트랩 관리자</title>
+
+    <!-- favicon -->
+    <link rel="icon" th:href="@{/images/logo/favi_ad.png}" type="image/x-icon"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/toast.css}" />
+
+    <!-- JS -->
+    <script th:src="@{/js/lib/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/toast.js}"></script>
+</head>
+<body class="scroll-up">
+<div class="skip-nav"><a href="#content">본문 바로가기</a></div>
+
+<div id="wrap" class="frame">
+    <aside id="aside" class="aside">
+        <h1><img class="logo" th:src="@{/images/logo/toastlab.png}" alt="토스트랩"/></h1>
+        <nav id="nav" class="aside-nav">
+            <ul>
+                <!-- 단일 메뉴  -->
+                <li>
+                    <a href="javascript:void(0);">
+                        <span class="material-symbols-outlined">pill</span>
+                        <span>영양제</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);">
+                        <span class="material-symbols-outlined">user_attributes</span>
+                        <span>회원</span>
+                    </a>
+                </li>
+                <!-- 서브 메뉴가 있을 경우  -->
+                <li>
+                    <a href="javascript:void(0);" class="toggle-sub">
+                        <span class="material-symbols-outlined">view_list</span>
+                        <span>게시판</span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="javascript:void(0);"><span>QnA</span></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);"><span>FAQ</span></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);"><span>후기</span></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <header id="header" class="header">
+        <div>
+            <button type="button" class="btn toggle-nav">
+					<span class="material-symbols-outlined">
+						arrow_circle_left
+					</span>
+            </button>
+        </div><!-- #header > div : left-->
+
+        <div>
+            <div class="user">
+                <ul>
+
+                    <li>
+                        <button type="button" class="btn btn-toggle">
+                            <img src="https://img.imbc.com/adams/Program/20237/133342330004430266.jpg" alt="{user name}" class="img profile">
+                        </button>
+                        <div class="toggle-cont">
+                            <ul>
+                                <li>
+                                    <div class="item pack-left">
+                                        <img src="https://img.imbc.com/adams/Program/20237/133342330004430266.jpg" alt="{user name}" class="img profile">
+                                        <div>
+                                            <p>Hong Gil Dong</p>
+                                            <p class="fs-s">admin</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="btn">
+											<span class="material-symbols-outlined">
+												account_circle
+											</span>
+                                        <span>계정 관리</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="btn">
+											<span class="material-symbols-outlined">
+											logout
+											</span>
+                                        <span>로그아웃</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- #header > div : right-->
+    </header>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">사원 목록</h2>
+        </div>
+
+        <main id="content">
+            <div id="search" class="search box-wrap">
+                <form>
+                    <fieldset>
+                        <legend class="blind">검색</legend>
+                        <div class="field insert">
+                            <input type="text" id="searchTxt" class="input-text medium" title="검색어" placeholder="검색어를 입력해 주세요">
+                        </div>
+
+                        <div class="button-area pack-left">
+                            <button type="button" class="btn medium color1">검색</button>
+                            <button type="reset" class="btn medium bdr-color1">초기화</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <section class="box-wrap">
+                <div class="list-header pack-both">
+                    <div></div>
+                    <div>
+                        <select class="select medium" title="*개씩 보기">
+                            <option>20개씩 보기</option>
+                            <option>50개씩 보기</option>
+                            <option>100개씩 보기</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>사번</th>
+                            <th>성명</th>
+                            <th>생년월일</th>
+                            <th>부서</th>
+                            <th>직책</th>
+                            <th>입사일</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="staff, idx : ${staffs.content}">
+                            <td th:text="${staff.id}">사번</td>
+                            <td th:text="${staff.staffName}">성명</td>
+                            <td th:text="${staff.getStaffBirth}">생년월일</td>
+                            <td th:text="${staff.staffDepartment}">부서</td>
+                            <td th:text="${staff.staffEmploymentType}">직책</td>
+                            <td th:text="${staff.getStaffStartDate}">입사일</td>
+                            <td th:text="${staff.getStaffEndDate != null} ? '재직' : '퇴사'">상태</td>
+                            <td>
+                                <button class="btn small normal">상세</button>
+                                <button class="btn small accent">수정</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer id="footer">
+            <address class="copyright">©TeamOne</address>
+            <p>허가없는 해당 사이트의 접근은 민.형사상 처벌을 받을 수 있습니다.</p>
+        </footer>
+    </div><!-- // #container  -->
+</div><!-- // #wrap  -->
+
+
+</body></html>
