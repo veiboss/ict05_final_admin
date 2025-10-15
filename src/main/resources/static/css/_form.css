@@ -1,5 +1,5 @@
 @charset "utf-8";
-/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20250818 */
+/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20251014 */
 
 /* common form reset */
 label,
@@ -45,7 +45,7 @@ textarea								{}
 /* input-text & select & textarea */
 .input-text,
 .select,
-.textarea								{width: 100%; border: 1px solid var(--bdr-color); border-radius: 2px;}
+.textarea								{width: 100%; border: 1px solid var(--bdr-color); border-radius: 4px;}
 .input-text.small,
 .select.small							{height: var(--small); padding: 0 .25rem; font-size: .875rem;}
 .input-text.medium,

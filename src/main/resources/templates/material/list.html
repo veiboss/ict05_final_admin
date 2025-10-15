@@ -1,0 +1,156 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+<div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">재료 목록</h2>
+        </div>
+
+        <main id="content">
+            <div class="box-wrap">
+                <div id="search" class="search">
+                    <form name="frm" id="frm" method="get">
+                        <fieldset>
+                            <legend class="blind">검색</legend>
+                            <div class="pack-both">
+                                <div class="pack-left">
+                                    <select title="검색옵션" name="type" class="select medium">
+                                        <option value="" th:selected="${materialSearchDTO.type == null or materialSearchDTO.type == ''}">선택</option>
+                                        <option value="title" th:selected="${materialSearchDTO.type == 'title'}">재료명</option>
+                                        <option value="content" th:selected="${materialSearchDTO.type == 'content'}">공급업체</option>
+                                        <option value="all" th:selected="${materialSearchDTO.type == 'all'}">재료명 + 공급업체</option>
+                                    </select>
+                                    <input title="검색어" type="text" name="s" th:value="${materialSearchDTO.s}" class="form-control" placeholder="검색어를 입력해 주세요" />
+                                    <input type="submit" value="검색" class="btn medium color1"/>
+                                </div>
+
+                                <div class="pack-left">
+                                    <select title="뷰사이즈" th:field="${materialSearchDTO.size}" class="select medium">
+                                        <option value="10">10</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <section class="pack-down">
+                    <div class="list-header pack-both">
+                        <div class="pack-left">
+                            <a href="/admin/material/write" class="btn small color1">글쓰기</a>
+                        </div>
+                        <div class="pack-left">
+                            <button type="button" class="btn small bdr-color1" onclick="excelDownload()">액셀다운로드</button>
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th scope="col"><input type="checkbox" name="" id="selectAll"/></th>
+                            <th scope="col">ID</th>
+                            <th scope="col">카테고리</th>
+                            <th scope="col">재료명</th>
+                            <th scope="col">공급업체</th>
+                            <th scope="col">상태</th>
+                            <th scope="col">관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="material, stat : ${materials.content}">
+                            <td>
+                                <input type="checkbox" class="checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
+                                       th:value="${material.id}"/>
+                            </td>
+                            <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>
+                            <td th:text="${material.category}">카테고리</td>
+                            <td>
+                                <a th:href="@{/material/detail/{id}(id=${material.id})}" th:text="${material.title}">재료명</a>
+                            </td>
+                            <td th:text="${material.supplier}">공급업체</td>
+                            <td th:text="${material.getWriteDate}">상태</td>
+                            <td>
+                                <a th:href="@{/material/detail/{id}(id=${material.id})}" th:text="${material.title}" class="btn small bdr-color1">상세</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div style="text-align: center;">
+                        <div th:replace="~{fragments/pagination :: pagination (${materials})}"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</div><!-- // #container  -->
+</div><!--#wrap.frame-->
+<script>
+    const selectAll = document.getElementById('selectAll');
+
+    const getRowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
+
+    selectAll.addEventListener('change', () => {
+        const all = getRowCheckboxes();
+        all.forEach(cb => cb.checked = selectAll.checked);
+        selectAll.indeterminate = false;
+    });
+
+    document.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('row-checkbox')) return;
+        updateSelectAllState();
+    });
+
+    function updateSelectAllState() {
+        const all = getRowCheckboxes();
+        if (all.length === 0) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+            return;
+        }
+        const checkedCount = all.filter(cb => cb.checked).length;
+        if (checkedCount === 0) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+        } else if (checkedCount === all.length) {
+            selectAll.checked = true;
+            selectAll.indeterminate = false;
+        } else {
+            selectAll.checked = false;
+            selectAll.indeterminate = true;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateSelectAllState);
+</script>
+<script>
+    function excelDownload() {
+        const formData = new FormData(document.getElementById('frm'));
+        const type = formData.get("type");
+        const s = formData.get("s");
+        window.location = `/admin/API/material/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}`;
+    }
+</script>
+</body>
+</html>

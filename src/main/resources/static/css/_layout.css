@@ -1,7 +1,7 @@
 @charset "UTF-8";
-/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20250818 */
+/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20251014 */
 
-html	{font-size: 16px; min-width: 360px;}
+html	{font-size: clamp(14px, 2vw, 16px); min-width: 360px;}
 body	{width: 100%; line-height: 1.5; word-break: break-word;}
 body,
 input,

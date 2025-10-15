@@ -1,5 +1,5 @@
 @charset "utf-8";
-/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20250818 */
+/* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20251014 */
 
 /* border-box */
 div, article, aside, footer, header, hgroup, main, menu, nav, section,
@@ -64,7 +64,7 @@ strong,
 .article-title,
 .section-title,
 .popup-title		{font-weight: 600; color: var(--title-color);}
-.page-title			{font-size: var(--page-title); font-weight: bold;}
+.page-title			{font-size: var(--page-title);}
 .section-title,
 .popup-title		{font-size: calc(var(--page-title)*.75);}
 
@@ -150,6 +150,9 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 /* item */
 .item					{position: relative;}
 
+/* box-wrap > .search */
+.box-wrap > .search + section	{margin-top: 10px;}
+
 /* data-list */
 .data-list				{gap: 1rem;
 	display: flex;
@@ -196,6 +199,7 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 
 /* table common */
 table							{overflow: hidden; width: 100%; margin: 1rem 0; border-collapse: collapse; border-top: 1px solid var(--title-color);}
+.list-header + table.data-table {margin-top: 0;}
 table th,
 table td						{border-bottom: 1px solid var(--bdr-color);}
 table thead th					{padding: .75rem 1.25rem; text-align: center;}
@@ -225,7 +229,7 @@ table p + p						{margin-top: 1rem;}
 	.data-table tbody td[data-th]:before		{content: attr(data-th); display: block;}
 	.data-table tbody td[data-th="버튼"]	{justify-content: flex-end; gap: 8px; padding-top: 4px;}
 	.data-table tbody td[data-th="버튼"]:before	{content: '';}
-	
+
 }
 
 
@@ -313,7 +317,7 @@ table p + p						{margin-top: 1rem;}
 	[class*="row-"]							{
 		flex-direction: column;
 	}
-	
+
 }
 @media (min-width: 768px) {
 	.row-3 > .col						{
@@ -351,8 +355,7 @@ table p + p						{margin-top: 1rem;}
 
 #content > .box-wrap,
 [class*="row-"] > .box-wrap[class*="col"],
-#content .write-form fieldset.box-wrap			{padding: .75rem}
-#content > .box-wrap.write-form					{padding: 1.4rem}
+#content .write-form fieldset.box-wrap			{padding: clamp(16px, 4vw, 40px);}
 #content > .box-wrap.write-form fieldset.pack-down > hr.line{margin: 0 -1.4rem;}
 .box-wrap > .section-title + table	{margin-top: .5rem}
 .box-wrap > hr.line,
