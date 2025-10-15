@@ -36,9 +36,9 @@ public class StoreController {
                                    HttpServletRequest request) {
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
-        Page<StoreListDTO> stores = storeService.selectAllOfficeStore(storeSearchDTO, pageRequest);
+        Page<StoreListDTO> store = storeService.selectAllOfficeStore(storeSearchDTO, pageRequest);
 
-        model.addAttribute("stores", stores);
+        model.addAttribute("store", store);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("storeSearchDTO", storeSearchDTO);
 

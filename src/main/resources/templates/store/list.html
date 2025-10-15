@@ -61,7 +61,7 @@
                         <th>매장번호</th>
                         <th>매장명</th>
                         <th>운영상태</th>
-                        <th>점주명</th>
+                        <!--<th>점주명</th>-->
                         <th>연락처</th>
                         <th>월매출</th>
                         <th>직원수</th>
@@ -72,11 +72,11 @@
                     <tr th:each="store, idx : ${store.content}">
                         <td th:text="${store.storeId}">매장번호</td>
                         <td th:text="${store.storeName}">매장명</td>
-                        <td th:text="${store.staffDepartment}">점주명</td>
+                        <td th:text="${store.storeStatus != null ? '운영중' : '폐점'}">운영상태</td>
+                        <!--<td th:text="${store.staffDepartment}">점주명</td>-->
                         <td th:text="${store.storePhone}">연락처</td>
                         <td th:text="${store.storeMonthlySales}">월매출</td>
                         <td th:text="${store.storeTotalEmployees}">직원수</td>
-                        <td th:text="${store.storeStatus != null} ? '운영중' : '개점준비' : '폐점'">운영상태</td>
                         <td>
                             <button class="btn small normal">상세</button>
                         </td>

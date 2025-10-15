@@ -1,4 +1,4 @@
-package com.boot.ict05_final_admin.domain.receiveOrder.entity;
+package com.boot.ict05_final_admin.domain.store.entity;
 
 public enum StoreType {
 

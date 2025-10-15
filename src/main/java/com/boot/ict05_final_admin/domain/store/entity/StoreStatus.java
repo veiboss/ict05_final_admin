@@ -1,35 +1,30 @@
 package com.boot.ict05_final_admin.domain.store.entity;
 
-/** 매장 상태 ENUM
- *
- * <p>가맹점의 상태의 분류를 정의하며, </p>
- *
- * <p>주요 카테고리:</p>
- * <ul>
- *     <li>OPEN: 운영</li>
- *     <li>PREPARING: 개점준비</li>
- *     <li>CLOSED: 폐업</li>
- * </ul>
- *
- */
 public enum StoreStatus {
-    OPEN("운영"),
+
+    /** 운영 중인 가맹점 */
+    OPERATING("운영"),
+
+    /** 개점 준비 중인 가맹점 */
     PREPARING("개점준비"),
+
+    /** 폐업한 가맹점 */
     CLOSED("폐업");
 
     /** 한글 설명 */
-    private final String label;
+    private final String description;
 
     /**
-     * 생성자. 상수 선언부의 괄호 값이 여기로 들어와서 label에 저장됨.
-     *  예: OPEN("운영") → 생성자 호출 → label에 "운영" 저장.
+     * 생성자
+     *
+     * @param description 각 카테고리의 한글 설명
      */
-    StoreStatus(String label) { this.label = label; }
+    StoreStatus(String description) { this.description = description; }
 
     /**
      * 카테고리 한글 설명을 반환한다.
      *
      * @return 카테고리 설명
      */
-    public String getLabel() { return label; }
+    public String getDescription() { return description; }
 }

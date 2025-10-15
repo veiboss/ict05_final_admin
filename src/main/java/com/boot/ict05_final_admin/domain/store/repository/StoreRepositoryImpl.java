@@ -26,19 +26,19 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
         // 데이터 목록 조회
         List<StoreListDTO> content = queryFactory
                 .select(Projections.fields(StoreListDTO.class,
-                       store.storeId,
-                        store.storeName,
-                        store.status,
+                       store.id.as("storeId"),
+                        store.name.as("storeName"),
+                        store.status.as("storeStatus"),
                        // store.storeOwnerName,
-                        store.phone,
-                        store.monthlySales,
-                        store.storeTotalEmployees
+                        store.phone.as("storePhone"),
+                        store.monthlySales.as("storeMonthlySales")
+                        //store.storeTotalEmployees
                 )) // member.name 매핑
                 .from(store)
                 .where(
                         eqStoreName(storeSearchDTO, store)
                 )
-                .orderBy(store.storeId.desc())
+                .orderBy(store.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -64,7 +64,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
 
         switch (storeSearchDTO.getType()) {
             case "storeName":
-                return store.storeName.containsIgnoreCase(keyword);
+                return store.name.containsIgnoreCase(keyword);
             default:
                 return null;
         }

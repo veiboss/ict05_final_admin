@@ -30,7 +30,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
         List<ReceiveOrderListDTO> content = queryFactory
                 .select(Projections.fields(ReceiveOrderListDTO.class,
                         receiveOrder.id,
-                        receiveOrder.store.storeName.as("storeName"),
+                        receiveOrder.store.name.as("storeName"),
                         receiveOrder.store.location.as("storeLocation"),
                         receiveOrder.orderCode,
                         receiveOrder.orderDate,
@@ -76,7 +76,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
             case "orderCode":
                 return receiveOrder.orderCode.containsIgnoreCase(keyword);
             case "storeName":
-                return receiveOrder.store.storeName.containsIgnoreCase(keyword);
+                return receiveOrder.store.name.containsIgnoreCase(keyword);
             case "storeLocation":
                 return receiveOrder.store.location.containsIgnoreCase(keyword);
             default:

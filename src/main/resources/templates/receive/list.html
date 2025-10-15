@@ -85,13 +85,13 @@
                         <tr th:each="receiveOrder, stat : ${receiveOrder.content}">
                             <td><input type="checkbox" class="row-checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
                                        th:value="${receiveOrder.id}"/></td>
-                            <td scope="row" th:text="${receiveOrder.store.name}">가맹점명</td>
-                            <td th:text="${receiveOrder.orderCode}">주문번호</a></td>
-                            <td th:text="${receiveOrder.store.location}">지역</td>
+                            <td th:text="${receiveOrder.storeName}">가맹점명</td>
+                            <td th:text="${receiveOrder.orderCode}">주문번호</td>
+                            <td th:text="${receiveOrder.storeLocation}">지역</td>
                             <td th:text="${receiveOrder.status}">상태</td>
                             <td th:text="${receiveOrder.priority}">우선순위</td>
                             <td th:text="${receiveOrder.totalPrice}">주문액</td>
-                            <td th:text="${receiveOrder.}">품목수</td>
+<!--                            <td th:text="${receiveOrder.}">품목수</td>-->
                             <td th:text="${receiveOrder.deliveryDate}">배송예정일</td>
                         </tr>
 
