@@ -36,15 +36,8 @@ public class MenuListDTO {
     /** 메뉴 설명 */
     private String menuInformation;
 
-    /** 재료 시퀀스(FK) */
-    private Long materialId;
-    /** 재료명 */
-    private String materialName;
-
     /** 카테고리 시퀀스(FK) */
     private Long menuCategoryId;
-    /** 카테고리명 */
-    private String menuCategoryName;
 
 }
 

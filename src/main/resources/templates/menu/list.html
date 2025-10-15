@@ -31,8 +31,7 @@
                 <th scope="col"><input type="checkbox" name="" id="selectAll"/></th>
                 <th scope="col">판매상태</th>
                 <th scope="col">메뉴명</th>
-                <th scope="col">카테고리</th>
-                <th scope="col">주재료</th>
+<!--                <th scope="col">카테고리</th>-->
                 <th scope="col">금액</th>
                 <th scope="col">칼로리</th>
                 <th scope="col">관리</th>
@@ -55,20 +54,17 @@
                 <td th:text="${m.menuName}">메뉴명</td>
 
                 <!-- 카테고리 뱃지 (이름에 따라 색상 매핑) -->
-                <td>
-                    <span th:text="${m.menuCategoryName}"
-                        class="badge rounded-pill"
-                        th:classappend="
-                            ${m.menuCategoryName=='세트'} ? ' bg-success' :
-                            (${m.menuCategoryName=='토스트'} ? ' bg-warning' :
-                            (${m.menuCategoryName=='사이드'} ? ' bg-info' :
-                            (${m.menuCategoryName=='음료'} ? ' bg-primary' : ' bg-secondary')))">
-                        카테고리
-                    </span>
-                </td>
-
-                <!-- 주재료 -->
-                <td th:text="${m.materialName}">재료</td>
+<!--                <td>-->
+<!--                    <span th:text="${m.menuCategoryName}"-->
+<!--                        class="badge rounded-pill"-->
+<!--                        th:classappend="-->
+<!--                            ${m.menuCategoryName=='세트'} ? ' bg-success' :-->
+<!--                            (${m.menuCategoryName=='토스트'} ? ' bg-warning' :-->
+<!--                            (${m.menuCategoryName=='사이드'} ? ' bg-info' :-->
+<!--                            (${m.menuCategoryName=='음료'} ? ' bg-primary' : ' bg-secondary')))">-->
+<!--                        카테고리-->
+<!--                    </span>-->
+<!--                </td>-->
 
                 <!-- 금액 (천단위 콤마 + 원) -->
                 <td th:text="${#numbers.formatDecimal(m.menuPrice, 1, 'COMMA', 0, 'POINT')} + '원'">0원</td>

@@ -31,20 +31,15 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         List<MenuListDTO> content = queryFactory
                 .select(Projections.fields(MenuListDTO.class,
                         menu.menuId,
-                        menu.menuCategory,
                         menu.menuCode,
                         menu.menuShow,
                         menu.menuName,
                         menu.menuPrice,
                         menu.menuKcal,
-                        material.id,
-                        material.title,
-                        menuCategory.MenuCategoryId,
                         menuCategory.menuCategoryName
                         ))
                 .from(menu)
-                //.leftJoin(menu.material, material)  // fk연결
-                .leftJoin(menu.menuCategory, menuCategory)
+                .join(menu.menuCategory, menuCategory)
                 .orderBy(menu.menuId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -54,8 +49,6 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         long total = queryFactory
                 .select(menu.menuId.countDistinct())
                 .from(menu)
-               // .leftJoin(menu.material, material)
-                .leftJoin(menu.menuCategory, menuCategory)
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
