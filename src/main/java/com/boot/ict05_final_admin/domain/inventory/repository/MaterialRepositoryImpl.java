@@ -2,6 +2,8 @@ package com.boot.ict05_final_admin.domain.inventory.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -28,9 +30,12 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
         List<MaterialListDTO> content = queryFactory
                 .select(Projections.fields(MaterialListDTO.class,
                         material.id,
+                        material.code,
                         material.category,
-                        material.materialTemperature,
                         material.title,
+                        material.unit,
+                        material.supplier,
+                        material.materialTemperature,
                         material.materialStatus
                 )) // member.name 매핑
                 .from(material)
