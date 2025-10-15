@@ -1,0 +1,182 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">수주 현황</h2>
+        </div>
+
+        <main id="content">
+            <div class="box-wrap">
+                <div id="search" class="search">
+                    <form name="frm" id="frm" method="get">
+                        <fieldset>
+                            <legend class="blind">검색</legend>
+                            <div class="pack-both">
+                                <div class="pack-left">
+                                    <select title="검색옵션" name="type" class="select medium">
+                                        <option value="" th:selected="${receiveOrderSearchDTO.type == null or receiveOrderSearchDTO.type == ''}">선택</option>
+                                        <option value="title" th:selected="${receiveOrderSearchDTO.type == 'storeName'}">가맹점명</option>
+                                        <option value="content" th:selected="${receiveOrderSearchDTO.type == 'orderCode'}">주문번호</option>
+                                        <option value="all" th:selected="${receiveOrderSearchDTO.type == 'storeLocation'}">지역</option>
+                                    </select>
+                                    <input title="검색어" type="text" name="s" th:value="${receiveOrderSearchDTO.s}" class="form-control" placeholder="검색어를 입력해 주세요" />
+                                    <input type="submit" value="검색" class="btn medium color1"/>
+                                </div>
+
+                                <div class="pack-left">
+                                    <select title="뷰사이즈" th:field="${receiveOrderSearchDTO.size}" class="select medium">
+                                        <option value="10">10</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <section class="pack-down">
+                    <div class="list-header pack-both">
+                        <div class="pack-left">
+                            <a href="/admin/material/write" class="btn small color1">글쓰기</a>
+                        </div>
+                        <div class="pack-left">
+                            <button type="button" class="btn small bdr-color1" onclick="excelDownload()">액셀다운로드</button>
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <!--<th scope="col"><input type="checkbox" name="" id="selectAll"/></th>-->
+                            <th scope="col">가맹점명</th>
+                            <th scope="col">주문번호</th>
+                            <th scope="col">지역</th>
+                            <th scope="col">상태</th>
+                            <th scope="col">우선순위</th>
+                            <th scope="col">주문액</th>
+                            <th scope="col">품목수</th>
+                            <th scope="col">배송예정일</th>
+                            <th scope="col">관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="receiveOrder, stat : ${receiveOrder.content}">
+                            <td><input type="checkbox" class="row-checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
+                                       th:value="${receiveOrder.id}"/></td>
+                            <td scope="row" th:text="${receiveOrder.store.name}">가맹점명</td>
+                            <td th:text="${receiveOrder.orderCode}">주문번호</a></td>
+                            <td th:text="${receiveOrder.store.location}">지역</td>
+                            <td th:text="${receiveOrder.status}">상태</td>
+                            <td th:text="${receiveOrder.priority}">우선순위</td>
+                            <td th:text="${receiveOrder.totalPrice}">주문액</td>
+                            <td th:text="${receiveOrder.}">품목수</td>
+                            <td th:text="${receiveOrder.deliveryDate}">배송예정일</td>
+                        </tr>
+
+                        <tr>
+                            <td data-th="가맹점명">이삭토스트 강남점</td>
+                            <td data-th="주문번호">ORD-20240120-001</td>
+                            <td data-th="지역">서울 강남구</td>
+                            <td data-th="상태">접수</td>
+                            <td data-th="우선순위">일반</td>
+                            <td data-th="주문액">450,000원</td>
+                            <td data-th="품목수">15개</td>
+                            <td data-th="배송예정일">2024년 1월 22일</td>
+                            <td data-th="관리">
+                                <button class="btn small normal">상세</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-th="가맹점명">이삭토스트 홍대점</td>
+                            <td data-th="주문번호">ORD-20240119-002</td>
+                            <td data-th="지역">서울 마포구	</td>
+                            <td data-th="상태">배송중</td>
+                            <td data-th="우선순위">우선</td>
+                            <td data-th="주문액">320,000원</td>
+                            <td data-th="품목수">12개</td>
+                            <td data-th="배송예정일">2024년 1월 21일</td>
+                            <td data-th="관리">
+                                <button class="btn small normal">상세</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div style="text-align: center;">
+                        <div th:replace="~{fragments/pagination :: pagination (${receiveOrder})}"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
+<script>
+    const selectAll = document.getElementById('selectAll');
+
+    const getRowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
+
+    selectAll.addEventListener('change', () => {
+        const all = getRowCheckboxes();
+        all.forEach(cb => cb.checked = selectAll.checked);
+        selectAll.indeterminate = false;
+    });
+
+    document.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('row-checkbox')) return;
+        updateSelectAllState();
+    });
+
+    function updateSelectAllState() {
+        const all = getRowCheckboxes();
+        if (all.length === 0) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+            return;
+        }
+        const checkedCount = all.filter(cb => cb.checked).length;
+        if (checkedCount === 0) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+        } else if (checkedCount === all.length) {
+            selectAll.checked = true;
+            selectAll.indeterminate = false;
+        } else {
+            selectAll.checked = false;
+            selectAll.indeterminate = true;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateSelectAllState);
+</script>
+<script>
+    function excelDownload() {
+        const formData = new FormData(document.getElementById('frm'));
+        const type = formData.get("type");
+        const s = formData.get("s");
+        window.location = `/admin/API/material/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}`;
+    }
+</script>
+</body>
+</html>
