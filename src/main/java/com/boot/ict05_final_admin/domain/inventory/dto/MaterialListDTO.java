@@ -16,11 +16,17 @@ public class MaterialListDTO {
     /** 재료 고유 ID */
     private Long id;
 
-    /** 재료 카테고리 */
-    private String category;
+    /** 재료 CODE */
+    private String code;
 
     /** 재료명 */
     private String title;
+
+    /** 재료 카테고리 */
+    private String category;
+    
+    /** 재료 단위 */
+    private String unit;
 
     /** 공급업체명 */
     private String supplier;

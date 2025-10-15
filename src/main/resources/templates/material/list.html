@@ -59,41 +59,41 @@
                 <section class="pack-down">
                     <div class="list-header pack-both">
                         <div class="pack-left">
-                            <a href="/admin/material/write" class="btn small color1">글쓰기</a>
+                            <a href="/admin/material/write" class="btn medium color1">글쓰기</a>
                         </div>
                         <div class="pack-left">
-                            <button type="button" class="btn small bdr-color1" onclick="excelDownload()">액셀다운로드</button>
+                            <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">액셀다운로드</button>
                         </div>
                     </div>
 
                     <table class="data-table">
                         <thead>
                         <tr>
-                            <th scope="col"><input type="checkbox" name="" id="selectAll"/></th>
+                            <th scope="col">
+                                <input type="checkbox" class="checkbox" title="전체선택" name="" id="selectAll"/>
+                            </th>
                             <th scope="col">ID</th>
+                            <th scope="col">CODE</th>
                             <th scope="col">카테고리</th>
                             <th scope="col">재료명</th>
                             <th scope="col">공급업체</th>
                             <th scope="col">상태</th>
-                            <th scope="col">관리</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="material, stat : ${materials.content}">
                             <td>
-                                <input type="checkbox" class="checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
+                                <input type="checkbox" class="checkbox" title="선택" name="selectedIds" th:id="'chk-'+${stat.index}"
                                        th:value="${material.id}"/>
                             </td>
                             <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>
+                            <td th:text="${material.code}">카테고리</td>
                             <td th:text="${material.category}">카테고리</td>
                             <td>
                                 <a th:href="@{/material/detail/{id}(id=${material.id})}" th:text="${material.title}">재료명</a>
                             </td>
                             <td th:text="${material.supplier}">공급업체</td>
-                            <td th:text="${material.getWriteDate}">상태</td>
-                            <td>
-                                <a th:href="@{/material/detail/{id}(id=${material.id})}" th:text="${material.title}" class="btn small bdr-color1">상세</a>
-                            </td>
+                            <td th:text="${material.materialStatus}">상태</td>
                         </tr>
                         </tbody>
                     </table>
