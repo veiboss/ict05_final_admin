@@ -43,7 +43,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                         menuCategory.menuCategoryName
                         ))
                 .from(menu)
-                .leftJoin(menu.material, material)  // fk연결
+                //.leftJoin(menu.material, material)  // fk연결
                 .leftJoin(menu.menuCategory, menuCategory)
                 .orderBy(menu.menuId.desc())
                 .offset(pageable.getOffset())
@@ -54,7 +54,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         long total = queryFactory
                 .select(menu.menuId.countDistinct())
                 .from(menu)
-                .leftJoin(menu.material, material)
+               // .leftJoin(menu.material, material)
                 .leftJoin(menu.menuCategory, menuCategory)
                 .fetchOne();
 

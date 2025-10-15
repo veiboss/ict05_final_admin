@@ -48,10 +48,10 @@ public class Menu {
     @Column(name = "menu_price")
     private BigDecimal menuPrice;
 
-    /** Material 참조 */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "material_id_fk")
-    private Material material;
+//    /** Material 참조 */
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name= "material_id_fk")
+//    private Material material;
 
     /** menuCategory 참조 */
     @ManyToOne(fetch = FetchType.LAZY)
