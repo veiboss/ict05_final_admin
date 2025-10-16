@@ -46,7 +46,7 @@
                 <!-- 판매상태 뱃지 -->
                 <td>
                     <span th:text="${m.menuShow} ? '판매중' : '중지'"
-                          th:classappend="${m.menuShow} ? ' bg-success' : ' bg-secondary'"  <!-- 초록 / 회색 -->
+                          th:classappend="${m.menuShow} ? ' bg-success text-white' : ' bg-danger text-white'"
                           class="badge rounded-pill">판매중</span>
                 </td>
 
@@ -74,8 +74,10 @@
 
                 <!-- 관리: 보기 아이콘 -->
                 <td class="text-center">
-                    <a th:href="@{/menu/detail/{id}(id=${m.menuId})}" class="btn btn-light btn-sm">
-                        <i class="fa-regular fa-eye"></i>
+                    <a th:href="@{/menu/detail/{id}(id=${m.menuId})}"
+                       class="btn btn-primary btn-sm"
+                       th:title="'상세 보기'">
+                        <i class="fa-regular fa-eye" style="color:#cfe2ff;"></i>
                     </a>
                 </td>
             </tr>
