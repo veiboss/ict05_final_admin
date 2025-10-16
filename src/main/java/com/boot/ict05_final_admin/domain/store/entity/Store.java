@@ -42,11 +42,13 @@ public class Store {
     /** 가맹점 구분 */
     @Enumerated(EnumType.STRING)
     @Column(name = "store_type", length = 10)
+    @Builder.Default
     private StoreType type = StoreType.FRANCHISE;
 
     /** 가맹점 상태 */
     @Enumerated(EnumType.STRING)
     @Column(name = "store_status", length = 10)
+    @Builder.Default
     private StoreStatus status = StoreStatus.OPERATING;
 
     /** 가맹점 계약 시작일 */

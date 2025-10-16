@@ -42,6 +42,7 @@ public class ReceiveOrder {
 
     /** 수주 총액 */
     @Column(name = "purchase_order_total_price", precision = 12, scale = 2)
+    @Builder.Default
     private BigDecimal totalPrice = BigDecimal.ZERO;
 
     /** 수주 비고 */
