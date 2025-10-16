@@ -49,4 +49,12 @@ public class ReceiveOrderListDTO {
 
     /** 수주 실제 납기일 */
     private LocalDate actualDeliveryDate;
+
+    public String getStatusDescription() {
+        return status != null ? status.getDescription() : "";
+    }
+
+    public String getPriorityDescription() {
+        return priority != null ? priority.getDescription() : "";
+    }
 }
