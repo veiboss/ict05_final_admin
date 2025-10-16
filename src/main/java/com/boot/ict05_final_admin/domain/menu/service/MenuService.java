@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-@Slf4j
+@Transactional      // DB 작업은 하나의 트랜잭션 단위로 처리 - 중간에 에러 나면 모두 취소
+@Slf4j  // 로그를 찍을 수 있음
 public class MenuService {
 
-    private final MenuRepository menuRepository;
+    private final MenuRepository menuRepository;    // @RequiredArgsConstructor가 자동으로 주입해 줘서 @Autowired가 필요 없음
 
-    /* 메뉴 목록 */
-    public Page<MenuListDTO> selectMenu(Pageable  pageable) {
+    /** 메뉴 목록 */
+    public Page<MenuListDTO> selectMenu(Pageable pageable) {
         return menuRepository.listMenu(pageable);
     }
 

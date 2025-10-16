@@ -1,16 +1,15 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>     <!-- HTML5 문서 -->
+<html xmlns:th="http://www.thymeleaf.org"> <!-- Thymeleaf 문법(th: 접두어)을 쓸 수 있게 설정 -->
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">  <!-- 글자 인코딩 -->
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="robots" content="noindex">
-    <meta name="googlebot" content="noindex">
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"> <!-- 반응형 화면 설정 (폰/PC 화면 자동맞춤) -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">   <!-- 최신 버전의 Internet Explorer(IE) 엔진으로 렌더링(그리기) -->
+    <meta name="robots" content="noindex">  <!-- 검색 엔진이 이 페이지를 크롤링해도 검색 결과에 안 뜨게 하는 설정 -->
+    <meta name="googlebot" content="noindex">      <!-- 구글 로봇이 페이지 인덱스 금지 -->
     <!-- Bootstrap CSS CDN -->
-    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block> <!-- fragments/head.html 파일의 commonHead 부분을 가져와서 사용 -->
 
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
@@ -28,7 +27,7 @@
         <table class="data-table">
             <thead>
             <tr>
-                <th scope="col"><input type="checkbox" name="" id="selectAll"/></th>
+                <th scope="col"><input type="checkbox" id="selectAll"/></th>
                 <th scope="col">판매상태</th>
                 <th scope="col">메뉴명</th>
 <!--                <th scope="col">카테고리</th>-->
@@ -38,16 +37,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="m, stat : ${menu.content}">
+            <tr th:each="m, stat : ${menu.content}">    <!-- for문 -->
                 <td>
                     <input type="checkbox" class="checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
                            th:value="${m.menuId}"/>
                 </td>
+
                 <!-- 판매상태 뱃지 -->
                 <td>
                     <span th:text="${m.menuShow} ? '판매중' : '중지'"
-                            class="badge rounded-pill"
-                            th:classappend="${m.menuShow} ? ' bg-success' : ' bg-secondary'">판매중</span>
+                          th:classappend="${m.menuShow} ? ' bg-success' : ' bg-secondary'"  <!-- 초록 / 회색 -->
+                          class="badge rounded-pill">판매중</span>
                 </td>
 
                 <!-- 메뉴명 -->
@@ -67,16 +67,14 @@
 <!--                </td>-->
 
                 <!-- 금액 (천단위 콤마 + 원) -->
-                <td th:text="${#numbers.formatDecimal(m.menuPrice, 1, 'COMMA', 0, 'POINT')} + '원'">0원</td>
+                <td th:text="${#numbers.formatDecimal(m.menuPrice, 1, 'COMMA', 0, 'POINT')} + '원'">0원</td>  <!-- 천단위 콤마 -->
 
                 <!-- 칼로리 -->
                 <td th:text="${m.menuKcal} + 'kcal'">0kcal</td>
 
                 <!-- 관리: 보기 아이콘 -->
                 <td class="text-center">
-                    <a th:href="@{/menu/detail/{id}(id=${m.menuId})}"
-                       class="btn btn-light btn-sm"
-                       th:title="'상세 보기'">
+                    <a th:href="@{/menu/detail/{id}(id=${m.menuId})}" class="btn btn-light btn-sm">
                         <i class="fa-regular fa-eye"></i>
                     </a>
                 </td>
@@ -89,29 +87,29 @@
             </tbody>
         </table>
         <div style="text-align: center;">
-            <div th:replace="~{fragments/pagination :: pagination (${menu})}"></div>
+            <div th:replace="~{fragments/pagination :: pagination (${menu})}"></div>    <!-- ${menu} 안의 페이지 정보(totalPages, number 등)를 이용해서 1,2,3 버튼을 자동 생성 -->
         </div>
     </div>
     <div th:replace="~{fragments/footer :: footer}"></div>
 </div>
 
 <script>
-    const selectAll = document.getElementById('selectAll');
+    const selectAll = document.getElementById('selectAll');     // 전체선택 체크박스
 
     const getRowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
 
-    selectAll.addEventListener('change', () => {
+    selectAll.addEventListener('change', () => {   // 전체선택 누르면 → 모든 체크박스 ON/OFF
         const all = getRowCheckboxes();
         all.forEach(cb => cb.checked = selectAll.checked);
         selectAll.indeterminate = false;
     });
 
-    document.addEventListener('change', (e) => {
+    document.addEventListener('change', (e) => {    // 개별 체크박스 하나씩 클릭
         if (!e.target.classList.contains('row-checkbox')) return;
         updateSelectAllState();
     });
 
-    function updateSelectAllState() {
+    function updateSelectAllState() {       // 전체 체크박스 중 체크된 개수를 세어서 각각 처리
         const all = getRowCheckboxes();
         if (all.length === 0) {
             selectAll.checked = false;
@@ -131,7 +129,7 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', updateSelectAllState);
+    document.addEventListener('DOMContentLoaded', updateSelectAllState);    // 페이지가 로드될 때(처음 화면 열릴 때) 전체선택 상태 갱신
 </script>
 </body>
 </html>

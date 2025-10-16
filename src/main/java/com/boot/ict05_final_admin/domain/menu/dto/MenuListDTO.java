@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Data       // getter, setter, toString 등 기본 메서드
+@AllArgsConstructor     // 매개변수 생성자
+@NoArgsConstructor      // 디폴트 생성자
 public class MenuListDTO {
 
     /** 메뉴 시퀀스 */
@@ -38,6 +38,9 @@ public class MenuListDTO {
 
     /** 카테고리 시퀀스(FK) */
     private Long menuCategoryId;
+
+    /** 재료 시퀀스(FK) */
+    private Long materialId;
 
 }
 
