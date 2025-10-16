@@ -25,42 +25,43 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "material")
+
 public class Material {
 
     /** 재료 고유 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "material_id")
+    @Column(name = "material_id", columnDefinition = "BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '재료 시퀀스'")
     private Long id;
 
     /** 재료코드 */
-    @Column(name = "material_code")
+    @Column(name = "material_code", length = 30, nullable = false, unique = true, columnDefinition = "VARCHAR(30) COMMENT '재료 코드'")
     private String code;
 
     /** 재료명 */
-    @Column(name = "material_name")
+    @Column(name = "material_name", length = 100, nullable = false, columnDefinition = "VARCHAR(100) COMMENT '재료명'")
     private String title;
 
     /** 재료 카테고리 */
-    @Column(name = "material_category")
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "material_category", length = 50, nullable = false, columnDefinition = "ENUM('BASE','SIDE','SAUCE','TOPPING','BEVERAGE','PACKAGE','ETC') COMMENT '재료 카테고리'")
+    private MaterialCategory materialCategory;
 
     /** 재료 단위 */
-    @Column(name = "material_unit")
+    @Column(name = "material_unit", length = 20, nullable = false, columnDefinition = "VARCHAR(20) COMMENT '재료 단위'")
     private String unit;
 
     /** 공급업체명 */
-    @Column(name = "material_supplier")
+    @Column(name = "material_supplier", length = 100, columnDefinition = "VARCHAR(100) COMMENT '재료 공급업체명'")
     private String supplier;
 
     /** 재료 보관온도 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "material_temperature")
+    @Column(name = "material_temperature", columnDefinition = "ENUM('TEMPERATURE','REFRIGERATE','FREEZE') COMMENT '재료 보관온도'")
     private MaterialTemperature materialTemperature;
 
     /** 재료 상태 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "material_status")
+    @Column(name = "material_status", nullable = false, columnDefinition = "ENUM('USE', 'STOP') DEFAULT 'USE' COMMENT '재료 상태'")
     private MaterialStatus materialStatus;
-
 }

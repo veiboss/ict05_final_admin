@@ -62,7 +62,7 @@
                             <a href="/admin/material/write" class="btn medium color1">글쓰기</a>
                         </div>
                         <div class="pack-left">
-                            <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">액셀다운로드</button>
+                            <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
                         </div>
                     </div>
 
@@ -88,12 +88,14 @@
                             </td>
                             <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>
                             <td th:text="${material.code}">카테고리</td>
-                            <td th:text="${material.category}">카테고리</td>
+                            <td th:text="${material.materialCategory.description}">카테고리</td>
                             <td>
                                 <a th:href="@{/material/detail/{id}(id=${material.id})}" th:text="${material.title}">재료명</a>
                             </td>
                             <td th:text="${material.supplier}">공급업체</td>
-                            <td th:text="${material.materialStatus}">상태</td>
+                            <td>
+                                <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

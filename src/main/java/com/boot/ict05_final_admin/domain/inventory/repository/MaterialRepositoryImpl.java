@@ -31,7 +31,7 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
                 .select(Projections.fields(MaterialListDTO.class,
                         material.id,
                         material.code,
-                        material.category,
+                        material.materialCategory,
                         material.title,
                         material.unit,
                         material.supplier,
