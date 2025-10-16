@@ -64,7 +64,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
         return new PageImpl<>(content, pageable, total);
     }
 
-
+    // 검색 필터 - 가맹점명, 주문번호, 지역
     private BooleanExpression eqOrderCode(ReceiveOrderSearchDTO receiveOrderSearchDTO, QReceiveOrder receiveOrder) {
         if (receiveOrderSearchDTO.getType() == null || receiveOrderSearchDTO.getS() == null) {
             return null;
@@ -84,6 +84,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
         }
     }
 
+    // 리스트 개수 카운팅
     @Override
     public long countReceive(ReceiveOrderSearchDTO receiveOrederSearchDTO) {
         QReceiveOrder receiveOrder = QReceiveOrder.receiveOrder;
