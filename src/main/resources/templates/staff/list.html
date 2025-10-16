@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <html lang="ko" style="--vh: 9.540000000000001px;"><head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,33 +31,32 @@
 
         <main id="content">
             <div id="search" class="search box-wrap">
-                <form>
+                <form th:action="@{/staff/list}" method="get" th:object="${staffSearchDTO}">
                     <fieldset>
                         <legend class="blind">검색</legend>
                         <div class="field insert">
-                            <input type="text" id="searchTxt" class="input-text medium" title="검색어" placeholder="검색어를 입력해 주세요">
+                            <input type="text" id="searchTxt" class="input-text medium"
+                                   th:field="*{keyword}" title="검색어" placeholder="사원명, 사번, 부서로 검색...">
                         </div>
 
                         <div class="button-area pack-left">
-                            <button type="button" class="btn medium color1">검색</button>
+                            <button type="submit" class="btn medium color1">검색</button>
                             <button type="reset" class="btn medium bdr-color1">초기화</button>
                         </div>
+
                     </fieldset>
                 </form>
             </div>
 
             <section class="box-wrap">
-                <div class="list-header pack-both">
-                    <div></div>
-                    <div>
-                        <select class="select medium" title="*개씩 보기">
-                            <option>20개씩 보기</option>
-                            <option>50개씩 보기</option>
-                            <option>100개씩 보기</option>
-                        </select>
+                <div>
+                    <div class="list-header pack-both">
+                        <div></div>
+                        <div>
+                            <button type="button" class="btn medium color1" onclick="modalOpen('#popupId');">+ 사원 등록</button>
+                        </div>
                     </div>
                 </div>
-
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -97,5 +96,73 @@
     </div><!-- // #container  -->
 </div><!-- // #wrap  -->
 
+<div id="popupId" class="overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title">신규 사원 등록</h2>
+            <button type="button" class="btn transparent pop-close" onclick="modalClose('#popupId');" title="팝업 닫기">
+                <svg viewBox="0 0 32 32" class="ico svg-close">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m16 17.414 8.485 8.485 1.415-1.414L17.414 16 25.9 7.515 24.485 6.1 16 14.586 7.515 6.1 6.1 7.515 14.586 16l-8.485 8.485L7.515 25.9 16 17.413z"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="popup-body write-form">
+            <form>
+                <fieldset class="pack-down">
+                    <legend class="blind">기본 정보</legend>
+                    <div class="row">
+                        <div class="field col">
+                            <label class="label medium required" for="staffName">이름</label>
+                            <div class="insert">
+                                <input type="text" name="staffName" id="staffName" class="input-text small" title="이름" placeholder="홍길동">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="field col">
+                            <label class="label medium" for="select1">셀렉트</label>
+                            <div class="insert">
+                                <select id="select1" class="select medium">
+                                    <option>선택</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="field col">
+                            <span class="label medium">체크박스</span>
+                            <div class="insert pack-left">
+                                <label for="cb1" class="pack-left"><input type="checkbox" class="checkbox" name="cb" id="cb1">체크박스1</label>
+                                <label for="cb2" class="pack-left"><input type="checkbox" class="checkbox" name="cb" id="cb2">체크박스2</label>
+                                <label for="cb3" class="pack-left"><input type="checkbox" class="checkbox" name="cb" id="cb3">체크박스3</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="field col">
+                            <span class="label medium">라디오</span>
+                            <div class="insert pack-left">
+                                <label for="radio1" class="pack-left"><input type="radio" class="radio" name="radio" id="radio1">라디오1</label>
+                                <label for="radio2" class="pack-left"><input type="radio" class="radio" name="radio" id="radio2">라디오2</label>
+                                <label for="radio3" class="pack-left"><input type="radio" class="radio" name="radio" id="radio3">라디오3</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="field">
+                            <label class="label medium" for="inputSet02">텍스트에리어</label>
+                            <div class="insert">
+                                <textarea id="inputSet02" class="textarea medium" rows="4" cols="50" placeholder="텍스트에리어"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body></html>

@@ -24,7 +24,7 @@ public class StaffProfile {
     private Long id;
 
     /** 직원 이름 */
-    @Column(name = "staff_name")
+    @Column(name = "staff_name", length = 100)
     private String staffName;
 
     /** 직원 근무형태 (점주/직원/알바) */
@@ -42,7 +42,7 @@ public class StaffProfile {
     private String staffEmail;
 
     /** 직원 전화번호 */
-    @Column(name = "staff_phone")
+    @Column(name = "staff_phone", length = 50)
     private String staffPhone;
 
     /** 직원 주소 */

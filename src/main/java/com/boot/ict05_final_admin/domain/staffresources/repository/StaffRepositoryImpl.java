@@ -78,7 +78,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom{
         String keyword = staffSearchDTO.getKeyword();
 
         return staffProfile.id.stringValue().containsIgnoreCase(keyword)
-                .or(staffProfile.staffName.containsIgnoreCase(keyword))
+                .or(staffProfile.staffName.stringValue().containsIgnoreCase(keyword))
                 .or(staffProfile.staffDepartment.stringValue().containsIgnoreCase(keyword));
     }
 }
