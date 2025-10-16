@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 /**
- * 가맹점 목록 조회 DTO
+ * 가맹점(매장) 목록 조회용 DTO.
  *
  * <p>가맹점 목록 조회 시 사용되는 데이터 전송 객체(DTO)이다.
  * 가맹점의 기본 정보를 포함한다.</p>
@@ -16,12 +16,11 @@ import java.math.BigDecimal;
  * <p>주요 필드:</p>
  * <ul>
  *     <li>storeId : 가맹점 고유 ID</li>
- *     <li>storeName : 가맹점 매장명</li>
- *     <li>storeStatus : 가맹점 상태</li>
- *     <li>storeOwnerName : 가맹점 점주명</li>
+ *     <li>storeName : 매장명</li>
+ *     <li>storeStatus : 매장 상태</li>
  *     <li>storePhone : 가맹점 연락처</li>
- *     <li>storeMonthlySales : 가맹점 월매출</li>
- *     <li>storeTotalEmployees : 가맹점 총 직원수</li>
+ *     <li>storeMonthlySales : 월 매출</li>
+ *     <li>storeTotalEmployees : 총 직원 수</li>
  * </ul>
  */
 

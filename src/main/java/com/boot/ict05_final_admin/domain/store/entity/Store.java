@@ -23,10 +23,6 @@ public class Store {
     @Column(name = "store_id", columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
-    /** 매장 점주 시퀀스 */
-    @Column(name = "staff_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long staffId;  // FK 후보 - 점주
-
     /** 본사 담당자 시퀀스 */
     @Column(name = "member_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long memberId;  // FK 후보 - 본사 담당자
