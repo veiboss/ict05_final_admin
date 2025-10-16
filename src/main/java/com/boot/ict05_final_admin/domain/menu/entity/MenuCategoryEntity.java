@@ -3,25 +3,24 @@ package com.boot.ict05_final_admin.domain.menu.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+@Entity     // DB 테이블이랑 연결
 @Table(name = "menu_category")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder    // 객체를 만드는 방법을 제공
 public class MenuCategoryEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id     // PK
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // id 숫자를 자동 증가
     @Column(name = "menu_category_id")
     private Long MenuCategoryId;
 
     /** 상위 카테고리 (대중소 구조 지원) */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "menu_category_parent_id",           // FK 컬럼명
-            referencedColumnName = "menu_category_id",  // 참조 PK 컬럼명
+    @ManyToOne(fetch = FetchType.LAZY)      // 1개의 자식 카테고리(소)는 1개의 부모 카테고리(상위)를 참조 / LAZY(지연로딩): 진짜 필요할 때만 DB에서 부모 가져옴
+    @JoinColumn(    // 부모 카테고리의 ID를 FK로 연결
+            name = "menu_category_parent_id",           // FK 이름
             columnDefinition = "BIGINT UNSIGNED"
     )
     private MenuCategoryEntity menuCategoryParentId;
