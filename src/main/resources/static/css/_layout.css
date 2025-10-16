@@ -98,10 +98,10 @@ body:not(.opened-nav) #nav a,
 #nav a							{position: relative; text-decoration:none;}
 #nav [class^="material-"]	{vertical-align: middle; color: inherit;}
 #nav > ul > li > a				{height: 48px; padding: 12px; line-height: 24px;}
-#nav > ul > li > a > span + span	{display: none}
-#nav > ul > li ul				{padding-left: 48px;}
+#nav > ul > li > a > span + span	{display: none; font-weight: 600;}
+#nav > ul > li ul				{padding: 3px 0 3px 48px;}
 body:not(.opened-nav) #nav > ul > li ul	{display:none;}
-#nav > ul > li ul a				{padding: 6px 0; font-size: small;}
+#nav > ul > li ul a				{padding: 4px 0; font-size: .9rem;}
 #nav > ul > li.active 			{background-color: #fff;}
 #nav > ul li.active > a:before 	{content:'';display:inline-block;position:absolute;top:calc(50% - 3px);left:4px; width: 6px;height: 6px; border-radius: 4px; background-color:var(--coral);}
 #nav > ul ul li.active > a:before 	{left: -8px;width: 5px;height: 5px;}

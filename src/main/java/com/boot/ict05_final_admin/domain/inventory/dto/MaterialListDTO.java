@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.dto;
 
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
 import jakarta.persistence.EnumType;
@@ -23,7 +24,7 @@ public class MaterialListDTO {
     private String title;
 
     /** 재료 카테고리 */
-    private String category;
+    private MaterialCategory materialCategory;
     
     /** 재료 단위 */
     private String unit;

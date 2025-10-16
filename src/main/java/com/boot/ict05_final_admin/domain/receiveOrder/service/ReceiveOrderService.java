@@ -31,12 +31,5 @@ public class ReceiveOrderService {
         return receiveOrderRepository.listReceive(receiveOrderSearchDTO, pageable);
     }
 
-    /**
-     * ID를 기준으로 수주를 조회한다.
-     *
-     * @param id 수주 ID
-     * @return 수주 엔티티, 존재하지 않으면 null
-     */
-    public ReceiveOrder findById(Long id) { return receiveOrderRepository.findById(id).orElse(null); }
 
 }
