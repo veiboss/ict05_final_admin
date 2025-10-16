@@ -22,6 +22,14 @@ public class ReceiveOrderController {
 
     private final ReceiveOrderService receiveOrderService;
 
+    /**
+     * 수주현황 목록을 페이징 처리하여 조회한다.
+     *
+     * @param receiveOrderSearchDTO   (선택) 가맹점명으로 검색할 경우 전달되는 값
+     * @param pageable 페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
+     * @param model    뷰에 전달할 모델 객체
+     * @return 수주현황 목록 페이지 뷰 이름
+     */
     @GetMapping("/receive/list")
     public String listOfficeReceive(ReceiveOrderSearchDTO receiveOrderSearchDTO,
                                     @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
