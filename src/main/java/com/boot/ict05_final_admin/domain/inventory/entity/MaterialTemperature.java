@@ -5,7 +5,7 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
  *
  * <p>재료의 보관방법을 정의하며, 각 항목은 한글 설명(description)을 가진다.</p>
  *
- * <p>주요 카테고리:</p>
+ * <p>재료 보관방법:</p>
  * <ul>
  *     <li>TEMPERATURE: 상온보관</li>
  *     <li>REFRIGERATE : 냉장보관</li>
@@ -29,16 +29,16 @@ public enum MaterialTemperature {
     /**
      * 생성자
      *
-     * @param description 각 카테고리의 한글 설명
+     * @param description 각 재료 보관방법의 한글 설명
      */
     MaterialTemperature(String description) {
         this.description = description;
     }
 
     /**
-     * 카테고리 한글 설명을 반환한다.
+     * 재료 보관방법 한글 설명을 반환한다.
      *
-     * @return 카테고리 설명
+     * @return 재료 보관방법 설명
      */
     public String getDescription() {
         return description;

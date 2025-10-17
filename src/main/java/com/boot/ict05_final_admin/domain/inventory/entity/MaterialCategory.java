@@ -11,32 +11,35 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
  *     <li>SIDE: 사이드</li>
  *     <li>SAUCE: 소스</li>
  *     <li>TOPPING: 토핑</li>
- *     <li>BEVERAGE: 읍료</li>
+ *     <li>BEVERAGE: 음료</li>
  *     <li>PACKAGE: 패키지</li>
  *     <li>ETC: 기타</li>
  * </ul>
  */
 public enum MaterialCategory {
     /** 기본재료 */
-    BASE("기본재료"),
+    BASE("기본재료", "BAS"),
 
     /** 사이드 */
-    SIDE("사이드"),
+    SIDE("사이드", "SID"),
 
     /** 소스 */
-    SAUCE("소스"),
+    SAUCE("소스", "SAU"),
     
     /** 토핑 */
-    TOPPING("토핑"),
+    TOPPING("토핑", "TOP"),
     
-    /** 읍료 */
-    BEVERAGE("읍료"),
+    /** 음료 */
+    BEVERAGE("음료", "BEV"),
     
     /** 패키지 */
-    PACKAGE("패키지"),
+    PACKAGE("패키지", "PAC"),
 
     /** 기타 */
-    ETC("기타");
+    ETC("기타", "ETC");
+
+    /** 코드 접두어 (영문 3자리) */
+    private final String codePrefix;
 
     /** 한글 설명 */
     private final String description;
@@ -45,9 +48,11 @@ public enum MaterialCategory {
      * 생성자
      *
      * @param description 각 카테고리의 한글 설명
+     * @param codePrefix  각 카테고리의 코드 접두어
      */
-    MaterialCategory(String description) {
+    MaterialCategory(String description, String codePrefix) {
         this.description = description;
+        this.codePrefix = codePrefix;
     }
 
     /**
@@ -58,4 +63,11 @@ public enum MaterialCategory {
     public String getDescription() {
         return description;
     }
+
+    /**
+     * 코드의 접두어를 반환한다.
+     *
+     * @return 코드접두어
+     */
+    public String getCodePrefix() {return codePrefix;}
 }

@@ -44,12 +44,31 @@
                                 </div>
 
                                 <div class="pack-left">
-                                    <select title="뷰사이즈" th:field="${materialSearchDTO.size}" class="select medium">
-                                        <option value="10">10</option>
-                                        <option value="30">30</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                    <!-- 상태 필터 -->
+                                    <div class="pack-left status-filter">
+                                        <button type="button" class="btn small rounded-pill"
+                                                th:classappend="${materialSearchDTO.status == null} ? ' bdr-color1' : ''"
+                                                th:onclick="|location.href='?status='|">전체</button>
+
+                                        <button type="button" class="btn small rounded-pill"
+                                                th:classappend="${materialSearchDTO.status?.name() == 'USE'} ? ' bg-primary' : ''"
+                                                th:onclick="|location.href='?status=USE'|">사용중</button>
+
+                                        <button type="button" class="btn small rounded-pill"
+                                                th:classappend="${materialSearchDTO.status?.name() == 'STOP'} ? ' bg-secondary' : ''"
+                                                th:onclick="|location.href='?status=STOP'|">중단</button>
+                                    </div>
+
+                                    <!-- 페이지 사이즈 -->
+                                    <div class="pack-left page-size">
+                                        <select title="뷰사이즈" th:field="${materialSearchDTO.size}" class="select medium">
+                                            <option value="10">10</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <span class="fs-sm">개씩 보기</span>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
@@ -69,9 +88,9 @@
                     <table class="data-table">
                         <thead>
                         <tr>
-                            <th scope="col">
-                                <input type="checkbox" class="checkbox" title="전체선택" name="" id="selectAll"/>
-                            </th>
+<!--                            <th scope="col">-->
+<!--                                <input type="checkbox" class="checkbox" title="전체선택" name="" id="selectAll"/>-->
+<!--                            </th>-->
                             <th scope="col">ID</th>
                             <th scope="col">CODE</th>
                             <th scope="col">카테고리</th>
@@ -82,10 +101,10 @@
                         </thead>
                         <tbody>
                         <tr th:each="material, stat : ${materials.content}">
-                            <td>
-                                <input type="checkbox" class="checkbox" title="선택" name="selectedIds" th:id="'chk-'+${stat.index}"
-                                       th:value="${material.id}"/>
-                            </td>
+<!--                            <td>-->
+<!--                                <input type="checkbox" class="checkbox" title="선택" name="selectedIds" th:id="'chk-'+${stat.index}"-->
+<!--                                       th:value="${material.id}"/>-->
+<!--                            </td>-->
                             <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>
                             <td th:text="${material.code}">카테고리</td>
                             <td th:text="${material.materialCategory.description}">카테고리</td>

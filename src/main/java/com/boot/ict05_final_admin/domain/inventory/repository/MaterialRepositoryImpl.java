@@ -2,8 +2,6 @@ package com.boot.ict05_final_admin.domain.inventory.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
-import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -20,13 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
 
+
     private final JPAQueryFactory queryFactory;
 
     @Override
     public Page<MaterialListDTO> listMaterial(MaterialSearchDTO materialSearchDTO, Pageable pageable) {
         QMaterial material = QMaterial.material;
 
-        // 데이터 목록 조회
         List<MaterialListDTO> content = queryFactory
                 .select(Projections.fields(MaterialListDTO.class,
                         material.id,
@@ -37,61 +35,62 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
                         material.supplier,
                         material.materialTemperature,
                         material.materialStatus
-                )) // member.name 매핑
+                ))
                 .from(material)
-                .where(
-                        eqTitleOrBody(materialSearchDTO, material)
-                )
+                .where(eqMaterialFilter(materialSearchDTO, material))
                 .orderBy(material.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 전체 카운트 조회
-        long total = queryFactory
+        Long total = queryFactory
                 .select(material.count())
                 .from(material)
-                .where(
-                        eqTitleOrBody(materialSearchDTO, material)
-                )
-                .fetchOne();
+                .where(eqMaterialFilter(materialSearchDTO, material))
+                .fetchFirst();
 
-        return new PageImpl<>(content, pageable, total);
+        return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
 
+    private BooleanExpression eqMaterialFilter(MaterialSearchDTO dto, QMaterial material) {
+        BooleanExpression condition = null;
 
-    private BooleanExpression eqTitleOrBody(MaterialSearchDTO materialSearchDTO, QMaterial material) {
-        if (materialSearchDTO.getType() == null || materialSearchDTO.getS() == null) {
-            return null; // 조건 없음
+        if (dto.getType() != null && dto.getS() != null) {
+            String keyword = dto.getS();
+            switch (dto.getType()) {
+                case "title":
+                    condition = material.title.containsIgnoreCase(keyword);
+                    break;
+                case "content":
+                    condition = material.supplier.containsIgnoreCase(keyword);
+                    break;
+                case "all":
+                    condition = material.title.containsIgnoreCase(keyword)
+                            .or(material.supplier.containsIgnoreCase(keyword));
+                    break;
+            }
         }
 
-        String keyword = materialSearchDTO.getS();
-
-        switch (materialSearchDTO.getType()) {
-            case "title":
-                return material.title.containsIgnoreCase(keyword);
-            case "content":
-                return material.supplier.containsIgnoreCase(keyword);
-            case "all": // title + body 모두 검색
-                return material.title.containsIgnoreCase(keyword)
-                        .or(material.supplier.containsIgnoreCase(keyword));
-            default:
-                return null;
+        if (dto.getStatus() != null) {
+            BooleanExpression statusCondition = material.materialStatus.eq(dto.getStatus());
+            condition = (condition == null)
+                    ? statusCondition
+                    : condition.and(statusCondition);
         }
+
+        return condition;
     }
 
     @Override
     public long countMaterial(MaterialSearchDTO materialSearchDTO) {
         QMaterial material = QMaterial.material;
 
-        long total = queryFactory
+        Long total = queryFactory
                 .select(material.count())
                 .from(material)
-                .where(
-                        eqTitleOrBody(materialSearchDTO, material)
-                )
-                .fetchOne();
+                .where(eqMaterialFilter(materialSearchDTO, material))
+                .fetchFirst();
 
-        return total;
+        return total != null ? total : 0L;
     }
 }

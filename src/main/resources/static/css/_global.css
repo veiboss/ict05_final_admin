@@ -48,6 +48,9 @@ strong,
 
 /* font size */
 .fs-14 {font-size: 14px;}
+.fs-sm {font-size: small;}
+.fs-sm-x {font-size: x-small;}
+.fs-sm-xx {font-size: xx-small;}
 
 /* font-color*/
 .fc-normal						{color: var(--body-color);}
@@ -152,6 +155,8 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 
 /* box-wrap > .search */
 .box-wrap > .search + section	{margin-top: 10px;}
+.search .page-size {white-space: nowrap;}
+.search .page-size .select {width: 60px;}
 
 /* data-list */
 .data-list				{gap: 1rem;
@@ -165,37 +170,6 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 .data-list li + li		{}
 
 /* no-result */
-
-/* pagination */
-.pagination				{
-	display: flex;
-}
-.pagination ul			{
-	display: inline-flex;
-}
-.pagination,
-.pagination ul,
-.pagination a			{
-	justify-content: center;
-	align-items: center;
-}
-.pagination ul			{
-	display: inline-flex;
-}
-.pagination ul,
-.pagination li			{list-style: none;}
-.pagination a			{min-width: 40px; height: 40px; line-height: 40px; text-decoration: none; text-align: center;}
-.pagination > a .svg	{display: block; width: 12px; height: 12px;}
-.pagination > a.next .svg	{
-	-webkit-transform: scaleX(-1);
-	transform: scaleX(-1);
-}
-.pagination ul			{margin: 0 4px;}
-.pagination ul li + li	{margin-left: 4px;}
-.pagination ul a		{font-size: inherit;}
-.pagination ul li.current a,
-.pagination ul a:hover	{color: #fff; background-color: var(--color1);}
-
 
 /* table common */
 table							{overflow: hidden; width: 100%; margin: 1rem 0; border-collapse: collapse; border-top: 1px solid var(--title-color);}
@@ -264,34 +238,25 @@ table p + p						{margin-top: 1rem;}
 }
 
 /* pagination */
-.pagination				{
+.pagination				{gap: 4px;
 	display: flex;
 }
-.pagination ul			{
-	display: inline-flex;
-}
 .pagination,
-.pagination ul,
 .pagination a			{
 	justify-content: center;
 	align-items: center;
 }
-.pagination ul			{
-	display: inline-flex;
-}
 .pagination ul,
 .pagination li			{list-style: none;}
-.pagination a			{min-width: 40px; height: 40px; line-height: 40px; text-decoration: none; text-align: center;}
-.pagination > a .svg	{display: block; width: 12px; height: 12px;}
-.pagination > a.next .svg	{
-	-webkit-transform: scaleX(-1);
-	transform: scaleX(-1);
-}
-.pagination ul			{margin: 0 4px;}
-.pagination ul li + li	{margin-left: 4px;}
-.pagination ul a		{font-size: inherit;}
-.pagination ul li.current a,
-.pagination ul a:hover	{color: #fff; background-color: var(--color1);}
+.pagination a			{min-width: 28px; height: 28px; font-size: .75rem; line-height: 28px; text-decoration: none; text-align: center;}
+.pagination a.on,
+.pagination a:hover	{color: #fff; background-color: var(--color1);}
+.pagination a.first,
+.pagination a.last  {position: relative;}
+.pagination a.first::after,
+.pagination a.last::after  {position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: #fff url(../images/common/btn-next.svg) no-repeat 50% 50%; background-size: contain}
+.pagination a.first::after {content: '\003c';}
+.pagination a.last::after  {content: '\003e';}
 
 /* box-wrap */
 .box-wrap				{background: #fff; border-radius: 4px;

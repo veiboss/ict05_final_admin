@@ -24,8 +24,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "material")
-
 public class Material {
 
     /** 재료 고유 ID */
@@ -37,6 +35,7 @@ public class Material {
     /** 재료코드 */
     @Column(name = "material_code", length = 30, nullable = false, unique = true, columnDefinition = "VARCHAR(30) COMMENT '재료 코드'")
     private String code;
+    public void setCode(String code) { this.code = code; }
 
     /** 재료명 */
     @Column(name = "material_name", length = 100, nullable = false, columnDefinition = "VARCHAR(100) COMMENT '재료명'")
