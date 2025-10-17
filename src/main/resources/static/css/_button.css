@@ -30,19 +30,30 @@ button.btn					{overflow: visible; margin: 0;}
 
 
 /* button color */
+.btn.color0					{background: #000; color: #fff;}
+.btn.color0:hover			{}
 .btn.color1					{background: var(--color1); color: #fff;}
 .btn.color1:hover			{}
 .btn.color2					{background: var(--color2-dark); color: #fff;}
 .btn.color2:hover			{}
 .btn[class*="bg-"]			{color: #fff;}
+.btn.bdr-color0,
 .btn.bdr-color1,
 .btn.bdr-color2				{border-style: inset;}
+.btn.bdr-color0				{border: 1px solid #000;}
+.btn.bdr-color0:hover		{}
 .btn.bdr-color1				{border: 1px solid var(--color1);}
 .btn.bdr-color1:hover		{}
 .btn.bdr-color2				{border: 1px solid var(--color2);}
 .btn.bdr-color2:hover		{}
+.btn.bdr-gray				{border: 1px solid var(--bdr-color);}
+.btn.bdr-gray:hover			{}
 
 /* button etc */
+.btn.medium.btn-group		{display: inline-flex; padding: 0; gap: 0;}
+.btn-group .btn 			{padding: 0 .75rem;}
+.btn-group .btn input 		{position: absolute; height: 1px; width: 1px; border: 0; overflow: hidden; z-index: -1; overflow: hidden; background: var(--light-gray);}
+.btn-group .btn.active		{background: var(--color1); color: #fff;}
 
 /* btn disabled */
 .btn[disabled]				{filter: grayscale(100%); opacity: .85;}

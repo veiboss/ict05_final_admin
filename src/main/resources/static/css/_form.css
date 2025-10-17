@@ -56,9 +56,9 @@ textarea								{}
 /* input-text */
 .input-text								{}
 .input-text[type="search"]::-webkit-search-cancel-button,
-.input-text[type="date"]::-webkit-clear-button {position: relative; right: .25rem; width: 1.5rem; height: 1.5rem;
+.input-text[type="date"]::-webkit-clear-button {position: relative; right: 0; width: 1.5rem; height: 1.5rem; cursor: pointer;
 	-webkit-appearance: none; -moz-appearance: none; appearance: none;
-	background: url('../images/@uio/btn_delete.svg') no-repeat 0 0;
+	background: url('../images/@uio/btn-delete.svg') no-repeat 50% 50%;
 }
 
 /* select */
