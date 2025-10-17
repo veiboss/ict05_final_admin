@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.menu.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
+import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.QMenu;
 import com.boot.ict05_final_admin.domain.menu.entity.QMenuCategoryEntity;
 import com.querydsl.core.types.Projections;
@@ -22,7 +23,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
     private final JPAQueryFactory queryFactory;     // QueryDSL의 핵심 객체
 
     @Override
-    public Page<MenuListDTO> listMenu(Pageable pageable) {
+    public Page<MenuListDTO> listMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
         QMenu menu = QMenu.menu;        // 각 엔티티의 QueryDSL 전용 메타 클래스(QueryDSL이 자동으로 변환해서 만든 쿼리용 전용 클래스)
         // QMaterial material = QMaterial.material;
         QMenuCategoryEntity menuCategory = QMenuCategoryEntity.menuCategoryEntity;

@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.menu.service;
 
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
+import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,8 @@ public class MenuService {
     private final MenuRepository menuRepository;    // @RequiredArgsConstructor가 자동으로 주입해 줘서 @Autowired가 필요 없음
 
     /** 메뉴 목록 */
-    public Page<MenuListDTO> selectMenu(Pageable pageable) {
-        return menuRepository.listMenu(pageable);
+    public Page<MenuListDTO> selectMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
+        return menuRepository.listMenu(menuSearchDTO, pageable);
     }
 
 }
