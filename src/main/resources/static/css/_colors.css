@@ -2,23 +2,27 @@
 /* ICT TeamONE _ 토스트랩 _ KimJuyeon _ 20251014 */
 
 :root {
-  --body-bg-color: #F7FAFC;
+  --body-bg-color: #fbf8f3;
   --body-color: #697a8d;
   --body-dark: #485461;
   --title-color: #2a3038;
 
-  /*orange*/
-  --color1: #FB6340;
-  --color1-dark: #c84f33;
-  --color1-light: #fb8266;
-  --color1-light2: #fdd0c5;
+  /* orange*/
+  --color1: #FE7743;
+  --color1-dark: #C86725;
+  --color1-light: #FB9A58;
+  --color1-light2: #FCB382;
 
-  /*brown */
-  --color2: #4B1D13;
-  --color2-dark: #f9b29d;
+  /* yellow */
+  --color2: #273F4F;
+  --color2-dark: #447D9B;
+
+  /* browon */
+  --color3: #521C0D;
+  --color3-dark: #3b2d18;
 
   /*gray*/
   --gray: #b4bcc6;
   --gray-dark: #a5afba;
-  --bdr-color: #dcdce0;
+  --bdr-color: #D7D7D7;
 }

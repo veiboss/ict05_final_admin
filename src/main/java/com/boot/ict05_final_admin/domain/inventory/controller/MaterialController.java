@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
 import com.boot.ict05_final_admin.domain.inventory.serivce.MaterialService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,15 @@ public class MaterialController {
                                Model model,
                                HttpServletRequest request) {
         System.out.println("MaterialController - listMaterial()");
+
+        boolean isFirstLoad = request.getParameter("status") == null
+                && request.getParameter("s") == null
+                && request.getParameter("page") == null;
+        if (materialSearchDTO.getStatus() != null &&
+                materialSearchDTO.getStatus().toString().trim().isEmpty()) {
+            materialSearchDTO.setStatus(null);
+        }
+
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
         Page<MaterialListDTO> materials = materialService.selectAllMaterial(materialSearchDTO, pageRequest);
 
