@@ -15,6 +15,118 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
+
+    <style>
+        .overlay {
+          display: none;
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.5);
+          z-index: 9999;
+
+          /* 중앙 정렬을 위한 Flexbox 설정 */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .overlay.active {
+          display: flex; /* active 상태일 때 flex 정렬 유지 */
+        }
+
+        .pop-close {
+          width: 48px;   /* 버튼 크기 증가 */
+          height: 48px;
+          padding: 8px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+        }
+
+        /* SVG 아이콘 크기도 키움 */
+        .pop-close svg {
+          width: 30px;
+          height: 30px;
+        }
+
+        /* 팝업 박스 자체 크기 고정 */
+        .popup {
+          background: white;
+          width: 600px;
+          max-width: 95vw; /* 모바일 대응 시 가로 최대 폭 제한 */
+          height: 750px;        /* 고정 높이 */
+          border-radius: 8px;
+          overflow: hidden;     /* 스크롤은 내부에서 처리 */
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* 팝업 body 부분만 스크롤되도록 */
+        .popup-body {
+          flex: 3;                       /* 남은 공간 모두 차지 */
+          overflow-y: auto;             /* 내용이 넘칠 때만 스크롤 */
+          padding: 25px;
+        }
+
+        .popup-body .box-wrap {
+          margin: 12px;
+          padding: 20px;
+          background: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 주문정보, 가맹점정보 나란히 */
+        .info-row {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+          flex-wrap: nowrap; 기본값이므로 없어도 됨
+        }
+
+        .info-card {
+          flex: 1;
+          box-sizing: border-box;    /* padding 포함 너비 계산 */
+          background: #f9f9f9;
+          border-radius: 8px;
+          padding: 15px 20px;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .info-card h4 {
+          margin-bottom: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #222;
+        }
+
+        .info-line {
+          display: flex;
+          justify-content: space-between;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 10px;
+          font-size: 14px;
+          gap: 8px;
+        }
+
+        .info-line .label {
+          font-weight: 500;
+          flex-shrink: 0;
+        }
+
+        .info-line .value {
+          margin-left: auto;
+          text-align: right;
+          color: #222;
+          font-weight: 400;
+          overflow: hidden;
+          <!--text-overflow: ellipsis;-->
+          max-width: 60%;
+        }
+
+    </style>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -92,7 +204,11 @@
                             <td th:text="${#numbers.formatInteger(receiveOrder.totalPrice, 0, 'COMMA')} + '원'">주문액</td>
 <!--                            <td th:text="${receiveOrder.itemCount}">품목수</td> &lt;!&ndash; 필요 시 DTO에 itemCount 추가 &ndash;&gt;-->
                             <td th:text="${#temporals.format(receiveOrder.deliveryDate, 'yyyy-MM-dd')}">배송예정일</td>
-                            <td><a th:href="@{'/admin/receive/detail/' + ${receiveOrder.id}}" class="btn small normal">상세</a></td>
+                            <td>
+                                <button type="button" class="btn small normal" onclick="openPopup('${receiveOrder.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye h-3 w-3"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -105,6 +221,120 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+
+<!-- popup 시작 -->
+<div id="popupId" class="overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title">주문 상세 정보</h2>
+            <button type="button" class="btn transparent pop-close" onclick="modalClose('#popupId');" title="팝업 닫기">
+                <svg viewBox="0 0 32 32" class="ico svg-close">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m16 17.414 8.485 8.485 1.415-1.414L17.414 16 25.9 7.515 24.485 6.1 16 14.586 7.515 6.1 6.1 7.515 14.586 16l-8.485 8.485L7.515 25.9 16 17.413z"></path>
+                </svg>
+            </button>
+            <div class="fs-14">
+                <p>주문번호 : </p>
+            </div>
+        </div>
+
+        <hr class="line">
+        <div class="popup-body wirte-form">
+             <div class="info-row">
+                <div data-th="info-card">
+                <!--<div class="row-2">-->
+                    <section class="col box-wrap">
+                        <h3 style="color: black; font-weight: 600;">주문 정보</h3>
+                        <div class="info-line"><span class="label">주문번호:</span><span class="value">ORD-20240120-001</span></div>
+                        <div class="info-line"><span class="label">주문일:</span><span class="value">2024-01-20</span></div>
+                        <div class="info-line"><span class="label">배송예정일:</span><span class="value">2024-01-22</span></div>
+                        <div class="info-line"><span class="label">상태:</span><span class="value">접수</span></div>
+                        <div class="info-line"><span class="label">우선순위:</span><span class="value">일반</span></div>
+                    </section>
+                </div>
+
+                <div data-th="info-card">
+                    <!--<div class="row-2">-->
+                    <section class="col box-wrap">
+                        <h3 style="color: black; font-weight: 600;">가맹점 정보</h3>
+                        <div class="info-line"><span class="label">가맹점명:</span><span class="value">이삭토스트 강남점</span></div>
+                        <div class="info-line"><span class="label">매장코드:</span><span class="value">ST-001</span></div>
+                        <div class="info-line"><span class="label">지역:</span><span class="value">서울 강남구</span></div>
+                        <div class="info-line"><span class="label">총 주문액:</span><span class="value">450,000원</span></div>
+                        <div class="info-line"><span class="label">주문 품목:</span><span class="value">15개</span></div>
+                    </section>
+                </div>
+             </div>
+
+            <hr class="line">
+            <div data-th="card">
+                <!--<div class="row-2">-->
+                <section class="box-wrap">
+
+                    <h3 style="color: black; font-weight: 600;">주문 상품</h3>
+
+                    <hr class="line">
+
+                    <div data-th="card">
+                        <section class="col box-wrap">
+                            <div class="pack-both">
+                                <table>
+                                   <thead>
+                                   <tr>
+                                       <th>상품명</th>
+                                       <th>카테고리</th>
+                                       <th>수량</th>
+                                       <th>단가</th>
+                                       <th>총액</th>
+                                       <th>재고상태</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                   <tr>
+                                       <td>상품명</td>
+                                       <td>카테고리</td>
+                                       <td>수량</td>
+                                       <td>단가</td>
+                                       <td>총액</td>
+                                       <td>재고상태</td>
+                                   </tr>
+                                   </tbody>
+                               </table>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+
+            <hr class="line">
+            <div data-th="card">
+                <!--<div class="row-2">-->
+                <section class="col box-wrap">
+                    <div class="pack-both">
+                        <h3 style="color: black; font-weight: 600;">특이 사항</h3>
+                    </div>
+
+                    <hr class="line">
+
+                    <textarea class="textarea medium" rows="4" cols="50" placeholder="텍스트에리어"></textarea>
+                </section>
+            </div>
+
+            <hr class="line">
+            <div class="button-area pack-center" style="float: right;">
+                <button type="button" class="btn medium bdr-color1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download h-4 w-4 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+                    주문서 다운로드
+                </button>
+                <button type="reset" class="btn medium color1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package h-4 w-4 mr-2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><path d="m7.5 4.27 9 5.15"></path></svg>
+                    배송 준비
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div><!-- popup 끝 -->
+
 <script>
     const selectAll = document.getElementById('selectAll');
 
@@ -149,6 +379,34 @@
         const type = formData.get("type");
         const s = formData.get("s");
         window.location = `/admin/API/material/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}`;
+    }
+</script>
+<script>
+    function openPopup(orderId) {
+        // 팝업 열기
+        const popup = document.getElementById('popupId');
+        popup.classList.add('active');
+
+        // 이 부분에서 orderId로 AJAX 요청하거나 데이터 바인딩 수행
+        // 예시: 콘솔 출력
+        console.log("주문 상세 보기: " + orderId);
+
+        // AJAX로 상세 데이터 가져와서 채우기 (예시)
+        /*
+        fetch('/admin/receive/detail/api/' + orderId)
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('#popupId .popup-title').textContent = "주문 상세 정보 - " + data.orderNumber;
+                document.querySelector('#popupId p:nth-child(1)').textContent = "주문번호: " + data.orderNumber;
+                ...
+            });
+        */
+    }
+
+    // 팝업 닫기 함수 (기존 코드 참고)
+    function modalClose(selector) {
+        const popup = document.querySelector(selector);
+        popup.classList.remove('active');
     }
 </script>
 </body>
