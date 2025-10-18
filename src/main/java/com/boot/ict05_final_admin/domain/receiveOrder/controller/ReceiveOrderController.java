@@ -44,4 +44,6 @@ public class ReceiveOrderController {
 
         return "receive/list";
     }
+
+
 }

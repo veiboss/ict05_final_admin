@@ -52,7 +52,7 @@
         /* 팝업 박스 자체 크기 고정 */
         .popup {
           background: white;
-          width: 600px;
+          width: 550px;
           max-width: 95vw; /* 모바일 대응 시 가로 최대 폭 제한 */
           height: 750px;        /* 고정 높이 */
           border-radius: 8px;
@@ -81,16 +81,18 @@
           display: flex;
           gap: 15px;
           margin-bottom: 20px;
-          flex-wrap: nowrap; 기본값이므로 없어도 됨
         }
 
         .info-card {
           flex: 1;
-          box-sizing: border-box;    /* padding 포함 너비 계산 */
+          display: flex;
+          flex-direction: column;
           background: #f9f9f9;
           border-radius: 8px;
           padding: 15px 20px;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+          box-sizing: border-box;
+          min-height: 100%; /* ✅ 높이 균형 유지 */
         }
 
         .info-card h4 {
@@ -103,28 +105,27 @@
         .info-line {
           display: flex;
           justify-content: space-between;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          flex-wrap: wrap;             /* ✅ 길면 다음 줄로 */
           margin-bottom: 10px;
-          font-size: 14px;
-          gap: 8px;
         }
 
         .info-line .label {
           font-weight: 500;
-          flex-shrink: 0;
+          flex: 0 1 auto;
+          min-width: 90px;
+          word-break: break-word;
         }
 
         .info-line .value {
-          margin-left: auto;
-          text-align: right;
-          color: #222;
           font-weight: 400;
-          overflow: hidden;
-          <!--text-overflow: ellipsis;-->
-          max-width: 60%;
+          color: #222;
+          text-align: right;
+          flex: 1 1 auto;
+          min-width: 100px;
+          word-break: break-word;
+          <!--white-space: normal !important;  /* ✅ 강제로 줄바꿈 허용 */-->
         }
+
 
     </style>
 </head>
@@ -238,17 +239,21 @@
         </div>
 
         <hr class="line">
-        <div class="popup-body wirte-form">
+        <div class="popup-body">
              <div class="info-row">
                 <div data-th="info-card">
                 <!--<div class="row-2">-->
                     <section class="col box-wrap">
                         <h3 style="color: black; font-weight: 600;">주문 정보</h3>
-                        <div class="info-line"><span class="label">주문번호:</span><span class="value">ORD-20240120-001</span></div>
-                        <div class="info-line"><span class="label">주문일:</span><span class="value">2024-01-20</span></div>
-                        <div class="info-line"><span class="label">배송예정일:</span><span class="value">2024-01-22</span></div>
-                        <div class="info-line"><span class="label">상태:</span><span class="value">접수</span></div>
-                        <div class="info-line"><span class="label">우선순위:</span><span class="value">일반</span></div>
+                        <div class="info-line">
+                            <div class="label">주문번호:</div>
+                            <div class="value">ORD-20240120-001</div>
+                        </div>
+
+                        <div class="info-line"><span class="label">주문일:</span><span class="value"></span></div>
+                        <div class="info-line"><span class="label">배송예정일:</span><span class="value"></span></div>
+                        <div class="info-line"><span class="label">상태:</span><span class="value"></span></div>
+                        <div class="info-line"><span class="label">우선순위:</span><span class="value"></span></div>
                     </section>
                 </div>
 
@@ -257,10 +262,10 @@
                     <section class="col box-wrap">
                         <h3 style="color: black; font-weight: 600;">가맹점 정보</h3>
                         <div class="info-line"><span class="label">가맹점명:</span><span class="value">이삭토스트 강남점</span></div>
-                        <div class="info-line"><span class="label">매장코드:</span><span class="value">ST-001</span></div>
-                        <div class="info-line"><span class="label">지역:</span><span class="value">서울 강남구</span></div>
-                        <div class="info-line"><span class="label">총 주문액:</span><span class="value">450,000원</span></div>
-                        <div class="info-line"><span class="label">주문 품목:</span><span class="value">15개</span></div>
+                        <div class="info-line"><span class="label">매장코드:</span><span class="value"></span></div>
+                        <div class="info-line"><span class="label">지역:</span><span class="value"></span></div>
+                        <div class="info-line"><span class="label">총 주문액:</span><span class="value"></span></div>
+                        <div class="info-line"><span class="label">주문 품목:</span><span class="value"></span></div>
                     </section>
                 </div>
              </div>
