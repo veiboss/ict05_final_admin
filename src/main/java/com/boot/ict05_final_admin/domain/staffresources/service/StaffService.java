@@ -1,7 +1,9 @@
 package com.boot.ict05_final_admin.domain.staffresources.service;
 
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,32 @@ public class StaffService {
      */
     public Page<StaffListDTO> selectAllStaff(StaffSearchDTO staffSearchDTO, Pageable pageable) {
         return staffRepository.listStaff(staffSearchDTO, pageable);
+    }
+
+    /**
+     * 새로운 사원을 등록한다.
+     *
+     * @param dto   사원 등록 정보
+     * @return 저장된 사원 ID
+     */
+    public long insertOfficeStaff(StaffAddFormDTO dto) {
+        StaffProfile staff = StaffProfile.builder()
+                .store(dto.getStore())
+                .staffName(dto.getStaffName())
+                .staffEmploymentType(dto.getStaffEmploymentType())
+                .staffDepartment(dto.getStaffDepartment())
+                .staffEmail(dto.getStaffEmail())
+                .staffPhone(dto.getStaffPhone())
+                .staffAddress(dto.getStaffAddress())
+                .staffBirth(dto.getStaffBirth())
+                .staffStartDate(dto.getStaffStartDate())
+                .staffEndDate(dto.getStaffEndDate())
+                .build();
+
+        StaffProfile saved = staffRepository.save(staff);
+        Long id = saved.getId();
+
+        return id;
     }
 
 }

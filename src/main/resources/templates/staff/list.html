@@ -10,6 +10,8 @@
     <meta name="googlebot" content="noindex">
     <title>토스트랩 관리자</title>
 
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
     <!-- favicon -->
     <link rel="icon" th:href="@{/images/logo/favi_ad.png}" type="image/x-icon"/>
 
@@ -30,25 +32,23 @@
         </div>
 
         <main id="content">
-            <div id="search" class="search box-wrap">
-                <form th:action="@{/staff/list}" method="get" th:object="${staffSearchDTO}">
-                    <fieldset>
-                        <legend class="blind">검색</legend>
-                        <div class="field insert">
-                            <input type="text" id="searchTxt" class="input-text medium"
-                                   th:field="*{keyword}" title="검색어" placeholder="사원명, 사번, 부서로 검색...">
-                        </div>
+            <div class="search box-wrap">
+                <div id="search" class="search">
+                    <form th:action="@{/staff/list}" method="get" th:object="${staffSearchDTO}">
+                        <fieldset>
+                            <legend class="blind">검색</legend>
+                            <div class="pack-both">
+                                <input type="text" id="searchTxt" class="input-text medium form-control"
+                                       th:field="*{keyword}" title="검색어" placeholder="사원명, 사번, 부서로 검색...">
+                            </div>
 
-                        <div class="button-area pack-left">
-                            <button type="submit" class="btn medium color1">검색</button>
-                            <button type="reset" class="btn medium bdr-color1">초기화</button>
-                        </div>
+                            <div class="button-area pack-left">
+                                <button type="submit" class="btn medium color1">검색</button>
+                            </div>
 
-                    </fieldset>
-                </form>
-            </div>
-
-            <section class="box-wrap">
+                        </fieldset>
+                    </form>
+                </div>
                 <div>
                     <div class="list-header pack-both">
                         <div></div>
@@ -57,42 +57,50 @@
                         </div>
                     </div>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>사번</th>
-                            <th>성명</th>
-                            <th>생년월일</th>
-                            <th>부서</th>
-                            <th>직책</th>
-                            <th>입사일</th>
-                            <th>상태</th>
-                            <th>관리</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="staff, idx : ${staffs.content}">
-                            <td th:text="${staff.id}">사번</td>
-                            <td th:text="${staff.staffName}">성명</td>
-                            <td th:text="${staff.getStaffBirth}">생년월일</td>
-                            <td th:text="${staff.staffDepartment}">부서</td>
-                            <td th:text="${staff.staffEmploymentType}">직책</td>
-                            <td th:text="${staff.getStaffStartDate}">입사일</td>
-                            <td th:text="${staff.getStaffEndDate != null} ? '재직' : '퇴사'">상태</td>
-                            <td>
-                                <button class="btn small normal">상세</button>
-                                <button class="btn small accent">수정</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+                <section class="pack-down">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>사번</th>
+                                <th>성명</th>
+                                <th>생년월일</th>
+                                <th>부서</th>
+                                <th>직책</th>
+                                <th>입사일</th>
+                                <th>상태</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="staff, idx : ${staffs.content}">
+                                <td th:text="${staff.id}">사번</td>
+                                <td th:text="${staff.staffName}">성명</td>
+                                <td th:text="${staff.getStaffBirth()}">생년월일</td>
+                                <td th:text="${staff.staffDepartment != null and staff.staffDepartment.name() == 'STORE' ? '판매팀' : '본사팀'}">부서</td>
+                                <td th:text="${staff.staffEmploymentType != null ?
+                                              (staff.staffEmploymentType.name() == 'OWNER'  ? '매장 관리자' :
+                                               staff.staffEmploymentType.name() == 'WORKER' ? '직원' : '알바')
+                                              : '알수없음'}">직책</td>
+                                <td th:text="${staff.getStaffStartDate()}">입사일</td>
+                                <td>
+                                    <span class="'badge rounded-pill ' + (${staff.getStaffEndDate()} != null ? ' bg-primary' : ' bg-secondary')"
+                                          th:text="${staff.getStaffEndDate() != null} ? '재직' : '퇴사'">
+                                      상태
+                                    </span>
+                                </td>
+                                <td>
+                                    <a class="btn small bdr-gray">
+                                        <span class="material-symbols-outlined md-18">visibility</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div th:replace="~{fragments/pagination :: pagination2(${staffs}, 'page')}"></div>
+                </section>
+            </div>
         </main>
-
-        <footer id="footer">
-            <address class="copyright">©TeamOne</address>
-            <p>허가없는 해당 사이트의 접근은 민.형사상 처벌을 받을 수 있습니다.</p>
-        </footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!-- // #wrap  -->
 
@@ -158,7 +166,9 @@
                             </div>
                         </div>
                     </div>
-
+                    <div>
+                        <button type="button" class="btn medium color1">등록</button>
+                    </div>
                 </fieldset>
             </form>
         </div>
