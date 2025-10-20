@@ -27,7 +27,7 @@ public class StaffRestController {
 
     private final StaffService staffService;
 
-    @PostMapping("/notice/write")
+    @PostMapping("/staff/add")
     @Operation(
             summary = "신규 사원 등록",
             description = "본사에서 새로운 사원을 등록하는 API입니다.",
