@@ -20,7 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MaterialService {
     private final MaterialRepository materialRepository;
 
-    /** 재료 목록 조회 */
+    /**
+     * 재료 목록을 페이지 단위로 조회한다.
+     *
+     * @param materialSearchDTO   재료 이름 (선택, null 가능)
+     * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
+     * @return 페이징 처리된 공지사항 리스트 DTO
+     */
     public Page<MaterialListDTO> selectAllMaterial(MaterialSearchDTO materialSearchDTO, Pageable pageable){
         return materialRepository.listMaterial(materialSearchDTO, pageable);
     }

@@ -21,7 +21,7 @@ public class MaterialListDTO {
     private String code;
 
     /** 재료명 */
-    private String title;
+    private String name;
 
     /** 재료 카테고리 */
     private MaterialCategory materialCategory;
@@ -43,4 +43,8 @@ public class MaterialListDTO {
 
     /** 재료 상태*/
     private MaterialStatus materialStatus;
+
+    public String getCategoryDescription() {
+        return materialCategory != null ? materialCategory.getDescription() : "";
+    }
 }
