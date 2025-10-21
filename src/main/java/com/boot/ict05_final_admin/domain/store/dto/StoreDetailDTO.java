@@ -31,9 +31,6 @@ public class StoreDetailDTO {
     /** 가맹점명 */
     private String storeName;
 
-    /** 점주명 */
-    private String staffName;
-
     /** 매장 사업자 등록번호 */
     private String businessRegistrationNumber;
 

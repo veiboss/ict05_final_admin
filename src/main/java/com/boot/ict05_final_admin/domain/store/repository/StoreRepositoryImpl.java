@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.store.repository;
 
 import com.boot.ict05_final_admin.domain.staffresources.entity.QStaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
+import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
@@ -117,5 +118,19 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 .fetchOne();
 
         return total;
+    }
+
+    @Override
+    public List<FindStoreDTO> findStoreName() {
+        QStore store = QStore.store;
+
+        return queryFactory
+                .select(Projections.fields(FindStoreDTO.class,
+                    store.id.as("storeId"),
+                    store.name.as("storeName")
+                        )) // member.name 매핑
+                .from(store)
+                .orderBy(store.id.desc())
+                .fetch();
     }
 }

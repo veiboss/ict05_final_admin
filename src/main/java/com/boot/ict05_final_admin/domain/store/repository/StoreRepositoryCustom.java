@@ -1,9 +1,12 @@
 package com.boot.ict05_final_admin.domain.store.repository;
 
+import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * Store 리포지토리의 커스텀(동적 쿼리) 인터페이스.
@@ -30,4 +33,6 @@ public interface StoreRepositoryCustom {
      * @return               총 레코드 수
      */
     long countStore(StoreSearchDTO storeSearchDTO);
+
+    List<FindStoreDTO> findStoreName ();
 }
