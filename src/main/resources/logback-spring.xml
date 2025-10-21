@@ -82,8 +82,8 @@
     <springProfile name="dev">
         <root level="DEBUG">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="ASYNC_FILE"/>
-            <appender-ref ref="ASYNC_ERROR"/>
+<!--            <appender-ref ref="ASYNC_FILE"/>-->
+<!--            <appender-ref ref="ASYNC_ERROR"/>-->
         </root>
     </springProfile>
 
