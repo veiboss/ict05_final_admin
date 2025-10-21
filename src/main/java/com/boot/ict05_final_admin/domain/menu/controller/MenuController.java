@@ -36,7 +36,6 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;      // private final : 바꿀 수 없는 변수
-    private final MenuAttachmentService menuAttachmentService;
     private final ProjectAttribute projectAttribute;
 
     /**
@@ -87,10 +86,8 @@ public class MenuController {
     @GetMapping("/menu/detail/{menuId}")
     public String detailStoreMenu(@PathVariable Long menuId, Model model) {
         Menu menu = menuService.deatilMenu(menuId);
-        List<MenuAttachment> attachments = menuAttachmentService.findByMenuId(menu.getMenuId());
 
         model.addAttribute("menu", menu);
-        model.addAttribute("attachments", attachments);
 
         return "menu/detail";
     }
@@ -105,10 +102,8 @@ public class MenuController {
     @GetMapping("/menu/modify/{menuId}")
     public String modifyStoreMenu(@PathVariable Long menuId, Model model) {
         Menu menu = menuService.detailMenu(menuId);
-        List<MenuAttachment> attachments = menuAttachmentService.findByMenuId(menuId);
 
         model.addAttribute("menu", menu);
-        model.addAttribute("attachments", attachments);
         model.addAttribute("MenuCategory", MenuCategory.values());
 
         return "menu/modify";

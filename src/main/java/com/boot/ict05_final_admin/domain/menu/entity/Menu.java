@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -48,13 +50,13 @@ public class Menu {
     @Column(name = "menu_price")
     private BigDecimal menuPrice;
 
-//    /** Material 참조 */
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name= "material_id_fk")
-//    private Material material;
+    /** 레시피(연결엔티티) */
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<MenuUsageMaterial> recipe = new ArrayList<>();
 
     /** menuCategory 참조 */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "menu_category_id_fk")
     private MenuCategoryEntity menuCategory;
 }
