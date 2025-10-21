@@ -28,6 +28,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.validation.FieldError;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +58,17 @@ public class GlobalRestExceptionHandler {
             else                     log.error("[{}] {}{}", ec.code(), head, message);
         }
 
-        ErrorResponse body = ErrorResponse.of(rid, ec, message, req.getRequestURI(), req.getMethod(), errors);
+        // 바디 생성 (여기서 timestamp가 확정됨: UTC)
+        ErrorResponse body = ErrorResponse.of(
+                rid, ec, message, req.getRequestURI(), req.getMethod(), errors
+        );
+
+        // 헤더도 동일 시간으로!
+        String serverTime = body.timestamp.toString();
+
         return ResponseEntity.status(ec.status())
                 .header("X-Request-Id", rid)
+                .header("X-Server-Time", serverTime)
                 .body(body);
     }
 

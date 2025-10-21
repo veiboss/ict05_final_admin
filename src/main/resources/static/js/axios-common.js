@@ -14,18 +14,33 @@ api.interceptors.response.use(
     } else if (res.data) {
       const data = res.data;
       msg = data.message || msg;
+
       if (Array.isArray(data.errors) && data.errors.length) {
         msg += `\n\n상세 오류:\n` + data.errors.map(e => `- ${e.field}: ${e.reason}`).join('\n');
       }
+
+      const serverTimeISO =
+        data.timestamp ||
+        res.headers?.['x-server-time'] ||
+        res.headers?.['date']; // 표준 Date 헤더(GMT)
+
+      if (serverTimeISO) {
+        try {
+          const kst = new Date(serverTimeISO).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+          msg += `\n시각: ${kst}`;
+        } catch (_) {/* ignore */}
+      }
+
       msg += `\n\n[${data.code || 'NO_CODE'}] HTTP ${data.status || res.status}`;
       if (data.path) msg += `\n경로: ${data.path}`;
     } else {
       msg += ` (HTTP ${res.status})`;
     }
+
     if (rid) msg += `\n요청 ID: ${rid}`;
 
     if (res?.status === 401) {
-      alert('로그인이 필요합니다.\n' + msg);
+      alert('인증이 필요합니다.\n' + msg);
       location.href = '/login?redirect=' + encodeURIComponent(location.pathname + location.search);
       return Promise.reject(err);
     }
