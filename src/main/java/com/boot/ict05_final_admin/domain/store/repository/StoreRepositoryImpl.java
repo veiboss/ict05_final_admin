@@ -1,10 +1,14 @@
 package com.boot.ict05_final_admin.domain.store.repository;
 
+import com.boot.ict05_final_admin.domain.staffresources.entity.QStaffProfile;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +41,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
 
     public Page<StoreListDTO> listStore(StoreSearchDTO storeSearchDTO, Pageable pageable) {
         QStore store = QStore.store;
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
 
         // 1) 데이터 목록 조회 (DTO 프로젝션)
         List<StoreListDTO> content = queryFactory
@@ -44,14 +49,22 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                        store.id.as("storeId"),
                         store.name.as("storeName"),
                         store.status.as("storeStatus"),
-                       // store.storeOwnerName,
+                        ExpressionUtils.as(
+                            JPAExpressions.select(staffProfile.staffName)
+                                .from(staffProfile)
+                                .where(
+                                        staffProfile.store.id.eq(store.id),
+                                        staffProfile.staffEmploymentType.eq(StaffEmploymentType.OWNER)
+                                )
+                                .limit(1),
+                            "staffName"),
                         store.phone.as("storePhone"),
                         store.monthlySales.as("storeMonthlySales")
                         //store.storeTotalEmployees
                 )) // member.name 매핑
                 .from(store)
                 .where(
-                        eqStoreName(storeSearchDTO, store)
+                        eqSearchStore(storeSearchDTO, store)
                 )
                 .orderBy(store.id.desc())
                 .offset(pageable.getOffset())
@@ -63,9 +76,10 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 .select(store.count())
                 .from(store)
                 .where(
-                        eqStoreName(storeSearchDTO, store)
+                        eqSearchStore(storeSearchDTO, store)
                 )
                 .fetchOne();
+
 
         // 3) Page 구현체로 반환
         return new PageImpl<>(content, pageable, total);
@@ -75,19 +89,15 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
      * 단일 조건(매장명 like) 생성.
      * <p>검색어가 없으면 null을 반환하여 WHERE에서 무시되게 한다.</p>
      */
-    private BooleanExpression eqStoreName(StoreSearchDTO storeSearchDTO, QStore store) {
+    private BooleanExpression eqSearchStore(StoreSearchDTO storeSearchDTO, QStore store) {
         if (storeSearchDTO.getKeyword() == null) {
             return null; // 조건 없음
         }
 
         String keyword = storeSearchDTO.getKeyword();
 
-        switch (storeSearchDTO.getType()) {
-            case "storeName":
-                return store.name.containsIgnoreCase(keyword);
-            default:
-                return null;
-        }
+       return store.id.stringValue().containsIgnoreCase(keyword)
+               .or(store.name.stringValue().containsIgnoreCase(keyword));
     }
 
     /**
@@ -102,7 +112,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 .select(store.count())
                 .from(store)
                 .where(
-                        eqStoreName(storeSearchDTO, store)
+                        eqSearchStore(storeSearchDTO, store)
                 )
                 .fetchOne();
 

@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.store.dto;
 
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,16 +28,20 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreListDTO {
+public class StoreListDTO  {
+
 
     /** 매장 고유 Id */
     private Long storeId;
 
-    /** 매장명 */
+    /** 가맹점명 */
     private String storeName;
 
-    /** 매장 상태 */
+    /** 운영 상태 */
     private StoreStatus storeStatus;
+
+    /** 점주명 */
+    private String staffName;
 
     /** 매장 연락처 */
     private String storePhone;
