@@ -36,6 +36,9 @@ public class NoticeDetailDTO {
     /** 공지사항 고유 ID */
     private Long id;
 
+    /** 작성자(회원) FK */
+    private Long memberIdFk;
+
     /** 공지사항 카테고리 */
     private NoticeCategory noticeCategory;
 
@@ -56,5 +59,5 @@ public class NoticeDetailDTO {
 
     /** 작성일시 */
     @Schema(type="string", format="date-time")
-    private LocalDateTime writerdate;
+    private LocalDateTime registeredAt;
 }

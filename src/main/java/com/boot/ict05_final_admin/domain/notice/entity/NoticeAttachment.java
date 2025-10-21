@@ -44,6 +44,8 @@ public class NoticeAttachment {
      * 첨부파일 URL
      */
     private String url;
-
+    /**
+     * 원본 파일명
+     */
     private String originalFilename;
 }

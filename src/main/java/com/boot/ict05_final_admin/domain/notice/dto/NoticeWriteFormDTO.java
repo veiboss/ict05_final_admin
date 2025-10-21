@@ -2,8 +2,12 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticeStatus;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -37,6 +41,9 @@ import java.util.List;
 @Data
 public class NoticeWriteFormDTO {
 
+    /** 작성자(회원) FK */
+    private Long memberIdFk;
+
     /** 공지사항 카테고리 (필수) */
     @NotNull(message = "카테고리를 선택해주세요")
     private NoticeCategory noticeCategory;
@@ -44,6 +51,9 @@ public class NoticeWriteFormDTO {
     /** 공지사항 우선순위 (필수) */
     @NotNull(message = "상태를 선택해주세요")
     private NoticePriority noticePriority;
+
+    /** 공지사항 상태  */
+    private NoticeStatus noticeStatus;
 
     /** 공지사항 공개 여부 */
     private Boolean isShow;

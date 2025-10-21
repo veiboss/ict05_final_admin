@@ -2,7 +2,11 @@ package com.boot.ict05_final_admin.domain.notice.dto;
 
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeCategory;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticePriority;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticeStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,30 +38,61 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class NoticeListDTO {
 
-    /** 공지사항 고유 ID */
+    /**
+     * 공지사항 고유 ID
+     */
     private Long id;
 
-    /** 공지사항 카테고리 */
+    /**
+     * 작성자(회원) FK
+     */
+    private Long memberIdFk;
+
+    /**
+     * 공지사항 카테고리
+     */
     private NoticeCategory noticeCategory;
 
-    /** 공지사항 우선순위 */
+    /**
+     * 공지사항 우선순위
+     */
     private NoticePriority noticePriority;
 
-    /** 공지사항 공개 여부 */
+    /**
+     * 공지사항 상태
+     */
+    private NoticeStatus noticeStatus;
+
+    /**
+     * 공지사항 공개 여부
+     */
     private boolean isShow;
 
-    /** 공지사항 제목 */
+    /**
+     * 공지사항 제목
+     */
     private String title;
 
-    /** 공지사항 내용 */
+    /**
+     * 공지사항 내용
+     */
     private String body;
 
-    /** 작성자 이름 */
+    /**
+     * 작성자 이름
+     */
     private String writer;
 
-    /** 작성일시 */
-    @Schema(type="string", format="date-time")
-    private LocalDateTime writerdate;
+    /**
+     * 조회수
+     */
+    private Integer noticeCount;
+
+    /**
+     * 작성일시
+     */
+    @Schema(type = "string", format = "date-time")
+    private LocalDateTime registeredAt;
 
     /**
      * 작성일자를 "yyyy.MM.dd" 형식의 문자열로 반환한다.
@@ -66,8 +101,23 @@ public class NoticeListDTO {
      * @return 형식화된 작성일자 문자열
      */
     public String getWriteDate() {
-        if (writerdate == null) return "";
+        if (registeredAt == null) return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        return writerdate.format(formatter);
+        return registeredAt.format(formatter);
+    }
+
+    /** 한글 라벨: 상태 */
+    public String getNoticeStatusLabel() {
+        return noticeStatus != null ? noticeStatus.getDescription() : "";
+    }
+
+    /** 한글 라벨: 카테고리 */
+    public String getNoticeCategoryLabel() {
+        return noticeCategory != null ? noticeCategory.getDescription() : "";
+    }
+
+    /** 한글 라벨: 우선순위 */
+    public String getNoticePriorityLabel() {
+        return noticePriority != null ? noticePriority.getDescription() : "";
     }
 }
