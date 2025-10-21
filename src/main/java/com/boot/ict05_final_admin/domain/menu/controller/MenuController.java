@@ -4,6 +4,8 @@ import com.boot.ict05_final_admin.config.ProjectAttribute;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
+import com.boot.ict05_final_admin.domain.menu.entity.Menu;
+import com.boot.ict05_final_admin.domain.menu.entity.MenuAttachment;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.service.MenuAttachmentService;
 import com.boot.ict05_final_admin.domain.menu.service.MenuService;
@@ -17,7 +19,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
 
 
 /**
@@ -70,6 +75,43 @@ public class MenuController {
         model.addAttribute("MenuCategory", MenuCategory.values());
 
         return "menu/write";
+    }
+
+    /**
+     * 특정 메뉴 상세 내용을 조회한다.
+     *
+     * @param menuId    메뉴 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 메뉴 상세 페이지 뷰 이름
+     */
+    @GetMapping("/menu/detail/{menuId}")
+    public String detailStoreMenu(@PathVariable Long menuId, Model model) {
+        Menu menu = menuService.deatilMenu(menuId);
+        List<MenuAttachment> attachments = menuAttachmentService.findByMenuId(menu.getMenuId());
+
+        model.addAttribute("menu", menu);
+        model.addAttribute("attachments", attachments);
+
+        return "menu/detail";
+    }
+
+    /**
+     * 특정 메뉴의 수정 화면을 표시한다.
+     *
+     * @param menuId    메뉴 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 메뉴 수정 페이지 뷰 이름
+     */
+    @GetMapping("/menu/modify/{menuId}")
+    public String modifyStoreMenu(@PathVariable Long menuId, Model model) {
+        Menu menu = menuService.detailMenu(menuId);
+        List<MenuAttachment> attachments = menuAttachmentService.findByMenuId(menuId);
+
+        model.addAttribute("menu", menu);
+        model.addAttribute("attachments", attachments);
+        model.addAttribute("MenuCategory", MenuCategory.values());
+
+        return "menu/modify";
     }
 
 
