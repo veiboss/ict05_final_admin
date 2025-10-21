@@ -6,6 +6,7 @@ import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
 import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
+import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -64,9 +67,12 @@ public class StaffController {
     @GetMapping("/staff/add")
     public String addForm(Model model) {
 
+        List<FindStoreDTO> stores = storeService.findStoreName();
+
         model.addAttribute("staffAddFormDTO", new StaffAddFormDTO());
         model.addAttribute("StaffDepartment", StaffDepartment.values());
         model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
+        model.addAttribute("stores", stores);
 
         return "staff/add";
     }
