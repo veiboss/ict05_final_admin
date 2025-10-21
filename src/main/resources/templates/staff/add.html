@@ -64,8 +64,8 @@
                                     <input type="hidden" id="storeIdFk" th:field="*{storeIdFk}">
                                     <datalist id="storeList">
                                         <option th:each="s : ${stores}"
-                                                th:value="${s.name}"
-                                                th:attr="data-id=${s.id}"></option>
+                                                th:value="${s.storeName}"
+                                                th:attr="data-id=${s.storeId}"></option>
                                     </datalist>
                                     <small id="storeHint" style="display:none;color:#ef4444;">목록에서 선택되지 않았습니다 (선택 항목).</small>
                                 </div>
@@ -156,127 +156,12 @@
 <script>
     nav.init();
 
-</script>
-<!--<div id="popupId" class="overlay">-->
-<!--    <div class="popup">-->
-<!--        <div class="popup-header">-->
-<!--            <h2 class="popup-title">신규 사원 등록</h2>-->
-<!--        </div>-->
-<!--        <div class="popup-body write-form">-->
-<!--            <form name="inputform" id="inputform" th:object="${staffAddFormDTO}">-->
-<!--                <fieldset class="pack-down">-->
-<!--                    <legend class="blind">기본 정보</legend>-->
-                    <!--                    <div class="row">-->
-                    <!--                        <div class="field col">-->
-                    <!--                            <label class="label medium required">근무지 (선택)</label>-->
-                    <!--                            <div class="input-wrap" style="position:relative;">-->
-                    <!--                                <input id="storeSearch" class="input-text small"-->
-                    <!--                                       placeholder="매장명 입력(선택)" list="storeList" autocomplete="off">-->
-                    <!--                                <input type="hidden" id="storeIdFk" th:field="*{storeIdFk}">-->
-                    <!--                                <datalist id="storeList">-->
-                    <!--                                    <option th:each="s : ${stores}"-->
-                    <!--                                            th:value="${s.name}"-->
-                    <!--                                            th:attr="data-id=${s.id}"></option>-->
-                    <!--                                </datalist>-->
-                    <!--                                <small id="storeHint" style="display:none;color:#ef4444;">목록에서 선택되지 않았습니다 (선택 항목).</small>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="staffName">이름</label>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{staffName}" type="text" id="staffName" class="input-text small" title="이름" placeholder="홍길동">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium" for="staffDepartment">부서</label>-->
-<!--                            <div class="insert">-->
-<!--                                <select id="staffDepartment" class="select medium" th:field="*{staffDepartment}">-->
-<!--                                    <option value="" >선택</option>-->
-<!--                                    <option th:each="c : ${StaffDepartment}" th:value="${c.name()}" th:text="${c.description}">팀</option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium" for="staffEmploymentType">근무 형태</label>-->
-<!--                            <div class="insert">-->
-<!--                                <select id="staffEmploymentType" class="select medium" th:field="*{staffEmploymentType}">-->
-<!--                                    <option value="" >선택</option>-->
-<!--                                    <option th:each="c : ${StaffEmploymentType}" th:value="${c.name()}" th:text="${c.description}">형태</option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="staffEmail">이메일</label>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{staffEmail}" type="text" id="staffEmail" class="input-text small" title="이메일" placeholder="hong@email.com">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="staffPhone">연락처</label>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{staffPhone}" type="text" id="staffPhone" class="input-text small" title="연락처" placeholder="010-1234-1234">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row-3">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="userAddress1">주소</label>-->
-<!--                            <input type="button" class="btn small color1" id="addressSearch" style="margin-left:10px" value="주소 검색" onclick="findAddr()">-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{userAddress1}" id="userAddress1" type="text" class="input-text small" size="50" placeholder="주소를 검색해주세요" readonly >-->
-<!--                            </div>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{userAddress2}" type="text" class="input-text small" size="50" placeholder="나머지 주소 작성" required>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="staffBirth">생년월일</label>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{staffBirth}" type="date" id="staffBirth" class="input-text small" title="생년월일">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="staffStartDate">입사일자</label>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{staffStartDate}" type="date" id="staffStartDate" class="input-text small" title="입사일자">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                        <div class="field col">-->
-<!--                            <label class="label medium required" for="staffEndDate">퇴사일자</label>-->
-<!--                            <div class="insert">-->
-<!--                                <input th:field="*{staffEndDate}" type="date" id="staffEndDate" class="input-text small" title="퇴사일자">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <button type="submit" class="btn medium color1">등록</button>-->
-<!--                    </div>-->
-<!--                </fieldset>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<script>
     document.getElementById("inputform").addEventListener("submit", function(e) {
         e.preventDefault();
 
         const formData = new FormData(this); // 폼의 모든 input 포함
+
+        if (!formData.get('storeIdFk')) formData.delete('storeIdFk');
 
         fetch("/admin/API/staff/add", {
             method: "POST",
@@ -290,6 +175,7 @@
                             const errorMsg = data.errors[field];
                             const errorElement = document.getElementById(field + 'Error');
                             if (errorElement) errorElement.textContent = errorMsg;
+
                         });
                     }
                     throw new Error("서버 검증 오류");
