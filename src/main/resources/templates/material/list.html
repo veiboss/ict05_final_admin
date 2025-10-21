@@ -99,6 +99,8 @@
                             <th scope="col">CODE</th>
                             <th scope="col">카테고리</th>
                             <th scope="col">재료명</th>
+                            <th scope="col">기본단위</th>
+                            <th scope="col">판매단위</th>
                             <th scope="col">공급업체</th>
                             <th scope="col">상태</th>
                             <th scope="col">관리</th>
@@ -107,11 +109,13 @@
                         <tbody>
                         <tr th:each="material, stat : ${materials.content}">
                             <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>
-                            <td th:text="${material.code}">카테고리</td>
-                            <td th:text="${material.materialCategory.description}">카테고리</td>
+                            <td th:text="${material.code}">CODE</td>
+                            <td th:text="${material.categoryDescription}">카테고리</td>
                             <td>
-                                <a th:href="@{/material/detail/{id}(id=${material.id})}"><span class="fc-000" th:text="${material.title}">재료명</span></a>
+                                <a th:href="@{/material/detail/{id}(id=${material.id})}"><span class="fc-000" th:text="${material.name}">재료명</span></a>
                             </td>
+                            <td th:text="${material.baseUnit}">기본단위</td>
+                            <td th:text="${material.salesUnit}">판매단위</td>
                             <td th:text="${material.supplier}">공급업체</td>
                             <td>
                                 <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>

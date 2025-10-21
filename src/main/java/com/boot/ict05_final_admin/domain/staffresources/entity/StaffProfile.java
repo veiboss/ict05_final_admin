@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.staffresources.entity;
 
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
+import com.boot.ict05_final_admin.domain.store.entity.Store;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,11 @@ public class StaffProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
     private Long id;
+
+    /** 직원 근무지 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id_fk", nullable = false)
+    private Store store;
 
     /** 직원 이름 */
     @Column(name = "staff_name", length = 100)
