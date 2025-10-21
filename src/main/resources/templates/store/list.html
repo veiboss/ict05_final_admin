@@ -27,17 +27,22 @@
         </div>
 
         <main id="content">
-            <div id="search" class="search box-wrap">
-                <form>
+            <div class="search box-wrap">
+                <div id="search" class="search">
+                <form th:action="@{/store/list}" method="get" th:object="${storeSearchDTO}">
                     <fieldset>
                         <legend class="blind">검색</legend>
-                        <div class="field insert">
-                            <input type="text" id="searchTxt" class="input-text medium" title="검색어" placeholder="검색어를 입력해 주세요">
+                        <div class="pack-both">
+                            <input type="text" id="searchTxt" class="input-text medium form-control"
+                                   th:field="*{keyword}" title="검색어" placeholder="가맹점번호, 가맹점명으로 검색..">
                         </div>
 
                         <div class="button-area pack-left">
-                            <button type="button" class="btn medium color1">검색</button>
-                            <button type="reset" class="btn medium bdr-color1">초기화</button>
+                            <button type="submit" class="btn medium color1">검색</button>
+                            <button type="button"
+                                    class="btn medium bdr-color1"
+                                    th:onclick="|location.href='@{/store/list}'|">초기화
+                            </button>
                         </div>
                     </fieldset>
                 </form>
@@ -61,7 +66,7 @@
                         <th>매장번호</th>
                         <th>매장명</th>
                         <th>운영상태</th>
-                        <!--<th>점주명</th>-->
+                        <th>점주명</th>
                         <th>연락처</th>
                         <th>월매출</th>
                         <th>직원수</th>
@@ -73,7 +78,7 @@
                         <td th:text="${store.storeId}">매장번호</td>
                         <td th:text="${store.storeName}">매장명</td>
                         <td th:text="${store.storeStatus != null ? '운영중' : '폐점'}">운영상태</td>
-                        <!--<td th:text="${store.staffDepartment}">점주명</td>-->
+                        <td th:text="${store.staffName}">점주명</td>
                         <td th:text="${store.storePhone}">연락처</td>
                         <td th:text="${store.storeMonthlySales}">월매출</td>
                         <td th:text="${store.storeTotalEmployees}">직원수</td>

@@ -1,5 +1,9 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
+import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreAddFormDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
@@ -10,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 가맹점 관련 비즈니스 로직을 처리하는 서비스 클래스
@@ -48,5 +54,11 @@ public class StoreService {
      */
     public Store findById(Long id) {
         return storeRepository.findById(id).orElse(null);
+    }
+
+
+
+    public List<FindStoreDTO> findStoreName() {
+        return storeRepository.findStoreName();
     }
 }

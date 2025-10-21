@@ -49,7 +49,7 @@ public class StaffRestController {
                     )
             }
     )
-    public ResponseEntity<Map<String, Object>> addOfficeNotice(
+    public ResponseEntity<Map<String, Object>> addOfficeStaff(
             @Validated @ModelAttribute StaffAddFormDTO dto,
             BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {

@@ -29,13 +29,16 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
         List<NoticeListDTO> content = queryFactory
                 .select(Projections.fields(NoticeListDTO.class,
                         notice.id,
+                        notice.memberIdFk,
                         notice.noticeCategory,
                         notice.noticePriority,
+                        notice.noticeStatus,
                         notice.isShow,
                         notice.title,
                         notice.body,
                         notice.writer,
-                        notice.writerdate
+                        notice.noticeCount,
+                        notice.registeredAt
                         )) // member.name 매핑
                 .from(notice)
                 .where(

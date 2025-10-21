@@ -27,8 +27,7 @@ import java.time.LocalDateTime;
 public class StaffAddFormDTO {
 
     /** 직원 근무지 */
-    @NotNull(message = "근무지를 선택해주세요")
-    private Store store;
+    private Long storeIdFk;
 
     /** 직원 이름 */
     @NotBlank(message = "직원 이름을 입력해주세요")
@@ -46,9 +45,15 @@ public class StaffAddFormDTO {
     @Email(message = "이메일 형식이 올바르지 않습니다")
     private String staffEmail;
 
-    /** 직원 전화번호 (선택) */
+    /** 직원 연락처 (선택) */
     @Pattern(regexp = "^[0-9\\-]{9,13}$", message = "전화번호는 숫자와 하이픈만 입력해주세요")
     private String staffPhone;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress1;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress2;
 
     /** 직원 주소 (선택) */
     @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
