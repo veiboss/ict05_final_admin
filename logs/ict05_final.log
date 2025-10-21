@@ -6366,3 +6366,345 @@ select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
 2025-10-21 19:29:21.183 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
 2025-10-21 19:29:21.204 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
 2025-10-21 19:29:21.217 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.205 seconds (process running for 5.47)
+2025-10-21 19:49:10.850 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 19:49:10.963 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 18628 (D:\DEV05\fork\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\fork\ict05_final_admin)
+2025-10-21 19:49:10.965 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 19:49:10.965 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 19:49:11.020 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 19:49:11.020 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 19:49:11.633 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 19:49:11.709 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 60 ms. Found 9 JPA repository interfaces.
+2025-10-21 19:49:12.308 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 19:49:12.322 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:49:12.322 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 19:49:12.322 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 19:49:12.430 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 19:49:12.430 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1410 ms
+2025-10-21 19:49:12.635 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 19:49:12.731 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 19:49:12.782 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 19:49:13.083 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 19:49:13.093 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 19:49:13.205 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@7a460bf0
+2025-10-21 19:49:13.205 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 19:49:13.221 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 19:49:13.247 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 19:49:13.831 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 19:49:14.052 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 19:49:14.243 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 19:49:15.012 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 19:49:15.054 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 19:49:15.759 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 19:49:15.776 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:49:15.813 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 19:49:15.823 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.413 seconds (process running for 5.683)
+2025-10-21 19:49:21.326 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 19:49:21.326 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 19:49:21.326 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-10-21 19:49:21.435 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761435 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 10, 2 = '대전 둔산점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 9, 2 = '울산 삼산점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 8, 2 = '인천 부평점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 7, 2 = '광주 충장로점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 6, 2 = '대구 동성로점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 5, 2 = '부산 해운대점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 4, 2 = '잠실점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 3, 2 = '신촌점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 2, 2 = '홍대점';
+2025-10-21 19:49:21.436 INFO  [http-nio-8081-exec-1] [465c77cc] p6spy - #1761043761436 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 1, 2 = '강남점';
+2025-10-21 19:50:37.604 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 19:50:37.626 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 13608 (D:\DEV05\fork\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\fork\ict05_final_admin)
+2025-10-21 19:50:37.626 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 19:50:37.626 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 19:50:37.685 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 19:50:37.685 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 19:50:38.269 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 19:50:38.348 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 73 ms. Found 9 JPA repository interfaces.
+2025-10-21 19:50:38.869 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 19:50:38.885 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:50:38.885 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 19:50:38.885 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 19:50:38.948 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 19:50:38.948 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1263 ms
+2025-10-21 19:50:39.184 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 19:50:39.284 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 19:50:39.326 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 19:50:39.657 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 19:50:39.689 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 19:50:39.834 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@186f6413
+2025-10-21 19:50:39.834 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 19:50:39.846 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 19:50:39.862 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 19:50:40.491 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 19:50:40.728 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 19:50:40.917 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 19:50:41.738 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 19:50:41.785 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 19:50:42.522 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 19:50:42.530 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:50:42.563 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 19:50:42.563 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.293 seconds (process running for 5.561)
+2025-10-21 19:50:54.576 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 19:50:54.576 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 19:50:54.586 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 10 ms
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 10, 2 = '대전 둔산점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 9, 2 = '울산 삼산점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 8, 2 = '인천 부평점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 7, 2 = '광주 충장로점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 6, 2 = '대구 동성로점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 5, 2 = '부산 해운대점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 4, 2 = '잠실점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 3, 2 = '신촌점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 2, 2 = '홍대점';
+2025-10-21 19:50:54.686 INFO  [http-nio-8081-exec-1] [a503c136] p6spy - #1761043854686 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 1, 2 = '강남점';
+2025-10-21 19:53:10.476 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 19:53:10.509 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 18204 (D:\DEV05\fork\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\fork\ict05_final_admin)
+2025-10-21 19:53:10.509 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 19:53:10.510 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 19:53:10.540 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 19:53:10.541 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 19:53:11.300 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 19:53:11.381 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 61 ms. Found 9 JPA repository interfaces.
+2025-10-21 19:53:12.153 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 19:53:12.172 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:53:12.174 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 19:53:12.175 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 19:53:12.244 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 19:53:12.244 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1703 ms
+2025-10-21 19:53:12.469 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 19:53:12.538 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 19:53:12.584 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 19:53:12.973 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 19:53:12.990 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 19:53:13.114 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@47ae9d67
+2025-10-21 19:53:13.115 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 19:53:13.133 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 19:53:13.147 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 19:53:13.774 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 19:53:14.002 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 19:53:14.216 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 19:53:15.116 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 19:53:15.170 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 19:53:15.746 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 19:53:15.762 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:53:15.778 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 19:53:15.778 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.659 seconds (process running for 5.966)
+2025-10-21 19:53:47.333 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 19:53:47.390 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 12336 (D:\DEV05\fork\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\fork\ict05_final_admin)
+2025-10-21 19:53:47.390 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 19:53:47.390 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 19:53:47.421 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 19:53:47.422 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 19:53:48.035 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 19:53:48.112 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 62 ms. Found 9 JPA repository interfaces.
+2025-10-21 19:53:48.738 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 19:53:48.762 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:53:48.766 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 19:53:48.766 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 19:53:48.835 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 19:53:48.836 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1414 ms
+2025-10-21 19:53:49.052 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 19:53:49.139 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 19:53:49.174 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 19:53:49.533 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 19:53:49.565 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 19:53:49.687 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@27f07057
+2025-10-21 19:53:49.687 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 19:53:49.719 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 19:53:49.735 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 19:53:50.323 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 19:53:50.560 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 19:53:50.780 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 19:53:51.585 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 19:53:51.614 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 19:53:52.370 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 19:53:52.389 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 19:53:52.432 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 19:53:52.433 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.399 seconds (process running for 5.673)
+2025-10-21 19:53:57.444 INFO  [http-nio-8081-exec-2] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 19:53:57.444 INFO  [http-nio-8081-exec-2] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 19:53:57.445 INFO  [http-nio-8081-exec-2] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 10, 2 = '대전 둔산점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 9, 2 = '울산 삼산점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 8, 2 = '인천 부평점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 7, 2 = '광주 충장로점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 6, 2 = '대구 동성로점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 5, 2 = '부산 해운대점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 4, 2 = '잠실점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 3, 2 = '신촌점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 2, 2 = '홍대점';
+2025-10-21 19:53:57.556 INFO  [http-nio-8081-exec-2] [e3deba78] p6spy - #1761044037556 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 1, 2 = '강남점';
+2025-10-21 19:54:28.897 INFO  [http-nio-8081-exec-3] [a7204e65] p6spy - #1761044068897 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_affiliate_price,s1_0.business_registration_number,s1_0.store_comment,s1_0.store_contract_affiliate_date,s1_0.store_contract_start_date,s1_0.store_contract_term,s1_0.store_location,s1_0.member_id_fk,s1_0.store_monthly_sales,s1_0.store_name,s1_0.store_phone,s1_0.store_royalty,s1_0.store_status,s1_0.store_type from store s1_0 where s1_0.store_id=?
+2 = 1000000.00, 3 = '123-45-67890', 4 = '첫 매장입니다.', 5 = '2023-01-10T00:00:00.000+0900', 6 = '2023-01-01T00:00:00.000+0900', 7 = 12, 8 = '서울 강남구', 9 = 1, 10 = 5000000.00, 11 = '강남점', 12 = '02-1234-5678', 13 = 0.0500, 14 = 'OPERATING', 15 = 'FRANCHISE';
+2025-10-21 19:54:30.085 INFO  [http-nio-8081-exec-5] [b176c1e1] p6spy - #1761044070085 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 6, 2 = '정지원', 3 = 'OWNER', 4 = 'STORE', 5 = '1991-02-06T00:00:00.000+0900', 6 = '2023-02-21T00:00:00.000+0900', 7 = NULL;
+2025-10-21 19:54:30.086 INFO  [http-nio-8081-exec-5] [b176c1e1] p6spy - #1761044070086 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 5, 2 = '정연우', 3 = 'OWNER', 4 = 'STORE', 5 = '2003-08-06T00:00:00.000+0900', 6 = '2020-01-15T09:00:00.000+0900', 7 = NULL;
+2025-10-21 19:54:30.087 INFO  [http-nio-8081-exec-5] [b176c1e1] p6spy - #1761044070087 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 3, 2 = '김매니저', 3 = 'WORKER', 4 = 'STORE', 5 = '1985-03-15T00:00:00.000+0900', 6 = '2020-01-15T09:00:00.000+0900', 7 = NULL;
+2025-10-21 19:54:30.108 INFO  [http-nio-8081-exec-5] [b176c1e1] p6spy - #1761044070108 | took 0ms | resultset | connection -1| url 
+select count(sp1_0.staff_id) from staff_profile sp1_0
+1 = 3;
+2025-10-21 19:55:16.177 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116177 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 10, 2 = '대전 둔산점';
+2025-10-21 19:55:16.178 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116178 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 9, 2 = '울산 삼산점';
+2025-10-21 19:55:16.178 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116178 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 8, 2 = '인천 부평점';
+2025-10-21 19:55:16.179 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116179 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 7, 2 = '광주 충장로점';
+2025-10-21 19:55:16.179 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116179 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 6, 2 = '대구 동성로점';
+2025-10-21 19:55:16.179 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116179 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 5, 2 = '부산 해운대점';
+2025-10-21 19:55:16.180 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116180 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 4, 2 = '잠실점';
+2025-10-21 19:55:16.180 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116180 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 3, 2 = '신촌점';
+2025-10-21 19:55:16.181 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116181 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 2, 2 = '홍대점';
+2025-10-21 19:55:16.181 INFO  [http-nio-8081-exec-10] [d419672f] p6spy - #1761044116181 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 1, 2 = '강남점';
+2025-10-21 19:55:24.872 INFO  [http-nio-8081-exec-8] [7e54920a] p6spy - #1761044124872 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 6, 2 = '정지원', 3 = 'OWNER', 4 = 'STORE', 5 = '1991-02-06T00:00:00.000+0900', 6 = '2023-02-21T00:00:00.000+0900', 7 = NULL;
+2025-10-21 19:55:24.873 INFO  [http-nio-8081-exec-8] [7e54920a] p6spy - #1761044124873 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 5, 2 = '정연우', 3 = 'OWNER', 4 = 'STORE', 5 = '2003-08-06T00:00:00.000+0900', 6 = '2020-01-15T09:00:00.000+0900', 7 = NULL;
+2025-10-21 19:55:24.874 INFO  [http-nio-8081-exec-8] [7e54920a] p6spy - #1761044124874 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 3, 2 = '김매니저', 3 = 'WORKER', 4 = 'STORE', 5 = '1985-03-15T00:00:00.000+0900', 6 = '2020-01-15T09:00:00.000+0900', 7 = NULL;
+2025-10-21 19:55:24.878 INFO  [http-nio-8081-exec-8] [7e54920a] p6spy - #1761044124878 | took 0ms | resultset | connection -1| url 
+select count(sp1_0.staff_id) from staff_profile sp1_0
+1 = 3;
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129527 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 10, 2 = '대전 둔산점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 9, 2 = '울산 삼산점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 8, 2 = '인천 부평점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 7, 2 = '광주 충장로점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 6, 2 = '대구 동성로점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 5, 2 = '부산 해운대점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 4, 2 = '잠실점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 3, 2 = '신촌점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 2, 2 = '홍대점';
+2025-10-21 19:55:29.528 INFO  [http-nio-8081-exec-2] [a126ebf8] p6spy - #1761044129528 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 1, 2 = '강남점';
