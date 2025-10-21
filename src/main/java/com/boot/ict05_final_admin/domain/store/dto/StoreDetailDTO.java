@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 /**
  * 가맹점 상세 정보 DTO
  *
@@ -24,5 +27,46 @@ public class StoreDetailDTO {
 
     /** 매장 고유 Id */
     private Long storeId;
+
+    /** 가맹점명 */
+    private String storeName;
+
+    /** 점주명 */
+    private String staffName;
+
+    /** 매장 사업자 등록번호 */
+    private String businessRegistrationNumber;
+
+    /** 매장 연락처 */
+    private String storePhone;
+
+    /** 매장 본사 담당자 */
+    private String memberName;
+
+    /** 이메일 */
+    private String memberEmail;
+
+    /** 사업장 주소 */
+    private String storeLocation;
+
+    /** 계약 시작일 */
+    private LocalDate storeContractStartDate;
+
+    /** 계약 가맹일 */
+    private LocalDate storeContractAffiliateDate;
+
+    /** 매장계약기간 */
+    private int storeContractTerm;
+
+    /** 가맹비 */
+    private BigDecimal storeAffiliatePrice;
+
+    /** 월 로열티 */
+    private BigDecimal royalty;
+
+    /** 특이사항 */
+    private String comment;
+
+
 
 }
