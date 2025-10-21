@@ -1,24 +1,19 @@
 package com.boot.ict05_final_admin.common.error;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public class ErrorResponse {
 
-    public final OffsetDateTime timestamp = OffsetDateTime.now();
+    public final OffsetDateTime timestamp = OffsetDateTime.now(ZoneOffset.UTC);
 
     public final String requestId;
-
     public final int status;
-
     public final String code;
-
     public final String message;
-
     public final String path;
-
     public final String method;
-
     public final List<ValidationError> errors;
 
     public ErrorResponse(String requestId, int status, String code, String message,

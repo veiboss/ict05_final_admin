@@ -61,3 +61,138 @@ Action:
 
 Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
 
+2025-10-21 17:27:22.605 ERROR [restartedMain] [] o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+2025-10-21 17:27:32.780 ERROR [restartedMain] [] o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+2025-10-21 17:50:48.772 ERROR [http-nio-8081-exec-6] [11857d6d] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:48.784 ERROR [http-nio-8081-exec-6] [11857d6d] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=11857d6d][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:49.824 ERROR [http-nio-8081-exec-8] [427e61d0] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:49.834 ERROR [http-nio-8081-exec-8] [427e61d0] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=427e61d0][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:50.444 ERROR [http-nio-8081-exec-9] [8c6ddc39] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:50.444 ERROR [http-nio-8081-exec-9] [8c6ddc39] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=8c6ddc39][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:51.320 ERROR [http-nio-8081-exec-7] [bf5a8689] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:51.324 ERROR [http-nio-8081-exec-7] [bf5a8689] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=bf5a8689][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:56.639 ERROR [http-nio-8081-exec-2] [9a09e818] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:56.644 ERROR [http-nio-8081-exec-2] [9a09e818] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9a09e818][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:57.324 ERROR [http-nio-8081-exec-4] [ab94a3ca] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:57.333 ERROR [http-nio-8081-exec-4] [ab94a3ca] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ab94a3ca][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:57.843 ERROR [http-nio-8081-exec-10] [de826e12] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:57.843 ERROR [http-nio-8081-exec-10] [de826e12] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=de826e12][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.048 ERROR [http-nio-8081-exec-3] [03013712] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.054 ERROR [http-nio-8081-exec-3] [03013712] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=03013712][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.284 ERROR [http-nio-8081-exec-1] [e2068a06] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.294 ERROR [http-nio-8081-exec-1] [e2068a06] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=e2068a06][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.484 ERROR [http-nio-8081-exec-5] [10b3b3f6] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.494 ERROR [http-nio-8081-exec-5] [10b3b3f6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=10b3b3f6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.672 ERROR [http-nio-8081-exec-6] [942f9416] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.677 ERROR [http-nio-8081-exec-6] [942f9416] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=942f9416][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.850 ERROR [http-nio-8081-exec-8] [cff8104c] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.854 ERROR [http-nio-8081-exec-8] [cff8104c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cff8104c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:57.132 ERROR [http-nio-8081-exec-7] [cf4c78af] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:57.132 ERROR [http-nio-8081-exec-7] [cf4c78af] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cf4c78af][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:58.704 ERROR [http-nio-8081-exec-10] [54a62f19] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:58.711 ERROR [http-nio-8081-exec-10] [54a62f19] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=54a62f19][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:59.482 ERROR [http-nio-8081-exec-6] [12994a0a] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:59.492 ERROR [http-nio-8081-exec-6] [12994a0a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=12994a0a][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:59.942 ERROR [http-nio-8081-exec-4] [5938d506] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:59.942 ERROR [http-nio-8081-exec-4] [5938d506] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=5938d506][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:00.292 ERROR [http-nio-8081-exec-2] [160e81e5] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:00.301 ERROR [http-nio-8081-exec-2] [160e81e5] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=160e81e5][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:00.813 ERROR [http-nio-8081-exec-1] [b3f06896] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:00.831 ERROR [http-nio-8081-exec-1] [b3f06896] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b3f06896][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:01.122 ERROR [http-nio-8081-exec-8] [3e29cc47] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:01.132 ERROR [http-nio-8081-exec-8] [3e29cc47] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=3e29cc47][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:01.512 ERROR [http-nio-8081-exec-3] [dc9708b6] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:01.512 ERROR [http-nio-8081-exec-3] [dc9708b6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=dc9708b6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:03.352 ERROR [http-nio-8081-exec-9] [c1cd2bd6] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:03.352 ERROR [http-nio-8081-exec-9] [c1cd2bd6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c1cd2bd6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:04.792 ERROR [http-nio-8081-exec-5] [681fe8d2] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:04.797 ERROR [http-nio-8081-exec-5] [681fe8d2] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=681fe8d2][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:05.147 ERROR [http-nio-8081-exec-7] [339559b5] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.152 ERROR [http-nio-8081-exec-7] [339559b5] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=339559b5][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:05.342 ERROR [http-nio-8081-exec-10] [14317f27] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.352 ERROR [http-nio-8081-exec-10] [14317f27] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=14317f27][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:05.502 ERROR [http-nio-8081-exec-6] [1840de5f] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.532 ERROR [http-nio-8081-exec-6] [1840de5f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=1840de5f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:29.484 ERROR [http-nio-8081-exec-4] [d739e8e1] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d739e8e1][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:30.905 ERROR [http-nio-8081-exec-2] [7d222a29] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=7d222a29][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.137 ERROR [http-nio-8081-exec-5] [ad181a4f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ad181a4f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.398 ERROR [http-nio-8081-exec-7] [45a8c9c3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=45a8c9c3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.654 ERROR [http-nio-8081-exec-1] [c2331e10] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c2331e10][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.884 ERROR [http-nio-8081-exec-8] [29e3909c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=29e3909c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:32.094 ERROR [http-nio-8081-exec-3] [845a68e0] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=845a68e0][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:32.285 ERROR [http-nio-8081-exec-6] [dbdcb00b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=dbdcb00b][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:32.565 ERROR [http-nio-8081-exec-9] [41459544] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=41459544][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:35.805 ERROR [http-nio-8081-exec-10] [3c8b5e13] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=3c8b5e13][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:47.544 ERROR [http-nio-8081-exec-1] [cfaf748f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cfaf748f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:47.879 ERROR [http-nio-8081-exec-6] [9fcf3657] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9fcf3657][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.064 ERROR [http-nio-8081-exec-9] [bc9e785f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=bc9e785f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.254 ERROR [http-nio-8081-exec-2] [10494bb9] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=10494bb9][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.476 ERROR [http-nio-8081-exec-3] [d4fabe42] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d4fabe42][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.693 ERROR [http-nio-8081-exec-10] [b7819fbf] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b7819fbf][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.892 ERROR [http-nio-8081-exec-5] [016b83d7] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=016b83d7][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.107 ERROR [http-nio-8081-exec-7] [c5bf329e] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c5bf329e][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.304 ERROR [http-nio-8081-exec-8] [f990faf3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=f990faf3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.522 ERROR [http-nio-8081-exec-4] [95efae80] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=95efae80][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.735 ERROR [http-nio-8081-exec-1] [96442215] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=96442215][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.944 ERROR [http-nio-8081-exec-6] [f3e03652] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=f3e03652][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.175 ERROR [http-nio-8081-exec-9] [383320b6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=383320b6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.444 ERROR [http-nio-8081-exec-2] [a41f9a3e] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=a41f9a3e][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.759 ERROR [http-nio-8081-exec-3] [04ec288c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=04ec288c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.994 ERROR [http-nio-8081-exec-10] [913dda4a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=913dda4a][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.255 ERROR [http-nio-8081-exec-5] [de2d6371] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=de2d6371][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.501 ERROR [http-nio-8081-exec-7] [100e7450] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=100e7450][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.733 ERROR [http-nio-8081-exec-8] [47e4e8e5] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=47e4e8e5][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.922 ERROR [http-nio-8081-exec-4] [9abb967c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9abb967c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:44.723 ERROR [http-nio-8081-exec-4] [d5c90f80] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d5c90f80][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:45.881 ERROR [http-nio-8081-exec-10] [189f3d7b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=189f3d7b][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:46.206 ERROR [http-nio-8081-exec-9] [cf807f61] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cf807f61][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:46.508 ERROR [http-nio-8081-exec-8] [b8d9428e] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b8d9428e][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:46.803 ERROR [http-nio-8081-exec-1] [49ac0d0b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=49ac0d0b][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:47.066 ERROR [http-nio-8081-exec-7] [72c100dd] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=72c100dd][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:58.918 ERROR [http-nio-8081-exec-5] [cdafd9eb] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cdafd9eb][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:59.552 ERROR [http-nio-8081-exec-4] [698435a3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=698435a3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:00.002 ERROR [http-nio-8081-exec-10] [d75aef65] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d75aef65][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:00.572 ERROR [http-nio-8081-exec-9] [90cf3198] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=90cf3198][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:01.302 ERROR [http-nio-8081-exec-8] [9c4484a8] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9c4484a8][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:01.908 ERROR [http-nio-8081-exec-1] [c43b686c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c43b686c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:02.378 ERROR [http-nio-8081-exec-7] [448c1f18] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=448c1f18][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:02.911 ERROR [http-nio-8081-exec-3] [0d96a126] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=0d96a126][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:03.432 ERROR [http-nio-8081-exec-6] [d2255b6a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d2255b6a][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:03.952 ERROR [http-nio-8081-exec-2] [ec62cfa6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ec62cfa6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:04.408 ERROR [http-nio-8081-exec-5] [6504cf41] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=6504cf41][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:04.872 ERROR [http-nio-8081-exec-4] [a81879b6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=a81879b6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:40.826 ERROR [http-nio-8081-exec-10] [fdef98de] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=fdef98de][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.387 ERROR [http-nio-8081-exec-9] [eac2976d] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=eac2976d][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.595 ERROR [http-nio-8081-exec-8] [61a25bbb] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=61a25bbb][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.783 ERROR [http-nio-8081-exec-1] [cdabdee7] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cdabdee7][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.971 ERROR [http-nio-8081-exec-7] [c4e3beb2] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c4e3beb2][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:42.170 ERROR [http-nio-8081-exec-3] [ddcba79c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ddcba79c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:42.347 ERROR [http-nio-8081-exec-6] [f9bf8089] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=f9bf8089][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:06:52.715 ERROR [http-nio-8081-exec-8] [106099d3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=106099d3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:06:53.836 ERROR [http-nio-8081-exec-6] [6c09d53f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=6c09d53f][POST /admin/API/notice/write] 예상치 못한 오류

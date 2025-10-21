@@ -2184,3 +2184,1025 @@ select count(m1_0.material_id) from material m1_0 where ?=? limit ?
 2025-10-21 15:38:24.017 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
 2025-10-21 15:38:24.044 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
 2025-10-21 15:38:24.050 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.376 seconds (process running for 5.641)
+2025-10-21 15:57:31.712 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 15:57:31.755 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 3272 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 15:57:31.755 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 15:57:31.755 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 15:57:31.780 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 15:57:31.780 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 15:57:32.387 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 15:57:32.466 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 62 ms. Found 9 JPA repository interfaces.
+2025-10-21 15:57:33.048 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 15:57:33.066 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 15:57:33.068 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 15:57:33.068 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 15:57:33.143 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 15:57:33.143 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1363 ms
+2025-10-21 15:57:33.379 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 15:57:33.458 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 15:57:33.508 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 15:57:33.883 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 15:57:33.905 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 15:57:34.041 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@2da41d67
+2025-10-21 15:57:34.041 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 15:57:34.058 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 15:57:34.073 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 15:57:34.672 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 15:57:35.155 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 15:57:35.336 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 15:57:36.307 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 15:57:36.373 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 15:57:37.114 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 15:57:37.119 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 15:57:37.134 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 15:57:37.139 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.768 seconds (process running for 6.026)
+2025-10-21 15:57:38.539 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 15:57:38.539 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 15:57:38.539 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 15:57:38.741 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858741 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-21 15:57:38.766 INFO  [http-nio-8081-exec-1] [410f3f05] p6spy - #1761029858766 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
+2025-10-21 16:23:14.424 WARN  [http-nio-8081-exec-4] [16bebc45] c.b.i.c.error.GlobalExceptionHandler - [COMMON-400] [WEB][rid=16bebc45][GET /admin/material/list] Page index must not be less than zero
+2025-10-21 16:23:14.424 WARN  [http-nio-8081-exec-4] [16bebc45] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.IllegalArgumentException: Page index must not be less than zero]
+2025-10-21 17:23:16.506 INFO  [http-nio-8081-exec-8] [527050c9] p6spy - #1761034996506 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 5, 2 = '정연우', 3 = 'OWNER', 4 = 'STORE', 5 = '2003-08-06T00:00:00.000+0900', 6 = '2020-01-15T09:00:00.000+0900', 7 = NULL;
+2025-10-21 17:23:16.506 INFO  [http-nio-8081-exec-8] [527050c9] p6spy - #1761034996506 | took 0ms | resultset | connection -1| url 
+select sp1_0.staff_id,sp1_0.staff_name,sp1_0.staff_employment_type,sp1_0.staff_department,sp1_0.staff_birth,sp1_0.staff_start_date,sp1_0.staff_end_date from staff_profile sp1_0 order by sp1_0.staff_id desc limit ?,?
+1 = 3, 2 = '김매니저', 3 = 'WORKER', 4 = 'STORE', 5 = '1985-03-15T00:00:00.000+0900', 6 = '2020-01-15T09:00:00.000+0900', 7 = NULL;
+2025-10-21 17:23:16.538 INFO  [http-nio-8081-exec-8] [527050c9] p6spy - #1761034996538 | took 0ms | resultset | connection -1| url 
+select count(sp1_0.staff_id) from staff_profile sp1_0
+1 = 2;
+2025-10-21 17:25:32.832 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132832 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 17:25:32.835 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132835 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 17:25:32.838 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132838 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 17:25:32.841 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132841 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 17:25:32.842 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132842 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 17:25:32.846 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132846 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 17:25:32.847 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132847 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 17:25:32.851 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132851 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 17:25:32.851 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132851 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 17:25:32.860 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132860 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-21 17:25:32.862 INFO  [http-nio-8081-exec-6] [c52a95db] p6spy - #1761035132862 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
+2025-10-21 17:27:15.086 INFO  [File Watcher] [] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 2 deletions, 0 modifications)
+2025-10-21 17:27:15.086 INFO  [Thread-7] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-21 17:27:15.086 INFO  [tomcat-shutdown] [] o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:15.171 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-21 17:27:15.171 INFO  [Thread-7] [] o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:15.171 INFO  [Thread-7] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:15.181 INFO  [Thread-7] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-21 17:27:15.197 INFO  [Thread-7] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-21 17:27:15.307 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 3272 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 17:27:15.307 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 17:27:15.307 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 17:27:15.660 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 17:27:15.686 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 30 ms. Found 9 JPA repository interfaces.
+2025-10-21 17:27:15.747 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 17:27:15.760 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:15.760 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 17:27:15.760 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 17:27:15.771 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 17:27:15.771 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 464 ms
+2025-10-21 17:27:15.789 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 17:27:15.789 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 17:27:15.810 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 17:27:15.810 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2025-10-21 17:27:15.821 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@4cfd32c3
+2025-10-21 17:27:15.821 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2025-10-21 17:27:15.821 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 17:27:15.821 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 17:27:16.017 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 17:27:16.192 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:16.351 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 17:27:16.357 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 17:27:16.482 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 17:27:16.487 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:16.492 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 17:27:16.494 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 1.219 seconds (process running for 5385.275)
+2025-10-21 17:27:16.494 INFO  [restartedMain] [] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-10-21 17:27:17.118 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 17:27:17.160 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 20608 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 17:27:17.163 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 17:27:17.163 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 17:27:17.195 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 17:27:17.195 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 17:27:17.822 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 17:27:17.915 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 63 ms. Found 9 JPA repository interfaces.
+2025-10-21 17:27:17.933 INFO  [File Watcher] [] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 265 class path changes (2 additions, 0 deletions, 263 modifications)
+2025-10-21 17:27:17.934 INFO  [Thread-9] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-21 17:27:17.934 INFO  [tomcat-shutdown] [] o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:18.032 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-21 17:27:18.032 INFO  [Thread-9] [] o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:18.034 INFO  [Thread-9] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:18.034 INFO  [Thread-9] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2025-10-21 17:27:18.056 INFO  [Thread-9] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2025-10-21 17:27:18.154 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 3272 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 17:27:18.154 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 17:27:18.154 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 17:27:18.316 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 17:27:18.373 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 51 ms. Found 9 JPA repository interfaces.
+2025-10-21 17:27:18.430 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 17:27:18.430 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:18.430 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 17:27:18.430 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 17:27:18.448 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 17:27:18.448 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 292 ms
+2025-10-21 17:27:18.473 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 17:27:18.473 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 17:27:18.480 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 17:27:18.481 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2025-10-21 17:27:18.493 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@16ccc98a
+2025-10-21 17:27:18.493 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2025-10-21 17:27:18.493 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 17:27:18.502 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 17:27:18.711 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 17:27:18.730 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:18.743 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 17:27:18.743 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 17:27:18.743 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 17:27:18.855 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 17:27:18.856 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1660 ms
+2025-10-21 17:27:18.914 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:19.146 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 17:27:19.148 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 17:27:19.148 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 17:27:19.227 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 17:27:19.247 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:19.253 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 17:27:19.257 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 1.138 seconds (process running for 5388.033)
+2025-10-21 17:27:19.258 INFO  [restartedMain] [] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-10-21 17:27:19.258 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 17:27:19.322 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 17:27:19.676 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 17:27:19.694 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 17:27:19.821 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@76adb27
+2025-10-21 17:27:19.821 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 17:27:19.842 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 17:27:19.853 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 17:27:20.462 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 17:27:20.708 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:20.885 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 17:27:21.696 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 17:27:21.749 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 17:27:22.524 WARN  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2025-10-21 17:27:22.539 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:22.539 WARN  [restartedMain] [] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-10-21 17:27:22.539 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:22.555 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-21 17:27:22.577 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-21 17:27:22.587 INFO  [restartedMain] [] o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-10-21 17:27:22.605 ERROR [restartedMain] [] o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+2025-10-21 17:27:27.681 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 17:27:27.707 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 18604 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 17:27:27.707 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 17:27:27.707 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 17:27:27.739 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 17:27:27.739 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 17:27:28.369 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 17:27:28.447 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 64 ms. Found 9 JPA repository interfaces.
+2025-10-21 17:27:29.009 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 17:27:29.025 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:29.025 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 17:27:29.025 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 17:27:29.102 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 17:27:29.102 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1363 ms
+2025-10-21 17:27:29.338 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 17:27:29.415 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 17:27:29.480 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 17:27:29.853 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 17:27:29.884 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 17:27:30.025 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@5fb61265
+2025-10-21 17:27:30.027 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 17:27:30.045 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 17:27:30.056 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 17:27:30.661 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 17:27:30.900 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:31.072 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 17:27:31.869 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 17:27:31.915 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 17:27:32.672 WARN  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2025-10-21 17:27:32.680 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:32.697 WARN  [restartedMain] [] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-10-21 17:27:32.697 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:27:32.712 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-21 17:27:32.744 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-21 17:27:32.757 INFO  [restartedMain] [] o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-10-21 17:27:32.780 ERROR [restartedMain] [] o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+2025-10-21 17:27:57.930 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 17:27:57.951 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 5644 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 17:27:57.951 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 17:27:57.951 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 17:27:57.991 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 17:27:57.991 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 17:27:58.640 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 17:27:58.713 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 64 ms. Found 9 JPA repository interfaces.
+2025-10-21 17:27:59.369 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 17:27:59.391 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:27:59.394 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 17:27:59.394 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 17:27:59.463 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 17:27:59.463 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1472 ms
+2025-10-21 17:27:59.744 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 17:27:59.826 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 17:27:59.853 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 17:28:00.174 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 17:28:00.201 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 17:28:00.337 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@39a1719e
+2025-10-21 17:28:00.337 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 17:28:00.353 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 17:28:00.369 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 17:28:00.978 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 17:28:01.619 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:28:01.792 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 17:28:02.770 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 17:28:02.806 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 17:28:03.384 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 17:28:03.402 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:28:03.416 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 17:28:03.432 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.86 seconds (process running for 6.135)
+2025-10-21 17:28:09.217 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 17:28:09.217 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 17:28:09.218 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-10-21 17:29:28.886 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 17:29:28.908 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 21024 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 17:29:28.908 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 17:29:28.908 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 17:29:28.947 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 17:29:28.947 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 17:29:29.565 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 17:29:29.651 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 64 ms. Found 9 JPA repository interfaces.
+2025-10-21 17:29:30.245 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 17:29:30.266 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:29:30.269 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 17:29:30.269 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 17:29:30.338 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 17:29:30.338 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1391 ms
+2025-10-21 17:29:30.708 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 17:29:30.759 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 17:29:30.799 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 17:29:31.006 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 17:29:31.028 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 17:29:31.135 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@779d6b82
+2025-10-21 17:29:31.135 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 17:29:31.151 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 17:29:31.167 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 17:29:31.746 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 17:29:31.983 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 17:29:32.167 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 17:29:33.064 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 17:29:33.115 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 17:29:33.761 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 17:29:33.777 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 17:29:33.792 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 17:29:33.812 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.285 seconds (process running for 5.535)
+2025-10-21 17:29:37.954 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 17:29:37.954 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 17:29:37.954 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-10-21 17:44:12.413 INFO  [http-nio-8081-exec-8] [5eea2303] p6spy - #1761036252413 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_affiliate_price,s1_0.business_registration_number,s1_0.store_comment,s1_0.store_contract_affiliate_date,s1_0.store_contract_start_date,s1_0.store_contract_term,s1_0.store_location,s1_0.member_id_fk,s1_0.store_monthly_sales,s1_0.store_name,s1_0.store_phone,s1_0.store_royalty,s1_0.store_status,s1_0.store_type from store s1_0 where s1_0.store_id=?
+2 = 1000000.00, 3 = '123-45-67890', 4 = '첫 매장입니다.', 5 = '2023-01-10T00:00:00.000+0900', 6 = '2023-01-01T00:00:00.000+0900', 7 = 12, 8 = '서울 강남구', 9 = 1, 10 = 5000000.00, 11 = '강남점', 12 = '02-1234-5678', 13 = 0.0500, 14 = 'OPERATING', 15 = 'FRANCHISE';
+2025-10-21 17:46:59.842 INFO  [http-nio-8081-exec-2] [f669327e] p6spy - #1761036419842 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_affiliate_price,s1_0.business_registration_number,s1_0.store_comment,s1_0.store_contract_affiliate_date,s1_0.store_contract_start_date,s1_0.store_contract_term,s1_0.store_location,s1_0.member_id_fk,s1_0.store_monthly_sales,s1_0.store_name,s1_0.store_phone,s1_0.store_royalty,s1_0.store_status,s1_0.store_type from store s1_0 where s1_0.store_id=?
+2 = 1000000.00, 3 = '123-45-67890', 4 = '첫 매장입니다.', 5 = '2023-01-10T00:00:00.000+0900', 6 = '2023-01-01T00:00:00.000+0900', 7 = 12, 8 = '서울 강남구', 9 = 1, 10 = 5000000.00, 11 = '강남점', 12 = '02-1234-5678', 13 = 0.0500, 14 = 'OPERATING', 15 = 'FRANCHISE';
+2025-10-21 17:49:40.051 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580051 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 17:49:40.051 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580051 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 17:49:40.052 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580052 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 17:49:40.053 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580053 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 17:49:40.053 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580053 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 17:49:40.055 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580055 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 17:49:40.058 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580058 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 17:49:40.060 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580060 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 17:49:40.061 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580061 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 17:49:40.062 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580062 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-21 17:49:40.102 INFO  [http-nio-8081-exec-3] [8474eeb0] p6spy - #1761036580102 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
+2025-10-21 17:49:42.746 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582746 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 17:49:42.748 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582748 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 17:49:42.752 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582752 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 17:49:42.754 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582754 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 17:49:42.756 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582756 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 17:49:42.761 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582761 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 17:49:42.763 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582763 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 17:49:42.764 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582764 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 17:49:42.766 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582766 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 17:49:42.766 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582766 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-21 17:49:42.766 INFO  [http-nio-8081-exec-5] [4bb3b501] p6spy - #1761036582766 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
+2025-10-21 17:49:43.429 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583429 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 17:49:43.432 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583432 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 17:49:43.433 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583433 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 17:49:43.434 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583434 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 17:49:43.436 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583436 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 17:49:43.441 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583441 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 17:49:43.444 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583444 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 17:49:43.447 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583447 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 17:49:43.448 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583448 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 17:49:43.448 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583448 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-21 17:49:43.453 INFO  [http-nio-8081-exec-10] [d8b2b5e5] p6spy - #1761036583453 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
+2025-10-21 17:50:48.771 WARN  [http-nio-8081-exec-6] [11857d6d] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:48.772 WARN  [http-nio-8081-exec-6] [11857d6d] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:48.772 ERROR [http-nio-8081-exec-6] [11857d6d] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:48.780 INFO  [http-nio-8081-exec-6] [11857d6d] p6spy - #1761036648780 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:48.784 ERROR [http-nio-8081-exec-6] [11857d6d] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=11857d6d][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:48.785 WARN  [http-nio-8081-exec-6] [11857d6d] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:49.824 WARN  [http-nio-8081-exec-8] [427e61d0] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:49.824 WARN  [http-nio-8081-exec-8] [427e61d0] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:49.824 ERROR [http-nio-8081-exec-8] [427e61d0] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:49.834 INFO  [http-nio-8081-exec-8] [427e61d0] p6spy - #1761036649834 | took 3ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:49.834 ERROR [http-nio-8081-exec-8] [427e61d0] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=427e61d0][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:49.834 WARN  [http-nio-8081-exec-8] [427e61d0] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:50.444 WARN  [http-nio-8081-exec-9] [8c6ddc39] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:50.444 WARN  [http-nio-8081-exec-9] [8c6ddc39] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:50.444 ERROR [http-nio-8081-exec-9] [8c6ddc39] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:50.444 INFO  [http-nio-8081-exec-9] [8c6ddc39] p6spy - #1761036650444 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:50.444 ERROR [http-nio-8081-exec-9] [8c6ddc39] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=8c6ddc39][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:50.444 WARN  [http-nio-8081-exec-9] [8c6ddc39] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:51.319 WARN  [http-nio-8081-exec-7] [bf5a8689] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:51.320 WARN  [http-nio-8081-exec-7] [bf5a8689] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:51.320 ERROR [http-nio-8081-exec-7] [bf5a8689] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:51.323 INFO  [http-nio-8081-exec-7] [bf5a8689] p6spy - #1761036651323 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:51.324 ERROR [http-nio-8081-exec-7] [bf5a8689] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=bf5a8689][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:51.324 WARN  [http-nio-8081-exec-7] [bf5a8689] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:56.638 WARN  [http-nio-8081-exec-2] [9a09e818] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:56.639 WARN  [http-nio-8081-exec-2] [9a09e818] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:56.639 ERROR [http-nio-8081-exec-2] [9a09e818] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:56.641 INFO  [http-nio-8081-exec-2] [9a09e818] p6spy - #1761036656641 | took 1ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:56.644 ERROR [http-nio-8081-exec-2] [9a09e818] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9a09e818][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:56.645 WARN  [http-nio-8081-exec-2] [9a09e818] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:57.324 WARN  [http-nio-8081-exec-4] [ab94a3ca] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:57.324 WARN  [http-nio-8081-exec-4] [ab94a3ca] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:57.324 ERROR [http-nio-8081-exec-4] [ab94a3ca] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:57.324 INFO  [http-nio-8081-exec-4] [ab94a3ca] p6spy - #1761036657324 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:57.333 ERROR [http-nio-8081-exec-4] [ab94a3ca] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ab94a3ca][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:57.334 WARN  [http-nio-8081-exec-4] [ab94a3ca] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:57.843 WARN  [http-nio-8081-exec-10] [de826e12] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:57.843 WARN  [http-nio-8081-exec-10] [de826e12] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:57.843 ERROR [http-nio-8081-exec-10] [de826e12] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:57.843 INFO  [http-nio-8081-exec-10] [de826e12] p6spy - #1761036657843 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:57.843 ERROR [http-nio-8081-exec-10] [de826e12] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=de826e12][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:57.843 WARN  [http-nio-8081-exec-10] [de826e12] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:58.048 WARN  [http-nio-8081-exec-3] [03013712] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.048 WARN  [http-nio-8081-exec-3] [03013712] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:58.048 ERROR [http-nio-8081-exec-3] [03013712] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.052 INFO  [http-nio-8081-exec-3] [03013712] p6spy - #1761036658052 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:58.054 ERROR [http-nio-8081-exec-3] [03013712] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=03013712][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.055 WARN  [http-nio-8081-exec-3] [03013712] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:58.284 WARN  [http-nio-8081-exec-1] [e2068a06] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.284 WARN  [http-nio-8081-exec-1] [e2068a06] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:58.284 ERROR [http-nio-8081-exec-1] [e2068a06] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.284 INFO  [http-nio-8081-exec-1] [e2068a06] p6spy - #1761036658284 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:58.294 ERROR [http-nio-8081-exec-1] [e2068a06] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=e2068a06][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.294 WARN  [http-nio-8081-exec-1] [e2068a06] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:58.484 WARN  [http-nio-8081-exec-5] [10b3b3f6] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.484 WARN  [http-nio-8081-exec-5] [10b3b3f6] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:58.484 ERROR [http-nio-8081-exec-5] [10b3b3f6] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.494 INFO  [http-nio-8081-exec-5] [10b3b3f6] p6spy - #1761036658494 | took 6ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:58.494 ERROR [http-nio-8081-exec-5] [10b3b3f6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=10b3b3f6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.494 WARN  [http-nio-8081-exec-5] [10b3b3f6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:58.672 WARN  [http-nio-8081-exec-6] [942f9416] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.672 WARN  [http-nio-8081-exec-6] [942f9416] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:58.672 ERROR [http-nio-8081-exec-6] [942f9416] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.675 INFO  [http-nio-8081-exec-6] [942f9416] p6spy - #1761036658675 | took 1ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:58.677 ERROR [http-nio-8081-exec-6] [942f9416] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=942f9416][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.678 WARN  [http-nio-8081-exec-6] [942f9416] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:50:58.850 WARN  [http-nio-8081-exec-8] [cff8104c] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.850 WARN  [http-nio-8081-exec-8] [cff8104c] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:50:58.850 ERROR [http-nio-8081-exec-8] [cff8104c] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'notice_content' at row 1
+2025-10-21 17:50:58.854 INFO  [http-nio-8081-exec-8] [cff8104c] p6spy - #1761036658854 | took 1ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:50:58.854 ERROR [http-nio-8081-exec-8] [cff8104c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cff8104c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:50:58.854 WARN  [http-nio-8081-exec-8] [cff8104c] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'notice_content' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:51:07.528 INFO  [http-nio-8081-exec-7] [7445e095] p6spy - #1761036667528 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.notice_content,n1_0.is_show,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_confirmed,n1_0.notice_count,n1_0.notice_priority,n1_0.notice_status,n1_0.notice_reg_date,n1_0.notice_title,n1_0.writer from notice n1_0 where n1_0.notice_id=?
+2 = '<p>테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트</p>', 3 = false, 4 = 0, 5 = 'NORMAL', 6 = false, 7 = 0, 8 = 'NORMAL', 9 = 'ACTIVE', 10 = '2025-10-21T17:51:04.996+0900', 11 = '테스트', 12 = '테스트';
+2025-10-21 17:51:11.273 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671273 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 128, 2 = 0, 3 = 'NORMAL', 4 = 'NORMAL', 5 = 'ACTIVE', 6 = false, 7 = '테스트', 8 = '<p>테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트</p>', 9 = '테스트', 10 = 0, 11 = '2025-10-21T17:51:04.996+0900';
+2025-10-21 17:51:11.274 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671274 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 17:51:11.276 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671276 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 17:51:11.277 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671277 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 17:51:11.278 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671278 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 17:51:11.279 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671279 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 17:51:11.279 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671279 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 17:51:11.280 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671280 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 17:51:11.282 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671282 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 17:51:11.282 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671282 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 17:51:11.282 INFO  [http-nio-8081-exec-6] [00cb23b6] p6spy - #1761036671282 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 101;
+2025-10-21 17:51:13.284 INFO  [http-nio-8081-exec-7] [e8b22faa] p6spy - #1761036673284 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.notice_content,n1_0.is_show,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_confirmed,n1_0.notice_count,n1_0.notice_priority,n1_0.notice_status,n1_0.notice_reg_date,n1_0.notice_title,n1_0.writer from notice n1_0 where n1_0.notice_id=?
+2 = '<p>테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트</p>', 3 = false, 4 = 0, 5 = 'NORMAL', 6 = false, 7 = 0, 8 = 'NORMAL', 9 = 'ACTIVE', 10 = '2025-10-21T17:51:04.996+0900', 11 = '테스트', 12 = '테스트';
+2025-10-21 17:51:20.724 INFO  [http-nio-8081-exec-9] [897a53fc] p6spy - #1761036680724 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.notice_content,n1_0.is_show,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_confirmed,n1_0.notice_count,n1_0.notice_priority,n1_0.notice_status,n1_0.notice_reg_date,n1_0.notice_title,n1_0.writer from notice n1_0 where n1_0.notice_id=?
+2 = '<p>테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트</p>', 3 = false, 4 = 0, 5 = 'NORMAL', 6 = false, 7 = 0, 8 = 'NORMAL', 9 = 'ACTIVE', 10 = '2025-10-21T17:51:04.996+0900', 11 = '테스트', 12 = '테스트';
+2025-10-21 17:51:20.768 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680768 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-21 17:51:20.769 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680769 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-21 17:51:20.771 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680771 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-21 17:51:20.771 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680771 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-21 17:51:20.771 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680771 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-21 17:51:20.772 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680772 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-21 17:51:20.772 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680772 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-21 17:51:20.772 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680772 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-21 17:51:20.773 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680773 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-21 17:51:20.773 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680773 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-21 17:51:20.777 INFO  [http-nio-8081-exec-3] [e5277a70] p6spy - #1761036680777 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
+2025-10-21 17:51:57.132 WARN  [http-nio-8081-exec-7] [cf4c78af] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:51:57.132 WARN  [http-nio-8081-exec-7] [cf4c78af] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:51:57.132 ERROR [http-nio-8081-exec-7] [cf4c78af] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:57.132 INFO  [http-nio-8081-exec-7] [cf4c78af] p6spy - #1761036717132 | took 1ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:51:57.132 ERROR [http-nio-8081-exec-7] [cf4c78af] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cf4c78af][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:57.132 WARN  [http-nio-8081-exec-7] [cf4c78af] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:51:58.704 WARN  [http-nio-8081-exec-10] [54a62f19] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:51:58.704 WARN  [http-nio-8081-exec-10] [54a62f19] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:51:58.704 ERROR [http-nio-8081-exec-10] [54a62f19] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:58.708 INFO  [http-nio-8081-exec-10] [54a62f19] p6spy - #1761036718708 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:51:58.711 ERROR [http-nio-8081-exec-10] [54a62f19] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=54a62f19][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:58.712 WARN  [http-nio-8081-exec-10] [54a62f19] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:51:59.482 WARN  [http-nio-8081-exec-6] [12994a0a] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:51:59.482 WARN  [http-nio-8081-exec-6] [12994a0a] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:51:59.482 ERROR [http-nio-8081-exec-6] [12994a0a] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:59.482 INFO  [http-nio-8081-exec-6] [12994a0a] p6spy - #1761036719482 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:51:59.492 ERROR [http-nio-8081-exec-6] [12994a0a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=12994a0a][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:59.492 WARN  [http-nio-8081-exec-6] [12994a0a] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:51:59.942 WARN  [http-nio-8081-exec-4] [5938d506] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:51:59.942 WARN  [http-nio-8081-exec-4] [5938d506] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:51:59.942 ERROR [http-nio-8081-exec-4] [5938d506] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:51:59.942 INFO  [http-nio-8081-exec-4] [5938d506] p6spy - #1761036719942 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:51:59.942 ERROR [http-nio-8081-exec-4] [5938d506] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=5938d506][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:51:59.942 WARN  [http-nio-8081-exec-4] [5938d506] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:00.292 WARN  [http-nio-8081-exec-2] [160e81e5] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:00.292 WARN  [http-nio-8081-exec-2] [160e81e5] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:00.292 ERROR [http-nio-8081-exec-2] [160e81e5] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:00.292 INFO  [http-nio-8081-exec-2] [160e81e5] p6spy - #1761036720292 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:00.301 ERROR [http-nio-8081-exec-2] [160e81e5] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=160e81e5][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:00.301 WARN  [http-nio-8081-exec-2] [160e81e5] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:00.813 WARN  [http-nio-8081-exec-1] [b3f06896] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:00.813 WARN  [http-nio-8081-exec-1] [b3f06896] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:00.813 ERROR [http-nio-8081-exec-1] [b3f06896] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:00.813 INFO  [http-nio-8081-exec-1] [b3f06896] p6spy - #1761036720813 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:00.831 ERROR [http-nio-8081-exec-1] [b3f06896] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b3f06896][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:00.831 WARN  [http-nio-8081-exec-1] [b3f06896] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:01.122 WARN  [http-nio-8081-exec-8] [3e29cc47] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:01.122 WARN  [http-nio-8081-exec-8] [3e29cc47] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:01.122 ERROR [http-nio-8081-exec-8] [3e29cc47] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:01.122 INFO  [http-nio-8081-exec-8] [3e29cc47] p6spy - #1761036721122 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:01.132 ERROR [http-nio-8081-exec-8] [3e29cc47] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=3e29cc47][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:01.132 WARN  [http-nio-8081-exec-8] [3e29cc47] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:01.512 WARN  [http-nio-8081-exec-3] [dc9708b6] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:01.512 WARN  [http-nio-8081-exec-3] [dc9708b6] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:01.512 ERROR [http-nio-8081-exec-3] [dc9708b6] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:01.512 INFO  [http-nio-8081-exec-3] [dc9708b6] p6spy - #1761036721512 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:01.512 ERROR [http-nio-8081-exec-3] [dc9708b6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=dc9708b6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:01.521 WARN  [http-nio-8081-exec-3] [dc9708b6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:03.352 WARN  [http-nio-8081-exec-9] [c1cd2bd6] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:03.352 WARN  [http-nio-8081-exec-9] [c1cd2bd6] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:03.352 ERROR [http-nio-8081-exec-9] [c1cd2bd6] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:03.352 INFO  [http-nio-8081-exec-9] [c1cd2bd6] p6spy - #1761036723352 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:03.352 ERROR [http-nio-8081-exec-9] [c1cd2bd6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c1cd2bd6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:03.352 WARN  [http-nio-8081-exec-9] [c1cd2bd6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:04.792 WARN  [http-nio-8081-exec-5] [681fe8d2] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:04.792 WARN  [http-nio-8081-exec-5] [681fe8d2] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:04.792 ERROR [http-nio-8081-exec-5] [681fe8d2] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:04.792 INFO  [http-nio-8081-exec-5] [681fe8d2] p6spy - #1761036724792 | took 1ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:04.797 ERROR [http-nio-8081-exec-5] [681fe8d2] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=681fe8d2][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:04.797 WARN  [http-nio-8081-exec-5] [681fe8d2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:05.147 WARN  [http-nio-8081-exec-7] [339559b5] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.147 WARN  [http-nio-8081-exec-7] [339559b5] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:05.147 ERROR [http-nio-8081-exec-7] [339559b5] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.150 INFO  [http-nio-8081-exec-7] [339559b5] p6spy - #1761036725150 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:05.152 ERROR [http-nio-8081-exec-7] [339559b5] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=339559b5][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:05.152 WARN  [http-nio-8081-exec-7] [339559b5] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:05.342 WARN  [http-nio-8081-exec-10] [14317f27] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.342 WARN  [http-nio-8081-exec-10] [14317f27] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:05.342 ERROR [http-nio-8081-exec-10] [14317f27] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.352 INFO  [http-nio-8081-exec-10] [14317f27] p6spy - #1761036725352 | took 2ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:05.352 ERROR [http-nio-8081-exec-10] [14317f27] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=14317f27][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:05.352 WARN  [http-nio-8081-exec-10] [14317f27] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 17:52:05.502 WARN  [http-nio-8081-exec-6] [1840de5f] o.m.jdbc.message.server.ErrorPacket - Error: 1406-22001: Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.502 WARN  [http-nio-8081-exec-6] [1840de5f] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1406, SQLState: 22001
+2025-10-21 17:52:05.502 ERROR [http-nio-8081-exec-6] [1840de5f] o.h.e.jdbc.spi.SqlExceptionHelper - (conn=678252) Data too long for column 'writer' at row 1
+2025-10-21 17:52:05.512 INFO  [http-nio-8081-exec-6] [1840de5f] p6spy - #1761036725512 | took 9ms | rollback | connection 0| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-21 17:52:05.532 ERROR [http-nio-8081-exec-6] [1840de5f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=1840de5f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 17:52:05.532 WARN  [http-nio-8081-exec-6] [1840de5f] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement [(conn=678252) Data too long for column 'writer' at row 1] [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into notice (notice_content,is_show,member_id_fk,notice_category,notice_confirmed,notice_count,notice_priority,notice_status,notice_reg_date,notice_title,writer) values (?,?,?,?,?,?,?,?,?,?,?)]]
+2025-10-21 18:03:00.017 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 18:03:00.058 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 18100 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 18:03:00.058 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 18:03:00.058 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 18:03:00.091 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 18:03:00.091 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 18:03:00.699 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 18:03:00.778 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 63 ms. Found 9 JPA repository interfaces.
+2025-10-21 18:03:01.330 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 18:03:01.346 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 18:03:01.346 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 18:03:01.346 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 18:03:01.418 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 18:03:01.418 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1327 ms
+2025-10-21 18:03:01.624 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 18:03:01.720 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 18:03:01.758 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 18:03:02.017 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 18:03:02.036 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 18:03:02.159 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@3c3b146
+2025-10-21 18:03:02.159 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 18:03:02.175 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 18:03:02.191 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 18:03:02.787 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 18:03:03.057 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 18:03:03.247 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 18:03:04.158 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 18:03:04.204 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 18:03:04.819 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 18:03:04.819 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 18:03:04.835 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 18:03:04.840 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.176 seconds (process running for 5.479)
+2025-10-21 18:03:09.181 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 18:03:09.181 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 18:03:09.182 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-10-21 18:03:29.484 ERROR [http-nio-8081-exec-4] [d739e8e1] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d739e8e1][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:29.485 WARN  [http-nio-8081-exec-4] [d739e8e1] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:30.905 ERROR [http-nio-8081-exec-2] [7d222a29] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=7d222a29][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:30.905 WARN  [http-nio-8081-exec-2] [7d222a29] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:31.137 ERROR [http-nio-8081-exec-5] [ad181a4f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ad181a4f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.137 WARN  [http-nio-8081-exec-5] [ad181a4f] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:31.398 ERROR [http-nio-8081-exec-7] [45a8c9c3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=45a8c9c3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.398 WARN  [http-nio-8081-exec-7] [45a8c9c3] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:31.654 ERROR [http-nio-8081-exec-1] [c2331e10] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c2331e10][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.655 WARN  [http-nio-8081-exec-1] [c2331e10] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:31.884 ERROR [http-nio-8081-exec-8] [29e3909c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=29e3909c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:31.884 WARN  [http-nio-8081-exec-8] [29e3909c] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:32.094 ERROR [http-nio-8081-exec-3] [845a68e0] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=845a68e0][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:32.094 WARN  [http-nio-8081-exec-3] [845a68e0] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:32.285 ERROR [http-nio-8081-exec-6] [dbdcb00b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=dbdcb00b][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:32.285 WARN  [http-nio-8081-exec-6] [dbdcb00b] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:32.565 ERROR [http-nio-8081-exec-9] [41459544] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=41459544][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:32.565 WARN  [http-nio-8081-exec-9] [41459544] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:35.805 ERROR [http-nio-8081-exec-10] [3c8b5e13] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=3c8b5e13][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:35.805 WARN  [http-nio-8081-exec-10] [3c8b5e13] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:47.544 ERROR [http-nio-8081-exec-1] [cfaf748f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cfaf748f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:47.544 WARN  [http-nio-8081-exec-1] [cfaf748f] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:47.879 ERROR [http-nio-8081-exec-6] [9fcf3657] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9fcf3657][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:47.879 WARN  [http-nio-8081-exec-6] [9fcf3657] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:48.064 ERROR [http-nio-8081-exec-9] [bc9e785f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=bc9e785f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.064 WARN  [http-nio-8081-exec-9] [bc9e785f] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:48.254 ERROR [http-nio-8081-exec-2] [10494bb9] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=10494bb9][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.254 WARN  [http-nio-8081-exec-2] [10494bb9] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:48.476 ERROR [http-nio-8081-exec-3] [d4fabe42] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d4fabe42][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.476 WARN  [http-nio-8081-exec-3] [d4fabe42] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:48.693 ERROR [http-nio-8081-exec-10] [b7819fbf] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b7819fbf][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.693 WARN  [http-nio-8081-exec-10] [b7819fbf] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:48.892 ERROR [http-nio-8081-exec-5] [016b83d7] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=016b83d7][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:48.892 WARN  [http-nio-8081-exec-5] [016b83d7] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:49.107 ERROR [http-nio-8081-exec-7] [c5bf329e] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c5bf329e][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.107 WARN  [http-nio-8081-exec-7] [c5bf329e] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:49.304 ERROR [http-nio-8081-exec-8] [f990faf3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=f990faf3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.304 WARN  [http-nio-8081-exec-8] [f990faf3] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:49.522 ERROR [http-nio-8081-exec-4] [95efae80] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=95efae80][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.522 WARN  [http-nio-8081-exec-4] [95efae80] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:49.735 ERROR [http-nio-8081-exec-1] [96442215] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=96442215][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.735 WARN  [http-nio-8081-exec-1] [96442215] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:49.944 ERROR [http-nio-8081-exec-6] [f3e03652] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=f3e03652][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:49.944 WARN  [http-nio-8081-exec-6] [f3e03652] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:50.175 ERROR [http-nio-8081-exec-9] [383320b6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=383320b6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.175 WARN  [http-nio-8081-exec-9] [383320b6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:50.444 ERROR [http-nio-8081-exec-2] [a41f9a3e] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=a41f9a3e][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.444 WARN  [http-nio-8081-exec-2] [a41f9a3e] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:50.759 ERROR [http-nio-8081-exec-3] [04ec288c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=04ec288c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.760 WARN  [http-nio-8081-exec-3] [04ec288c] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:50.994 ERROR [http-nio-8081-exec-10] [913dda4a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=913dda4a][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:50.994 WARN  [http-nio-8081-exec-10] [913dda4a] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:51.255 ERROR [http-nio-8081-exec-5] [de2d6371] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=de2d6371][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.255 WARN  [http-nio-8081-exec-5] [de2d6371] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:51.501 ERROR [http-nio-8081-exec-7] [100e7450] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=100e7450][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.501 WARN  [http-nio-8081-exec-7] [100e7450] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:51.733 ERROR [http-nio-8081-exec-8] [47e4e8e5] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=47e4e8e5][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.734 WARN  [http-nio-8081-exec-8] [47e4e8e5] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:03:51.922 ERROR [http-nio-8081-exec-4] [9abb967c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9abb967c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:03:51.923 WARN  [http-nio-8081-exec-4] [9abb967c] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:12.376 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 18:04:12.395 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 1968 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 18:04:12.395 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 18:04:12.395 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 18:04:12.440 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 18:04:12.440 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 18:04:13.131 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 18:04:13.214 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 66 ms. Found 9 JPA repository interfaces.
+2025-10-21 18:04:13.801 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 18:04:13.813 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 18:04:13.813 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 18:04:13.813 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 18:04:13.861 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 18:04:13.877 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1421 ms
+2025-10-21 18:04:14.066 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 18:04:14.160 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 18:04:14.192 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 18:04:14.493 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 18:04:14.508 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 18:04:14.620 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@4e2f3984
+2025-10-21 18:04:14.632 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 18:04:14.636 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 18:04:14.651 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 18:04:15.271 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 18:04:15.508 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 18:04:15.682 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 18:04:16.521 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 18:04:16.553 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 18:04:17.202 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 18:04:17.202 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 18:04:17.217 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 18:04:17.233 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.227 seconds (process running for 5.52)
+2025-10-21 18:04:23.863 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-21 18:04:23.863 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-21 18:04:23.863 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-10-21 18:04:44.723 ERROR [http-nio-8081-exec-4] [d5c90f80] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d5c90f80][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:44.723 WARN  [http-nio-8081-exec-4] [d5c90f80] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:45.881 ERROR [http-nio-8081-exec-10] [189f3d7b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=189f3d7b][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:45.882 WARN  [http-nio-8081-exec-10] [189f3d7b] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:46.206 ERROR [http-nio-8081-exec-9] [cf807f61] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cf807f61][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:46.206 WARN  [http-nio-8081-exec-9] [cf807f61] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:46.508 ERROR [http-nio-8081-exec-8] [b8d9428e] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b8d9428e][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:46.508 WARN  [http-nio-8081-exec-8] [b8d9428e] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:46.803 ERROR [http-nio-8081-exec-1] [49ac0d0b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=49ac0d0b][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:46.803 WARN  [http-nio-8081-exec-1] [49ac0d0b] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:47.066 ERROR [http-nio-8081-exec-7] [72c100dd] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=72c100dd][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:47.067 WARN  [http-nio-8081-exec-7] [72c100dd] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:58.918 ERROR [http-nio-8081-exec-5] [cdafd9eb] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cdafd9eb][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:58.919 WARN  [http-nio-8081-exec-5] [cdafd9eb] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:04:59.552 ERROR [http-nio-8081-exec-4] [698435a3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=698435a3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:04:59.552 WARN  [http-nio-8081-exec-4] [698435a3] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:00.002 ERROR [http-nio-8081-exec-10] [d75aef65] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d75aef65][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:00.002 WARN  [http-nio-8081-exec-10] [d75aef65] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:00.572 ERROR [http-nio-8081-exec-9] [90cf3198] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=90cf3198][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:00.572 WARN  [http-nio-8081-exec-9] [90cf3198] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:01.302 ERROR [http-nio-8081-exec-8] [9c4484a8] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=9c4484a8][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:01.302 WARN  [http-nio-8081-exec-8] [9c4484a8] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:01.908 ERROR [http-nio-8081-exec-1] [c43b686c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c43b686c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:01.908 WARN  [http-nio-8081-exec-1] [c43b686c] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:02.378 ERROR [http-nio-8081-exec-7] [448c1f18] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=448c1f18][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:02.378 WARN  [http-nio-8081-exec-7] [448c1f18] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:02.911 ERROR [http-nio-8081-exec-3] [0d96a126] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=0d96a126][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:02.912 WARN  [http-nio-8081-exec-3] [0d96a126] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:03.432 ERROR [http-nio-8081-exec-6] [d2255b6a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d2255b6a][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:03.432 WARN  [http-nio-8081-exec-6] [d2255b6a] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:03.952 ERROR [http-nio-8081-exec-2] [ec62cfa6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ec62cfa6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:03.952 WARN  [http-nio-8081-exec-2] [ec62cfa6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:04.408 ERROR [http-nio-8081-exec-5] [6504cf41] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=6504cf41][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:04.409 WARN  [http-nio-8081-exec-5] [6504cf41] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:04.872 ERROR [http-nio-8081-exec-4] [a81879b6] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=a81879b6][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:04.872 WARN  [http-nio-8081-exec-4] [a81879b6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:40.826 ERROR [http-nio-8081-exec-10] [fdef98de] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=fdef98de][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:40.827 WARN  [http-nio-8081-exec-10] [fdef98de] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:41.387 ERROR [http-nio-8081-exec-9] [eac2976d] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=eac2976d][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.387 WARN  [http-nio-8081-exec-9] [eac2976d] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:41.595 ERROR [http-nio-8081-exec-8] [61a25bbb] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=61a25bbb][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.595 WARN  [http-nio-8081-exec-8] [61a25bbb] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:41.783 ERROR [http-nio-8081-exec-1] [cdabdee7] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cdabdee7][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.783 WARN  [http-nio-8081-exec-1] [cdabdee7] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:41.971 ERROR [http-nio-8081-exec-7] [c4e3beb2] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=c4e3beb2][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:41.971 WARN  [http-nio-8081-exec-7] [c4e3beb2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:42.170 ERROR [http-nio-8081-exec-3] [ddcba79c] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=ddcba79c][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:42.170 WARN  [http-nio-8081-exec-3] [ddcba79c] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:05:42.347 ERROR [http-nio-8081-exec-6] [f9bf8089] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=f9bf8089][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:05:42.347 WARN  [http-nio-8081-exec-6] [f9bf8089] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:06:52.715 ERROR [http-nio-8081-exec-8] [106099d3] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=106099d3][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:06:52.716 WARN  [http-nio-8081-exec-8] [106099d3] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:06:53.836 ERROR [http-nio-8081-exec-6] [6c09d53f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=6c09d53f][POST /admin/API/notice/write] 예상치 못한 오류
+2025-10-21 18:06:53.836 WARN  [http-nio-8081-exec-6] [6c09d53f] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 테스트용 강제 예외]
+2025-10-21 18:09:07.876 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-21 18:09:07.944 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 18344 (D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\ict05_final_project\ict05_final_admin)
+2025-10-21 18:09:07.944 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-21 18:09:07.946 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-21 18:09:07.966 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-21 18:09:07.966 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-21 18:09:08.633 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-21 18:09:08.711 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 65 ms. Found 9 JPA repository interfaces.
+2025-10-21 18:09:09.311 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-21 18:09:09.327 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-21 18:09:09.331 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-21 18:09:09.331 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-21 18:09:09.399 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-21 18:09:09.399 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1433 ms
+2025-10-21 18:09:09.645 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-21 18:09:09.705 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-21 18:09:09.736 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-21 18:09:10.020 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-21 18:09:10.072 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-21 18:09:10.204 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@6a914027
+2025-10-21 18:09:10.208 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-21 18:09:10.224 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-21 18:09:10.240 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-21 18:09:10.879 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-21 18:09:11.125 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-21 18:09:11.331 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-21 18:09:12.203 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-21 18:09:12.247 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-21 18:09:12.972 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-21 18:09:12.982 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-21 18:09:12.994 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-21 18:09:13.003 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 5.449 seconds (process running for 5.719)
