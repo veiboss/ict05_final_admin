@@ -1,8 +1,14 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
+import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderDetail;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,41 +30,41 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
     @Override
     public Page<ReceiveOrderListDTO> listReceive(ReceiveOrderSearchDTO receiveOrderSearchDTO, Pageable pageable) {
-        QReceiveOrder receiveOrder = QReceiveOrder.receiveOrder;
+        QReceiveOrder ro = QReceiveOrder.receiveOrder;
         QStore store = QStore.store;
 
         // 데이터 목록 조회
         List<ReceiveOrderListDTO> content = queryFactory
                 .select(Projections.fields(ReceiveOrderListDTO.class,
-                        receiveOrder.id,
-                        receiveOrder.store.name.as("storeName"),
-                        receiveOrder.store.location.as("storeLocation"),
-                        receiveOrder.orderCode,
-                        receiveOrder.orderDate,
-                        receiveOrder.status,
-                        receiveOrder.totalPrice,
-                        receiveOrder.priority,
-                        receiveOrder.remark,
-                        receiveOrder.supplier,
-                        receiveOrder.deliveryDate,
-                        receiveOrder.actualDeliveryDate
+                        ro.id,
+                        ro.store.name.as("storeName"),
+                        ro.store.location.as("storeLocation"),
+                        ro.orderCode,
+                        ro.orderDate,
+                        ro.status,
+                        ro.totalPrice,
+                        ro.priority,
+                        ro.remark,
+                        ro.supplier,
+                        ro.deliveryDate,
+                        ro.actualDeliveryDate
                 ))
-                .from(receiveOrder)
-                .join(receiveOrder.store, store)
+                .from(ro)
+                .join(ro.store, store)
                 .where(
-                        eqOrderCode(receiveOrderSearchDTO, receiveOrder)
+                        eqOrderCode(receiveOrderSearchDTO, ro)
                 )
-                .orderBy(receiveOrder.id.desc())
+                .orderBy(ro.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         // 전체 카운트 조회
         long total = queryFactory
-                .select(receiveOrder.count())
-                .from(receiveOrder)
+                .select(ro.count())
+                .from(ro)
                 .where(
-                        eqOrderCode(receiveOrderSearchDTO, receiveOrder)
+                        eqOrderCode(receiveOrderSearchDTO, ro)
                 )
                 .fetchOne();
 
@@ -99,4 +106,63 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
         return total;
     }
+
+    // 수주 상세 조회
+    @Override
+    public Optional<ReceiveOrderDetailDTO> findDetailById(Long id) {
+        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+        QReceiveOrderDetail rod = QReceiveOrderDetail.receiveOrderDetail;
+        QStore store = QStore.store;
+
+        ReceiveOrderDetailDTO dto = queryFactory
+                .select(Projections.fields(ReceiveOrderDetailDTO.class,
+                        ro.id,
+                        ro.orderCode,
+                        ro.orderDate,
+                        ro.deliveryDate,
+                        ro.status,
+                        ro.priority,
+                        store.name.as("storeName"),
+                        store.id.as("storeId"),
+                        store.location.as("storeLocation"),
+                        ro.totalPrice,
+                        ro.totalCount,
+                        ro.remark
+                ))
+                .from(ro)
+                .leftJoin(ro.store, store)
+                .leftJoin(ro.details, rod)
+                .where(ro.id.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(dto);
+    }
+
+    // 수주 상세 - 주문 상품 리스트
+    @Override
+    public List<ReceiveOrderItemDTO> findItemsByOrderId(Long id) {
+        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+        QReceiveOrderDetail rod = QReceiveOrderDetail.receiveOrderDetail;
+        QMaterial material = QMaterial.material;
+        QHqInventory hq = QHqInventory.hqInventory;
+
+        return queryFactory
+                .select(Projections.fields(ReceiveOrderItemDTO.class,
+                        material.name,
+                        material.materialCategory,
+                        rod.detailCount,
+                        rod.detailUnitPrice,
+                        rod.detailTotalPrice,
+                        hq.status.as("inventoryStatus")
+                ))
+                .from(rod)
+                .join(rod.material, material)
+                .join(rod.receiveOrder, ro)
+                .leftJoin(hq).on(hq.material.eq(material))
+                .where(rod.receiveOrder.id.eq(id))
+                .fetch();
+    }
+
+
 }
+

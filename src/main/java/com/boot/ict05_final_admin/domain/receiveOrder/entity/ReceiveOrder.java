@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 본사 수주 엔티티 (가맹점 발주 내역 기반)
@@ -45,6 +46,10 @@ public class ReceiveOrder {
     @Builder.Default
     private BigDecimal totalPrice = BigDecimal.ZERO;
 
+    /** 수주 총개수 */
+    @Column(name = "purchase_order_total_count", columnDefinition = "INT UNSIGNED DEFAULT 0 COMMENT '발주 총개수'")
+    private Integer totalCount;
+
     /** 수주 비고 */
     @Column(name = "purchase_order_remark", columnDefinition = "TEXT")
     private String remark;
@@ -70,5 +75,8 @@ public class ReceiveOrder {
     /** 수주 실제 납기일 */
     @Column(name = "purchase_order_actual_delivery_date")
     private LocalDate actualDeliveryDate;
+
+    @OneToMany(mappedBy = "receiveOrder")
+    private List<ReceiveOrderDetail> details;
 
 }
