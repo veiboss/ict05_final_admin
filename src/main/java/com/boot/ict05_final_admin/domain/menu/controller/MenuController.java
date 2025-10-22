@@ -81,7 +81,7 @@ public class MenuController {
      */
     @GetMapping("/menu/detail/{menuId}")
     public String detailStoreMenu(@PathVariable Long menuId, Model model) {
-        Menu menu = menuService.deatilMenu(menuId);
+        Menu menu = menuService.detailMenu(menuId);
 
         model.addAttribute("menu", menu);
 

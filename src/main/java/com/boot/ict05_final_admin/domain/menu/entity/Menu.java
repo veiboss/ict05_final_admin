@@ -1,10 +1,8 @@
 package com.boot.ict05_final_admin.domain.menu.entity;
 
+import com.boot.ict05_final_admin.domain.menu.dto.MenuModifyFormDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -12,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -59,25 +58,48 @@ public class Menu {
     @JoinColumn(name= "menu_category_id_fk")
     private MenuCategory menuCategory;
 
-    /** 메뉴의 알레르기 (재료들의 알레르기 합집합, 파생값) */
-    @Transient
-    public Set<Allergy> getAllergies() {
-        return recipe.stream()
-                .map(MenuRecipe::getMaterial)           // 재료
-                .filter(Objects::nonNull)
-                .flatMap(m -> m.getAllergies().stream()) // 재료의 알레르기 (ManyToMany)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+    // ===== 수정 편의 메서드 =====
+    /** DTO 기반 필드 수정(카테고리는 별도 changeCategory 사용) */
+    public void updateMenu(MenuModifyFormDTO dto) {
+        if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
+        if (dto.getMenuCode() != null) this.menuCode = dto.getMenuCode();
+        if (dto.getMenuInformation() != null) this.menuInformation = dto.getMenuInformation();
+        if (dto.getMenuNameEnglish() != null) this.menuNameEnglish = dto.getMenuNameEnglish();
+        if (dto.getMenuKcal() != null) this.menuKcal = dto.getMenuKcal();
+        if (dto.getMenuShow() != null) this.menuShow = (dto.getMenuShow() == MenuShowEnum.SHOW);
+        if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
     }
 
-    /** 연관관계 편의 메서드 */
-    public void addRecipe(MenuRecipe item) {
-        if (item == null) return;
-        recipe.add(item);
-        item.setMenu(this);
+    /** 카테고리 교체 */
+    public void changeCategory(MenuCategory category) {
+        this.menuCategory = Objects.requireNonNull(category, "category");
     }
-    public void removeRecipe(MenuRecipe item) {
-        if (item == null) return;
-        recipe.remove(item);
-        item.setMenu(null);
+
+    // ===== 알레르기 파생값 =====
+    /**
+     * 메뉴의 알레르기: 레시피에 포함된 재료들의 알레르기 합집합.
+     * DB 조인테이블(menu_allergy) 없이 계산만 수행한다.
+     */
+    @Transient
+    public Set<Allergy> getAllergies() {
+        if (recipe == null || recipe.isEmpty()) return Collections.emptySet();
+        return recipe.stream()
+                .map(MenuRecipe::getMaterial)               // 재료
+                .filter(Objects::nonNull)
+                .filter(m -> m.getAllergies() != null)       // 재료-알레르기 ManyToMany
+                .flatMap(m -> m.getAllergies().stream())
+                .collect(Collectors.toCollection(LinkedHashSet::new)); // 표시 순서 보존
     }
+
+    /** 뷰에서 사용하기 편한 파생값(이름 목록) */
+    @Transient
+    public List<String> getAllergyNames() {
+        return getAllergies().stream()
+                .map(Allergy::getAllergyName)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+
 }
+

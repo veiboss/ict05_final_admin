@@ -23,6 +23,10 @@ public class MenuModifyFormDTO {
     @NotNull
     private MenuShowEnum menuShow;
 
+    /** 메뉴코드 */
+    @NotNull
+    private String menuCode;
+
     /** 메뉴명 */
     @NotBlank
     private String menuName;

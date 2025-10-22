@@ -12,6 +12,10 @@ import lombok.*;
 @ToString
 public class MenuSearchDTO {
 
+    /** 검색 대상 (name: 메뉴명, info: 설명, all: 둘 다) */
+    @Builder.Default
+    private String type = "all";  // 기본값: 메뉴명 + 설명 모두 검색
+
     /** 검색 키워드 (상품명, 설명) */
     private String keyword;
 
@@ -34,9 +38,11 @@ public class MenuSearchDTO {
     @Builder.Default
     private String direction = "desc";
 
-    /** 검색 조건 헬퍼 */
-    public boolean hasKeyword() {
-        return keyword != null && !keyword.trim().isEmpty();
+    /** 헬퍼: 검색 타입이 유효한지 검사 */
+    public boolean isValidType() {
+        return "name".equalsIgnoreCase(type)
+                || "info".equalsIgnoreCase(type)
+                || "all".equalsIgnoreCase(type);
     }
 }
 

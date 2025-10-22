@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.menu.dto;
 
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategoryEnum;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,10 @@ public class MenuDetailDTO {
 
     /** 판매 상태 */
     private MenuShowEnum menuShow;
+
+    /** 메뉴코드 */
+    @NotNull
+    private String menuCode;
 
     /** 메뉴명 */
     private String menuName;
