@@ -75,31 +75,5 @@ public class Menu {
         this.menuCategory = Objects.requireNonNull(category, "category");
     }
 
-    // ===== 알레르기 파생값 =====
-    /**
-     * 메뉴의 알레르기: 레시피에 포함된 재료들의 알레르기 합집합.
-     * DB 조인테이블(menu_allergy) 없이 계산만 수행한다.
-     */
-    @Transient
-    public Set<Allergy> getAllergies() {
-        if (recipe == null || recipe.isEmpty()) return Collections.emptySet();
-        return recipe.stream()
-                .map(MenuRecipe::getMaterial)               // 재료
-                .filter(Objects::nonNull)
-                .filter(m -> m.getAllergies() != null)       // 재료-알레르기 ManyToMany
-                .flatMap(m -> m.getAllergies().stream())
-                .collect(Collectors.toCollection(LinkedHashSet::new)); // 표시 순서 보존
-    }
-
-    /** 뷰에서 사용하기 편한 파생값(이름 목록) */
-    @Transient
-    public List<String> getAllergyNames() {
-        return getAllergies().stream()
-                .map(Allergy::getAllergyName)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-
 }
 

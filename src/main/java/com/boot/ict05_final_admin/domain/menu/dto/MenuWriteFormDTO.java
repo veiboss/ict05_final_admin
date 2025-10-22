@@ -45,10 +45,6 @@ public class MenuWriteFormDTO {
     @NotNull @Min(0)
     private Integer menuKcal;
 
-    /** 알레르기 선택 ID 목록 (체크박스) */
-    @Builder.Default
-    private List<Integer> allergyIds = List.of();
-
     /** 재료구성 – 주재료(필수) */
     @NotNull
     private List<RecipeItemDTO> mainMaterials;

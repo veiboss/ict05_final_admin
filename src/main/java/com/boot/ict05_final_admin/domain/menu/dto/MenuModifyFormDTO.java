@@ -45,10 +45,6 @@ public class MenuModifyFormDTO {
     @NotNull @Min(0)
     private Integer menuKcal;
 
-    /** 알레르기 선택 ID 목록 */
-    @Builder.Default
-    private List<Integer> allergyIds = List.of();
-
     /** 재료구성 – 주재료 (menuRecipeId 포함됨) */
     @NotNull
     private List<RecipeItemDTO> mainMaterials;

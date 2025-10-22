@@ -10,7 +10,6 @@ import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
-import com.boot.ict05_final_admin.domain.menu.repository.AllergyRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRecipeRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
@@ -38,7 +37,6 @@ public class MenuService {
     private final MaterialRepository materialRepository;
     private final MenuCategoryRepository menuCategoryRepository;
     private final MenuRecipeRepository menuRecipeRepository;
-    private final AllergyRepository allergyRepository;
 
     /**
      * 작성자 이름으로 필터링하여 메뉴 목록을 페이지 단위로 조회한다.
@@ -110,8 +108,6 @@ public class MenuService {
                 menuRecipeRepository.save(recipe);
             });
         }
-
-        // 알레르기는 저장하지 않음(재료 기반 파생값: menu.getAllergies())
         return menu.getMenuId();
     }
 

@@ -42,10 +42,6 @@ public class MenuDetailDTO {
     /** 설명 */
     private String menuInformation;
 
-    /** 알레르기: 선택된 코드/ID 목록 (저장용) + 표시용 이름 목록 */
-    private List<Integer> allergyIds;
-    private List<String> allergyNames;         // 상세 조회용 표시
-
     /** 재료구성 */
     private List<RecipeItemDTO> mainMaterials;  // 주재료 구성 테이블
     private List<RecipeItemDTO> sauceMaterials; // 소스 구성 테이블
