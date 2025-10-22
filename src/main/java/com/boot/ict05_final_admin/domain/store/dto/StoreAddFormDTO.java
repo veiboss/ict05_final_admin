@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.store.dto;
 
+import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
+import com.boot.ict05_final_admin.domain.store.entity.StoreType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -34,19 +36,21 @@ public class StoreAddFormDTO {
     @Pattern(regexp = "^[0-9\\-]{9,13}$", message = "전화번호는 숫자와 하이픈만 입력해주세요")
     private String storePhone;
 
-    /** 매장 본사 담당자 */
-    @NotBlank(message = "가맹 담당자를 입력해주세요")
-    @Size(max = 10, message = "담당자명은 10자 이내로 입력해주세요")
-    private String memberName;
+    /** 운영 상태 */
+    @NotNull(message = "운영 상태를 선택해주세요")
+    private StoreStatus storeStatus;
 
-    /** 이메일 */
-    @NotBlank(message = "이메일을 입력해주세요")
-    @Email(message = "올바른 이메일 형식이 아닙니다")
-    @Size(max = 50, message = "이메일은 50자 이내로 입력해주세요")
-    private String memberEmail;
+    /** 매장 구분 (직영점/가맹점)*/
+    @NotNull(message = "매장을 선택해주세요")
+    private StoreType storeType;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress1;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress2;
 
     /** 사업장 주소 */
-    @NotBlank(message = "사업장 주소를 입력해주세요")
     @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
     private String storeLocation;
 
@@ -67,6 +71,11 @@ public class StoreAddFormDTO {
     @Digits(integer = 14, fraction = 2, message = "가맹비는 소수점 둘째 자리까지 입력 가능합니다")
     @PositiveOrZero(message = "가맹비는 0 이상이어야 합니다")
     private BigDecimal storeAffiliatePrice;
+
+    /** 월 매출 */
+    @Digits(integer = 14, fraction = 2, message = "월 매출은 소수점 둘째 자리까지 입력 가능합니다")
+    @PositiveOrZero(message = "월 매출은 0 이상이어야 합니다")
+    private BigDecimal storeMonthlySales;
 
     /** 월 로열티 */
     @NotNull(message = "월 로열티를 입력해주세요")

@@ -48,18 +48,16 @@
                 </form>
             </div>
 
-            <section class="box-wrap">
+            <div>
                 <div class="list-header pack-both">
                     <div></div>
                     <div>
-                        <select class="select medium" title="*개씩 보기">
-                            <option>20개씩 보기</option>
-                            <option>50개씩 보기</option>
-                            <option>100개씩 보기</option>
-                        </select>
+                        <a th:href="@{/store/add}" class="btn medium color1">+ 가맹점 등록</a>
                     </div>
                 </div>
+            </div>
 
+            <section class="box-wrap">
                 <table class="data-table">
                     <thead>
                     <tr>
@@ -77,24 +75,23 @@
                     <tr th:each="store, idx : ${store.content}">
                         <td th:text="${store.storeId}">매장번호</td>
                         <td th:text="${store.storeName}">매장명</td>
-                        <td th:text="${store.storeStatus != null ? '운영중' : '폐점'}">운영상태</td>
+                        <td th:text="${store.storeStatus != null and store.storeStatus.name() == '운영' ? '개점준비' : '폐점'}">운영 상태</td>
                         <td th:text="${store.staffName}">점주명</td>
                         <td th:text="${store.storePhone}">연락처</td>
                         <td th:text="${store.storeMonthlySales}">월매출</td>
                         <td th:text="${store.storeTotalEmployees}">직원수</td>
                         <td>
-                            <button class="btn small normal">상세</button>
+                            <a class="btn small bdr-gray">
+                                <span class="material-symbols-outlined md-18">visibility</span>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                <div th:replace="~{fragments/pagination :: pagination2(${staffs}, 'page')}"></div>
             </section>
         </main>
-
-        <footer id="footer">
-            <address class="copyright">©TeamOne</address>
-            <p>허가없는 해당 사이트의 접근은 민.형사상 처벌을 받을 수 있습니다.</p>
-        </footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
     </div><!-- // #wrap  -->
 </body>
