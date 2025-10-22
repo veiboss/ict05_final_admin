@@ -48,8 +48,11 @@ public class StaffService {
         address = address1 + "," + address2;
         dto.setStaffAddress(address);
 
-        Store store = storeRepository.findById(dto.getStoreIdFk())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 근무지입니다."));
+        Store store = null;
+        if (dto.getStoreIdFk() != null) {
+            store = storeRepository.findById(dto.getStoreIdFk())
+                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 근무지입니다."));
+        }
 
         StaffProfile staff = StaffProfile.builder()
                 .store(store)
