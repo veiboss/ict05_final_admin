@@ -74,7 +74,7 @@
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                         </select>
-                                        <span class="fs-sm">개씩 보기</span>
+                                        <span class="fs-ss">개씩 보기</span>
                                     </div>
                                 </div>
                             </div>
@@ -95,7 +95,6 @@
                     <table class="data-table">
                         <thead>
                         <tr>
-                            <th scope="col">ID</th>
                             <th scope="col">CODE</th>
                             <th scope="col">카테고리</th>
                             <th scope="col">재료명</th>
@@ -108,11 +107,10 @@
                         </thead>
                         <tbody>
                         <tr th:each="material, stat : ${materials.content}">
-                            <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>
                             <td th:text="${material.code}">CODE</td>
                             <td th:text="${material.categoryDescription}">카테고리</td>
                             <td>
-                                <a th:href="@{/material/detail/{id}(id=${material.id})}"><span class="fc-000" th:text="${material.name}">재료명</span></a>
+                                <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
                             </td>
                             <td th:text="${material.baseUnit}">기본단위</td>
                             <td th:text="${material.salesUnit}">판매단위</td>
