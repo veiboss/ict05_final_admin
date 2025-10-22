@@ -48,8 +48,11 @@ public class StaffService {
         address = address1 + "," + address2;
         dto.setStaffAddress(address);
 
-        Store store = storeRepository.findById(dto.getStoreIdFk())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 근무지입니다."));
+        Store store = null;
+        if (dto.getStoreIdFk() != null) {
+            store = storeRepository.findById(dto.getStoreIdFk())
+                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 근무지입니다."));
+        }
 
         StaffProfile staff = StaffProfile.builder()
                 .store(store)
@@ -70,4 +73,11 @@ public class StaffService {
         return id;
     }
 
+    /**
+     * 사원 상세 정보를 조회한다.
+     *
+     * @param id 사원 ID
+     * @return 사원 엔티티, 존재하지 않으면 null
+     */
+    public StaffProfile detailStaff(Long id) { return staffRepository.findById(id).orElse(null); }
 }

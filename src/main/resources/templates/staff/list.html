@@ -33,6 +33,31 @@
             <h2 class="page-title ellipsis">사원 목록</h2>
         </div>
 
+        <div>
+            <div class="row-4">
+                <div class="col box-wrap">
+                    <div>전체 사원</div>
+                    <div>4명</div>
+                    <div>등록된 사원</div>
+                </div>
+                <div class="col box-wrap">
+                    <div>재직 중</div>
+                    <div>4명</div>
+                    <div>활성된 사원</div>
+                </div>
+                <div class="col box-wrap">
+                    <div>본사팀</div>
+                    <div>4명</div>
+                    <div>매장 관리직 포함</div>
+                </div>
+                <div class="col box-wrap">
+                    <div>평균 근속</div>
+                    <div>2.5년</div>
+                    <div>근속 기간</div>
+                </div>
+            </div>
+        </div>
+
         <main id="content">
             <div class="search box-wrap">
                 <div id="search" class="search">
@@ -91,7 +116,7 @@
                                 </td>
                                 <td>
                                     <a class="btn small bdr-gray">
-                                        <span class="material-symbols-outlined md-18">visibility</span>
+                                        <span class="material-symbols-outlined md-18" th:onclick="|location.href='@{/staff/detail/{id}(id=${staff.id})}'|">visibility</span>
                                     </a>
                                 </td>
                             </tr>
