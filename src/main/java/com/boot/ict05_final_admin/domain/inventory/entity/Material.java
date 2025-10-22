@@ -97,5 +97,5 @@ public class Material {
     @Column(name = "material_modify_date", nullable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'")
     private LocalDateTime modifyDate;
-    
+
 }

@@ -673,3 +673,10 @@ org.attoparser.ParseException: (Line = 252, Column = 29) Incomplete structure: "
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:842)
 2025-10-21 19:42:22.975 ERROR [http-nio-8081-exec-2] [] o.s.b.a.w.s.e.ErrorMvcAutoConfiguration$StaticView - Cannot render error page for request [/admin/receive/list] and exception [An error happened during template parsing (template: "class path resource [templates/receive/list.html]" - line 252, col 29)] as the response has already been committed. As a result, the response may have the wrong status code.
+2025-10-22 18:22:03.581 ERROR [http-nio-8081-exec-1] [52a66e81] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=52a66e81][GET /admin/menu/list] 예상치 못한 오류
+2025-10-22 18:22:10.451 ERROR [http-nio-8081-exec-2] [d0f491ef] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=d0f491ef][GET /admin/menu/list] 예상치 못한 오류
+2025-10-22 18:22:22.244 ERROR [http-nio-8081-exec-7] [cfcfb2fc] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=cfcfb2fc][GET /admin/menu/list] 예상치 못한 오류
+2025-10-22 18:24:58.156 ERROR [http-nio-8081-exec-3] [b31cb33f] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b31cb33f][GET /admin/menu/list] 예상치 못한 오류
+2025-10-22 18:25:17.319 ERROR [http-nio-8081-exec-7] [bbb776ff] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=bbb776ff][GET /admin/menu/list] 예상치 못한 오류
+2025-10-22 18:25:33.641 ERROR [http-nio-8081-exec-5] [b1a5769b] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=b1a5769b][GET /admin/menu/list] 예상치 못한 오류
+2025-10-22 18:25:50.895 ERROR [http-nio-8081-exec-4] [afc33c8a] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=afc33c8a][GET /admin/menu/list] 예상치 못한 오류
