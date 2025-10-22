@@ -1,6 +1,5 @@
 package com.boot.ict05_final_admin.domain.inventory.entity;
 
-import com.boot.ict05_final_admin.domain.menu.entity.Allergy;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -98,9 +97,5 @@ public class Material {
     @Column(name = "material_modify_date", nullable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'")
     private LocalDateTime modifyDate;
-
-    /** 재료 알레르기 관계 */
-    @ManyToMany
-    @Builder.Default
-    private Set<Allergy> allergies = new LinkedHashSet<>();
+    
 }
