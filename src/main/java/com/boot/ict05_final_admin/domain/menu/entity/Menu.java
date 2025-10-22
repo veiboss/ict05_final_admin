@@ -1,6 +1,5 @@
 package com.boot.ict05_final_admin.domain.menu.entity;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -53,10 +52,32 @@ public class Menu {
     /** 레시피(연결엔티티) */
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<MenuUsageMaterial> recipe = new ArrayList<>();
+    private List<MenuRecipe> recipe = new ArrayList<>();
 
     /** menuCategory 참조 */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "menu_category_id_fk")
-    private MenuCategoryEntity menuCategory;
+    private MenuCategory menuCategory;
+
+    /** 메뉴의 알레르기 (재료들의 알레르기 합집합, 파생값) */
+    @Transient
+    public Set<Allergy> getAllergies() {
+        return recipe.stream()
+                .map(MenuRecipe::getMaterial)           // 재료
+                .filter(Objects::nonNull)
+                .flatMap(m -> m.getAllergies().stream()) // 재료의 알레르기 (ManyToMany)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    /** 연관관계 편의 메서드 */
+    public void addRecipe(MenuRecipe item) {
+        if (item == null) return;
+        recipe.add(item);
+        item.setMenu(this);
+    }
+    public void removeRecipe(MenuRecipe item) {
+        if (item == null) return;
+        recipe.remove(item);
+        item.setMenu(null);
+    }
 }
