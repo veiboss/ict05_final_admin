@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.entity;
 
+import com.boot.ict05_final_admin.domain.menu.entity.Allergy;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * 재료(Material) 엔티티 클래스
@@ -95,4 +98,9 @@ public class Material {
     @Column(name = "material_modify_date", nullable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'")
     private LocalDateTime modifyDate;
+
+    /** 재료 알레르기 관계 */
+    @ManyToMany
+    @Builder.Default
+    private Set<Allergy> allergies = new LinkedHashSet<>();
 }
