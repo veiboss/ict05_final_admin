@@ -70,4 +70,11 @@ public class StaffService {
         return id;
     }
 
+    /**
+     * 사원 상세 정보를 조회한다.
+     *
+     * @param id 사원 ID
+     * @return 사원 엔티티, 존재하지 않으면 null
+     */
+    public StaffProfile detailStaff(Long id) { return staffRepository.findById(id).orElse(null); }
 }
