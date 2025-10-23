@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-
 /**
  * 가맹점 재고(StoreInventory) 엔티티
  *
@@ -34,10 +33,9 @@ public class StoreInventory extends Inventory {
             foreignKey = @ForeignKey(name = "fk_si_store"))
     private Store store;
 
-    /** 가맹점 재료 (FK: store.store_material_id) */
+    /** 가맹점 재료 (FK: store_material.store_material_id) */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_material_id_fk", nullable = false,
             foreignKey = @ForeignKey(name = "fk_si_store_material"))
     private StoreMaterial storeMaterial;
-
 }

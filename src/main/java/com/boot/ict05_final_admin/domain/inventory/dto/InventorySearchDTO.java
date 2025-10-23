@@ -1,34 +1,25 @@
 package com.boot.ict05_final_admin.domain.inventory.dto;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 /**
  * 재고 목록 검색 DTO.
  *
- * <p>검색 조건(카테고리, 재료명, 상태, 가맹점 등)을 전달한다.</p>
+ * <p>MaterialSearchDTO와 동일한 구조로 단순화.</p>
  */
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
 public class InventorySearchDTO {
 
-    /** 재료명 검색 */
-    private String materialName;
+    /** 검색어 (재료명, 카테고리명 등) */
+    private String s;
 
-    /** 카테고리명 검색 */
-    private String categoryName;
+    /** 검색 구분 (HQ: 본사, STORE: 가맹점) */
+    private String type;
 
-    /** 재고 상태 (SUFFICIENT, LOW, SHORTAGE) */
+    /** 페이지 크기 (기본값 10) */
+    private String size = "10";
+
+    /** 재고 상태 (SUFFICIENT / LOW / SHORTAGE) */
     private InventoryStatus status;
-
-    /** 가맹점 ID (가맹점 재고 검색 시 사용) */
-    private Long storeId;
-
-    /** 검색 유형 구분: HQ(본사) / STORE(가맹점) */
-    private String inventoryType;
 }
