@@ -1,276 +1,207 @@
 <!DOCTYPE HTML>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
     <title>토스트랩 관리자</title>
-    <link href="/admin/css/toast.css" rel="stylesheet"/>
-    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
-    <script src="/admin/js/toast.js"></script>
+
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <!-- favicon -->
+    <link rel="icon" th:href="@{/images/logo/favi_ad.png}" type="image/x-icon"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/toast.css}" />
+
+    <!-- JS -->
+    <script th:src="@{/js/lib/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/js/toast.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .wrap{padding:20px}
+        .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .card{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:18px}
+        .num{font-size:28px;font-weight:700}
+        .hint{color:#777;font-size:12px}
+        .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
+        .up{background:#e6f4ea;color:#137333}
+        .down{background:#fce8e6;color:#a50e0e}
+        .title{font-size:14px;color:#666;margin-bottom:6px}
+        .panel{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:16px}
+        .row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f3f5}
+        .iconBubble{width:48px;height:48px;border-radius:999px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center}
+        .grad1{background:linear-gradient(135deg,#5b8cff,#5b8cffcc);color:#fff}
+        .grad2{background:linear-gradient(135deg,#34c759,#34c759cc);color:#fff}
+        .grad3{background:linear-gradient(135deg,#ff8a34,#ff8a34cc);color:#fff}
+        .grad4{background:linear-gradient(135deg,#8a5bff,#8a5bffcc);color:#fff}
+    </style>
 </head>
 <body>
 <div id="wrap" class="frame">
-<div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <div id="container" class="container">
         <div class="title-bar">
-            <h2 class="page-title ellipsis">페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목 페이지 제목</h2>
+            <h2 class="page-title ellipsis">대시보드</h2>
         </div>
 
         <main id="content">
 
-            <div id="search" class="search box-wrap">
-                <form>
-                    <fieldset>
-                        <legend class="blind">검색</legend>
-                        <div class="field insert">
-                            <select class="select medium" title="검색조건" id="searchSel">
-                                <option>작성자</option>
-                                <option>한줄후기</option>
-                            </select>
-                        </div>
-                        <div class="field insert">
-                            <input type="text" id="searchTxt" class="input-text medium" title="검색어" placeholder="검색어를 입력해 주세요" />
-                        </div>
-
-                        <div class="button-area pack-left">
-                            <button type="button" class="btn medium color1">검색</button>
-                            <button type="reset" class="btn medium bdr-color1">초기화</button>
-                        </div>
-                    </fieldset>
-                </form>
+            <div class="row-4">
+                <div class="col box-wrap">
+                    .row-4 &gt; .col
+                </div>
+                <div class="col box-wrap">
+                    .row-4 &gt; .col
+                </div>
+                <div class="col box-wrap">
+                    .row-4 &gt; .col
+                </div>
+                <div class="col box-wrap">
+                    .row-4 &gt; .col
+                </div>
             </div>
 
-            <section class="box-wrap">
-                <div class="list-header pack-both">
-                    <div></div>
-                    <div>
-                        <select class="select medium" title="*개씩 보기">
-                            <option>20개씩 보기</option>
-                            <option>50개씩 보기</option>
-                            <option>100개씩 보기</option>
-                        </select>
-                    </div>
+
+            <!-- Charts -->
+            <section class="grid2" style="margin-top:16px">
+                <div class="panel">
+                    <h3 style="margin:0 0 8px 0;">가맹점 월별 매출 추이</h3>
+                    <div style="height:300px"><canvas id="salesChart"></canvas></div>
+                </div>
+                <div class="panel">
+                    <h3 style="margin:0 0 8px 0;">가맹점 주간 매출 현황</h3>
+                    <div style="height:300px"><canvas id="weeklyChart"></canvas></div>
                 </div>
 
-                <table class="data-table">
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>성명</th>
-                        <th>프로필</th>
-                        <th>유형</th>
-                        <th>이메일</th>
-                        <th>전화번호</th>
-                        <th>등록일</th>
-                        <th>공개여부</th>
-                        <th>버튼</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td data-th="번호">261</td>
-                        <td data-th="성명">김신운</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgxh2HVUAAq_V7?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">gwkang@partner.com</td>
-                        <td data-th="전화번호">061-724-0701</td>
-                        <td data-th="등록일">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">260</td>
-                        <td data-th="성명">김명지</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/CpgxhjVUkAA-Amu?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">kasdngmj@partner.com</td>
-                        <td data-th="전화번호">02-6207-1654</td>
-                        <td data-th="번호">2017-05-07 00:00</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1">공개</option>
-                                <option value="0" selected>비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">259</td>
-                        <td data-th="성명">김민제</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgy6fTVYAERQbn?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">mjasdfkang@partner.com</td>
-                        <td data-th="전화번호">02-6207-1778</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">258</td>
-                        <td data-th="성명">김상원</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgy7lhVUAAabOc?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">sasdfwkang@partner.com</td>
-                        <td data-th="전화번호">02-6932-5418</td>
-                        <td data-th="번호">2017-04-28 00:00</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">256</td>
-                        <td data-th="성명">김원일</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/Cpgy77mVUAAVrBY?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">wiksdfang@partner.com</td>
-                        <td data-th="전화번호">02-6207-1951</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">254</td>
-                        <td data-th="성명">김재우</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/CpgyQWXVMAAuaqy?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">jyka12ng2@partner.com</td>
-                        <td data-th="전화번호">02-6207-1816</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">253</td>
-                        <td data-th="성명">김호정</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/CpgyQuLUIAANQkY?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">khjsdfyer2003@partner.com</td>
-                        <td data-th="전화번호">051-072-0708</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">252</td>
-                        <td data-th="성명">신지동</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/EgZypfMUMAIIK8O?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">외국	</td>
-                        <td data-th="이메일">ydjdfing@partner.com</td>
-                        <td data-th="전화번호">+86-21-5408-2818</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">257</td>
-                        <td data-th="성명">김우주</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/EghgJxDUMAEUTsS?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">고문</td>
-                        <td data-th="이메일">casa3@hanmail.net</td>
-                        <td data-th="전화번호">02-6207-1600</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-th="번호">255</td>
-                        <td data-th="성명">김율리</td>
-                        <td data-th="프로필"><img src="https://pbs.twimg.com/media/EgArCSvUwAAJing?format=jpg&name=large" class="profile"></td>
-                        <td data-th="유형">한국</td>
-                        <td data-th="이메일">ylkadfng@partner.com</td>
-                        <td data-th="전화번호">02-6207-1711</td>
-                        <td data-th="번호">2017-04-26 16:50</td>
-                        <td data-th="공개여부">
-                            <select class="select small">
-                                <option value="1" selected>공개</option>
-                                <option value="0">비공개</option>
-                            </select>
-                        </td>
-                        <td data-th="버튼">
-                            <button class="btn small normal">수정</button>
-                            <button class="btn small accent">삭제</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            </section>
+
+            <section class="grid2" style="margin-top:16px">
+                <div class="panel">
+                    <h3 style="margin:0 0 8px 0;">재료 매출 현황</h3>
+                    <div class="hint">최근 6개월 재료 매출 추이</div>
+                    <div style="height:300px"><canvas id="logiChart"></canvas></div>
+                </div>
+                <!-- Store table -->
+                <div class="panel">
+                    <h3 style="margin:0 0 8px 0;">매장별 매출 현황</h3>
+                    <div th:each="r : ${storeRows}" class="row">
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <div style="width:8px;height:8px;border-radius:999px;background:#5b8cff"></div>
+                            <div th:text="${r.store}">매장명</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <div th:text="${#numbers.formatInteger(r.revenue,0,'COMMA')} + ' 원'">0 원</div>
+                            <span class="badge" th:classappend="${r.growth} >= 0 ? ' up' : ' down'"
+                                  th:text="(${r.growth} >= 0 ? '+' : '') + ${#numbers.formatDecimal(r.growth,1,1)} + '%'">+0.0%</span>
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
-
-
-    <div th:replace="~{fragments/footer :: footer}"></div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+
+<!-- 서버값을 JS로 주입하고 Chart.js 그리기 -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const salesLabels  = /*[[${salesLabels}]]*/ ["1월","2월"];
+    const salesValues  = /*[[${salesValues}]]*/ [0,0];
+    const weeklyLabels = /*[[${weeklyLabels}]]*/ ["월","화"];
+    const weeklyValues = /*[[${weeklyValues}]]*/ [0,0];
+    const logiLabels   = /*[[${logiLabels}]]*/ ["1월","2월"];
+    const logiValues   = /*[[${logiValues}]]*/ [0,0];
+
+    const colors = {
+      orange:'#fb6340',
+      green:'#2dce89',
+      purple:'#9966FF',
+      grid:'rgba(0,0,0,0.06)'
+    };
+
+    const common = {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false }, tooltip:{ intersect:false, mode:'index' } },
+      scales:{ x:{ offset: true, grid:{ display:false } }, y:{ beginAtZero:true, grid:{ color: colors.grid } } }
+
+    };
+
+    new Chart(document.getElementById('salesChart'),{
+      type:'line',
+      data:{
+        labels:salesLabels,
+        datasets:[{
+          data:salesValues,
+          borderColor:colors.orange,
+          backgroundColor:colors.orange + '20',
+          borderWidth:3,
+          pointRadius:4,
+          tension:0.35,
+          fill:false
+        }]
+      },
+      options: common
+    });
+
+    new Chart(document.getElementById('weeklyChart'),{
+      type:'bar',
+      data:{
+        labels:weeklyLabels,
+        datasets:[{
+          data:weeklyValues,
+          backgroundColor:colors.green,
+          borderColor:colors.green,
+          borderWidth:1,
+          borderRadius:6,
+          borderSkipped:false
+        }]
+      },
+      options: common
+    });
+
+    new Chart(document.getElementById('logiChart'),{
+      type:'bar',
+      data:{
+        labels:logiLabels,
+        datasets:[{
+          data:logiValues,
+          backgroundColor:colors.purple,
+          borderColor:colors.purple,
+          borderWidth:1,
+          borderRadius:6,
+          borderSkipped:false
+        }]
+      },
+      options:{
+        ...common,
+        plugins:{
+          ...common.plugins,
+          tooltip:{
+            callbacks:{
+              label:(ctx)=>{
+                const v = ctx.parsed.y ?? 0;
+                return new Intl.NumberFormat('ko-KR',{ style:'currency', currency:'KRW', minimumFractionDigits:0 }).format(v);
+              }
+            }
+          }
+        },
+        scales:{
+          x:{ grid:{ display:false } },
+          y:{ beginAtZero:true, grid:{ color:colors.grid },
+              ticks:{ callback:(v)=> (Number(v)/1_000_000)+'M' } }
+        }
+      }
+    });
+    /*]]>*/
+</script>
 </body>
 </html>

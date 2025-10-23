@@ -1,60 +1,159 @@
 package com.boot.ict05_final_admin.domain.menu.repository;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.QMenu;
-import com.boot.ict05_final_admin.domain.menu.entity.QMenuCategoryEntity;
+import com.boot.ict05_final_admin.domain.menu.entity.QMenuCategory;
+import com.boot.ict05_final_admin.domain.menu.entity.QMenuRecipe;
+import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.expression.spel.ast.Projection;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
 public class MenuRepositoryImpl implements MenuRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;     // QueryDSL의 핵심 객체
+    private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<MenuListDTO> listMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
-        QMenu menu = QMenu.menu;        // 각 엔티티의 QueryDSL 전용 메타 클래스(QueryDSL이 자동으로 변환해서 만든 쿼리용 전용 클래스)
-        // QMaterial material = QMaterial.material;
-        QMenuCategoryEntity menuCategory = QMenuCategoryEntity.menuCategoryEntity;
+    public Page<MenuListDTO> listMenu(MenuSearchDTO dto, Pageable pageable) {
+        if (dto == null) dto = new MenuSearchDTO();
 
-        // 메뉴 목록 조회
-        List<MenuListDTO> content = queryFactory
-                    .select(Projections.fields(MenuListDTO.class,   // DTO의 필드명과 선택한 컬럼의 별칭이 반드시 일치
-                        menu.menuId.as("menuId"),
-                        menu.menuCode.as("menuCode"),
-                        menu.menuShow.as("menuShow"),
-                        menu.menuName.as("menuName"),
-                        menu.menuPrice.as("menuPrice"),
-                        menu.menuKcal.as("menuKcal"),
-                        menuCategory.menuCategoryName.as("menuCategoryName")
-                        ))
+        QMenu menu = QMenu.menu;
+        QMenuCategory category = QMenuCategory.menuCategory;
+        QMenuRecipe recipe = QMenuRecipe.menuRecipe;
+        QMaterial material = QMaterial.material;
+
+        // WHERE 조건
+        BooleanExpression where = andAll(
+                eqNameOrInfo(dto, menu),
+                eqCategory(dto, menu)
+        );
+
+        // 정렬 (기본: menuId DESC)
+        Sort sort = (pageable.getSort().isSorted())
+                ? pageable.getSort()
+                : Sort.by(Sort.Direction.DESC, "menuId");
+
+        // 1) 페이지 대상 ID만 먼저 조회
+        List<Long> pageIds = queryFactory
+                .select(menu.menuId)
                 .from(menu)
-                .join(menu.menuCategory, menuCategory)
-                .orderBy(menu.menuId.desc())
-                .offset(pageable.getOffset())   // 몇 번째부터
-                .limit(pageable.getPageSize())  // 몇 개 가져올지
-                .fetch();   // 실제로 DB에 쿼리를 보내서 결과를 가져오라 명령
+                .leftJoin(menu.menuCategory, category) // 카테고리 정렬/필터 시 필요
+                .where(where)
+                .orderBy(toOrderSpec(menu, sort))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-        // 전체 카운트 조회
-        long total = queryFactory   // 쿼리를 만드는 객체
-                .select(menu.menuId.countDistinct())    // 중복없이 개수 셈
+        if (pageIds.isEmpty()) {
+            return new PageImpl<>(List.of(), pageable, 0);
+        }
+
+        // 2) 상세 + 재료 일괄 조회 (선택된 ID 한정)
+        var rows = queryFactory
+                .select(Projections.tuple(
+                        menu.menuId,
+                        menu.menuShow,
+                        menu.menuName,
+                        menu.menuCode,
+                        category.menuCategoryName,
+                        menu.menuPrice,
+                        menu.menuKcal,
+                        material.name // ← 실제 프로퍼티명이 name인지 확인
+                ))
                 .from(menu)
-                .fetchOne();    // 결과 1개만 가져옴
+                .leftJoin(menu.menuCategory, category)
+                .leftJoin(menu.recipe, recipe)
+                .leftJoin(recipe.material, material)
+                .where(menu.menuId.in(pageIds))
+                .orderBy(toOrderSpec(menu, sort))
+                .fetch();
 
-        // 전체 페이지 계산용 Page 객체 반환
-        return new PageImpl<>(content, pageable, total);    // PageImpl은 Spring이 제공하는 기본 Page 구현체
+        Map<Long, MenuListDTO> map = new LinkedHashMap<>();
+        for (var t : rows) {
+            Long id = t.get(menu.menuId);
+            MenuListDTO v = map.computeIfAbsent(id, k -> {
+                MenuListDTO d = new MenuListDTO();
+                d.setMenuId(t.get(menu.menuId));
+                d.setMenuShow(t.get(menu.menuShow));
+                d.setMenuName(t.get(menu.menuName));
+                d.setMenuCode(t.get(menu.menuCode));
+                d.setMenuCategoryName(t.get(category.menuCategoryName));
+                d.setMenuPrice(t.get(menu.menuPrice));
+                d.setMenuKcal(t.get(menu.menuKcal));
+                d.setMaterialNames(new ArrayList<>());
+                return d;
+            });
+            String mName = t.get(material.name);
+            if (mName != null) v.getMaterialNames().add(mName);
+        }
+        List<MenuListDTO> content = new ArrayList<>(map.values());
+
+        // 3) Count (가벼운 버전: 불필요 조인 제거)
+        Long total = queryFactory
+                .select(menu.menuId.countDistinct())
+                .from(menu)
+                .where(where)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
 
+    // ====== 아래는 헬퍼 메서드들 (클래스 안에 위치해야 함) ======
 
+    /** 이름 또는 설명 검색 */
+    private BooleanExpression eqNameOrInfo(MenuSearchDTO dto, QMenu menu) {
+        String kw = dto.getS();
+        if (!StringUtils.hasText(kw)) return null;
+
+        String type = Optional.ofNullable(dto.getType()).orElse("all");
+        return switch (type) {
+            case "name" -> menu.menuName.containsIgnoreCase(kw);
+            case "info" -> menu.menuInformation.containsIgnoreCase(kw); // 필드명 확인
+            default -> menu.menuName.containsIgnoreCase(kw)
+                    .or(menu.menuInformation.containsIgnoreCase(kw));    // 필드명 확인
+        };
+    }
+
+    /** 카테고리 필터 */
+    private BooleanExpression eqCategory(MenuSearchDTO dto, QMenu menu) {
+        if (dto.getMenuCategoryId() == null || dto.getMenuCategoryId() == 0) return null;
+        return menu.menuCategory.menuCategoryId.eq(dto.getMenuCategoryId());
+    }
+
+    /** 여러 조건 and 결합 */
+    private BooleanExpression andAll(BooleanExpression... exps) {
+        BooleanExpression result = null;
+        for (BooleanExpression exp : exps) {
+            if (exp == null) continue;
+            result = (result == null) ? exp : result.and(exp);
+        }
+        return result;
+    }
+
+    // 정렬 변환 (pageable Sort → QueryDSL OrderSpecifier[])
+    private com.querydsl.core.types.OrderSpecifier<?>[] toOrderSpec(QMenu menu, Sort sort) {
+        return sort.stream()
+                .map(order -> {
+                    com.querydsl.core.types.Order direction = order.isAscending()
+                            ? com.querydsl.core.types.Order.ASC
+                            : com.querydsl.core.types.Order.DESC;
+                    return switch (order.getProperty()) {
+                        case "menuId"   -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuId);
+                        case "menuName" -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuName);
+                        case "menuPrice"-> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuPrice);
+                        case "menuKcal" -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuKcal);
+                        default         -> new com.querydsl.core.types.OrderSpecifier<>(com.querydsl.core.types.Order.DESC, menu.menuId);
+                    };
+                })
+                .toArray(com.querydsl.core.types.OrderSpecifier[]::new);
+    }
 }

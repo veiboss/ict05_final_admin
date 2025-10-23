@@ -1,9 +1,7 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
-import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
-import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreAddFormDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
@@ -47,18 +45,59 @@ public class StoreService {
     }
 
     /**
-     *  ID로 가맹점 단건을 조회한다.
+     * 새로운 가맹점을 등록한다.
      *
-     * @param id 공지사항 ID
-     * @return 공지사항 엔티티, 존재하지 않으면 null
+     * @param dto 가맹점 등록 정보
+     * @return 저장된 가맹점 ID
      */
-    public Store findById(Long id) {
-        return storeRepository.findById(id).orElse(null);
+    public long insertOfficeStore(StoreWriteFormDTO dto) {
+
+        String address = "";
+        String address1 = dto.getUserAddress1();
+        String address2 = dto.getUserAddress2();
+        address = address1 + "," + address2;
+        dto.setStoreLocation(address);
+
+        Store store = Store.builder()
+                .name(dto.getStoreName())
+                .businessRegistrationNumber(dto.getBusinessRegistrationNumber())
+                .phone(dto.getStorePhone())
+                .status(dto.getStoreStatus())
+                .type(dto.getStoreType())
+                .location(dto.getStoreLocation())
+                .contractStartDate(dto.getStoreContractStartDate())
+                .contractAffiliateDate(dto.getStoreContractAffiliateDate())
+                .contractTerm(dto.getStoreContractTerm())
+                .affiliatePrice(dto.getStoreAffiliatePrice())
+                .monthlySales(dto.getStoreMonthlySales())
+                .royalty(dto.getRoyalty())
+                .comment(dto.getComment())
+                .build();
+
+        Store saved = storeRepository.save(store);
+        Long id = saved.getId();
+
+        return id;
     }
 
-
-
+    /**
+     * 가맹점의 이름(및 필요 시 식별자 등 최소 필드)을 DTO로 조회한다.
+     *
+     * @return 가맹점 표시용 DTO 리스트. 데이터가 없으면 일반적으로 빈 리스트를 반환.
+     * @see com.boot.ict05_final_admin.domain.store.repository.StoreRepository#findStoreName()
+     */
     public List<FindStoreDTO> findStoreName() {
         return storeRepository.findStoreName();
     }
-}
+
+    /**
+     * 가맹점 상세 정보를 조회한다.
+     *
+     * @param id 가맹점 ID
+     * @return 가맹점 엔티티, 존재하지 않으면 null
+     */
+    public Store detailOfficeStore(Long id) { return storeRepository.findById(id).orElse(null); }
+    }
+
+
+

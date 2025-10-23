@@ -13,7 +13,7 @@ package com.boot.ict05_final_admin.domain.staffresources.entity;
  */
 public enum StaffDepartment {
 
-    OFFICE("관리팀"),
+    OFFICE("본사팀"),
 
     STORE("판매팀");
 

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">  <!-- 글자 인코딩 -->
     <meta name="format-detection" content="telephone=no">
+<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"> <!-- 반응형 화면 설정 (폰/PC 화면 자동맞춤) -->
     <meta http-equiv="X-UA-Compatible" content="ie=edge">   <!-- 최신 버전의 Internet Explorer(IE) 엔진으로 렌더링(그리기) -->
@@ -21,79 +22,120 @@
 
     <div id="container" class="container">
         <div class="title-bar">
-            <h2 class="page-title ellipsis">메뉴 목록</h2>
+            <h2 class="page-title ellipsis">
+                메뉴 목록  (<span th:text="${menus.totalElements}">0</span>)
+            </h2>
         </div>
 
-        <table class="data-table">
-            <thead>
-            <tr>
-                <th scope="col"><input type="checkbox" id="selectAll"/></th>
-                <th scope="col">판매상태</th>
-                <th scope="col">메뉴명</th>
-<!--                <th scope="col">카테고리</th>-->
-                <th scope="col">금액</th>
-                <th scope="col">칼로리</th>
-                <th scope="col">관리</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="m, stat : ${menu.content}">    <!-- for문 -->
-                <td>
-                    <input type="checkbox" class="checkbox" name="selectedIds" th:id="'chk-'+${stat.index}"
-                           th:value="${m.menuId}"/>
-                </td>
+        <main id="content">
+            <div class="box-wrap">
+                <div id="search" class="search">
+                    <form name="frm" id="frm" method="get">
+                        <fieldset>
+                            <legend class="blind">검색</legend>
+                            <div class="pack-both">
+                                <div class="pack-left">
+                                    <input type="hidden" name="type" th:value="${menuSearchDTO.type}" />
+                                    <input type="hidden" name="size" th:value="${menuSearchDTO.size}" />
 
-                <!-- 판매상태 뱃지 -->
-                <td>
-                    <span th:text="${m.menuShow} ? '판매중' : '중지'"
-                          th:classappend="${m.menuShow} ? ' bg-success text-white' : ' bg-danger text-white'"
-                          class="badge rounded-pill">판매중</span>
-                </td>
+                                    <input title="검색어" type="search" name="s" th:value="${menuSearchDTO.s}" class="input-text medium form-control" placeholder="상품명, 설명으로 검색" />
+                                    <input type="submit" value="검색" class="btn medium color1"/>
+                                </div>
 
-                <!-- 메뉴명 -->
-                <td th:text="${m.menuName}">메뉴명</td>
+                                <div class="pack-left">
+                                    <!-- 카테고리 필터 -->
+                                    <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
 
-                <!-- 카테고리 뱃지 (이름에 따라 색상 매핑) -->
-<!--                <td>-->
-<!--                    <span th:text="${m.menuCategoryName}"-->
-<!--                        class="badge rounded-pill"-->
-<!--                        th:classappend="-->
-<!--                            ${m.menuCategoryName=='세트'} ? ' bg-success' :-->
-<!--                            (${m.menuCategoryName=='토스트'} ? ' bg-warning' :-->
-<!--                            (${m.menuCategoryName=='사이드'} ? ' bg-info' :-->
-<!--                            (${m.menuCategoryName=='음료'} ? ' bg-primary' : ' bg-secondary')))">-->
-<!--                        카테고리-->
-<!--                    </span>-->
-<!--                </td>-->
+                                        <!-- 전체 버튼 -->
+                                        <label class="btn medium"
+                                               th:classappend="${menuSearchDTO.menuCategoryId == null or menuSearchDTO.menuCategoryId == 0} ? ' active' : ''">
+                                            <input type="radio" name="menuCategoryId" value="0"
+                                                   th:checked="${menuSearchDTO.menuCategoryId == null or menuSearchDTO.menuCategoryId == 0}"
+                                                   onclick="setFilter(0)">
+                                            전체
+                                        </label>
 
-                <!-- 금액 (천단위 콤마 + 원) -->
-                <td th:text="${#numbers.formatDecimal(m.menuPrice, 1, 'COMMA', 0, 'POINT')} + '원'">0원</td>  <!-- 천단위 콤마 -->
+                                        <!-- DB 카테고리 반복 -->
+                                        <label th:each="c : ${menuCategories}" class="btn medium"
+                                               th:classappend="${menuSearchDTO.menuCategoryId == c.menuCategoryId} ? ' active'">
+                                            <input type="radio" name="menuCategoryId"
+                                                   th:value="${c.menuCategoryId}"
+                                                   th:checked="${menuSearchDTO.menuCategoryId == c.menuCategoryId}"
+                                                   th:attr="onclick=|setFilter(${c.menuCategoryId})|">
+                                            <span th:text="${c.menuCategoryName}">카테고리명</span>
+                                        </label>
 
-                <!-- 칼로리 -->
-                <td th:text="${m.menuKcal} + 'kcal'">0kcal</td>
 
-                <!-- 관리: 보기 아이콘 -->
-                <td class="text-center">
-                    <a th:href="@{/menu/detail/{id}(id=${m.menuId})}"
-                       class="btn btn-primary btn-sm"
-                       th:title="'상세 보기'">
-                        <i class="fa-regular fa-eye" style="color:#cfe2ff;"></i>
-                    </a>
-                </td>
-            </tr>
+                                    </div>
+                                </div>
 
-            <!-- 데이터 없을 때 -->
-            <tr th:if="${#lists.isEmpty(menu.content)}">
-                <td colspan="7" class="text-center text-muted py-4">표시할 메뉴가 없습니다.</td>
-            </tr>
-            </tbody>
-        </table>
-        <div style="text-align: center;">
-            <div th:replace="~{fragments/pagination :: pagination (${menu})}"></div>    <!-- ${menu} 안의 페이지 정보(totalPages, number 등)를 이용해서 1,2,3 버튼을 자동 생성 -->
-        </div>
-    </div>
-    <div th:replace="~{fragments/footer :: footer}"></div>
-</div>
+
+                                <!-- 페이지 사이즈 -->
+                                    <div class="pack-left page-size">
+                                        <select title="뷰사이즈" th:field="${menuSearchDTO.size}" class="select medium"
+                                                onchange="setPageSize(this.value)">
+                                            <option value="10">10</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <span class="fs-ss">개씩 보기</span>
+                                    </div>
+                                </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <section class="pack-down">
+                    <div class="list-header pack-both">
+                        <div class="pack-right">
+                            <a href="/admin/menu/write" class="btn medium color2">상품 등록</a>
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">판매상태</th>
+                            <th scope="col">상품코드</th>
+                            <th scope="col">메뉴명</th>
+                            <th scope="col">카테고리</th>
+                            <th scope="col">주재료</th>
+                            <th scope="col">금액</th>
+                            <th scope="col">칼로리</th>
+                            <th scope="col">관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="menu, stat : ${menus.content}">
+                            <td th:text="${menu.menuShow}">판매상태</td>
+                            <td th:text="${menu.menuCode}">상품코드</td>
+                            <td>
+                                <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
+                            </td>
+                            <td th:text="${material.baseUnit}">기본단위</td>
+                            <td th:text="${material.salesUnit}">판매단위</td>
+                            <td th:text="${material.supplier}">공급업체</td>
+                            <td>
+                                <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/material/detail/{id}(id=${material.id})}" class="btn small bdr-gray">
+                                    <span class="material-symbols-outlined md-18">visibility</span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div style="text-align: center;">
+                        <div th:replace="~{fragments/pagination :: pagination (${materials})}"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
 
 <script>
     const selectAll = document.getElementById('selectAll');     // 전체선택 체크박스

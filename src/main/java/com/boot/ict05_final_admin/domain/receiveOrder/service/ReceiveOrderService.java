@@ -1,8 +1,11 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.service;
 
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +38,36 @@ public class ReceiveOrderService {
     }
 
     /* 주문 상세 정보 조회 */
+    public ReceiveOrderDetailDTO getReceiveOrderDetail(Long id) {
+        ReceiveOrderDetailDTO dto = receiveOrderRepository.findDetailById(id)
+                .orElseThrow(() -> new NoSuchElementException("수주 내역이 존재하지 않습니다. id=" + id));
+
+        List<ReceiveOrderItemDTO> items = receiveOrderRepository.findItemsByOrderId(id);
+        dto.setItems(items);  // setter로 주입
+
+        return dto;
+    }
+
+    /* 배송 상태 변경 */
+    @Transactional
+    public void advanceStatus(Long id) {
+        ReceiveOrder order = receiveOrderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
+
+        ReceiveOrderStatus current = order.getStatus();
+        ReceiveOrderStatus next;
+
+        switch (current) {
+            case RECEIVED -> next = ReceiveOrderStatus.PREPARING;
+            case PREPARING -> next = ReceiveOrderStatus.SHIPPING;
+            case SHIPPING -> next = ReceiveOrderStatus.DELIVERED;
+            default -> throw new IllegalStateException("배송 완료된 주문은 변경할 수 없습니다.");
+        }
+
+        order.setStatus(next);
+        receiveOrderRepository.save(order);
+    }
+
 
 
 }

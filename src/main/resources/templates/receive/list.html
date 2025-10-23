@@ -52,11 +52,11 @@
         /* 팝업 박스 자체 크기 고정 */
         .popup {
           background: white;
-          width: 550px;
-          max-width: 95vw; /* 모바일 대응 시 가로 최대 폭 제한 */
-          height: 750px;        /* 고정 높이 */
+          width: 630px;            /* ✅ 보기 좋은 중간 크기 */
+          max-width: 92vw;         /* ✅ 작은 화면 대응 */
+          height: 750px;
           border-radius: 8px;
-          overflow: hidden;     /* 스크롤은 내부에서 처리 */
+          overflow: hidden;
           display: flex;
           flex-direction: column;
         }
@@ -69,11 +69,14 @@
         }
 
         .popup-body .box-wrap {
-          margin: 12px;
-          padding: 20px;
-          background: #ffffff;
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          margin: 16px auto;         /* 가운데 정렬 */
+          padding: 25px;             /* 여백 확대 */
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          width: 95%;                /* ✅ 카드 폭 확대 */
+          max-width: 100%;           /* 팝업 내부 꽉 차게 */
+          box-sizing: border-box;
         }
 
         /* 주문정보, 가맹점정보 나란히 */
@@ -104,28 +107,85 @@
 
         .info-line {
           display: flex;
+          align-items: center;     /* 세로 가운데 정렬 */
           justify-content: space-between;
-          flex-wrap: wrap;             /* ✅ 길면 다음 줄로 */
-          margin-bottom: 10px;
+          gap: 8px;                /* 라벨-값 간 간격 */
+          margin-bottom: 6px;
+          white-space: nowrap;     /* 한 줄 유지 */
         }
 
         .info-line .label {
           font-weight: 500;
-          flex: 0 1 auto;
-          min-width: 90px;
-          word-break: break-word;
         }
 
         .info-line .value {
           font-weight: 400;
           color: #222;
           text-align: right;
-          flex: 1 1 auto;
-          min-width: 100px;
-          word-break: break-word;
-          <!--white-space: normal !important;  /* ✅ 강제로 줄바꿈 허용 */-->
+          flex: 1;                /* 라벨 오른쪽 정렬 여유 확보 */
         }
 
+        .overlay {
+          display: none;
+          position: fixed;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(0,0,0,0.5);
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        }
+        .overlay.active {
+          display: flex;
+        }
+
+
+        /* 주문 상품 테이블 */
+        #itemTable {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 12px;
+          table-layout: fixed;     /* ✅ 칸 너비 균등 분배 */
+          background: #fafafa;
+          box-shadow: 0 0 0 1px #e0e0e0 inset;
+        }
+
+        #itemTable thead {
+          background: #f3f3f3;
+        }
+
+        /* 제목은 한 줄 유지 */
+        #itemTable th {
+          font-size: 14px;
+          font-weight: 600;
+          color: #555;
+          padding: 10px 12px;
+          text-align: center;
+          border-bottom: 1px solid #e0e0e0;
+          white-space: nowrap; /* ✅ 줄바꿈 방지 */
+          table-layout: fixed;     /* ✅ 균등 분배 유지 */
+        }
+
+        /* 내용은 줄바꿈 허용 */
+        #itemTable td {
+          padding: 10px 12px;
+          text-align: center;
+          font-size: 14px;
+          color: #222;
+          border-bottom: 1px solid #eaeaea;
+          word-break: keep-all;
+          white-space: normal; /* ✅ 자동 줄바꿈 허용 */
+        }
+
+        /* 마지막 행 밑줄 제거 */
+        #itemTable tr:last-child td {
+          border-bottom: none;
+        }
+
+        #itemTable tbody tr:hover {
+          background-color: #f9f9f9;
+          transition: background-color 0.2s ease;
+        }
 
     </style>
 </head>
@@ -171,9 +231,7 @@
 
                 <section class="pack-down">
                     <div class="list-header pack-both">
-                        <div class="pack-left">
-                            <a href="/admin/material/write" class="btn small color1">글쓰기</a>
-                        </div>
+                        <div></div>
                         <div class="pack-left">
                             <button type="button" class="btn small bdr-color1" onclick="excelDownload()">액셀다운로드</button>
                         </div>
@@ -189,25 +247,27 @@
                             <th scope="col">상태</th>
                             <th scope="col">우선순위</th>
                             <th scope="col">주문액</th>
-<!--                            <th scope="col">품목수</th>-->
+                            <th scope="col">품목수</th>
                             <th scope="col">배송예정일</th>
                             <th scope="col">관리</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="receiveOrder, stat : ${receiveOrder.content}">
-<!--                            <td><input type="checkbox" class="row-checkbox" th:id="'chk-'+${stat.index}" th:value="${receiveOrder.id}" /></td>&ndash;&gt;-->
+                            <!--                            <td><input type="checkbox" class="row-checkbox" th:id="'chk-'+${stat.index}" th:value="${receiveOrder.id}" /></td>&ndash;&gt;-->
                             <td th:text="${receiveOrder.storeName}">가맹점명</td>
                             <td th:text="${receiveOrder.orderCode}">주문번호</td>
                             <td th:text="${receiveOrder.storeLocation}">지역</td>
                             <td th:text="${receiveOrder.statusDescription}">상태</td>
                             <td th:text="${receiveOrder.priorityDescription}">우선순위</td>
                             <td th:text="${#numbers.formatInteger(receiveOrder.totalPrice, 0, 'COMMA')} + '원'">주문액</td>
-<!--                            <td th:text="${receiveOrder.itemCount}">품목수</td> &lt;!&ndash; 필요 시 DTO에 itemCount 추가 &ndash;&gt;-->
+                            <td th:text="${receiveOrder.totalCount}">품목수</td>
                             <td th:text="${#temporals.format(receiveOrder.deliveryDate, 'yyyy-MM-dd')}">배송예정일</td>
                             <td>
-                                <button type="button" class="btn small normal" onclick="openPopup('${receiveOrder.id}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye h-3 w-3"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <button type="button"
+                                        class="btn small normal"
+                                        th:onclick="|openPopup(${receiveOrder.id})|">
+                                    <span class="material-symbols-outlined">visibility</span>
                                 </button>
                             </td>
                         </tr>
@@ -224,160 +284,174 @@
 </div><!--#wrap.frame-->
 
 <!-- popup 시작 -->
-<div id="popupId" class="overlay">
+<!-- 각 주문마다 하나의 팝업 생성 -->
+<div th:each="order : ${receiveOrder.content}"
+     th:with="detail=${orderDetails[order.id]}"
+     th:id="'popup-' + ${order.id}"
+     class="overlay">
+
     <div class="popup">
+        <!-- Header -->
         <div class="popup-header">
             <h2 class="popup-title">주문 상세 정보</h2>
-            <button type="button" class="btn transparent pop-close" onclick="modalClose('#popupId');" title="팝업 닫기">
-                <svg viewBox="0 0 32 32" class="ico svg-close">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="m16 17.414 8.485 8.485 1.415-1.414L17.414 16 25.9 7.515 24.485 6.1 16 14.586 7.515 6.1 6.1 7.515 14.586 16l-8.485 8.485L7.515 25.9 16 17.413z"></path>
-                </svg>
+            <button type="button" class="btn transparent pop-close"
+                    th:onclick="'modalClose(' + '\'' + '#popup-' + ${order.id} + '\'' + ')'"
+                    title="팝업 닫기">
+                <span class="material-symbols-outlined">close</span>
             </button>
             <div class="fs-14">
-                <p>주문번호 : </p>
+                <p>주문번호 :
+                    <span th:text="${detail.orderCode}">주문번호</span>
+                </p>
             </div>
         </div>
 
         <hr class="line">
+
+        <!-- Body -->
         <div class="popup-body">
-             <div class="info-row">
-                <div data-th="info-card">
-                <!--<div class="row-2">-->
-                    <section class="col box-wrap">
-                        <h3 style="color: black; font-weight: 600;">주문 정보</h3>
-                        <div class="info-line">
-                            <div class="label">주문번호:</div>
-                            <div class="value">ORD-20240120-001</div>
-                        </div>
-
-                        <div class="info-line"><span class="label">주문일:</span><span class="value"></span></div>
-                        <div class="info-line"><span class="label">배송예정일:</span><span class="value"></span></div>
-                        <div class="info-line"><span class="label">상태:</span><span class="value"></span></div>
-                        <div class="info-line"><span class="label">우선순위:</span><span class="value"></span></div>
-                    </section>
-                </div>
-
-                <div data-th="info-card">
-                    <!--<div class="row-2">-->
-                    <section class="col box-wrap">
-                        <h3 style="color: black; font-weight: 600;">가맹점 정보</h3>
-                        <div class="info-line"><span class="label">가맹점명:</span><span class="value">이삭토스트 강남점</span></div>
-                        <div class="info-line"><span class="label">매장코드:</span><span class="value"></span></div>
-                        <div class="info-line"><span class="label">지역:</span><span class="value"></span></div>
-                        <div class="info-line"><span class="label">총 주문액:</span><span class="value"></span></div>
-                        <div class="info-line"><span class="label">주문 품목:</span><span class="value"></span></div>
-                    </section>
-                </div>
-             </div>
-
-            <hr class="line">
-            <div data-th="card">
-                <!--<div class="row-2">-->
-                <section class="box-wrap">
-
-                    <h3 style="color: black; font-weight: 600;">주문 상품</h3>
-
-                    <hr class="line">
-
-                    <div data-th="card">
-                        <section class="col box-wrap">
-                            <div class="pack-both">
-                                <table>
-                                   <thead>
-                                   <tr>
-                                       <th>상품명</th>
-                                       <th>카테고리</th>
-                                       <th>수량</th>
-                                       <th>단가</th>
-                                       <th>총액</th>
-                                       <th>재고상태</th>
-                                   </tr>
-                                   </thead>
-                                   <tbody>
-                                   <tr>
-                                       <td>상품명</td>
-                                       <td>카테고리</td>
-                                       <td>수량</td>
-                                       <td>단가</td>
-                                       <td>총액</td>
-                                       <td>재고상태</td>
-                                   </tr>
-                                   </tbody>
-                               </table>
-                            </div>
-                        </section>
-                    </div>
-                </section>
-            </div>
-
-            <hr class="line">
-            <div data-th="card">
-                <!--<div class="row-2">-->
+            <div class="info-row">
+                <!-- 주문 정보 -->
                 <section class="col box-wrap">
-                    <div class="pack-both">
-                        <h3 style="color: black; font-weight: 600;">특이 사항</h3>
-                    </div>
+                    <h3 style="color:black; font-weight:600;">주문 정보</h3>
+                    <hr>
+                    <div class="info-line"><div class="label">주문번호:</div><div class="value" th:text="${detail.orderCode}"></div></div>
+                    <div class="info-line"><div class="label">주문일:</div><div class="value" th:text="${#temporals.format(detail.orderDate, 'yyyy-MM-dd')}"></div></div>
+                    <div class="info-line"><div class="label">배송예정일:</div><div class="value" th:text="${#temporals.format(detail.deliveryDate, 'yyyy-MM-dd')}"></div></div>
+                    <div class="info-line"><div class="label">상태:</div><div class="value" th:text="${detail.statusDescription}"></div></div>
+                    <div class="info-line"><div class="label">우선순위:</div><div class="value" th:text="${detail.priorityDescription}"></div></div>
+                </section>
 
-                    <hr class="line">
-
-                    <textarea class="textarea medium" rows="4" cols="50" placeholder="텍스트에리어"></textarea>
+                <!-- 가맹점 정보 -->
+                <section class="col box-wrap">
+                    <h3 style="color:black; font-weight:600;">가맹점 정보</h3>
+                    <hr>
+                    <div class="info-line"><div class="label">가맹점명:</div><div class="value" th:text="${detail.storeName}"></div></div>
+                    <div class="info-line"><div class="label">매장코드:</div><div class="value" th:text="${detail.storeId}"></div></div>
+                    <div class="info-line"><div class="label">지역:</div><div class="value" th:text="${detail.storeLocation}"></div></div>
+                    <div class="info-line"><div class="label">총 주문액:</div><div class="value" th:text="${#numbers.formatInteger(detail.totalPrice, 0, 'COMMA')} + '원'"></div></div>
+                    <div class="info-line"><div class="label">주문 품목:</div><div class="value" th:text="${detail.totalCount}"></div></div>
                 </section>
             </div>
 
             <hr class="line">
+
+            <!-- 주문 상품 -->
+            <section class="box-wrap">
+                <h3 style="color:black; font-weight:600;">주문 상품</h3>
+                <hr class="line">
+
+                <table id="itemTable">
+                    <thead>
+                    <tr>
+                        <th>상품명</th>
+                        <th>카테고리</th>
+                        <th>수량</th>
+                        <th>단가</th>
+                        <th>총액</th>
+                        <th>재고상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${detail.items}">
+                        <td th:text="${item.name}"></td>
+                        <td th:text="${item.materialCategory}"></td>
+                        <td th:text="${item.detailCount}"></td>
+                        <td th:text="${#numbers.formatInteger(item.detailUnitPrice,0,'COMMA')} + '원'"></td>
+                        <td th:text="${#numbers.formatInteger(item.detailTotalPrice,0,'COMMA')} + '원'"></td>
+                        <td th:text="${item.inventoryStatusDescription}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr class="line">
+
+            <!-- 특이사항 -->
+            <section class="col box-wrap">
+                <h3 style="color:black; font-weight:600;">특이 사항</h3>
+                <hr class="line">
+                <textarea class="textarea medium" rows="4" cols="50"
+                          th:text="${detail.remark}" readonly></textarea>
+            </section>
+
+            <hr class="line">
+
+            <!-- 버튼 영역 -->
             <div class="button-area pack-center" style="float: right;">
                 <button type="button" class="btn medium bdr-color1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download h-4 w-4 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+                    <span class="material-symbols-outlined">download</span>
                     주문서 다운로드
                 </button>
-                <button type="reset" class="btn medium color1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package h-4 w-4 mr-2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><path d="m7.5 4.27 9 5.15"></path></svg>
-                    배송 준비
+
+                <button type="button"
+                        class="btn medium color1"
+                        th:attr="id='updateStatusBtn-' + ${order.id}"
+                        th:onclick="|updateStatus(${order.id})|"
+                        th:disabled="${order.status.name() == 'DELIVERED'}">
+                    <span class="material-symbols-outlined"
+                          th:attr="id='statusIcon-' + ${order.id}"
+                          th:text="${order.status.name() == 'RECEIVED' ? 'pallet'
+                   : order.status.name() == 'PREPARING' ? 'delivery_truck_speed'
+                   : order.status.name() == 'SHIPPING' ? 'check_box'
+                   : order.status.name() == 'DELIVERED' ? 'deployed_code_account'
+                   : 'help'}"></span>
+
+                    <span th:attr="id='statusLabel-' + ${order.id}"
+                          th:text="${order.status.name() == 'RECEIVED' ? '배송 준비'
+                   : order.status.name() == 'PREPARING' ? '배송 중'
+                   : order.status.name() == 'SHIPPING' ? '배송 완료'
+                   : order.status.name() == 'DELIVERED' ? '완료됨'
+                   : '알 수 없음'}"></span>
                 </button>
             </div>
-
         </div>
     </div>
-</div><!-- popup 끝 -->
+</div>
+<!-- popup 끝 -->
 
 <script>
-    const selectAll = document.getElementById('selectAll');
+    //    const selectAll = document.getElementById('selectAll');
 
-    const getRowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
+    //    const getRowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
 
-    selectAll.addEventListener('change', () => {
-        const all = getRowCheckboxes();
-        all.forEach(cb => cb.checked = selectAll.checked);
-        selectAll.indeterminate = false;
-    });
+    //    if (selectAll) { // 방어 코드 추가
+    //        selectAll.addEventListener('change', () => {
+    //            const all = getRowCheckboxes();
+    //            all.forEach(cb => cb.checked = selectAll.checked);
+    //            selectAll.indeterminate = false;
+    //        });
+    //    }
 
-    document.addEventListener('change', (e) => {
-        if (!e.target.classList.contains('row-checkbox')) return;
-        updateSelectAllState();
-    });
+    //    document.addEventListener('DOMContentLoaded', () => {
+    //        document.addEventListener('change', (e) => {
+    //            if (!e.target.classList.contains('row-checkbox')) return;
+    //            updateSelectAllState();
+    //        });
+    //    });
 
-    function updateSelectAllState() {
-        const all = getRowCheckboxes();
-        if (all.length === 0) {
-            selectAll.checked = false;
-            selectAll.indeterminate = false;
-            return;
-        }
-        const checkedCount = all.filter(cb => cb.checked).length;
-        if (checkedCount === 0) {
-            selectAll.checked = false;
-            selectAll.indeterminate = false;
-        } else if (checkedCount === all.length) {
-            selectAll.checked = true;
-            selectAll.indeterminate = false;
-        } else {
-            selectAll.checked = false;
-            selectAll.indeterminate = true;
-        }
-    }
+    //    function updateSelectAllState() {
+    //        const all = getRowCheckboxes();
+    //        if (all.length === 0) {
+    //            selectAll.checked = false;
+    //            selectAll.indeterminate = false;
+    //            return;
+    //        }
+    //        const checkedCount = all.filter(cb => cb.checked).length;
+    //        if (checkedCount === 0) {
+    //            selectAll.checked = false;
+    //            selectAll.indeterminate = false;
+    //        } else if (checkedCount === all.length) {
+    //            selectAll.checked = true;
+    //            selectAll.indeterminate = false;
+    //        } else {
+    //            selectAll.checked = false;
+    //            selectAll.indeterminate = true;
+    //        }
+    //    }
 
-    document.addEventListener('DOMContentLoaded', updateSelectAllState);
-</script>
+    //    document.addEventListener('DOMContentLoaded', updateSelectAllState);
+    </script>
 <script>
     function excelDownload() {
         const formData = new FormData(document.getElementById('frm'));
@@ -387,25 +461,24 @@
     }
 </script>
 <script>
-    function openPopup(orderId) {
+    function openPopup(id) {
+         // 현재 주문 ID를 전역에 저장 (배송 준비 버튼에서 사용)
+        window.currentOrderId = id;
+
         // 팝업 열기
-        const popup = document.getElementById('popupId');
-        popup.classList.add('active');
+        const popup = document.getElementById('popup-' + id);
+        if (popup) popup.classList.add('active');
+        else console.warn('팝업을 찾을 수 없음: popup-' + id);
 
-        // 이 부분에서 orderId로 AJAX 요청하거나 데이터 바인딩 수행
+        // 이 부분에서 id AJAX 요청하거나 데이터 바인딩 수행
         // 예시: 콘솔 출력
-        console.log("주문 상세 보기: " + orderId);
+        console.log("넘어온 id : " + id);
 
-        // AJAX로 상세 데이터 가져와서 채우기 (예시)
-        /*
-        fetch('/admin/receive/detail/api/' + orderId)
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('#popupId .popup-title').textContent = "주문 상세 정보 - " + data.orderNumber;
-                document.querySelector('#popupId p:nth-child(1)').textContent = "주문번호: " + data.orderNumber;
-                ...
-            });
-        */
+    }
+
+    function formatCurrency(amount) {
+        if (typeof amount !== 'number') return amount;
+        return amount.toLocaleString('ko-KR') + '원';
     }
 
     // 팝업 닫기 함수 (기존 코드 참고)
@@ -413,6 +486,65 @@
         const popup = document.querySelector(selector);
         popup.classList.remove('active');
     }
+
+/**
+ * 배송 상태 업데이트 및 버튼 갱신
+ */
+function updateStatus(id) {
+    const btn = document.getElementById('updateStatusBtn-' + id);
+    const icon = document.getElementById('statusIcon-' + id);
+    const label = document.getElementById('statusLabel-' + id);
+
+    if (!btn || !icon || !label) {
+        alert(`요소를 찾을 수 없음: ${id}`);
+        console.log('btn:', btn, 'icon:', icon, 'label:', label);
+        return;
+    }
+
+    fetch(`/admin/API/receive/status/${id}`, { method: 'PUT' })
+    .then(res => {
+      if (!res.ok) throw new Error('상태 업데이트 실패');
+      return res.text();
+    })
+    .then(() => {
+      // 상태 순서대로 변경: RECEIVED → PREPARING → SHIPPING → DELIVERED
+      const current = label.textContent.trim();
+
+      switch (current) {
+        case '접수됨':
+          icon.textContent = 'pallet';
+          label.textContent = '배송 준비';
+          break;
+        case '배송 준비':
+          icon.textContent = 'delivery_truck_speed';
+          label.textContent = '배송 중';
+          break;
+        case '배송 중':
+          icon.textContent = 'check_box';
+          label.textContent = '배송 완료';
+          break;
+        case '배송 완료':
+          icon.textContent = 'deployed_code_account';
+          label.textContent = '완료됨';
+          btn.disabled = true;
+          break;
+        default:
+          icon.textContent = 'help';
+          label.textContent = '알 수 없음';
+      }
+
+      // 팝업 닫기
+      modalClose('#popup-' + id);
+
+      // 리스트 새로고침으로 반영
+      location.reload();
+    })
+    .catch(err => {
+      console.error(err);
+      alert('업데이트 실패: ' + err.message);
+    });
+}
+
 </script>
 </body>
 </html>

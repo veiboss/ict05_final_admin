@@ -1,14 +1,13 @@
 package com.boot.ict05_final_admin.domain.staffresources.controller;
 
-import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffWriteFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class StaffController {
      * @return 직원 목록 페이지 뷰 이름
      */
     @GetMapping("/staff/list")
-    public String listStaff(StaffSearchDTO staffSearchDTO,
+    public String listOfficeStaff(StaffSearchDTO staffSearchDTO,
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
                             Model model,
                             HttpServletRequest request) {
@@ -64,16 +64,59 @@ public class StaffController {
      * @param model 뷰에 전달할 모델 객체
      * @return 사원등록 작성 페이지 뷰 이름
      */
-    @GetMapping("/staff/add")
-    public String addForm(Model model) {
+    @GetMapping("/staff/write")
+    public String addOfficeStaff(Model model) {
 
         List<FindStoreDTO> stores = storeService.findStoreName();
 
-        model.addAttribute("staffAddFormDTO", new StaffAddFormDTO());
+        model.addAttribute("staffWriteFormDTO", new StaffWriteFormDTO());
         model.addAttribute("StaffDepartment", StaffDepartment.values());
         model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
         model.addAttribute("stores", stores);
 
-        return "staff/add";
+        return "staff/write";
+    }
+
+    /**
+     * 특정 사원의 상세 내용을 조회한다.
+     *
+     * @param id    사원 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 사원 상세 페이지 뷰 이름
+     */
+    @GetMapping("staff/detail/{id}")
+    public String detailOfficeStaff(@PathVariable Long id, Model model) {
+        StaffProfile staffProfile = staffService.detailStaff(id);
+
+        model.addAttribute("staff", staffProfile);
+
+        return "staff/detail";
+    }
+
+    /**
+     * 특정 사원의 수정 화면을 표시한다.
+     *
+     * @param id    재료 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 사원 수정 페이지 뷰 이름
+     */
+    @GetMapping("/staff/modify/{id}")
+    public String modifyOfficeStaff(@PathVariable Long id, Model model) {
+
+        StaffProfile staffProfile = staffService.detailStaff(id);
+        List<FindStoreDTO> stores = storeService.findStoreName();
+
+        model.addAttribute("staff", staffProfile);
+        model.addAttribute("StaffDepartment", StaffDepartment.values());
+        model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
+        model.addAttribute("stores", stores);
+
+        return "staff/modify";
+    }
+
+    @GetMapping("/staff/delete/{id}")
+    public String deleteOfficeStaff(@PathVariable Long id, Model model) {
+        staffService.deleteStaff(id);
+        return "redirect:/staff/list";
     }
 }

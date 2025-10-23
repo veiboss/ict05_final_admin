@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.menu.controller;
 
 
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
+import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.service.MenuService;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuModifyFormDTO;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  *     <li>메뉴 수정</li>
  * </ul>
  *
- * <p>요청 시 첨부파일 업로드를 지원하며,
+ * <p>
  * {@link MenuWriteFormDTO}, {@link MenuModifyFormDTO} 를 통해
  * 검증 및 데이터 바인딩을 수행합니다.</p>
  *
@@ -54,7 +55,7 @@ public class MenuRestController {
      * @param dto 등록할 메뉴 데이터 (제목, 내용, 카테고리, 첨부파일 포함)
      * @param bindingResult 유효성 검증 결과
      * @return 등록 성공 여부 및 생성된 메뉴 ID
-     * @throws Exception 파일 처리 오류 또는 DB 저장 오류
+     * @throws Exception DB 저장 오류
      */
     @PostMapping("/menu/write")
     @Operation(
@@ -97,7 +98,7 @@ public class MenuRestController {
                     ));
         }
 
-        Long menuId = menuService.insertStoreMenu(dto, dto.getFiles());
+        Long menuId = menuService.insertStoreMenu(dto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -159,7 +160,8 @@ public class MenuRestController {
                     ));
         }
 
-        long menuId = menuService.menuModify(dto, dto.getFiles()).getMenuId();
+        long menuId = menuService.menuModify(dto).getMenuId();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of(

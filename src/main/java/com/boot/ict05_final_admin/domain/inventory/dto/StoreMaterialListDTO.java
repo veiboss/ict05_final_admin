@@ -31,7 +31,10 @@ public class StoreMaterialListDTO {
     private String category;
 
     /** 단위 (예: kg, 개, L 등) */
-    private String unit;
+    private String baseUnit;
+
+    /** 본사 기준 판매단위 (예: kg, 개, L 등) */
+    private String salesUnit;
 
     /** 공급업체명 */
     private String supplier;
@@ -43,16 +46,16 @@ public class StoreMaterialListDTO {
     private MaterialStatus status;
 
     /** 현재 수량 */
-    private BigDecimal quantity;
+    private Integer quantity;
 
     /** 적정 수량 */
-    private BigDecimal optimalQuantity;
+    private Integer optimalQuantity;
 
     /** 매입가 */
-    private BigDecimal purchasePrice;
+    private Long purchasePrice;
 
     /** 판매가 */
-    private BigDecimal sellingPrice;
+    private Long sellingPrice;
 
     /** 유통기한 */
     private LocalDate expirationDate;

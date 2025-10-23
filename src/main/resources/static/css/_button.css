@@ -61,4 +61,4 @@ button.btn					{overflow: visible; margin: 0;}
 /* btn inner */
 
 /* button-area */
-.button-area				{}
+.button-area				{margin-top: clamp(24px, 3.75vw, 48px);}

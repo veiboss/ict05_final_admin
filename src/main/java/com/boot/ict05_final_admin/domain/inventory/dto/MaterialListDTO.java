@@ -33,7 +33,7 @@ public class MaterialListDTO {
     private String salesUnit;
 
     /** 판매단위 → 기본단위 변환비율 */
-    private Double conversionRate;
+    private Integer conversionRate;
 
     /** 공급업체명 */
     private String supplier;

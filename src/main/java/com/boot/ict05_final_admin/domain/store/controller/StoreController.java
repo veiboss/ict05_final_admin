@@ -1,7 +1,15 @@
 package com.boot.ict05_final_admin.domain.store.controller;
 
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
+import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
+import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
+import com.boot.ict05_final_admin.domain.store.entity.Store;
+import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
+import com.boot.ict05_final_admin.domain.store.entity.StoreType;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +21,18 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class StoreController {
 
     private final StoreService storeService;
+    private final StaffService staffService;
+
 
     /**
      * 공지사항 목록을 페이징 처리하여 조회한다.
@@ -55,5 +68,40 @@ public class StoreController {
         model.addAttribute("storeSearchDTO", storeSearchDTO);
 
         return "store/list";
+    }
+
+    /**
+     * 가맹점 등록 화면을 표시한다.
+     *
+     * @param model 뷰에 전달할 모델 객체
+     * @return 가맹점 등록 작성 페이지 뷰 이름
+     */
+    @GetMapping("/store/write")
+    public String addOfficeStore(Model model) {
+
+        List<FindStoreDTO> stores = storeService.findStoreName();
+
+        model.addAttribute("storeWriteFormDTO", new StoreWriteFormDTO());
+        model.addAttribute("StoreStatus", StoreStatus.values());
+        model.addAttribute("StoreType", StoreType.values());
+        model.addAttribute("stores", stores);
+
+        return "store/write";
+    }
+
+    /**
+     * 특정 가맹점의 상세 내용을 조회한다.
+     *
+     * @param id    가맹점 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 가맹점 상세 페이지 뷰 이름
+     */
+    @GetMapping("store/detail/{id}")
+    public String detailOfficeStore(@PathVariable Long id, Model model) {
+        Store store = storeService.detailOfficeStore(id);
+
+        model.addAttribute("store", store);
+
+        return "store/detail";
     }
 }

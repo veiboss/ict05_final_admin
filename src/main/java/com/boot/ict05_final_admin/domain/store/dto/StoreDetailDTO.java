@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.store.dto;
 
+import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
+import com.boot.ict05_final_admin.domain.store.entity.StoreType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +33,9 @@ public class StoreDetailDTO {
     /** 가맹점명 */
     private String storeName;
 
+    /** 점주명 */
+    private String staffName;
+
     /** 매장 사업자 등록번호 */
     private String businessRegistrationNumber;
 
@@ -46,6 +51,12 @@ public class StoreDetailDTO {
     /** 사업장 주소 */
     private String storeLocation;
 
+    /** 운영 상태 */
+    private StoreStatus storeStatus;
+
+    /** 매장 구분 (직영점/가맹점)*/
+    private StoreType storeType;
+
     /** 계약 시작일 */
     private LocalDate storeContractStartDate;
 
@@ -57,6 +68,9 @@ public class StoreDetailDTO {
 
     /** 가맹비 */
     private BigDecimal storeAffiliatePrice;
+
+    /** 월매출 */
+    private BigDecimal storeMonthlySales;
 
     /** 월 로열티 */
     private BigDecimal royalty;

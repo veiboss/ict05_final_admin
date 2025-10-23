@@ -1,5 +1,9 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 
+import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.Material;
+import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +33,14 @@ public class ReceiveOrderDetail {
     private ReceiveOrder receiveOrder;
 
     /** 재료 재고 시퀀스 */
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "material_inventory_id_fk", nullable = false)
-//    private MaterialInventory MaterialInventory;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inventory_id_fk", nullable = false)
+    private HqInventory hqInventory;
+
+    /** 재료 시퀀스 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "material_id_fk", nullable = false)
+    private Material material;
 
     /** 수주 단가 */
     @Column(name = "purchase_order_detail_unit_price", precision = 12, scale = 2, nullable = false)
