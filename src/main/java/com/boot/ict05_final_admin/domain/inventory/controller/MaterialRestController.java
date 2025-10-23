@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.controller;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialWriteFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.serivce.MaterialService;
+import com.boot.ict05_final_admin.domain.inventory.service.MaterialService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
