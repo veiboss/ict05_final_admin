@@ -1,0 +1,168 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="robots" content="noindex">
+  <meta name="googlebot" content="noindex">
+  <!-- Bootstrap CSS CDN -->
+  <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+  <link href="/admin/css/toast.css" rel="stylesheet"/>
+  <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+  <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <div id="container" class="container">
+    <div class="title-bar">
+      <h2 class="page-title ellipsis">KPI 리포트</h2>
+    </div>
+
+    <main id="content">
+      <div class="box-wrap">
+        <div id="search" class="search">
+          <form name="frm" id="frm" method="get">
+            <fieldset>
+              <legend class="blind">검색</legend>
+              <div class="pack-both">
+
+                <div class="pack-left">
+                  <input type="hidden" name="type" th:value="${materialSearchDTO.type}" />
+                  <input type="hidden" name="size" th:value="${materialSearchDTO.size}" />
+
+                  <input title="검색어" type="search" name="s" th:value="${materialSearchDTO.s}" class="input-text medium form-control" placeholder="재료명, 검색어, 카테고리 검색" />
+                  <input type="submit" value="검색" class="btn medium color1"/>
+                </div>
+
+                <div class="pack-left">
+                  <!-- 상태 필터 -->
+                  <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+                    <label class="btn medium"
+                           th:classappend="${materialSearchDTO.status == null or materialSearchDTO.status == ''} ? ' active' : ''">
+                      <input type="radio" name="status" value=""
+                             th:checked="${materialSearchDTO.status == null}"
+                             onclick="setFilter('')">전체
+                    </label>
+
+                    <label class="btn medium"
+                           th:classappend="${materialSearchDTO.status?.name() == 'USE'} ? ' active' : ''">
+                      <input type="radio" name="status" value="USE"
+                             th:checked="${materialSearchDTO.status?.name() == 'USE'}"
+                             onclick="setFilter('USE')">사용중
+                    </label>
+
+                    <label class="btn medium"
+                           th:classappend="${materialSearchDTO.status?.name() == 'STOP'} ? ' active' : ''">
+                      <input type="radio" name="status" value="STOP"
+                             th:checked="${materialSearchDTO.status?.name() == 'STOP'}"
+                             onclick="setFilter('STOP')">중단
+                    </label>
+                  </div>
+
+                   페이지 사이즈
+                  <div class="pack-left page-size">
+                    <select title="뷰사이즈" th:field="${materialSearchDTO.size}" class="select medium"
+                            onchange="setPageSize(this.value)">
+                      <option value="20">20</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="200">200</option>
+                    </select>
+                    <span class="fs-sm">개씩 보기</span>
+                  </div>
+
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+        <section class="pack-down">
+          <table class="data-table">
+            <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Store</th>
+              <th scope="col">Sales</th>
+              <th scope="col">Transaction</th>
+              <th scope="col">UPT</th>
+              <th scope="col">ADS</th>
+              <th scope="col">AUR</th>
+              <th scope="col">Comp.(MoM)</th>
+              <th scope="col">Comp.(YoY)</th>
+              <th scope="col">Order_Type_Ratio</th>
+            </tr>
+            </thead>
+<!--            <tbody>-->
+<!--            <tr th:each="material, stat : ${materials.content}">-->
+<!--              <td th:text="${materials.totalElements - (materials.number * materials.size) - stat.index}">ID</td>-->
+<!--              <td th:text="${material.code}">CODE</td>-->
+<!--              <td th:text="${material.categoryDescription}">카테고리</td>-->
+<!--              <td>-->
+<!--                <a th:href="@{/material/detail/{id}(id=${material.id})}"><span class="fc-000" th:text="${material.name}">재료명</span></a>-->
+<!--              </td>-->
+<!--              <td th:text="${material.baseUnit}">기본단위</td>-->
+<!--              <td th:text="${material.salesUnit}">판매단위</td>-->
+<!--              <td th:text="${material.supplier}">공급업체</td>-->
+<!--              <td>-->
+<!--                <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <a th:href="@{/material/detail/{id}(id=${material.id})}" class="btn small bdr-gray">-->
+<!--                  <span class="material-symbols-outlined md-18">visibility</span>-->
+<!--                </a>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+          </table>
+          <div style="text-align: center;">
+            <div th:replace="~{fragments/pagination :: pagination (${materials})}"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </div><!-- // #container  -->
+</div><!--#wrap.frame-->
+<script>
+  function setFilter(status) {
+    const params = new URLSearchParams(window.location.search);
+
+    if (status === '') {
+      params.set("status", '');
+    } else {
+      params.set("status", status);
+    }
+
+    const query = params.toString();
+    window.location = `/admin/material/list?${query}`;
+  }
+
+
+  function setPageSize(size) {
+      const params = new URLSearchParams(window.location.search);
+      params.set('size', size);
+      params.set('page', 1);
+      window.location = `/admin/material/list?${params.toString()}`;
+  }
+</script>
+<script>
+  function excelDownload() {
+      const formData = new FormData(document.getElementById('frm'));
+      const type = formData.get("type");
+      const s = formData.get("s");
+      const size = formData.get("size");
+      const status = formData.get("status");
+
+      window.location = `/admin/API/material/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}&size=${encodeURIComponent(size)}&status=${encodeURIComponent(status)}`;
+  }
+</script>
+</body>
+</html>
