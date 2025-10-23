@@ -34,7 +34,7 @@ public class MenuRecipe {
     private String recipeUnit;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "recipe_role", length = 10, nullable = false)
+    @Column(name = "recipe_role", nullable = false)
     private RecipeRole recipeRole; // MAIN / SAUCE / TOPPING
 
     @Column(name = "recipe_sort", nullable = false)
