@@ -24,6 +24,9 @@
     <script th:src="@{/js/lib/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/js/toast.js}"></script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+        .error{display:block;margin-top:4px;font-size:12px;color:#ef4444}
+    </style>
 </head>
 <body class="scroll-up">
 <div id="wrap" class="frame">
@@ -38,7 +41,7 @@
 
         <main id="content">
             <div class="write-form box-wrap">
-                <form name="inputform" id="inputform" th:object="${staffAddFormDTO}">
+                <form name="inputform" id="inputform" th:object="${staffAddFormDTO}" novalidate>
                     <fieldset>
                         <legend class="blind">기본 정보</legend>
                         <div class="row-2">
@@ -46,16 +49,54 @@
                                 <label class="label medium required" for="staffName">이름</label>
                                 <div class="insert">
                                     <input th:field="*{staffName}" type="text" id="staffName" class="input-text medium" title="이름" placeholder="홍길동">
+                                    <small id="staffNameError" class="error" aria-live="polite"></small>
                                 </div>
                             </div>
                             <div class="field col">
                                 <label class="label medium required" for="staffEmail">이메일</label>
                                 <div class="insert">
                                     <input th:field="*{staffEmail}" type="text" id="staffEmail" class="input-text medium" title="이메일" placeholder="hong@email.com">
+                                    <small id="staffEmailError" class="error" aria-live="polite"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-2">
+                            <div class="field col">
+                                <label class="label medium required" for="staffPhone">연락처</label>
+                                <div class="insert">
+                                    <input th:field="*{staffPhone}" type="text" id="staffPhone" class="input-text medium" title="연락처" placeholder="010-1234-1234">
+                                    <small id="staffPhoneError" class="error" aria-live="polite"></small>
+                                </div>
+                            </div>
+                            <div class="field col">
+                                <label class="label medium required" for="staffBirth">생년월일</label>
+                                <div class="insert">
+                                    <input th:field="*{staffBirth}" type="date" id="staffBirth" class="input-text medium" title="생년월일">
+                                    <small id="staffBirthError" class="error" aria-live="polite"></small>
                                 </div>
                             </div>
                         </div>
                         <div class="row-3">
+                            <div class="field col">
+                                <label class="label medium" for="staffDepartment">부서</label>
+                                <div class="insert">
+                                    <select id="staffDepartment" class="select medium" th:field="*{staffDepartment}">
+                                        <option value="" >선택</option>
+                                        <option th:each="c : ${StaffDepartment}" th:value="${c.name()}" th:text="${c.description}">팀</option>
+                                    </select>
+                                    <small id="staffDepartmentError" class="error" aria-live="polite"></small>
+                                </div>
+                            </div>
+                            <div class="field col">
+                                <label class="label medium" for="staffEmploymentType">근무 형태</label>
+                                <div class="insert">
+                                    <select id="staffEmploymentType" class="select medium" th:field="*{staffEmploymentType}">
+                                        <option value="" >선택</option>
+                                        <option th:each="c : ${StaffEmploymentType}" th:value="${c.name()}" th:text="${c.description}">형태</option>
+                                    </select>
+                                    <small id="staffEmploymentTypeError" class="error" aria-live="polite"></small>
+                                </div>
+                            </div>
                             <div class="field col">
                                 <label class="label medium required">근무지 (선택)</label>
                                 <div class="input-wrap" style="position:relative;">
@@ -67,65 +108,34 @@
                                                 th:value="${s.storeName}"
                                                 th:attr="data-id=${s.storeId}"></option>
                                     </datalist>
-                                    <small id="storeHint" style="display:none;color:#ef4444;">목록에서 선택되지 않았습니다 (선택 항목).</small>
-                                </div>
-                            </div>
-                            <div class="field col">
-                                <label class="label medium" for="staffDepartment">부서</label>
-                                <div class="insert">
-                                    <select id="staffDepartment" class="select medium" th:field="*{staffDepartment}">
-                                        <option value="" >선택</option>
-                                        <option th:each="c : ${StaffDepartment}" th:value="${c.name()}" th:text="${c.description}">팀</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="field col">
-                                <label class="label medium" for="staffEmploymentType">근무 형태</label>
-                                <div class="insert">
-                                    <select id="staffEmploymentType" class="select medium" th:field="*{staffEmploymentType}">
-                                        <option value="" >선택</option>
-                                        <option th:each="c : ${StaffEmploymentType}" th:value="${c.name()}" th:text="${c.description}">형태</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-2">
-                            <div class="field col">
-                                <label class="label medium required" for="staffPhone">연락처</label>
-                                <div class="insert">
-                                    <input th:field="*{staffPhone}" type="text" id="staffPhone" class="input-text medium" title="연락처" placeholder="010-1234-1234">
-                                </div>
-                            </div>
-                            <div class="field col">
-                                <label class="label medium required" for="staffBirth">생년월일</label>
-                                <div class="insert">
-                                    <input th:field="*{staffBirth}" type="date" id="staffBirth" class="input-text medium" title="생년월일">
                                 </div>
                             </div>
                         </div>
                         <div class="row-3">
                             <div class="field col">
-                                <label class="label medium required" for="userAddress1">주소</label>
+                                <label class="label medium required" for="userAddress1">주소 (선택)</label>
                                 <input type="button" class="btn small color1" id="addressSearch" style="margin-left:10px" value="주소 검색" onclick="findAddr()">
                                 <div class="insert">
-                                    <input th:field="*{userAddress1}" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly >
+                                    <input th:field="*{userAddress1}" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly>
                                 </div>
                                 <div class="insert">
-                                    <input th:field="*{userAddress2}" type="text" class="input-text medium" size="50" placeholder="나머지 주소 작성" required>
+                                    <input th:field="*{userAddress2}" type="text" class="input-text medium" size="50" placeholder="나머지 주소 작성">
                                 </div>
                             </div>
                         </div>
                         <div class="row-2">
                             <div class="field col">
-                                <label class="label medium required" for="staffStartDate">입사일자</label>
+                                <label class="label medium required" for="staffStartDate">입사일자 (선택)</label>
                                 <div class="insert">
                                     <input th:field="*{staffStartDate}" type="date" id="staffStartDate" class="input-text medium" title="입사일자">
+                                    <small id="staffStartDateError" class="error" aria-live="polite"></small>
                                 </div>
                             </div>
                             <div class="field col">
-                                <label class="label medium required" for="staffEndDate">퇴사일자</label>
+                                <label class="label medium required" for="staffEndDate">퇴사일자 (선택)</label>
                                 <div class="insert">
                                     <input th:field="*{staffEndDate}" type="date" id="staffEndDate" class="input-text medium" title="퇴사일자">
+                                    <small id="staffEndDateError" class="error" aria-live="polite"></small>
                                 </div>
                             </div>
                         </div>
@@ -145,72 +155,139 @@
 
 
 <script>
+    // ---- helpers ----
+    const getValue = (id) => document.getElementById(id);
 
-    document.getElementById("inputform").addEventListener("submit", function(e) {
-        e.preventDefault();
+    function setError(fieldId, msg) {
+      const input = getValue(fieldId);
+      const box   = getValue(fieldId + 'Error');
+      if (input) input.classList.add('is-error');
+      if (box)   box.textContent = msg || '';
+    }
+    function clearFieldError(fieldId) {
+      const input = getValue(fieldId);
+      const box   = getValue(fieldId + 'Error');
+      if (input) input.classList.remove('is-error');
+      if (box)   box.textContent = '';
+    }
+    function clearAllErrors() {
+      document.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
+      document.querySelectorAll('[id$="Error"]').forEach(el => el.textContent = '');
+    }
 
-        const formData = new FormData(this); // 폼의 모든 input 포함
+    // ---- 클라이언트 검증(함수 내부!) ----
+    function clientValidate() {
+      const errs = {};
 
-        if (!formData.get('storeIdFk')) formData.delete('storeIdFk');
+      // 필수 항목 (@NotNull 과 1:1)
+      if (!getValue('staffName').value.trim())            errs.staffName           = '직원 이름을 입력해주세요';
+      if (!getValue('staffEmail').value.trim())           errs.staffEmail          = '이메일을 입력해주세요';
+      if (!getValue('staffPhone').value.trim())           errs.staffPhone          = '연락처를 입력해주세요';
+      if (!getValue('staffDepartment').value)             errs.staffDepartment     = '부서를 선택해주세요';
+      if (!getValue('staffEmploymentType').value)         errs.staffEmploymentType = '근무 형태를 선택해주세요';
+      if (!getValue('staffBirth').value)                  errs.staffBirth          = '생년월일을 입력해주세요';
 
-        fetch("/admin/API/staff/add", {
-            method: "POST",
-            body: formData
-        })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) {
-                    if (response.status === 400 && data.errors) {
-                        Object.keys(data.errors).forEach(field => {
-                            const errorMsg = data.errors[field];
-                            const errorElement = document.getElementById(field + 'Error');
-                            if (errorElement) errorElement.textContent = errorMsg;
+      // 형식
+      const email = getValue('staffEmail').value.trim();
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+        errs.staffEmail = '이메일 형식이 올바르지 않습니다';
 
-                        });
-                    }
-                    throw new Error("서버 검증 오류");
-                } else {
-                    if (data.success) {
-                        alert('저장 완료!');
-                        window.location.href = '/admin/staff/list';
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("에러 발생:", error);
+      const phone = getValue('staffPhone').value.trim();
+      if (phone && !/^[0-9\-]{9,13}$/.test(phone))
+        errs.staffPhone = '연락처는 숫자와 하이픈만 입력해주세요';
+
+      // 날짜 규칙
+      const toDate = (v)=> v ? new Date(v) : null; // yyyy-MM-dd
+      const today  = new Date(); today.setHours(0,0,0,0);
+
+      const birth  = toDate(getValue('staffBirth').value);
+      const start  = toDate(getValue('staffStartDate').value);
+      const end    = toDate(getValue('staffEndDate').value);
+
+      if (birth && birth >= today) errs.staffBirth = '생년월일은 과거여야 합니다';
+      if (start && start >  today) errs.staffStartDate = '입사일자는 과거 또는 오늘이어야 합니다';
+      if (end   && end   >  today) errs.staffEndDate   = '퇴사일자는 과거 또는 오늘이어야 합니다';
+      if (birth && start && start < birth) errs.staffStartDate = '입사일자는 생년월일 이후여야 합니다';
+      if (start && end   && end   < start) errs.staffEndDate   = '퇴사일자는 입사일자 이후여야 합니다';
+
+      return errs;
+    }
+
+    // ---- 필드 입력 시 에러 자동 해제 ----
+    (function wireLiveClear() {
+      const form = getValue('inputform');
+      if (!form) return;
+      form.addEventListener('input',  (e) => { if (e.target?.id) clearFieldError(e.target.id); });
+      form.addEventListener('change', (e) => { if (e.target?.id) clearFieldError(e.target.id); });
+    })();
+
+    // ---- datalist(근무지) 동기화 ----
+    (function(){
+      const input  = getValue('storeSearch');
+      const hidden = getValue('storeIdFk');
+      const list   = getValue('storeList');
+      const hint   = getValue('storeHint');
+      const opts = () => Array.from(list?.options || []);
+      function sync(){
+        const val = (input?.value || '').trim();
+        const exact = opts().find(o => o.value === val);
+        if (hidden) hidden.value = exact ? (exact.getAttribute('data-id') || '') : '';
+        if (hint)   hint.style.display = (val && !hidden?.value) ? 'inline' : 'none';
+        if (hidden?.value) clearFieldError('storeIdFk');
+      }
+      input?.addEventListener('input',  sync);
+      input?.addEventListener('change', sync);
+      input?.addEventListener('blur',   sync);
+    })();
+
+    // ---- 제출 ----
+    document.getElementById("inputform").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      clearAllErrors();
+      const cErrs = clientValidate();
+      if (Object.keys(cErrs).length){
+        let first;
+        Object.entries(cErrs).forEach(([k,v]) => {
+          setError(k, v);
+          if (!first) first = k;
+        });
+        if (first && getValue(first)) getValue(first).focus();
+        return; // ❗ 기본 submit 막고 서버 전송도 중단
+      }
+
+      const fd = new FormData(this);
+      if (!fd.get('storeIdFk')) fd.delete('storeIdFk');
+
+      try{
+        const resp = await fetch("/admin/API/staff/add", { method:"POST", body: fd });
+        const data = await resp.json().catch(()=> ({}));
+
+        if (!resp.ok){
+          if (resp.status === 400 && data.errors){
+            let first;
+            Object.entries(data.errors).forEach(([k,v]) => {
+              setError(k, v);
+              if (!first) first = k;
             });
+            if (first && getValue(first)) getValue(first).focus();
+          }else{
+            alert('요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.');
+          }
+          return;
+        }
+
+        if (data.success){
+          alert('저장 완료!');
+          location.href = '/admin/staff/list';
+        }else{
+          alert('응답 형식이 올바르지 않습니다.');
+        }
+      }catch(err){
+        console.error('에러 발생:', err);
+        alert('네트워크 오류가 발생했습니다.');
+      }
     });
-
-(function(){
-  const input  = document.getElementById('storeSearch');
-  const hidden = document.getElementById('storeIdFk');
-  const list   = document.getElementById('storeList');
-  const hint   = document.getElementById('storeHint');
-
-  const opts = () => Array.from(list.options || []);
-
-  function sync(){
-    const val = (input.value || '').trim();
-    const exact = opts().find(o => o.value === val);
-    hidden.value = exact ? (exact.getAttribute('data-id') || '') : '';
-    // 필수 아님: 입력이 있지만 매칭이 없을 때만 힌트 표시, 제출은 막지 않음
-    hint.style.display = (val && !hidden.value) ? 'inline' : 'none';
-  }
-
-  input.addEventListener('input',  sync);
-  input.addEventListener('change', sync);
-  input.addEventListener('blur',   sync);
-
-  const form = input.closest('form');
-  if (form) {
-    form.addEventListener('submit', () => {
-      // null 허용 → 막지 않음
-      // 필요하면 여기서 hidden.value==='' && input.value!=='' 인 경우 confirm 띄우기 정도만.
-    });
-  }
-})();
-
 </script>
-
 
 </body></html>
