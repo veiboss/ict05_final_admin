@@ -36,6 +36,7 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
                         material.name,
                         material.baseUnit,
                         material.salesUnit,
+                        material.conversionRate,
                         material.supplier,
                         material.materialTemperature,
                         material.materialStatus

@@ -88,24 +88,24 @@ public class StoreMaterial {
     private MaterialStatus status;
 
     /** 현재 수량 */
-    @Column(name = "store_material_quantity", precision = 15, scale = 3, nullable = false,
-            columnDefinition = "DECIMAL(15,3) DEFAULT 0.000 COMMENT '현재 수량'")
-    private BigDecimal quantity;
+    @Column(name = "store_material_quantity", nullable = false,
+            columnDefinition = "INT DEFAULT 0 COMMENT '현재 수량'")
+    private Integer quantity;
 
     /** 적정 수량 */
-    @Column(name = "store_material_optimal_quantity", precision = 15, scale = 3,
-            columnDefinition = "DECIMAL(15,3) COMMENT '적정 수량'")
-    private BigDecimal optimalQuantity;
+    @Column(name = "store_material_optimal_quantity",
+            columnDefinition = "INT COMMENT '적정 수량'")
+    private Integer optimalQuantity;
 
     /** 매입가 */
-    @Column(name = "store_material_purchase_price", precision = 10, scale = 2,
-            columnDefinition = "DECIMAL(10,2) COMMENT '매입가'")
-    private BigDecimal purchasePrice;
+    @Column(name = "store_material_purchase_price",
+            columnDefinition = "BIGINT COMMENT '매입가'")
+    private Long purchasePrice;
 
     /** 판매가 */
-    @Column(name = "store_material_selling_price", precision = 10, scale = 2,
-            columnDefinition = "DECIMAL(10,2) COMMENT '판매가'")
-    private BigDecimal sellingPrice;
+    @Column(name = "store_material_selling_price",
+            columnDefinition = "BIGINT COMMENT '판매가'")
+    private Long sellingPrice;
 
     /** 유통기한 */
     @Column(name = "store_material_expiration_date", columnDefinition = "DATE COMMENT '유통기한'")

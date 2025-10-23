@@ -1,7 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
-import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
@@ -10,8 +9,10 @@ import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderDetail;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,22 +38,20 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
         List<ReceiveOrderListDTO> content = queryFactory
                 .select(Projections.fields(ReceiveOrderListDTO.class,
                         ro.id,
+                        ro.orderCode,
                         ro.store.name.as("storeName"),
                         ro.store.location.as("storeLocation"),
-                        ro.orderCode,
-                        ro.orderDate,
                         ro.status,
-                        ro.totalPrice,
                         ro.priority,
-                        ro.remark,
-                        ro.supplier,
-                        ro.deliveryDate,
-                        ro.actualDeliveryDate
+                        ro.totalPrice,
+                        ro.totalCount.as("totalCount"),
+                        ro.deliveryDate
                 ))
                 .from(ro)
                 .join(ro.store, store)
                 .where(
-                        eqOrderCode(receiveOrderSearchDTO, ro)
+                        eqOrderCode(receiveOrderSearchDTO, ro),
+                        ro.details.isNotEmpty()     // 주문 건이 있는 주문만
                 )
                 .orderBy(ro.id.desc())
                 .offset(pageable.getOffset())
@@ -64,7 +63,8 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 .select(ro.count())
                 .from(ro)
                 .where(
-                        eqOrderCode(receiveOrderSearchDTO, ro)
+                        eqOrderCode(receiveOrderSearchDTO, ro),
+                        ro.details.isNotEmpty()
                 )
                 .fetchOne();
 
@@ -111,7 +111,8 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     @Override
     public Optional<ReceiveOrderDetailDTO> findDetailById(Long id) {
         QReceiveOrder ro = QReceiveOrder.receiveOrder;
-        QReceiveOrderDetail rod = QReceiveOrderDetail.receiveOrderDetail;
+        QReceiveOrderDetail rod = new QReceiveOrderDetail("rod");
+        QReceiveOrderDetail rodSub = new QReceiveOrderDetail("rodSub");   // 서브쿼리
         QStore store = QStore.store;
 
         ReceiveOrderDetailDTO dto = queryFactory
@@ -125,13 +126,21 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         store.name.as("storeName"),
                         store.id.as("storeId"),
                         store.location.as("storeLocation"),
+//                        ExpressionUtils.as(
+//                                JPAExpressions
+//                                        .select(rodSub.detailCount.sum())
+//                                        .from(rodSub)
+//                                        .where(rodSub.receiveOrder.eq(ro))
+//                                        .distinct(),
+//                                "totalCount"
+//                        ),
+                        ro.totalCount.as("totalCount"),
                         ro.totalPrice,
-                        ro.totalCount,
-                        ro.remark
+                        ro.remark,
+                        ro.deliveryDate
                 ))
                 .from(ro)
                 .leftJoin(ro.store, store)
-                .leftJoin(ro.details, rod)
                 .where(ro.id.eq(id))
                 .fetchOne();
 
@@ -141,24 +150,23 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     // 수주 상세 - 주문 상품 리스트
     @Override
     public List<ReceiveOrderItemDTO> findItemsByOrderId(Long id) {
+        QReceiveOrderDetail rod = new QReceiveOrderDetail("rod");
         QReceiveOrder ro = QReceiveOrder.receiveOrder;
-        QReceiveOrderDetail rod = QReceiveOrderDetail.receiveOrderDetail;
         QMaterial material = QMaterial.material;
         QHqInventory hq = QHqInventory.hqInventory;
 
         return queryFactory
-                .select(Projections.fields(ReceiveOrderItemDTO.class,
-                        material.name,
-                        material.materialCategory,
-                        rod.detailCount,
-                        rod.detailUnitPrice,
-                        rod.detailTotalPrice,
+                .selectDistinct(Projections.fields(ReceiveOrderItemDTO.class,
+                        material.name.as("name"),
+                        material.materialCategory.as("materialCategory"),
+                        rod.detailCount.as("detailCount"),
+                        rod.detailUnitPrice.as("detailUnitPrice"),
+                        rod.detailTotalPrice.as("detailTotalPrice"),
                         hq.status.as("inventoryStatus")
                 ))
                 .from(rod)
-                .join(rod.material, material)
-                .join(rod.receiveOrder, ro)
-                .leftJoin(hq).on(hq.material.eq(material))
+                .leftJoin(rod.material, material)
+                .leftJoin(rod.hqInventory, hq)
                 .where(rod.receiveOrder.id.eq(id))
                 .fetch();
     }

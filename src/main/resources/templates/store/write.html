@@ -37,8 +37,8 @@
         <main id="content">
             <div class="write-form box-wrap">
                 <form name="inputform" id="inputform"
-                      th:object="${storeAddFormDTO}"
-                      th:action="@{/admin/API/store/add}" method="post">
+                      th:object="${storeWriteFormDTO}"
+                      th:action="@{/admin/API/store/write}" method="post">
                     <fieldset>
                         <legend class="blind">기본 정보</legend>
 
@@ -198,7 +198,7 @@
 
         if (!formData.get('storeIdFk')) formData.delete('storeIdFk');
 
-        fetch("/admin/API/store/add", {
+        fetch("/admin/API/store/write", {
             method: "POST",
             body: formData
         })

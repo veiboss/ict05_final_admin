@@ -43,16 +43,16 @@ public class StoreMaterialListDTO {
     private MaterialStatus status;
 
     /** 현재 수량 */
-    private BigDecimal quantity;
+    private Integer quantity;
 
     /** 적정 수량 */
-    private BigDecimal optimalQuantity;
+    private Integer optimalQuantity;
 
     /** 매입가 */
-    private BigDecimal purchasePrice;
+    private Long purchasePrice;
 
     /** 판매가 */
-    private BigDecimal sellingPrice;
+    private Long sellingPrice;
 
     /** 유통기한 */
     private LocalDate expirationDate;

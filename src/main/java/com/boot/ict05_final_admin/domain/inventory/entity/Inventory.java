@@ -22,14 +22,14 @@ import java.time.LocalDateTime;
 public abstract class Inventory {
 
     /** 현재 재고 수량 */
-    @Column(name = "inventory_quantity", precision = 15, scale = 3, nullable = false,
-            columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '현재 재고 수량'")
-    protected BigDecimal quantity;
+    @Column(name = "inventory_quantity", nullable = false,
+            columnDefinition = "INT DEFAULT 0 COMMENT '현재 재고 수량'")
+    protected Integer quantity;
 
     /** 적정 재고 수량 */
-    @Column(name = "inventory_optimal_quantity", precision = 15, scale = 3,
-            columnDefinition = "DECIMAL(15,3) COMMENT '적정 재고 수량'")
-    protected BigDecimal optimalQuantity;
+    @Column(name = "inventory_optimal_quantity",
+            columnDefinition = "INT COMMENT '적정 재고 수량'")
+    protected Integer optimalQuantity;
 
     /** 재고 상태 */
     @Enumerated(EnumType.STRING)

@@ -53,15 +53,15 @@
 
                     <div class="row col-3">
                         <div class="pack-down col">
-                            <span class="fs-ss fc-999">기본단위</span>
+                            <span class="fs-ss fc-999">기본단위(소진단위, cf.g/kg/ea)</span>
                             <span th:text="${material.baseUnit}">기본단위</span>
                         </div>
                         <div class="pack-down col">
-                            <span class="fs-ss fc-999">판매단위</span>
+                            <span class="fs-ss fc-999">판매단위(cf.g/kg/ea/box)</span>
                             <span th:text="${material.salesUnit}">판매단위</span>
                         </div>
                         <div class="pack-down col">
-                            <span class="fs-ss fc-999">변환비율</span>
+                            <span class="fs-ss fc-999">변환비율(판매단위/기본단위)</span>
                             <span th:text="${material.conversionRate}">변환비율</span>
                         </div>
                     </div>

@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  * </ul>
  */
 @Data
-public class StaffAddFormDTO {
+public class StaffWriteFormDTO {
 
     /** 직원 근무지 */
     private Long storeIdFk;

@@ -5,6 +5,7 @@ import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,27 @@ public class ReceiveOrderService {
 
         return dto;
     }
+
+    /* 배송 상태 변경 */
+    @Transactional
+    public void advanceStatus(Long id) {
+        ReceiveOrder order = receiveOrderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
+
+        ReceiveOrderStatus current = order.getStatus();
+        ReceiveOrderStatus next;
+
+        switch (current) {
+            case RECEIVED -> next = ReceiveOrderStatus.PREPARING;
+            case PREPARING -> next = ReceiveOrderStatus.SHIPPING;
+            case SHIPPING -> next = ReceiveOrderStatus.DELIVERED;
+            default -> throw new IllegalStateException("배송 완료된 주문은 변경할 수 없습니다.");
+        }
+
+        order.setStatus(next);
+        receiveOrderRepository.save(order);
+    }
+
 
 
 }

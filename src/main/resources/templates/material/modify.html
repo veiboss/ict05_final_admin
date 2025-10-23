@@ -68,19 +68,19 @@
 
                             <div class="row col-3">
                                 <div class="pack-down col">
-                                    <label class="fs-ss fc-999" for="materialBaseUnit">기본단위</label>
+                                    <label class="fs-ss fc-999" for="materialBaseUnit">기본단위(소진단위, cf.g/kg/ea)</label>
                                     <input type="text" name="baseUnit" id="materialBaseUnit" class="input-text medium"
                                            th:value="${material.baseUnit}"
                                            title="기본단위" placeholder="기본단위 입력" />
                                 </div>
                                 <div class="pack-down col">
-                                    <label class="fs-ss fc-999" for="materialSalesUnit">판매단위</label>
+                                    <label class="fs-ss fc-999" for="materialSalesUnit">판매단위(cf.g/kg/ea/box)</label>
                                     <input type="text" name="salesUnit" id="materialSalesUnit" class="input-text medium"
                                            th:value="${material.salesUnit}"
                                            title="판매단위" placeholder="판매단위 입력" />
                                 </div>
                                 <div class="pack-down col">
-                                    <label class="fs-ss fc-999" for="materialRate">변환비율</label>
+                                    <label class="fs-ss fc-999" for="materialRate">변환비율(판매단위/기본단위)</label>
                                     <input type="text" name="conversionRate" id="materialRate" class="input-text medium"
                                            th:value="${material.conversionRate}"
                                            title="변환비율" placeholder="변환비율 입력" />

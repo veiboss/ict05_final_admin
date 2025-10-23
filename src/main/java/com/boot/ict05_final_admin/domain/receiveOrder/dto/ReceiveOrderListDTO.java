@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.receiveOrder.dto;
 
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderPriority;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,11 +30,14 @@ public class ReceiveOrderListDTO {
     /** 수주 상태 */
     private ReceiveOrderStatus status;
 
+    /** 수주 우선순위 */
+    private ReceiveOrderPriority priority;
+
     /** 수주 주문 총액 */
     private BigDecimal totalPrice;
 
-    /** 수주 우선순위 */
-    private ReceiveOrderPriority priority;
+    /** 수주 주문 상품 총수량 */
+    private Integer totalCount;
 
     /** 수주 배송 예정일 */
     private LocalDate deliveryDate;
