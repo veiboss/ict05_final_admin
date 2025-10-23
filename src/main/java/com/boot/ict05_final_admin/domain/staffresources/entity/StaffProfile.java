@@ -26,7 +26,7 @@ public class StaffProfile {
 
     /** 직원 근무지 */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = false)
+    @JoinColumn(name = "store_id_fk", nullable = false)
     private Store store;
 
     /** 직원 이름 */
