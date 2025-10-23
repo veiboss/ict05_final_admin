@@ -31,6 +31,17 @@ var nav = {
 			}
 		});
 
+		// PC 전용 자동 열림
+        if (window.innerWidth > nav.unMob) {
+          const $aside = $('#aside');
+          $aside.on('mouseenter', function () {
+            $('body').addClass('opened-nav');
+          });
+          $aside.on('mouseleave', function () {
+            $('body').removeClass('opened-nav');
+          });
+        }
+
 		$(window).on("scroll", function (e) {
 			var st = $(this).scrollTop();
 
