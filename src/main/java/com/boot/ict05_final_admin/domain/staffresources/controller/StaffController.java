@@ -74,7 +74,7 @@ public class StaffController {
         model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
         model.addAttribute("stores", stores);
 
-        return "staff/add";
+        return "staff/write";
     }
 
     /**
