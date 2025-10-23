@@ -5871,3 +5871,1600 @@ org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property o
 2025-10-23 08:26:50.072 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-10-23 08:26:50.073 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
 2025-10-23 08:26:50.098 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-10-23 12:52:49.342 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 12:52:49.364 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 15672 (D:\DEV05\final_pj\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\final_pj\ict05_final_admin)
+2025-10-23 12:52:49.364 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:52:49.365 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:52:49.386 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 12:52:49.386 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 12:52:49.973 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:52:50.024 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 47 ms. Found 12 JPA repository interfaces.
+2025-10-23 12:52:50.297 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:52:50.310 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:50.311 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:52:50.311 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:52:50.337 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:52:50.337 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 951 ms
+2025-10-23 12:52:50.416 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:52:50.436 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 12:52:50.450 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:52:50.575 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:52:50.590 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 12:52:50.671 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@5ead83bc
+2025-10-23 12:52:50.672 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 12:52:50.689 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:52:50.701 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:52:51.262 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:52:51.479 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:52:51.641 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 12:52:51.956 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:52:51.967 INFO  [restartedMain] [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authProvider
+2025-10-23 12:52:51.967 WARN  [restartedMain] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-10-23 12:52:52.002 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:52:52.250 WARN  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2025-10-23 12:52:52.260 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:52.268 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:52:52.273 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.17 seconds (process running for 3.433)
+2025-10-23 12:52:54.748 INFO  [File Watcher] [] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 17 class path changes (0 additions, 17 deletions, 0 modifications)
+2025-10-23 12:52:54.750 INFO  [Thread-1] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:52:54.750 INFO  [tomcat-shutdown] [] o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:54.804 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:52:54.805 INFO  [Thread-1] [] o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:54.809 INFO  [Thread-1] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:52:54.811 INFO  [Thread-1] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 12:52:54.837 INFO  [Thread-1] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 12:52:54.910 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 15672 (D:\DEV05\final_pj\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\final_pj\ict05_final_admin)
+2025-10-23 12:52:54.910 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:52:54.910 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:52:55.019 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:52:55.042 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 22 ms. Found 12 JPA repository interfaces.
+2025-10-23 12:52:55.092 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:52:55.092 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:55.092 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:52:55.092 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:52:55.103 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:52:55.103 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 193 ms
+2025-10-23 12:52:55.129 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:52:55.131 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:52:55.136 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:52:55.136 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2025-10-23 12:52:55.155 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@b2d4573
+2025-10-23 12:52:55.155 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2025-10-23 12:52:55.163 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:52:55.168 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:52:55.302 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:52:55.514 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:52:55.670 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:52:55.675 INFO  [restartedMain] [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authProvider
+2025-10-23 12:52:55.675 WARN  [restartedMain] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-10-23 12:52:55.680 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:52:55.765 WARN  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2025-10-23 12:52:55.771 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:55.773 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:52:55.775 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 0.885 seconds (process running for 6.935)
+2025-10-23 12:52:55.776 INFO  [restartedMain] [] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-10-23 12:52:57.227 INFO  [File Watcher] [] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 17 class path changes (17 additions, 0 deletions, 0 modifications)
+2025-10-23 12:52:57.230 INFO  [Thread-7] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:52:57.231 INFO  [tomcat-shutdown] [] o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:57.286 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:52:57.286 INFO  [Thread-7] [] o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:57.287 INFO  [Thread-7] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:52:57.288 INFO  [Thread-7] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2025-10-23 12:52:57.324 INFO  [Thread-7] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2025-10-23 12:52:57.367 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 15672 (D:\DEV05\final_pj\ict05_final_admin\build\classes\java\main started by ict1 in D:\DEV05\final_pj\ict05_final_admin)
+2025-10-23 12:52:57.367 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:52:57.367 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:52:57.473 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:52:57.497 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 22 ms. Found 12 JPA repository interfaces.
+2025-10-23 12:52:57.550 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:52:57.550 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:57.550 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:52:57.551 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:52:57.560 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:52:57.560 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 192 ms
+2025-10-23 12:52:57.583 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:52:57.585 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:52:57.592 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:52:57.593 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2025-10-23 12:52:57.608 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@16414c61
+2025-10-23 12:52:57.608 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2025-10-23 12:52:57.618 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:52:57.628 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:52:57.709 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:52:57.884 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:52:58.003 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:52:58.007 INFO  [restartedMain] [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authProvider
+2025-10-23 12:52:58.007 WARN  [restartedMain] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-10-23 12:52:58.013 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:52:58.085 WARN  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2025-10-23 12:52:58.090 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:52:58.092 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:52:58.094 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 0.741 seconds (process running for 9.254)
+2025-10-23 12:52:58.095 INFO  [restartedMain] [] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-10-23 12:52:58.295 INFO  [http-nio-8081-exec-1] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-23 12:52:58.295 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-23 12:52:58.296 INFO  [http-nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-10-23 12:53:12.614 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592614 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 10, 2 = '대전 둔산점', 3 = 'CLOSED', 4 = NULL, 5 = '042-678-9012', 6 = 0.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 9, 2 = '울산 삼산점', 3 = 'OPERATING', 4 = '정연우', 5 = '052-567-8901', 6 = 3500000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 8, 2 = '인천 부평점', 3 = 'OPERATING', 4 = NULL, 5 = '032-456-7890', 6 = 3000000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 7, 2 = '광주 충장로점', 3 = 'PREPARING', 4 = NULL, 5 = '062-345-6789', 6 = 2200000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 6, 2 = '대구 동성로점', 3 = 'OPERATING', 4 = NULL, 5 = '053-234-5678', 6 = 2500000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 5, 2 = '부산 해운대점', 3 = 'OPERATING', 4 = NULL, 5 = '051-123-4567', 6 = 5500000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 4, 2 = '잠실점', 3 = 'OPERATING', 4 = NULL, 5 = '02-4567-8901', 6 = 4000000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 3, 2 = '신촌점', 3 = 'PREPARING', 4 = NULL, 5 = '02-3456-7890', 6 = 2000000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 2, 2 = '홍대점', 3 = 'OPERATING', 4 = NULL, 5 = '02-2345-6789', 6 = 3000000.00;
+2025-10-23 12:53:12.615 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592615 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 1, 2 = '강남점', 3 = 'OPERATING', 4 = '정지원', 5 = '02-1234-5678', 6 = 5000000.00;
+2025-10-23 12:53:12.629 INFO  [http-nio-8081-exec-3] [14943fe3] p6spy - #1761191592629 | took 0ms | resultset | connection -1| url 
+select count(s1_0.store_id) from store s1_0
+1 = 10;
+2025-10-23 12:53:12.647 ERROR [http-nio-8081-exec-3] [14943fe3] org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-8081-exec-3] Exception processing template "store/list": An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: org.attoparser.ParseException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:393)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	... 104 common frames omitted
+Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:292)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	... 106 common frames omitted
+Caused by: org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	... 130 common frames omitted
+2025-10-23 12:53:12.649 ERROR [http-nio-8081-exec-3] [] o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [/admin] threw exception [Request processing failed: org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")] with root cause
+org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-23 12:53:12.653 ERROR [http-nio-8081-exec-3] [] o.s.b.a.w.s.e.ErrorMvcAutoConfiguration$StaticView - Cannot render error page for request [/admin/store/list] and exception [An error happened during template parsing (template: "class path resource [templates/store/list.html]")] as the response has already been committed. As a result, the response may have the wrong status code.
+2025-10-23 12:53:20.114 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600114 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 10, 2 = '대전 둔산점', 3 = 'CLOSED', 4 = NULL, 5 = '042-678-9012', 6 = 0.00;
+2025-10-23 12:53:20.115 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600115 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 9, 2 = '울산 삼산점', 3 = 'OPERATING', 4 = '정연우', 5 = '052-567-8901', 6 = 3500000.00;
+2025-10-23 12:53:20.115 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600115 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 8, 2 = '인천 부평점', 3 = 'OPERATING', 4 = NULL, 5 = '032-456-7890', 6 = 3000000.00;
+2025-10-23 12:53:20.115 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600115 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 7, 2 = '광주 충장로점', 3 = 'PREPARING', 4 = NULL, 5 = '062-345-6789', 6 = 2200000.00;
+2025-10-23 12:53:20.115 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600115 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 6, 2 = '대구 동성로점', 3 = 'OPERATING', 4 = NULL, 5 = '053-234-5678', 6 = 2500000.00;
+2025-10-23 12:53:20.116 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600116 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 5, 2 = '부산 해운대점', 3 = 'OPERATING', 4 = NULL, 5 = '051-123-4567', 6 = 5500000.00;
+2025-10-23 12:53:20.116 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600116 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 4, 2 = '잠실점', 3 = 'OPERATING', 4 = NULL, 5 = '02-4567-8901', 6 = 4000000.00;
+2025-10-23 12:53:20.117 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600117 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 3, 2 = '신촌점', 3 = 'PREPARING', 4 = NULL, 5 = '02-3456-7890', 6 = 2000000.00;
+2025-10-23 12:53:20.117 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600117 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 2, 2 = '홍대점', 3 = 'OPERATING', 4 = NULL, 5 = '02-2345-6789', 6 = 3000000.00;
+2025-10-23 12:53:20.117 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600117 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 1, 2 = '강남점', 3 = 'OPERATING', 4 = '정지원', 5 = '02-1234-5678', 6 = 5000000.00;
+2025-10-23 12:53:20.119 INFO  [http-nio-8081-exec-2] [1a2858d9] p6spy - #1761191600119 | took 0ms | resultset | connection -1| url 
+select count(s1_0.store_id) from store s1_0
+1 = 10;
+2025-10-23 12:53:20.129 ERROR [http-nio-8081-exec-2] [1a2858d9] org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-8081-exec-2] Exception processing template "store/list": An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: org.attoparser.ParseException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:393)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	... 104 common frames omitted
+Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:292)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	... 106 common frames omitted
+Caused by: org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	... 130 common frames omitted
+2025-10-23 12:53:20.130 ERROR [http-nio-8081-exec-2] [] o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [/admin] threw exception [Request processing failed: org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")] with root cause
+org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-23 12:53:20.132 ERROR [http-nio-8081-exec-2] [] o.s.b.a.w.s.e.ErrorMvcAutoConfiguration$StaticView - Cannot render error page for request [/admin/store/list] and exception [An error happened during template parsing (template: "class path resource [templates/store/list.html]")] as the response has already been committed. As a result, the response may have the wrong status code.
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 54, 2 = 'ETC0004', 3 = 'ETC', 4 = '냅킨', 5 = 'ea', 6 = 'box(500ea)', 7 = '유한킴벌리', 8 = 'TEMPERATURE', 9 = 'STOP';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 53, 2 = 'PAC0009', 3 = 'PACKAGE', 4 = '비닐캐리어 2구', 5 = '개', 6 = '개', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 52, 2 = 'PAC0008', 3 = 'PACKAGE', 4 = '비닐캐리어 1구', 5 = '개', 6 = '개', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 51, 2 = 'PAC0007', 3 = 'PACKAGE', 4 = '컵홀더', 5 = '개', 6 = '개', 7 = '한솔제지', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 50, 2 = 'PAC0006', 3 = 'PACKAGE', 4 = '돔뚜껑', 5 = '개', 6 = 'box(1000)', 7 = '한솔제지', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 49, 2 = 'PAC0005', 3 = 'PACKAGE', 4 = '냉컵', 5 = '개', 6 = '개', 7 = '한솔제지', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 48, 2 = 'PAC0004', 3 = 'PACKAGE', 4 = '비닐봉투(중)', 5 = '매', 6 = 'box', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.598 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606598 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 47, 2 = 'PAC0003', 3 = 'PACKAGE', 4 = '비닐봉투(소)', 5 = '개', 6 = '개', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.599 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606599 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 46, 2 = 'PAC0002', 3 = 'PACKAGE', 4 = '쇼핑백', 5 = '개', 6 = '개', 7 = '유한킴벌리', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.599 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606599 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 45, 2 = 'PAC0001', 3 = 'PACKAGE', 4 = '반봉투', 5 = '개', 6 = '개', 7 = '유한킴벌리', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:26.603 INFO  [http-nio-8081-exec-2] [93207dd4] p6spy - #1761191606603 | took 0ms | resultset | connection -1| url 
+select count(m1_0.material_id) from material m1_0 where ?=? limit ?
+1 = 54;
+2025-10-23 12:53:29.582 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609582 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 10, 2 = '대전 둔산점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 9, 2 = '울산 삼산점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 8, 2 = '인천 부평점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 7, 2 = '광주 충장로점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 6, 2 = '대구 동성로점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 5, 2 = '부산 해운대점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 4, 2 = '잠실점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 3, 2 = '신촌점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 2, 2 = '홍대점';
+2025-10-23 12:53:29.583 INFO  [http-nio-8081-exec-6] [40e89db4] p6spy - #1761191609583 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name from store s1_0 order by s1_0.store_id desc
+1 = 1, 2 = '강남점';
+2025-10-23 12:53:32.349 INFO  [http-nio-8081-exec-9] [754f3b23] p6spy - #1761191612349 | took 0ms | rollback | connection 20| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-23 12:53:32.353 ERROR [http-nio-8081-exec-9] [754f3b23] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=754f3b23][GET /admin/menu/list] 예상치 못한 오류
+2025-10-23 12:53:32.353 WARN  [http-nio-8081-exec-9] [754f3b23] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessApiUsageException: java.lang.Boolean is not compatible with com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum]
+2025-10-23 12:53:34.175 INFO  [http-nio-8081-exec-3] [fef4e2c4] p6spy - #1761191614175 | took 0ms | rollback | connection 20| url jdbc:p6spy:mariadb://ict05final.wwwbiz.kr:3306/ict05final
+
+;
+2025-10-23 12:53:34.177 ERROR [http-nio-8081-exec-3] [fef4e2c4] c.b.i.c.error.GlobalExceptionHandler - [COMMON-500] [WEB][rid=fef4e2c4][GET /admin/menu/list] 예상치 못한 오류
+2025-10-23 12:53:34.177 WARN  [http-nio-8081-exec-3] [fef4e2c4] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessApiUsageException: java.lang.Boolean is not compatible with com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum]
+2025-10-23 12:53:41.536 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621536 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 54, 2 = 'ETC0004', 3 = 'ETC', 4 = '냅킨', 5 = 'ea', 6 = 'box(500ea)', 7 = '유한킴벌리', 8 = 'TEMPERATURE', 9 = 'STOP';
+2025-10-23 12:53:41.536 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621536 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 53, 2 = 'PAC0009', 3 = 'PACKAGE', 4 = '비닐캐리어 2구', 5 = '개', 6 = '개', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.536 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621536 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 52, 2 = 'PAC0008', 3 = 'PACKAGE', 4 = '비닐캐리어 1구', 5 = '개', 6 = '개', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.536 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621536 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 51, 2 = 'PAC0007', 3 = 'PACKAGE', 4 = '컵홀더', 5 = '개', 6 = '개', 7 = '한솔제지', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.536 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621536 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 50, 2 = 'PAC0006', 3 = 'PACKAGE', 4 = '돔뚜껑', 5 = '개', 6 = 'box(1000)', 7 = '한솔제지', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.537 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621537 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 49, 2 = 'PAC0005', 3 = 'PACKAGE', 4 = '냉컵', 5 = '개', 6 = '개', 7 = '한솔제지', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.537 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621537 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 48, 2 = 'PAC0004', 3 = 'PACKAGE', 4 = '비닐봉투(중)', 5 = '매', 6 = 'box', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.537 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621537 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 47, 2 = 'PAC0003', 3 = 'PACKAGE', 4 = '비닐봉투(소)', 5 = '개', 6 = '개', 7 = 'LG생활건강', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.537 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621537 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 46, 2 = 'PAC0002', 3 = 'PACKAGE', 4 = '쇼핑백', 5 = '개', 6 = '개', 7 = '유한킴벌리', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.537 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621537 | took 0ms | resultset | connection -1| url 
+select m1_0.material_id,m1_0.material_code,m1_0.material_category,m1_0.material_name,m1_0.material_base_unit,m1_0.material_sales_unit,m1_0.material_supplier,m1_0.material_temperature,m1_0.material_status from material m1_0 where ?=? order by m1_0.material_id desc limit ?,?
+1 = 45, 2 = 'PAC0001', 3 = 'PACKAGE', 4 = '반봉투', 5 = '개', 6 = '개', 7 = '유한킴벌리', 8 = 'TEMPERATURE', 9 = 'USE';
+2025-10-23 12:53:41.540 INFO  [http-nio-8081-exec-5] [397c710b] p6spy - #1761191621540 | took 0ms | resultset | connection -1| url 
+select count(m1_0.material_id) from material m1_0 where ?=? limit ?
+1 = 54;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 10, 2 = '대전 둔산점', 3 = 'CLOSED', 4 = NULL, 5 = '042-678-9012', 6 = 0.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 9, 2 = '울산 삼산점', 3 = 'OPERATING', 4 = '정연우', 5 = '052-567-8901', 6 = 3500000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 8, 2 = '인천 부평점', 3 = 'OPERATING', 4 = NULL, 5 = '032-456-7890', 6 = 3000000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 7, 2 = '광주 충장로점', 3 = 'PREPARING', 4 = NULL, 5 = '062-345-6789', 6 = 2200000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 6, 2 = '대구 동성로점', 3 = 'OPERATING', 4 = NULL, 5 = '053-234-5678', 6 = 2500000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 5, 2 = '부산 해운대점', 3 = 'OPERATING', 4 = NULL, 5 = '051-123-4567', 6 = 5500000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 4, 2 = '잠실점', 3 = 'OPERATING', 4 = NULL, 5 = '02-4567-8901', 6 = 4000000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 3, 2 = '신촌점', 3 = 'PREPARING', 4 = NULL, 5 = '02-3456-7890', 6 = 2000000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 2, 2 = '홍대점', 3 = 'OPERATING', 4 = NULL, 5 = '02-2345-6789', 6 = 3000000.00;
+2025-10-23 12:53:44.874 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624874 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 1, 2 = '강남점', 3 = 'OPERATING', 4 = '정지원', 5 = '02-1234-5678', 6 = 5000000.00;
+2025-10-23 12:53:44.877 INFO  [http-nio-8081-exec-1] [661745cb] p6spy - #1761191624877 | took 0ms | resultset | connection -1| url 
+select count(s1_0.store_id) from store s1_0
+1 = 10;
+2025-10-23 12:53:44.886 ERROR [http-nio-8081-exec-1] [661745cb] org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-8081-exec-1] Exception processing template "store/list": An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: org.attoparser.ParseException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:393)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	... 104 common frames omitted
+Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:292)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	... 106 common frames omitted
+Caused by: org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	... 130 common frames omitted
+2025-10-23 12:53:44.887 ERROR [http-nio-8081-exec-1] [] o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [/admin] threw exception [Request processing failed: org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")] with root cause
+org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-23 12:53:44.890 ERROR [http-nio-8081-exec-1] [] o.s.b.a.w.s.e.ErrorMvcAutoConfiguration$StaticView - Cannot render error page for request [/admin/store/list] and exception [An error happened during template parsing (template: "class path resource [templates/store/list.html]")] as the response has already been committed. As a result, the response may have the wrong status code.
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 10, 2 = '대전 둔산점', 3 = 'CLOSED', 4 = NULL, 5 = '042-678-9012', 6 = 0.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 9, 2 = '울산 삼산점', 3 = 'OPERATING', 4 = '정연우', 5 = '052-567-8901', 6 = 3500000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 8, 2 = '인천 부평점', 3 = 'OPERATING', 4 = NULL, 5 = '032-456-7890', 6 = 3000000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 7, 2 = '광주 충장로점', 3 = 'PREPARING', 4 = NULL, 5 = '062-345-6789', 6 = 2200000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 6, 2 = '대구 동성로점', 3 = 'OPERATING', 4 = NULL, 5 = '053-234-5678', 6 = 2500000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 5, 2 = '부산 해운대점', 3 = 'OPERATING', 4 = NULL, 5 = '051-123-4567', 6 = 5500000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 4, 2 = '잠실점', 3 = 'OPERATING', 4 = NULL, 5 = '02-4567-8901', 6 = 4000000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 3, 2 = '신촌점', 3 = 'PREPARING', 4 = NULL, 5 = '02-3456-7890', 6 = 2000000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 2, 2 = '홍대점', 3 = 'OPERATING', 4 = NULL, 5 = '02-2345-6789', 6 = 3000000.00;
+2025-10-23 12:54:00.240 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640240 | took 0ms | resultset | connection -1| url 
+select s1_0.store_id,s1_0.store_name,s1_0.store_status,(select sp1_0.staff_name from staff_profile sp1_0 where sp1_0.store_id_fk=s1_0.store_id and sp1_0.staff_employment_type=?),s1_0.store_phone,s1_0.store_monthly_sales from store s1_0 order by s1_0.store_id desc limit ?,?
+1 = 1, 2 = '강남점', 3 = 'OPERATING', 4 = '정지원', 5 = '02-1234-5678', 6 = 5000000.00;
+2025-10-23 12:54:00.243 INFO  [http-nio-8081-exec-5] [520008d3] p6spy - #1761191640243 | took 0ms | resultset | connection -1| url 
+select count(s1_0.store_id) from store s1_0
+1 = 10;
+2025-10-23 12:54:00.250 ERROR [http-nio-8081-exec-5] [520008d3] org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-8081-exec-5] Exception processing template "store/list": An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: org.attoparser.ParseException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:393)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	... 104 common frames omitted
+Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "pageVars.numberOfElements ne null and pageVars.numberOfElements gt 0" (template: "fragments/pagination" - line 14, col 29)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:292)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	... 106 common frames omitted
+Caused by: org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	... 130 common frames omitted
+2025-10-23 12:54:00.251 ERROR [http-nio-8081-exec-5] [] o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [/admin] threw exception [Request processing failed: org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/store/list.html]")] with root cause
+org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'numberOfElements' cannot be found on null
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.readProperty(PropertyOrFieldReference.java:225)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference.getValueInternal(PropertyOrFieldReference.java:112)
+	at org.springframework.expression.spel.ast.PropertyOrFieldReference$AccessorValueRef.getValue(PropertyOrFieldReference.java:376)
+	at org.springframework.expression.spel.ast.CompoundExpression.getValueInternal(CompoundExpression.java:97)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:43)
+	at org.springframework.expression.spel.ast.OpNE.getValueInternal(OpNE.java:33)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:203)
+	at org.springframework.expression.spel.ast.OpAnd.getBooleanValue(OpAnd.java:58)
+	at org.springframework.expression.spel.ast.OpAnd.getValueInternal(OpAnd.java:49)
+	at org.springframework.expression.spel.ast.SpelNodeImpl.getValue(SpelNodeImpl.java:116)
+	at org.springframework.expression.spel.standard.SpelExpression.getValue(SpelExpression.java:338)
+	at org.thymeleaf.spring6.expression.SPELVariableExpressionEvaluator.evaluate(SPELVariableExpressionEvaluator.java:265)
+	at org.thymeleaf.standard.expression.VariableExpression.executeVariableExpression(VariableExpression.java:166)
+	at org.thymeleaf.standard.expression.SimpleExpression.executeSimple(SimpleExpression.java:66)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:109)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:138)
+	at org.thymeleaf.standard.expression.Expression.execute(Expression.java:125)
+	at org.thymeleaf.standard.processor.StandardIfTagProcessor.isVisible(StandardIfTagProcessor.java:59)
+	at org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor.doProcess(AbstractStandardConditionalVisibilityTagProcessor.java:61)
+	at org.thymeleaf.processor.element.AbstractAttributeTagProcessor.doProcess(AbstractAttributeTagProcessor.java:74)
+	at org.thymeleaf.processor.element.AbstractElementTagProcessor.process(AbstractElementTagProcessor.java:95)
+	at org.thymeleaf.util.ProcessorConfigurationUtils$ElementTagProcessorWrapper.process(ProcessorConfigurationUtils.java:633)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1314)
+	at org.thymeleaf.engine.OpenElementTag.beHandled(OpenElementTag.java:205)
+	at org.thymeleaf.engine.Model.process(Model.java:282)
+	at org.thymeleaf.engine.ProcessorTemplateHandler.handleOpenElement(ProcessorTemplateHandler.java:1587)
+	at org.thymeleaf.engine.TemplateHandlerAdapterMarkupHandler.handleOpenElementEnd(TemplateHandlerAdapterMarkupHandler.java:304)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler$InlineMarkupAdapterPreProcessorHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:278)
+	at org.thymeleaf.standard.inline.OutputExpressionInlinePreProcessorHandler.handleOpenElementEnd(OutputExpressionInlinePreProcessorHandler.java:186)
+	at org.thymeleaf.templateparser.markup.InlinedOutputExpressionMarkupHandler.handleOpenElementEnd(InlinedOutputExpressionMarkupHandler.java:124)
+	at org.attoparser.HtmlElement.handleOpenElementEnd(HtmlElement.java:109)
+	at org.attoparser.HtmlMarkupHandler.handleOpenElementEnd(HtmlMarkupHandler.java:297)
+	at org.attoparser.MarkupEventProcessorHandler.handleOpenElementEnd(MarkupEventProcessorHandler.java:402)
+	at org.attoparser.ParsingElementMarkupUtil.parseOpenElement(ParsingElementMarkupUtil.java:159)
+	at org.attoparser.MarkupParser.parseBuffer(MarkupParser.java:710)
+	at org.attoparser.MarkupParser.parseDocument(MarkupParser.java:301)
+	at org.attoparser.MarkupParser.parse(MarkupParser.java:257)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:230)
+	at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+	at org.thymeleaf.engine.TemplateManager.parseAndProcess(TemplateManager.java:666)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1103)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1077)
+	at org.thymeleaf.spring6.view.ThymeleafView.renderFragment(ThymeleafView.java:372)
+	at org.thymeleaf.spring6.view.ThymeleafView.render(ThymeleafView.java:192)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1438)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1168)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at com.boot.ict05_final_admin.common.log.TraceFilter.doFilter(TraceFilter.java:29)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-23 12:54:00.253 ERROR [http-nio-8081-exec-5] [] o.s.b.a.w.s.e.ErrorMvcAutoConfiguration$StaticView - Cannot render error page for request [/admin/store/list] and exception [An error happened during template parsing (template: "class path resource [templates/store/list.html]")] as the response has already been committed. As a result, the response may have the wrong status code.
+2025-10-23 12:54:15.932 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655932 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 100, 2 = 100, 3 = 'EVENT', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 100', 8 = '공지 내용 100', 9 = '작성자01', 10 = 500, 11 = '2025-10-19T12:30:47.079+0900';
+2025-10-23 12:54:15.933 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655933 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 99, 2 = 99, 3 = 'SYSTEM', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 99', 8 = '공지 내용 99', 9 = '작성자10', 10 = 495, 11 = '2025-10-18T12:30:47.079+0900';
+2025-10-23 12:54:15.933 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655933 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 98, 2 = 98, 3 = 'POLICY', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 98', 8 = '공지 내용 98', 9 = '작성자09', 10 = 490, 11 = '2025-10-17T12:30:47.079+0900';
+2025-10-23 12:54:15.933 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655933 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 97, 2 = 97, 3 = 'NORMAL', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 97', 8 = '공지 내용 97', 9 = '작성자08', 10 = 485, 11 = '2025-10-16T12:30:47.079+0900';
+2025-10-23 12:54:15.934 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655934 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 96, 2 = 96, 3 = 'EVENT', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = false, 7 = '공지 제목 96', 8 = '공지 내용 96', 9 = '작성자07', 10 = 480, 11 = '2025-10-15T12:30:47.079+0900';
+2025-10-23 12:54:15.934 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655934 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 95, 2 = 95, 3 = 'SYSTEM', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = true, 7 = '공지 제목 95', 8 = '공지 내용 95', 9 = '작성자06', 10 = 475, 11 = '2025-10-14T12:30:47.079+0900';
+2025-10-23 12:54:15.934 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655934 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 94, 2 = 94, 3 = 'POLICY', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = false, 7 = '공지 제목 94', 8 = '공지 내용 94', 9 = '작성자05', 10 = 470, 11 = '2025-10-13T12:30:47.079+0900';
+2025-10-23 12:54:15.934 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655934 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 93, 2 = 93, 3 = 'NORMAL', 4 = 'EMERGENCY', 5 = 'ACTIVE', 6 = true, 7 = '공지 제목 93', 8 = '공지 내용 93', 9 = '작성자04', 10 = 465, 11 = '2025-10-12T12:30:47.079+0900';
+2025-10-23 12:54:15.934 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655934 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 92, 2 = 92, 3 = 'EVENT', 4 = 'NORMAL', 5 = 'INACTIVE', 6 = false, 7 = '공지 제목 92', 8 = '공지 내용 92', 9 = '작성자03', 10 = 460, 11 = '2025-10-11T12:30:47.079+0900';
+2025-10-23 12:54:15.935 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655935 | took 0ms | resultset | connection -1| url 
+select n1_0.notice_id,n1_0.member_id_fk,n1_0.notice_category,n1_0.notice_priority,n1_0.notice_status,n1_0.is_show,n1_0.notice_title,n1_0.notice_content,n1_0.writer,n1_0.notice_count,n1_0.notice_reg_date from notice n1_0 order by n1_0.notice_id desc limit ?,?
+1 = 91, 2 = 91, 3 = 'SYSTEM', 4 = 'IMPORTANT', 5 = 'DELETED', 6 = true, 7 = '공지 제목 91', 8 = '공지 내용 91', 9 = '작성자02', 10 = 455, 11 = '2025-10-10T12:30:47.079+0900';
+2025-10-23 12:54:15.938 INFO  [http-nio-8081-exec-10] [774162af] p6spy - #1761191655938 | took 0ms | resultset | connection -1| url 
+select count(n1_0.notice_id) from notice n1_0
+1 = 100;
