@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +22,7 @@ public class ReceiveOrderRestController {
 
     private final ReceiveOrderService receiveOrderService;
 
+    // 수주 상세 정보 조회
     @GetMapping("/receive/detail/{id}")
     public ResponseEntity<ReceiveOrderDetailDTO> detail(@PathVariable Long id, Model model) {
         log.info("GET 요청 수신: id = {}", id);
@@ -38,6 +36,13 @@ public class ReceiveOrderRestController {
 
         // 데이터 있으면 200 OK 반환
         return ResponseEntity.ok(dto);
+    }
+
+    // 배송 상태 업데이트
+    @PutMapping("/receive/status/{id}")
+    public ResponseEntity<String> updateStatus(@PathVariable Long id) {
+        receiveOrderService.advanceStatus(id);
+        return ResponseEntity.ok("상태 업데이트 완료");
     }
 
 

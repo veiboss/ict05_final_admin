@@ -37,4 +37,9 @@ public class ReceiveOrderItemDTO {
         return inventoryStatus != null ? inventoryStatus.getDescription() : "";
     }
 
+    // 재료 카테고리 한글 값
+    public String getMaterialCategory() {
+        return  materialCategory != null ? materialCategory.getDescription() : "";
+    }
+
 }
