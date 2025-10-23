@@ -2,10 +2,7 @@ package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "purchase_order")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

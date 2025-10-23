@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.dto;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderPriority;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class ReceiveOrderDetailDTO {
     /** 수주 상태 */
     private ReceiveOrderStatus status;
 
+    /** 수주 우선순위 */
+    private ReceiveOrderPriority priority;
+
     /** 가맹점명 */
     private String storeName;   // 가맹점 엔티티
 
@@ -60,6 +64,10 @@ public class ReceiveOrderDetailDTO {
     /* 화면에 한글 값으로 출력 */
     public String getStatusDescription() {
         return status != null ? status.getDescription() : "";
+    }
+
+    public String getPriorityDescription() {
+        return priority != null ? priority.getDescription() : "";
     }
 
 }
