@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.staffresources.service;
 
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffWriteFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
@@ -33,6 +34,15 @@ public class StaffService {
     public Page<StaffListDTO> selectAllStaff(StaffSearchDTO staffSearchDTO, Pageable pageable) {
         return staffRepository.listStaff(staffSearchDTO, pageable);
     }
+
+    /**
+     * ID를 기준으로 사원을 조회한다.
+     *
+     * @param id 재료 ID
+     * @return 사원 엔티티, 존재하지 않으면 null
+     */
+    @Transactional(readOnly = true)
+    public StaffProfile findById(Long id) { return staffRepository.findById(id).orElse(null);}
 
     /**
      * 새로운 사원을 등록한다.
@@ -80,4 +90,35 @@ public class StaffService {
      * @return 사원 엔티티, 존재하지 않으면 null
      */
     public StaffProfile detailStaff(Long id) { return staffRepository.findById(id).orElse(null); }
+
+    /**
+     * 기존 사원 정보를 수정한다.
+     *
+     * @param dto 수정할 데이터
+     * @return 수정된 재료 엔티티
+     */
+    public StaffProfile staffModify(StaffModifyFormDTO dto) {
+
+        String address = "";
+        String address1 = dto.getUserAddress1();
+        String address2 = dto.getUserAddress2();
+        address = address1 + "," + address2;
+        dto.setStaffAddress(address);
+
+        StaffProfile staffProfile = findById(dto.getId());
+        if (staffProfile == null) throw new IllegalArgumentException("해당 사원이 존재하지 않습니다.");
+
+        staffProfile.updateStaff(dto);
+
+        return staffProfile;
+    }
+
+    /**
+     * 사원 ID를 받아 삭제한다.
+     *
+     * @param id 사원 ID
+     */
+    public void deleteStaff(Long id) {
+        staffRepository.deleteById(id);
+    }
 }

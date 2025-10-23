@@ -89,7 +89,6 @@ public class StaffProfile {
         this.staffEmail = dto.getStaffEmail();
         this.staffPhone = dto.getStaffPhone();
         this.staffAddress = dto.getStaffAddress();
-        this.staffSalary = dto.getStaffSalary();
         this.staffBirth = dto.getStaffBirth();
         this.staffStartDate = dto.getStaffStartDate();
         this.staffEndDate = dto.getStaffEndDate();

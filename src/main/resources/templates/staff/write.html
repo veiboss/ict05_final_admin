@@ -46,9 +46,9 @@
                         <legend class="blind">기본 정보</legend>
                         <div class="row-2">
                             <div class="field pack-down col">
-                                <label class="label medium required" for="staffName">이름</label>
+                                <label class="label medium required" for="staffName">사원명</label>
                                 <div class="insert pack-left">
-                                    <input th:field="*{staffName}" type="text" id="staffName" class="input-text medium" title="이름" placeholder="홍길동">
+                                    <input th:field="*{staffName}" type="text" id="staffName" class="input-text medium" title="사원명" placeholder="홍길동">
                                 </div>
                                 <small id="staffNameError" class="error" aria-live="polite"></small>
                             </div>
@@ -253,7 +253,7 @@
           if (!first) first = k;
         });
         if (first && getValue(first)) getValue(first).focus();
-        return; // ❗ 기본 submit 막고 서버 전송도 중단
+        return; // 기본 submit 막고 서버 전송도 중단
       }
 
       const fd = new FormData(this);

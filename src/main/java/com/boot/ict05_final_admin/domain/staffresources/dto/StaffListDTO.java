@@ -16,27 +16,27 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class StaffListDTO {
 
-    /** 직원 시퀀스 */
+    /** 사원 시퀀스 */
     private Long id;
 
-    /** 직원 이름 */
+    /** 사원 이름 */
     private String staffName;
 
-    /** 직원 근무형태 (점주/직원/알바) */
+    /** 사원 근무형태 (점주/직원/알바) */
     private StaffEmploymentType staffEmploymentType;
 
-    /** 직원 부서 (관리팀, 판매팀) */
+    /** 사원 부서 (관리팀, 판매팀) */
     private StaffDepartment staffDepartment;
 
-    /** 직원 생년월일 */
+    /** 사원 생년월일 */
     @Schema(type="string", format="date-time")
     private LocalDateTime staffBirth;
 
-    /** 직원 입사일자 (혹은 매장 근무 시작일) */
+    /** 사원 입사일자 (혹은 매장 근무 시작일) */
     @Schema(type="string", format="date-time")
     private LocalDateTime staffStartDate;
 
-    /** 직원 퇴사일자 */
+    /** 사원 퇴사일자 */
     @Schema(type="string", format="date-time")
     private LocalDateTime staffEndDate;
 
