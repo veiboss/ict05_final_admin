@@ -6,6 +6,7 @@ import com.boot.ict05_final_admin.domain.notice.dto.NoticeSearchDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeWriteFormDTO;
 import com.boot.ict05_final_admin.domain.notice.entity.Notice;
 import com.boot.ict05_final_admin.domain.notice.entity.NoticeAttachment;
+import com.boot.ict05_final_admin.domain.notice.entity.NoticeStatus;
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeAttachmentRepository;
 import com.boot.ict05_final_admin.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +53,15 @@ public class NoticeService {
      */
     public Long insertOfficeNotice(NoticeWriteFormDTO dto, List<MultipartFile> files) throws Exception {
         Notice notice = Notice.builder()
+                .memberIdFk(dto.getMemberIdFk())
                 .noticeCategory(dto.getNoticeCategory())
                 .noticePriority(dto.getNoticePriority())
+                .noticeStatus(NoticeStatus.ACTIVE)
                 .isShow(dto.getIsShow())
                 .title(dto.getTitle())
                 .body(dto.getBody())
                 .writer(dto.getWriter())
-                .writerdate(LocalDateTime.now())
+                .registeredAt(LocalDateTime.now())
                 .build();
 
         // DB 저장
@@ -182,7 +185,7 @@ public class NoticeService {
             sheet1_row.createCell(0).setCellValue(notice.getId());
             sheet1_row.createCell(1).setCellValue(notice.getTitle());
             sheet1_row.createCell(2).setCellValue(notice.getWriter());
-            sheet1_row.createCell(3).setCellValue(notice.getWriterdate());
+            sheet1_row.createCell(3).setCellValue(notice.getRegisteredAt());
             i++;
         }
 

@@ -1,23 +1,37 @@
 package com.boot.ict05_final_admin.domain.menu.entity;
 
-public enum MenuCategory {  // enum : 정해진 몇 가지 값만 쓸 수 있는 데이터 타입(코드 안정성+가독성+실수방지)
+import jakarta.persistence.*;
+import lombok.*;
 
-    TOTAL("전체"),
+@Entity     // DB 테이블이랑 연결
+@Table(name = "menu_category")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder    // 객체를 만드는 방법을 제공
+public class MenuCategory {
 
-    SET("세트"),
+    @Id     // PK
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // id 숫자를 자동 증가
+    @Column(name = "menu_category_id")
+    private Long MenuCategoryId;
 
-    TOAST("토스트"),
+    /** 상위 카테고리 (대중소 구조 지원) */
+    @ManyToOne(fetch = FetchType.LAZY)      // 1개의 자식 카테고리(소)는 1개의 부모 카테고리(상위)를 참조 / LAZY(지연로딩): 진짜 필요할 때만 DB에서 부모 가져옴
+    @JoinColumn(    // 부모 카테고리의 ID를 FK로 연결
+            name = "menu_category_parent_id",           // FK 이름
+            columnDefinition = "BIGINT UNSIGNED"
+    )
+    private MenuCategory menuCategoryParentId;
 
-    SIDE("사이드"),
+    /** 카테고리명 */
+    @Column(name = "menu_category_name")
+    private String menuCategoryName;
 
-    DRINK("음료");
+    /** 단계 구분(대=1, 중=2, 소=3) */
+    @Column(name = "menu_category_level")
+    private Short menuCategoryLevel;
 
-    /** 카테고리의 한글 설명 */
-    private final String description;
 
-    /** 생성자 */    // 내부적으로는 new MenuCategory("세트") 이런 식으로 동작
-    MenuCategory(String description) {this.description = description;}
-
-    /** 카테고리 한글 설명을 반환 */   // description 값을 가져오는 getter
-    public String getDescription() { return description; }
 }

@@ -1,16 +1,16 @@
 package com.boot.ict05_final_admin.domain.menu.entity;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.Material;
+import com.boot.ict05_final_admin.domain.menu.dto.MenuModifyFormDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -48,13 +48,32 @@ public class Menu {
     @Column(name = "menu_price")
     private BigDecimal menuPrice;
 
-//    /** Material 참조 */
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name= "material_id_fk")
-//    private Material material;
+    /** 레시피(연결엔티티) */
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<MenuRecipe> recipe = new ArrayList<>();
 
     /** menuCategory 참조 */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "menu_category_id_fk")
-    private MenuCategoryEntity menuCategory;
+    private MenuCategory menuCategory;
+
+    // ===== 수정 편의 메서드 =====
+    /** DTO 기반 필드 수정(카테고리는 별도 changeCategory 사용) */
+    public void updateMenu(MenuModifyFormDTO dto) {
+        if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
+        if (dto.getMenuCode() != null) this.menuCode = dto.getMenuCode();
+        if (dto.getMenuInformation() != null) this.menuInformation = dto.getMenuInformation();
+        if (dto.getMenuNameEnglish() != null) this.menuNameEnglish = dto.getMenuNameEnglish();
+        if (dto.getMenuKcal() != null) this.menuKcal = dto.getMenuKcal();
+        if (dto.getMenuShow() != null) this.menuShow = (dto.getMenuShow() == MenuShowEnum.SHOW);
+        if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
+    }
+
+    /** 카테고리 교체 */
+    public void changeCategory(MenuCategory category) {
+        this.menuCategory = Objects.requireNonNull(category, "category");
+    }
+
 }
+

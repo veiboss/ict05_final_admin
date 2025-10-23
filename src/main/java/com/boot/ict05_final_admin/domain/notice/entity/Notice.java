@@ -35,6 +35,10 @@ public class Notice {
     @Column(name = "notice_id")
     private Long id;
 
+    /** 작성자(회원) FK */
+    @Column(name = "member_id_fk")
+    private Long memberIdFk;
+
     /** 공지사항 카테고리 */
     @Enumerated(EnumType.STRING)
     @Column(name = "notice_category")
@@ -44,6 +48,11 @@ public class Notice {
     @Enumerated(EnumType.STRING)
     @Column(name = "notice_priority")
     private NoticePriority noticePriority;
+
+    /** 공지사항 상태  */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "notice_status")
+    private NoticeStatus noticeStatus;
 
     /** 공지사항 노출 여부 */
     @Column(name = "is_show")
@@ -64,7 +73,15 @@ public class Notice {
     /** 작성일자 */
     @Schema(type="string", format="date-time")
     @Column(name = "notice_reg_date")
-    private LocalDateTime writerdate;
+    private LocalDateTime registeredAt;
+
+    /** 조회수 */
+    @Column(name = "notice_count")
+    private Integer noticeCount;
+
+    /** 확인 여부 (TINYINT(1) → Boolean) */
+    @Column(name = "notice_confirmed")
+    private Boolean noticeConfirmed;
 
     /**
      * 공지사항 정보를 수정하는 메서드
@@ -75,12 +92,12 @@ public class Notice {
      * @param dto 수정할 공지사항 정보를 담고 있는 DTO 객체
      */
     public void updateNotice(NoticeModifyFormDTO dto) {
-        this.noticeCategory = dto.getNoticeCategory();
-        this.noticePriority = dto.getNoticePriority();
-        this.isShow = dto.getIsShow();
-        this.title = dto.getTitle();
-        this.body = dto.getBody();
-        this.writer = dto.getWriter();
-        this.writerdate = LocalDateTime.now();
+        this.noticeCategory   = dto.getNoticeCategory();
+        this.noticePriority   = dto.getNoticePriority();
+        this.isShow           = dto.getIsShow();
+        this.title            = dto.getTitle();
+        this.body             = dto.getBody();
+        this.writer           = dto.getWriter();
+        this.registeredAt     = LocalDateTime.now();
     }
 }

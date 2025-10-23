@@ -1,7 +1,11 @@
 package com.boot.ict05_final_admin.domain.store.controller;
 
+import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreAddFormDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
+import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
+import com.boot.ict05_final_admin.domain.store.entity.StoreType;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +19,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class StoreController {
 
     private final StoreService storeService;
+
 
     /**
      * 공지사항 목록을 페이징 처리하여 조회한다.
@@ -55,5 +62,24 @@ public class StoreController {
         model.addAttribute("storeSearchDTO", storeSearchDTO);
 
         return "store/list";
+    }
+
+    /**
+     * 가맹점 등록 화면을 표시한다.
+     *
+     * @param model 뷰에 전달할 모델 객체
+     * @return 가맹점 등록 작성 페이지 뷰 이름
+     */
+    @GetMapping("/store/add")
+    public String addForm(Model model) {
+
+        List<FindStoreDTO> stores = storeService.findStoreName();
+
+        model.addAttribute("storeAddFormDTO", new StoreAddFormDTO());
+        model.addAttribute("StoreStatus", StoreStatus.values());
+        model.addAttribute("StoreType", StoreType.values());
+        model.addAttribute("stores", stores);
+
+        return "store/add";
     }
 }

@@ -2,7 +2,6 @@ package com.boot.ict05_final_admin.domain.staffresources.dto;
 
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
-import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -27,11 +26,10 @@ import java.time.LocalDateTime;
 public class StaffAddFormDTO {
 
     /** 직원 근무지 */
-    @NotNull(message = "근무지를 선택해주세요")
-    private Store store;
+    private Long storeIdFk;
 
     /** 직원 이름 */
-    @NotBlank(message = "직원 이름을 입력해주세요")
+    @NotNull(message = "직원 이름을 입력해주세요")
     private String staffName;
 
     /** 근무 형태 (점주, 직원, 알바) */
@@ -42,19 +40,28 @@ public class StaffAddFormDTO {
     @NotNull(message = "직원 부서를 선택해주세요")
     private StaffDepartment staffDepartment;
 
-    /** 직원 이메일 (선택) */
+    /** 직원 이메일 */
+    @NotNull(message = "이메일을 입력해주세요")
     @Email(message = "이메일 형식이 올바르지 않습니다")
     private String staffEmail;
 
-    /** 직원 전화번호 (선택) */
-    @Pattern(regexp = "^[0-9\\-]{9,13}$", message = "전화번호는 숫자와 하이픈만 입력해주세요")
+    /** 직원 연락처 */
+    @NotNull(message = "연락처를 입력해주세요")
+    @Pattern(regexp = "^[0-9\\-]{9,13}$", message = "연락처는 숫자와 하이픈만 입력해주세요")
     private String staffPhone;
 
-    /** 직원 주소 (선택) */
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress1;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress2;
+
+    /** 직원 주소 */
     @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
     private String staffAddress;
 
-    /** 생년월일 (선택, 과거) */
+    /** 생년월일 (과거) */
+    @NotNull(message = "생년월일을 입력해주세요")
     @Past(message = "생년월일은 과거여야 합니다")
     private LocalDateTime staffBirth;
 

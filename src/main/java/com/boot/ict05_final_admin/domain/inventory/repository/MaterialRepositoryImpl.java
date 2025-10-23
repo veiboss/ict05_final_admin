@@ -33,8 +33,9 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
                         material.id,
                         material.code,
                         material.materialCategory,
-                        material.title,
-                        material.unit,
+                        material.name,
+                        material.baseUnit,
+                        material.salesUnit,
                         material.supplier,
                         material.materialTemperature,
                         material.materialStatus
@@ -74,7 +75,7 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
 
             switch (type) {
                 case "title":
-                    condition = material.title.containsIgnoreCase(keyword);
+                    condition = material.name.containsIgnoreCase(keyword);
                     break;
                 case "content":
                     condition = material.supplier.containsIgnoreCase(keyword);
@@ -89,7 +90,7 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
                 case "all":
                 default:
                     BooleanExpression keywordCondition =
-                            material.title.containsIgnoreCase(keyword)
+                            material.name.containsIgnoreCase(keyword)
                                     .or(material.supplier.containsIgnoreCase(keyword));
 
                     if (matchedCategoryName != null)

@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.service;
 
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +37,15 @@ public class ReceiveOrderService {
     }
 
     /* 주문 상세 정보 조회 */
+    public ReceiveOrderDetailDTO getReceiveOrderDetail(Long id) {
+        ReceiveOrderDetailDTO dto = receiveOrderRepository.findDetailById(id)
+                .orElseThrow(() -> new NoSuchElementException("수주 내역이 존재하지 않습니다. id=" + id));
+
+        List<ReceiveOrderItemDTO> items = receiveOrderRepository.findItemsByOrderId(id);
+        dto.setItems(items);  // setter로 주입
+
+        return dto;
+    }
 
 
 }
