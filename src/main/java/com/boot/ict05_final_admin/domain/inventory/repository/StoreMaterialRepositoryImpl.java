@@ -33,7 +33,7 @@ public class StoreMaterialRepositoryImpl implements StoreMaterialRepositoryCusto
                         sm.code,
                         sm.name,
                         sm.category,
-                        sm.unit,
+                        sm.baseUnit,
                         sm.supplier,
                         sm.temperature,
                         sm.status,

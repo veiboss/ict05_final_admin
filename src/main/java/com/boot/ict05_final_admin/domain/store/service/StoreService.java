@@ -91,5 +91,15 @@ public class StoreService {
     public List<FindStoreDTO> findStoreName() {
         return storeRepository.findStoreName();
     }
-}
+
+    /**
+     * 가맹점 상세 정보를 조회한다.
+     *
+     * @param id 가맹점 ID
+     * @return 가맹점 엔티티, 존재하지 않으면 null
+     */
+    public Store detailStore(Long id) { return storeRepository.findById(id).orElse(null); }
+    }
+
+
 

@@ -41,63 +41,63 @@
 
         <main id="content">
             <div class="write-form box-wrap">
-                <form name="inputform" id="inputform" th:object="${staffAddFormDTO}" novalidate>
-                    <fieldset>
+                <form name="inputform" id="inputform" th:object="${staffWriteFormDTO}" novalidate>
+                    <fieldset class="pack-down gap-12">
                         <legend class="blind">기본 정보</legend>
                         <div class="row-2">
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="staffName">이름</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{staffName}" type="text" id="staffName" class="input-text medium" title="이름" placeholder="홍길동">
-                                    <small id="staffNameError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffNameError" class="error" aria-live="polite"></small>
                             </div>
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="staffEmail">이메일</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{staffEmail}" type="text" id="staffEmail" class="input-text medium" title="이메일" placeholder="hong@email.com">
-                                    <small id="staffEmailError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffEmailError" class="error" aria-live="polite"></small>
                             </div>
                         </div>
                         <div class="row-2">
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="staffPhone">연락처</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{staffPhone}" type="text" id="staffPhone" class="input-text medium" title="연락처" placeholder="010-1234-1234">
-                                    <small id="staffPhoneError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffPhoneError" class="error" aria-live="polite"></small>
                             </div>
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="staffBirth">생년월일</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{staffBirth}" type="date" id="staffBirth" class="input-text medium" title="생년월일">
-                                    <small id="staffBirthError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffBirthError" class="error" aria-live="polite"></small>
                             </div>
                         </div>
                         <div class="row-3">
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium" for="staffDepartment">부서</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <select id="staffDepartment" class="select medium" th:field="*{staffDepartment}">
                                         <option value="" >선택</option>
                                         <option th:each="c : ${StaffDepartment}" th:value="${c.name()}" th:text="${c.description}">팀</option>
                                     </select>
-                                    <small id="staffDepartmentError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffDepartmentError" class="error" aria-live="polite"></small>
                             </div>
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium" for="staffEmploymentType">근무 형태</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <select id="staffEmploymentType" class="select medium" th:field="*{staffEmploymentType}">
                                         <option value="" >선택</option>
                                         <option th:each="c : ${StaffEmploymentType}" th:value="${c.name()}" th:text="${c.description}">형태</option>
                                     </select>
-                                    <small id="staffEmploymentTypeError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffEmploymentTypeError" class="error" aria-live="polite"></small>
                             </div>
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required">근무지 (선택)</label>
                                 <div class="input-wrap" style="position:relative;">
                                     <input id="storeSearch" class="input-text medium"
@@ -112,31 +112,31 @@
                             </div>
                         </div>
                         <div class="row-3">
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="userAddress1">주소 (선택)</label>
                                 <input type="button" class="btn small color1" id="addressSearch" style="margin-left:10px" value="주소 검색" onclick="findAddr()">
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{userAddress1}" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly>
                                 </div>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{userAddress2}" type="text" class="input-text medium" size="50" placeholder="나머지 주소 작성">
                                 </div>
                             </div>
                         </div>
                         <div class="row-2">
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="staffStartDate">입사일자 (선택)</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{staffStartDate}" type="date" id="staffStartDate" class="input-text medium" title="입사일자">
-                                    <small id="staffStartDateError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffStartDateError" class="error" aria-live="polite"></small>
                             </div>
-                            <div class="field col">
+                            <div class="field pack-down col">
                                 <label class="label medium required" for="staffEndDate">퇴사일자 (선택)</label>
-                                <div class="insert">
+                                <div class="insert pack-left">
                                     <input th:field="*{staffEndDate}" type="date" id="staffEndDate" class="input-text medium" title="퇴사일자">
-                                    <small id="staffEndDateError" class="error" aria-live="polite"></small>
                                 </div>
+                                <small id="staffEndDateError" class="error" aria-live="polite"></small>
                             </div>
                         </div>
                         <div class="button-area pack-center">
@@ -260,7 +260,7 @@
       if (!fd.get('storeIdFk')) fd.delete('storeIdFk');
 
       try{
-        const resp = await fetch("/admin/API/staff/add", { method:"POST", body: fd });
+        const resp = await fetch("/admin/API/staff/write", { method:"POST", body: fd });
         const data = await resp.json().catch(()=> ({}));
 
         if (!resp.ok){
