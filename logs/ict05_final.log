@@ -5871,3 +5871,1507 @@ org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property o
 2025-10-23 08:26:50.072 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-10-23 08:26:50.073 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
 2025-10-23 08:26:50.098 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-10-23 08:47:43.113 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 08:47:43.173 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 19244 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 08:47:43.173 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 08:47:43.174 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 08:47:43.215 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 08:47:43.215 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 08:47:43.691 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 08:47:43.754 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 57 ms. Found 11 JPA repository interfaces.
+2025-10-23 08:47:44.056 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 08:47:44.062 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:47:44.063 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 08:47:44.063 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 08:47:44.090 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 08:47:44.090 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 874 ms
+2025-10-23 08:47:44.168 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 08:47:44.190 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 08:47:44.206 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 08:47:44.344 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 08:47:44.359 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 08:47:44.439 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@634f1fbc
+2025-10-23 08:47:44.440 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 08:47:44.467 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 08:47:44.480 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 08:47:45.035 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 08:47:45.242 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 08:47:45.244 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872226) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872226) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=872226) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 08:47:45.369 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:47:45.512 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 08:47:45.894 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 08:47:45.906 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 08:47:46.133 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 08:47:46.146 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:47:46.155 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 08:47:46.160 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.318 seconds (process running for 3.68)
+2025-10-23 08:51:17.515 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 08:51:17.596 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 08:51:17.600 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:51:17.601 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 08:51:17.627 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 08:51:20.060 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 08:51:20.086 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 14008 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 08:51:20.086 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 08:51:20.086 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 08:51:20.112 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 08:51:20.112 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 08:51:20.526 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 08:51:20.580 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 11 JPA repository interfaces.
+2025-10-23 08:51:20.860 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 08:51:20.866 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:51:20.867 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 08:51:20.867 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 08:51:20.894 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 08:51:20.895 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 782 ms
+2025-10-23 08:51:20.974 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 08:51:20.995 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 08:51:21.010 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 08:51:21.144 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 08:51:21.158 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 08:51:21.222 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@66de4240
+2025-10-23 08:51:21.223 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 08:51:21.240 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 08:51:21.252 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 08:51:21.804 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 08:51:21.960 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 08:51:21.961 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872471) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872471) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=872471) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 08:51:22.073 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:51:22.206 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 08:51:22.563 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 08:51:22.576 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 08:51:22.797 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 08:51:22.808 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:51:22.818 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 08:51:22.823 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 2.995 seconds (process running for 3.293)
+2025-10-23 08:53:33.699 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 08:53:33.782 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 08:53:33.785 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:53:33.786 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 08:53:33.810 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 08:53:35.988 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 08:53:36.014 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 11124 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 08:53:36.014 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 08:53:36.015 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 08:53:36.037 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 08:53:36.037 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 08:53:36.437 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 08:53:36.492 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 11 JPA repository interfaces.
+2025-10-23 08:53:36.773 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 08:53:36.779 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:53:36.780 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 08:53:36.780 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 08:53:36.808 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 08:53:36.808 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 771 ms
+2025-10-23 08:53:36.889 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 08:53:36.910 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 08:53:36.925 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 08:53:37.059 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 08:53:37.074 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 08:53:37.142 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@66de4240
+2025-10-23 08:53:37.143 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 08:53:37.161 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 08:53:37.174 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 08:53:37.729 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 08:53:37.869 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 08:53:37.870 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872608) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872608) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=872608) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 08:53:37.974 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:53:38.112 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 08:53:38.484 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 08:53:38.497 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 08:53:38.715 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 08:53:38.726 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:53:38.736 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 08:53:38.741 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 2.978 seconds (process running for 3.273)
+2025-10-23 08:55:53.597 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 08:55:53.680 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 08:55:53.684 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:55:53.686 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 08:55:53.710 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 08:55:55.886 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 08:55:55.910 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 14000 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 08:55:55.911 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 08:55:55.911 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 08:55:55.932 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 08:55:55.932 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 08:55:56.326 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 08:55:56.377 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 11 JPA repository interfaces.
+2025-10-23 08:55:56.652 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 08:55:56.658 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:55:56.659 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 08:55:56.659 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 08:55:56.686 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 08:55:56.686 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 754 ms
+2025-10-23 08:55:56.765 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 08:55:56.787 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 08:55:56.802 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 08:55:56.936 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 08:55:56.950 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 08:55:57.026 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@430a42a0
+2025-10-23 08:55:57.027 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 08:55:57.047 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 08:55:57.059 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 08:55:57.611 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 08:55:57.815 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 08:55:57.816 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FKl0ta3l204rrpbc868rs1bbp3a foreign key (menu_id) references menu (menu_id)" via JDBC [(conn=872770) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FKl0ta3l204rrpbc868rs1bbp3a foreign key (menu_id) references menu (menu_id)" via JDBC [(conn=872770) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=872770) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 08:55:57.933 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:55:58.073 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 08:55:58.446 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 08:55:58.458 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 08:55:58.680 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 08:55:58.691 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:55:58.700 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 08:55:58.705 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.048 seconds (process running for 3.35)
+2025-10-23 08:56:29.205 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 08:56:29.292 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 08:56:29.295 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:56:29.297 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 08:56:29.322 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 08:56:32.093 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 08:56:32.119 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 6836 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 08:56:32.119 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 08:56:32.119 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 08:56:32.139 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 08:56:32.139 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 08:56:32.607 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 08:56:32.659 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 11 JPA repository interfaces.
+2025-10-23 08:56:32.935 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 08:56:32.940 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:56:32.941 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 08:56:32.942 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 08:56:32.975 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 08:56:32.975 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 836 ms
+2025-10-23 08:56:33.046 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 08:56:33.068 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 08:56:33.083 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 08:56:33.216 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 08:56:33.231 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 08:56:33.302 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@aeb83c0
+2025-10-23 08:56:33.304 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 08:56:33.321 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 08:56:33.333 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 08:56:33.906 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 08:56:34.053 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 08:56:34.055 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872809) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=872809) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=872809) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 08:56:34.164 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 08:56:34.299 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 08:56:34.705 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 08:56:34.721 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 08:56:34.999 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 08:56:35.012 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 08:56:35.025 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 08:56:35.031 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.181 seconds (process running for 3.475)
+2025-10-23 09:09:29.323 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 09:09:29.408 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 09:09:29.412 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 09:09:29.414 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 09:09:29.438 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 11:44:39.450 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 11:44:39.476 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 4800 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 11:44:39.476 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 11:44:39.476 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 11:44:39.497 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 11:44:39.497 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 11:44:39.905 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 11:44:39.962 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 11 JPA repository interfaces.
+2025-10-23 11:44:40.246 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 11:44:40.252 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 11:44:40.253 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 11:44:40.253 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 11:44:40.281 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 11:44:40.281 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 783 ms
+2025-10-23 11:44:40.362 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 11:44:40.384 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 11:44:40.399 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 11:44:40.538 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 11:44:40.552 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 11:44:40.627 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@350d63af
+2025-10-23 11:44:40.628 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 11:44:40.645 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 11:44:40.656 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 11:44:41.218 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 11:44:41.384 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 11:44:41.385 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=887889) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=887889) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=887889) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 11:44:41.465 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1452-23000: Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d8c51`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+2025-10-23 11:44:41.466 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=887889) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d8c51`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=887889) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d8c51`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: (conn=887889) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d8c51`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:301)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 11:44:41.519 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 11:44:41.652 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 11:44:42.037 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 11:44:42.049 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 11:44:42.277 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 11:44:42.289 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 11:44:42.298 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 11:44:42.303 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.083 seconds (process running for 3.374)
+2025-10-23 11:44:50.495 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 11:44:50.576 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 11:44:50.579 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 11:44:50.581 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 11:44:50.639 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 11:57:33.069 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 11:57:33.095 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 20416 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 11:57:33.095 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 11:57:33.095 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 11:57:33.117 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 11:57:33.117 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 11:57:33.511 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 11:57:33.566 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 49 ms. Found 11 JPA repository interfaces.
+2025-10-23 11:57:33.838 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 11:57:33.844 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 11:57:33.845 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 11:57:33.845 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 11:57:33.872 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 11:57:33.872 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 754 ms
+2025-10-23 11:57:33.954 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 11:57:33.977 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 11:57:33.992 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 11:57:34.127 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 11:57:34.142 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 11:57:34.206 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@50beb9f8
+2025-10-23 11:57:34.207 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 11:57:34.231 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 11:57:34.244 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 11:57:34.771 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 11:57:34.926 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 11:57:34.928 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=888907) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=888907) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=888907) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 11:57:35.009 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1452-23000: Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d904b`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+2025-10-23 11:57:35.010 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=888907) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d904b`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=888907) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d904b`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: (conn=888907) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d904b`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:301)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 11:57:35.067 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 11:57:35.198 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 11:57:35.580 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 11:57:35.594 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 11:57:35.818 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 11:57:35.830 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 11:57:35.839 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 11:57:35.845 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.002 seconds (process running for 3.318)
+2025-10-23 11:57:53.860 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 11:57:53.947 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 11:57:53.950 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 11:57:53.952 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 11:57:53.978 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 11:59:45.551 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 11:59:45.577 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 8072 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 11:59:45.578 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 11:59:45.578 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 11:59:45.601 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 11:59:45.601 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 11:59:46.053 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 11:59:46.112 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 53 ms. Found 11 JPA repository interfaces.
+2025-10-23 11:59:46.413 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 11:59:46.419 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 11:59:46.420 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 11:59:46.420 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 11:59:46.459 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 11:59:46.460 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 858 ms
+2025-10-23 11:59:46.536 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 11:59:46.558 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 11:59:46.574 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 11:59:46.715 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 11:59:46.729 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 11:59:46.797 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@350d63af
+2025-10-23 11:59:46.798 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 11:59:46.816 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 11:59:46.827 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 11:59:47.376 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 11:59:47.532 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 11:59:47.534 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=889092) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=889092) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=889092) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 11:59:47.622 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1452-23000: Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9104`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+2025-10-23 11:59:47.622 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=889092) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9104`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=889092) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9104`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: (conn=889092) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9104`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:301)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 11:59:47.680 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 11:59:47.818 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 11:59:48.187 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 11:59:48.199 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 11:59:48.421 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 11:59:48.433 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 11:59:48.443 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 11:59:48.449 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.146 seconds (process running for 3.447)
+2025-10-23 12:00:00.386 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:00:00.468 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:00:00.472 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:00:00.473 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 12:00:00.512 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 12:02:49.378 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 12:02:49.403 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 2224 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 12:02:49.403 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:02:49.403 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:02:49.425 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 12:02:49.425 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 12:02:49.819 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:02:49.873 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 48 ms. Found 11 JPA repository interfaces.
+2025-10-23 12:02:50.156 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:02:50.162 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:02:50.163 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:02:50.163 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:02:50.191 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:02:50.191 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 766 ms
+2025-10-23 12:02:50.272 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:02:50.296 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 12:02:50.311 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:02:50.445 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:02:50.459 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 12:02:50.528 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@3bc6e6d0
+2025-10-23 12:02:50.529 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 12:02:50.548 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:02:50.559 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:02:51.138 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:02:51.296 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 12:02:51.296 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=889462) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=889462) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=889462) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 12:02:51.384 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1452-23000: Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9276`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+2025-10-23 12:02:51.385 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=889462) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9276`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=889462) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9276`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: (conn=889462) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d9276`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:301)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 12:02:51.439 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:02:51.573 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 12:02:51.952 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:02:51.965 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:02:52.182 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 12:02:52.195 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:02:52.205 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:02:52.210 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.06 seconds (process running for 3.359)
+2025-10-23 12:04:57.216 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:04:57.308 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:04:57.312 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:04:57.314 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 12:04:57.341 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 12:05:11.722 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 12:05:11.749 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 19888 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 12:05:11.750 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:05:11.750 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:05:11.773 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 12:05:11.773 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 12:05:12.198 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:05:12.254 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 47 ms. Found 11 JPA repository interfaces.
+2025-10-23 12:05:12.553 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:05:12.559 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:05:12.559 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:05:12.560 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:05:12.590 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:05:12.590 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 817 ms
+2025-10-23 12:05:12.677 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:05:12.700 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 12:05:12.716 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:05:12.867 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:05:12.883 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 12:05:12.951 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@66de4240
+2025-10-23 12:05:12.952 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 12:05:12.975 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:05:12.989 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:05:13.589 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:05:13.769 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 12:05:13.770 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=889693) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=889693) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=889693) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 12:05:13.881 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1452-23000: Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d935d`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+2025-10-23 12:05:13.881 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=889693) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d935d`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists staff_profile add constraint FKovs7gsc4h746ottk6mbx7w66j foreign key (store_id) references store (store_id)" via JDBC [(conn=889693) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d935d`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: (conn=889693) Cannot add or update a child row: a foreign key constraint fails (`ict05final`.`#sql-alter-2894-d935d`, CONSTRAINT `FKovs7gsc4h746ottk6mbx7w66j` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`))
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:301)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 12:05:13.974 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:05:14.128 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 12:05:14.526 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:05:14.539 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:05:14.779 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 12:05:14.794 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:05:14.803 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:05:14.809 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.339 seconds (process running for 3.65)
+2025-10-23 12:08:36.917 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:08:37.006 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:08:37.010 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:08:37.012 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 12:08:37.040 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 12:23:00.030 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 12:23:00.056 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 19316 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 12:23:00.056 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:23:00.056 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:23:00.101 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 12:23:00.101 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 12:23:00.545 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:23:00.605 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 54 ms. Found 11 JPA repository interfaces.
+2025-10-23 12:23:00.889 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:23:00.896 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:23:00.897 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:23:00.897 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:23:00.937 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:23:00.938 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 837 ms
+2025-10-23 12:23:01.012 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:23:01.033 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 12:23:01.050 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:23:01.182 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:23:01.196 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 12:23:01.268 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@428b9f09
+2025-10-23 12:23:01.269 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 12:23:01.289 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:23:01.300 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:23:01.848 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:23:01.996 WARN  [restartedMain] [] o.m.jdbc.message.server.ErrorPacket - Error: 1005-HY000: Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+2025-10-23 12:23:01.998 WARN  [restartedMain] [] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=891778) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table if exists menu_recipe add constraint FK5lx96n6mnj7acs4cmi75u5aa1 foreign key (menu_id_fk) references menu (menu_id)" via JDBC [(conn=891778) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applyForeignKeys(AbstractSchemaMigrator.java:448)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:269)
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.boot.ict05_final_admin.Ict05FinalAdminApplication.main(Ict05FinalAdminApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLException: (conn=891778) Can't create table `ict05final`.`menu_recipe` (errno: 150 "Foreign key constraint is incorrectly formed")
+	at org.mariadb.jdbc.export.ExceptionFactory.createException(ExceptionFactory.java:313)
+	at org.mariadb.jdbc.export.ExceptionFactory.create(ExceptionFactory.java:386)
+	at org.mariadb.jdbc.message.ClientMessage.readPacket(ClientMessage.java:187)
+	at org.mariadb.jdbc.client.impl.StandardClient.readPacket(StandardClient.java:1376)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResults(StandardClient.java:1315)
+	at org.mariadb.jdbc.client.impl.StandardClient.readResponse(StandardClient.java:1234)
+	at org.mariadb.jdbc.client.impl.StandardClient.execute(StandardClient.java:1158)
+	at org.mariadb.jdbc.Statement.executeInternal(Statement.java:1003)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:1132)
+	at org.mariadb.jdbc.Statement.execute(Statement.java:471)
+	at com.p6spy.engine.wrapper.StatementWrapper.execute(StatementWrapper.java:115)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 41 common frames omitted
+2025-10-23 12:23:02.107 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:23:02.247 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 12:23:02.619 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:23:02.630 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:23:02.850 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 12:23:02.862 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:23:02.871 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:23:02.876 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.085 seconds (process running for 3.39)
+2025-10-23 12:23:07.680 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:23:07.761 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:23:07.764 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:23:07.766 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 12:23:07.791 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-10-23 12:28:50.989 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-23 12:28:51.014 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Starting Ict05FinalAdminApplication using Java 17.0.12 with PID 15512 (D:\DEV05\workspace_spring_ict05\ict05_final_admin\build\classes\java\main started by ict in D:\DEV05\workspace_spring_ict05\ict05_final_admin)
+2025-10-23 12:28:51.014 DEBUG [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-10-23 12:28:51.014 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - The following 1 profile is active: "dev"
+2025-10-23 12:28:51.035 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-23 12:28:51.035 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-23 12:28:51.436 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-23 12:28:51.492 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 11 JPA repository interfaces.
+2025-10-23 12:28:51.769 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-10-23 12:28:51.775 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:28:51.776 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-23 12:28:51.776 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-23 12:28:51.810 INFO  [restartedMain] [] o.a.c.c.C.[.[localhost].[/admin] - Initializing Spring embedded WebApplicationContext
+2025-10-23 12:28:51.811 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 776 ms
+2025-10-23 12:28:51.887 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-23 12:28:51.909 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-23 12:28:51.924 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-23 12:28:52.060 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-23 12:28:52.075 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-23 12:28:52.140 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.p6spy.engine.wrapper.ConnectionWrapper@350d63af
+2025-10-23 12:28:52.142 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-23 12:28:52.160 WARN  [restartedMain] [] org.hibernate.orm.deprecation - HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-23 12:28:52.171 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 10.5.12
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-23 12:28:52.742 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-23 12:28:53.087 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:28:53.226 INFO  [restartedMain] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-23 12:28:53.603 WARN  [restartedMain] [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-23 12:28:53.615 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-23 12:28:53.838 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-23 12:28:53.850 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-10-23 12:28:53.859 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/admin'
+2025-10-23 12:28:53.864 INFO  [restartedMain] [] c.b.i.Ict05FinalAdminApplication - Started Ict05FinalAdminApplication in 3.107 seconds (process running for 3.398)
+2025-10-23 12:29:30.047 INFO  [SpringApplicationShutdownHook] [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-10-23 12:29:30.128 INFO  [tomcat-shutdown] [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-10-23 12:29:30.132 INFO  [SpringApplicationShutdownHook] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-23 12:29:30.134 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-10-23 12:29:30.159 INFO  [SpringApplicationShutdownHook] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
