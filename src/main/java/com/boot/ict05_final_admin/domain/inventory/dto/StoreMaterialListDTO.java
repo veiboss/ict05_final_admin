@@ -31,7 +31,10 @@ public class StoreMaterialListDTO {
     private String category;
 
     /** 단위 (예: kg, 개, L 등) */
-    private String unit;
+    private String baseUnit;
+
+    /** 본사 기준 판매단위 (예: kg, 개, L 등) */
+    private String salesUnit;
 
     /** 공급업체명 */
     private String supplier;

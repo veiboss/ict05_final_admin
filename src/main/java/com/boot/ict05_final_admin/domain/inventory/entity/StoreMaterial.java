@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,11 +14,18 @@ import java.time.LocalDateTime;
  * 가맹점 재료(StoreMaterial) 엔티티
  *
  * <p>각 가맹점의 재료 정보를 관리한다.</p>
- * <p>본사에서 공급받은 재료(isHqMaterial = true)와
- * 가맹점 자체 등록 재료(isHqMaterial = false)를 모두 포함한다.</p>
+ * <ul>
+ *   <li>본사 공급 재료(isHqMaterial = true) → material_id_fk 존재</li>
+ *   <li>가맹점 자체 등록 재료(isHqMaterial = false) → material_id_fk = NULL</li>
+ * </ul>
+ * <p>
+ * 본사 재료일 경우, 본사의 판매단위(salesUnit)를 가맹점 기준 단위로 사용한다.
+ * 자체 등록 재료일 경우, 가맹점의 기본 단위를 직접 입력한다.
+ * </p>
  */
 @Entity
-@Table(name = "store_material",
+@Table(
+        name = "store_material",
         uniqueConstraints = @UniqueConstraint(columnNames = {"store_id_fk", "store_material_code"})
 )
 @Getter
@@ -40,14 +46,17 @@ public class StoreMaterial {
             name = "store_id_fk",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_sm_store"),
-            columnDefinition = "BIGINT UNSIGNED COMMENT '매장 시퀀스 (FK)'")
+            columnDefinition = "BIGINT UNSIGNED COMMENT '매장 시퀀스 (FK)'"
+    )
     private Store store;
 
     /** 본사 재료 (FK: material.material_id) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "material_id_fk", nullable = true,
+    @JoinColumn(
+            name = "material_id_fk",
             foreignKey = @ForeignKey(name = "fk_sm_material"),
-            columnDefinition = "BIGINT UNSIGNED COMMENT '본사 재료 (FK)'")
+            columnDefinition = "BIGINT UNSIGNED COMMENT '본사 재료 (FK)'"
+    )
     private Material material;
 
     /** 가맹점 재료 코드 (점포별 고유) */
@@ -65,10 +74,15 @@ public class StoreMaterial {
             columnDefinition = "VARCHAR(50) COMMENT '가맹점 재료 카테고리'")
     private String category;
 
-    /** 단위 (예: kg, 개, L 등) */
-    @Column(name = "store_material_unit", length = 20,
-            columnDefinition = "VARCHAR(20) COMMENT '재료 단위'")
-    private String unit;
+    /** 기본 단위 (소진 단위, 가맹점 기준) */
+    @Column(name = "store_material_base_unit", length = 20,
+            columnDefinition = "VARCHAR(20) COMMENT '기본 단위(가맹점 기준)'")
+    private String baseUnit;
+
+    /** 판매 단위 (본사 기준 단위, 본사 재료일 경우 참조됨) */
+    @Column(name = "store_material_sales_unit", length = 20,
+            columnDefinition = "VARCHAR(20) COMMENT '판매 단위(본사 기준)'")
+    private String salesUnit;
 
     /** 공급업체명 */
     @Column(name = "store_material_supplier", length = 100,
@@ -108,7 +122,8 @@ public class StoreMaterial {
     private Long sellingPrice;
 
     /** 유통기한 */
-    @Column(name = "store_material_expiration_date", columnDefinition = "DATE COMMENT '유통기한'")
+    @Column(name = "store_material_expiration_date",
+            columnDefinition = "DATE COMMENT '유통기한'")
     private LocalDate expirationDate;
 
     /** 본사 재료 여부 (1=본사, 0=가맹점 자체 등록) */
