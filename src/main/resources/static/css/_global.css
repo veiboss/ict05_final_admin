@@ -212,6 +212,10 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 	--gap: 4px;
 }
 
+.gap-0[class*="pack-"] {
+	--gap: 0;
+}
+
 .gap-4[class*="pack-"] {
 	--gap: 4px;
 }

@@ -38,7 +38,7 @@ public class MaterialModifyFormDTO {
 
     /** 판매단위 → 기본단위 변환비율 */
     @NotNull(message = "변환비율을 입력해주세요")
-    private BigDecimal conversionRate;
+    private Integer conversionRate;
 
     /** 공급업체명 */
     private String supplier;

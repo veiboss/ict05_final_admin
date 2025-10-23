@@ -113,7 +113,15 @@
                                 <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
                             </td>
                             <td th:text="${material.baseUnit}">기본단위</td>
-                            <td th:text="${material.salesUnit}">판매단위</td>
+                            <td>
+                                <div class="pack-down-center gap-0">
+                                    <span th:text="${material.salesUnit}">판매단위</span>
+                                    <span class="fs-s fc-999 pack-center gap-0">
+                                        <span th:text="${material.conversionRate}">변환비율</span>
+                                        <span th:text="${material.salesUnit}">판매단위</span>
+                                    </span>
+                                </div>
+                            </td>
                             <td th:text="${material.supplier}">공급업체</td>
                             <td>
                                 <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>

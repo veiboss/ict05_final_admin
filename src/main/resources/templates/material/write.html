@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                             <div class="field pack-down col">
-                                <label class="label medium required" for="materialSalesUnit">판매단위(g/kg/ea/box(660g*12ea))</label>
+                                <label class="label medium required" for="materialSalesUnit">판매단위(cf.g/kg/ea/box)</label>
                                 <div class="insert pack-down">
                                     <input type="text" name="" id="materialSalesUnit" class="input-text medium"
                                            th:field="*{salesUnit}"
@@ -76,7 +76,7 @@
                                 </div>
                             </div>
                             <div class="field pack-down col">
-                                <label class="label medium required" for="materialRate">변환비율(판매단위 → 기본단위)</label>
+                                <label class="label medium required" for="materialRate">변환비율(판매단위/기본단위)</label>
                                 <div class="insert pack-down">
                                     <input type="text" name="materialRate" id="materialRate" class="input-text medium"
                                            th:field="*{conversionRate}"

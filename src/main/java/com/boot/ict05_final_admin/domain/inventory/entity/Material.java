@@ -67,9 +67,8 @@ public class Material {
 
     /** 변환비율(판매단위 → 기본단위) */
     @Column(name = "material_conversion_rate", precision = 10, scale = 3, nullable = false,
-            columnDefinition = "DECIMAL(10,3) DEFAULT 1.000 COMMENT '변환비율(판매단위 → 기본단위)'")
-    @Builder.Default
-    private BigDecimal conversionRate = BigDecimal.valueOf(1.000);
+            columnDefinition = "INT COMMENT '변환비율(판매단위/기본단위)'")
+    private Integer conversionRate;
 
     /** 공급업체명 */
     @Column(name = "material_supplier", length = 100,

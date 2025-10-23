@@ -56,7 +56,7 @@ public class MaterialDetailDTO {
     private String salesUnit;
 
     /** 단위 변환비율 */
-    private Double conversionRate;
+    private Integer conversionRate;
 
     /** 공급업체명 */
     private String supplier;
@@ -66,8 +66,4 @@ public class MaterialDetailDTO {
 
     /** 상태 */
     private MaterialStatus materialStatus;
-
-    /** 등록일시 */
-    @Schema(type = "string", format = "date-time")
-    private LocalDateTime writerdate;
 }
