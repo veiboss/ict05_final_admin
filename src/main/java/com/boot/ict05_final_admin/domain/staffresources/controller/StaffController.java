@@ -113,4 +113,10 @@ public class StaffController {
 
         return "staff/modify";
     }
+
+    @GetMapping("/staff/delete/{id}")
+    public String deleteOfficeStaff(@PathVariable Long id, Model model) {
+        staffService.deleteStaff(id);
+        return "redirect:/staff/list";
+    }
 }
