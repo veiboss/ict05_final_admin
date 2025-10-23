@@ -61,17 +61,21 @@ public class MenuService {
         MenuCategory category = menuCategoryRepository.findByMenuCategoryName(dto.getMenuCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 없음: " + dto.getMenuCategoryName()));
 
-        // 메뉴 생성/저장
+        // null -> false 로 처리하고, true만 판매중
+        boolean show = Boolean.TRUE.equals(dto.getMenuShow());
+
         Menu menu = Menu.builder()
                 .menuName(dto.getMenuName())
                 .menuNameEnglish(dto.getMenuNameEnglish())
                 .menuPrice(dto.getMenuPrice())
                 .menuInformation(dto.getMenuInformation())
                 .menuKcal(dto.getMenuKcal())
-                .menuShow(dto.getMenuShow() == MenuShowEnum.SHOW)
+                .menuShow(show)
                 .menuCategory(category)
                 .build();
+
         menuRepository.save(menu);
+
 
         // 주재료 레시피 저장
         if (dto.getMainMaterials() != null && !dto.getMainMaterials().isEmpty()) {

@@ -5,7 +5,8 @@ import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuCategoryEnum;
+import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
+import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.service.MenuService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
+
 
 /**
  * 본사 메뉴 관리 컨트롤러
@@ -33,6 +36,7 @@ public class MenuController {
 
     private final MenuService menuService;      // private final : 바꿀 수 없는 변수
     private final ProjectAttribute projectAttribute;
+    private final MenuCategoryRepository menuCategoryRepository;
 
     /**
      * 메뉴 목록을 페이징 처리하여 조회한다.
@@ -43,19 +47,40 @@ public class MenuController {
      * @return 메뉴 목록 페이지 뷰 이름
      */
     @GetMapping("/menu/list")
-    public String listStoreMenu(MenuSearchDTO menuSearchDTO,
-                                @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, // 페이지 설정 id 기준
-                                Model model,
-                                HttpServletRequest request) {  // 사용자가 보낸 요청 정보를 담은 객체
+    public String listStoreMenu(
+            MenuSearchDTO menuSearchDTO,
+            @PageableDefault(page = 1, size = 10, sort = "menuId", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model,
+            HttpServletRequest request) {
 
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending()); // 현재 페이지 번호와 한 페이지 개수를 기반으로 페이지 요청을 새로 생성
-        Page<MenuListDTO> menu = menuService.selectAllStoreMenu(menuSearchDTO, pageRequest);   // DB에서 목록을 끌고와 DTO에 담아 페이지 객체
+        int size = resolveSize(menuSearchDTO.getSize(), pageable.getPageSize());
+        Sort sort = pageable.getSort().isSorted()
+                ? pageable.getSort()
+                : Sort.by(Sort.Direction.DESC, "menuId");
 
-        model.addAttribute("menu", menu);   // html에 데이터 넘김
-        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request)); // 현재 요청 URL을 담음, html에 전달해서 페이지 이동 버튼 같은 거 만들 때 사용 가능
-        model.addAttribute("menuSearchDTO", menuSearchDTO);
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), size, sort);
+
+        Page<MenuListDTO> menus = menuService.selectAllStoreMenu(menuSearchDTO, pageRequest);
+        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+
+        model.addAttribute("menus", menus);
+        model.addAttribute("menuSearchDTO", menuSearchDTO);     // 뷰에서 그대로 사용
+        model.addAttribute("menuCategories", categories);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
 
         return "menu/list";
+    }
+
+
+    // util
+    private int resolveSize(String s, int fallback) {
+        try {
+            if (s == null || s.isBlank()) return fallback;
+            int v = Integer.parseInt(s);
+            return (v < 1) ? fallback : v;
+        } catch (NumberFormatException e) {
+            return fallback;
+        }
     }
 
     /**
@@ -66,8 +91,10 @@ public class MenuController {
      */
     @GetMapping("/menu/write")
     public String addStoreMenu(Model model) {
-        model.addAttribute("menuWriteFormDTO" , new MenuWriteFormDTO()); // 폼 입력용 DTO를 초기화, 즉 비어있는 객체 새로 생성
-        model.addAttribute("MenuCategory", MenuCategoryEnum.values());
+        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+
+        model.addAttribute("menuWriteFormDTO", new MenuWriteFormDTO());
+        model.addAttribute("menuCategories", categories);
 
         return "menu/write";
     }
@@ -99,8 +126,10 @@ public class MenuController {
     public String modifyStoreMenu(@PathVariable Long menuId, Model model) {
         Menu menu = menuService.detailMenu(menuId);
 
+        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+
         model.addAttribute("menu", menu);
-        model.addAttribute("MenuCategory", MenuCategoryEnum.values());
+        model.addAttribute("menuCategories", categories);
 
         return "menu/modify";
     }
