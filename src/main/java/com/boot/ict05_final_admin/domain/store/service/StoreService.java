@@ -1,9 +1,7 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
-import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
-import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreAddFormDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
@@ -52,7 +50,7 @@ public class StoreService {
      * @param dto 가맹점 등록 정보
      * @return 저장된 가맹점 ID
      */
-    public long insertOfficeStore(StoreAddFormDTO dto) {
+    public long insertOfficeStore(StoreWriteFormDTO dto) {
 
         String address = "";
         String address1 = dto.getUserAddress1();
@@ -98,7 +96,7 @@ public class StoreService {
      * @param id 가맹점 ID
      * @return 가맹점 엔티티, 존재하지 않으면 null
      */
-    public Store detailStore(Long id) { return storeRepository.findById(id).orElse(null); }
+    public Store detailOfficeStore(Long id) { return storeRepository.findById(id).orElse(null); }
     }
 
 

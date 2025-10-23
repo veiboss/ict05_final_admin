@@ -50,9 +50,8 @@
 
             <div>
                 <div class="list-header pack-both">
-                    <div></div>
                     <div>
-                        <a th:href="@{/store/add}" class="btn medium color1">+ 가맹점 등록</a>
+                        <a th:href="@{/store/write}" class="btn medium color1">+ 가맹점 등록</a>
                     </div>
                 </div>
             </div>
@@ -72,16 +71,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="store, idx : ${store.content}">
-                        <td th:text="${store.storeId}">매장번호</td>
-                        <td th:text="${store.storeName}">매장명</td>
-                        <td th:text="${store.storeStatus != null and store.storeStatus.name() == '운영' ? '개점준비' : '폐점'}">운영 상태</td>
-                        <td th:text="${store.staffName}">점주명</td>
-                        <td th:text="${store.storePhone}">연락처</td>
-                        <td th:text="${store.storeMonthlySales}">월매출</td>
-                        <td th:text="${store.storeTotalEmployees}">직원수</td>
+                    <tr th:each="row, idx : ${store.content}">
+                        <td th:text="${row.storeId}">매장번호</td>
+                        <td th:text="${row.storeName}">매장명</td>
+                        <td th:text="${row.storeStatus != null && row.storeStatus.name() == 'OPERATING' ? '운영' :
+                                    (row.storeStatus != null && row.storeStatus.name() == 'PREPARING' ? '개점준비' :
+                                    (row.storeStatus != null && row.storeStatus.name() == 'CLOSED' ? '폐점' : '-'))}">운영 상태</td>
+                        <td th:text="${row.staffName}">점주명</td>
+                        <td th:text="${row.storePhone}">연락처</td>
+                        <td th:text="${row.storeMonthlySales}">월매출</td>
+                        <td th:text="${row.storeTotalEmployees}">직원수</td>
                         <td>
-                            <a class="btn small bdr-gray">
+                            <a th:href="@{/store/detail/{id}(id=${row.storeId})}" class="btn small bdr-gray">
                                 <span class="material-symbols-outlined md-18">visibility</span>
                             </a>
                         </td>
