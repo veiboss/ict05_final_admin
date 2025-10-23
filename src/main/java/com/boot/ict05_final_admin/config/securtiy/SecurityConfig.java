@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")     // POST 처리
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/admin", true) // ✅ 내부 첫화면으로
+                        .defaultSuccessUrl("/", true) // ✅ 내부 첫화면으로
                         .failureUrl("/login?error")
                         .permitAll()
                 )

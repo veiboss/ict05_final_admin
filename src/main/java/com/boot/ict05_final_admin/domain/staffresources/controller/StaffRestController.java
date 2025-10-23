@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.staffresources.controller;
 
-import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffWriteFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class StaffRestController {
 
     private final StaffService staffService;
 
-    @PostMapping("/staff/add")
+    @PostMapping("/staff/write")
     @Operation(
             summary = "신규 사원 등록",
             description = "본사에서 새로운 사원을 등록하는 API입니다.",
@@ -50,7 +50,7 @@ public class StaffRestController {
             }
     )
     public ResponseEntity<Map<String, Object>> addOfficeStaff(
-            @Validated @ModelAttribute StaffAddFormDTO dto,
+            @Validated @ModelAttribute StaffWriteFormDTO dto,
             BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()

@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.controller;
 
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.service.ReceiveOrderService;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,7 +42,14 @@ public class ReceiveOrderController {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
         Page<ReceiveOrderListDTO> receiveOrder = receiveOrderService.selectAllOfficeReceive(receiveOrderSearchDTO, pageRequest);
 
+        // 각 주문별 상세DTO 조회
+        Map<Long, ReceiveOrderDetailDTO> orderDetails = new LinkedHashMap<>();
+        for (ReceiveOrderListDTO listDTO : receiveOrder.getContent()) {
+            orderDetails.put(listDTO.getId(), receiveOrderService.getReceiveOrderDetail(listDTO.getId()));
+        }
+
         model.addAttribute("receiveOrder", receiveOrder);
+        model.addAttribute("orderDetails", orderDetails);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("receiveOrderSearchDTO", receiveOrderSearchDTO);
 

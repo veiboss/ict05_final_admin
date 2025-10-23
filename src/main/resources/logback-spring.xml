@@ -70,8 +70,8 @@
     <!-- 기본 root 설정: 콘솔 + 비동기 파일 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="ASYNC_FILE"/>
-        <appender-ref ref="ASYNC_ERROR"/>
+<!--        <appender-ref ref="ASYNC_FILE"/>-->
+<!--        <appender-ref ref="ASYNC_ERROR"/>-->
     </root>
 
     <!-- 필요하면 패키지별 레벨 오버라이드 -->

@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.staffresources.service;
 
-import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffWriteFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
@@ -40,7 +40,7 @@ public class StaffService {
      * @param dto   사원 등록 정보
      * @return 저장된 사원 ID
      */
-    public long insertOfficeStaff(StaffAddFormDTO dto) {
+    public long insertOfficeStaff(StaffWriteFormDTO dto) {
 
         String address = "";
         String address1 = dto.getUserAddress1();

@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.staffresources.controller;
 
-import com.boot.ict05_final_admin.domain.staffresources.dto.StaffAddFormDTO;
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffWriteFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
@@ -8,8 +8,6 @@ import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentTy
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -66,17 +64,17 @@ public class StaffController {
      * @param model 뷰에 전달할 모델 객체
      * @return 사원등록 작성 페이지 뷰 이름
      */
-    @GetMapping("/staff/add")
+    @GetMapping("/staff/write")
     public String addOfficeStaff(Model model) {
 
         List<FindStoreDTO> stores = storeService.findStoreName();
 
-        model.addAttribute("staffAddFormDTO", new StaffAddFormDTO());
+        model.addAttribute("staffAddFormDTO", new StaffWriteFormDTO());
         model.addAttribute("StaffDepartment", StaffDepartment.values());
         model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
         model.addAttribute("stores", stores);
 
-        return "staff/add";
+        return "staff/write";
     }
 
     /**
