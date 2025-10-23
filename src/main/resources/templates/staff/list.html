@@ -33,7 +33,7 @@
             <h2 class="page-title ellipsis">사원 목록</h2>
         </div>
 
-        <div>
+        <main id="content" class="pack-down gap-20">
             <div class="row-4">
                 <div class="col box-wrap">
                     <div>전체 사원</div>
@@ -56,10 +56,7 @@
                     <div>근속 기간</div>
                 </div>
             </div>
-        </div>
-
-        <main id="content">
-            <div class="search box-wrap">
+            <div class="box-wrap">
                 <div id="search" class="search">
                     <form th:action="@{/staff/list}" method="get" th:object="${staffSearchDTO}">
                         <fieldset>
