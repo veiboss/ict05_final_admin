@@ -42,7 +42,6 @@ public class Material {
     @Column(name = "material_code", length = 30, nullable = false, unique = true,
             columnDefinition = "VARCHAR(30) COMMENT '재료 코드'")
     private String code;
-//    public void setCode(String code) { this.code = code; }
 
     /** 재료명 */
     @Column(name = "material_name", length = 100, nullable = false,

@@ -22,23 +22,29 @@ import java.time.LocalDateTime;
 public abstract class Inventory {
 
     /** 현재 재고 수량 */
-    @Column(name = "inventory_quantity", nullable = false,
-            columnDefinition = "INT DEFAULT 0 COMMENT '현재 재고 수량'")
-    protected Integer quantity;
+    @Column(name = "inventory_quantity", precision = 15, scale = 3, nullable = false,
+            columnDefinition = "DECIMAL(15,3) DEFAULT 0.000 COMMENT '현재 재고 수량'")
+    protected BigDecimal quantity;
 
     /** 적정 재고 수량 */
-    @Column(name = "inventory_optimal_quantity",
-            columnDefinition = "INT COMMENT '적정 재고 수량'")
-    protected Integer optimalQuantity;
+    @Column(name = "inventory_optimal_quantity", precision = 15, scale = 3,
+            columnDefinition = "DECIMAL(15,3) COMMENT '적정 재고 수량'")
+    protected BigDecimal optimalQuantity;
 
     /** 재고 상태 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "inventory_status", nullable = false,
-            columnDefinition = "ENUM('SUFFICIENT','LOW','SHORTAGE') DEFAULT 'SUFFICIENT' COMMENT '재고 상태'")
+    @Column(name = "inventory_status", nullable = false, length = 20)
     protected InventoryStatus status;
 
     /** 마지막 업데이트 일시 */
     @Column(name = "inventory_update_date", nullable = false,
-            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '재고 수정일'")
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '재고 수정일'")
     protected LocalDateTime updateDate;
+
+    /** 생성 및 수정 시 자동 갱신 */
+    @PrePersist
+    @PreUpdate
+    public void updateTimestamp() {
+        this.updateDate = LocalDateTime.now();
+    }
 }

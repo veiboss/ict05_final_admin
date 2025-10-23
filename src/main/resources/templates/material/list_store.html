@@ -21,7 +21,16 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="title-bar">
+        <div class="title-bar pack-left gap-8">
+            <select title="가맹점 선택" class="select large" style="width: 120px;"
+                    id="storeSelect" onchange="onStoreChange(this.value)">
+                <option value="">전가맹점</option>
+                <option th:each="store : ${stores}"
+                        th:value="${store.storeId}"
+                        th:text="${store.storeName}"
+                        th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
+                </option>
+            </select>
             <h2 class="page-title ellipsis">재료 목록</h2>
         </div>
 
@@ -33,10 +42,10 @@
                             <legend class="blind">검색</legend>
                             <div class="pack-both">
                                 <div class="pack-left">
-                                    <input type="hidden" name="type" th:value="${materialSearchDTO.type}" />
-                                    <input type="hidden" name="size" th:value="${materialSearchDTO.size}" />
+                                    <input type="hidden" name="type" th:value="${storeMaterialSearchDTO.type}" />
+                                    <input type="hidden" name="size" th:value="${storeMaterialSearchDTO.size}" />
 
-                                    <input title="검색어" type="search" name="s" th:value="${materialSearchDTO.s}" class="input-text medium form-control" placeholder="재료명, 검색어, 카테고리 검색" />
+                                    <input title="검색어" type="search" name="s" th:value="${storeMaterialSearchDTO.s}" class="input-text medium form-control" placeholder="재료명, 검색어, 카테고리 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 
@@ -44,30 +53,30 @@
                                     <!-- 상태 필터 -->
                                     <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
                                         <label class="btn medium"
-                                               th:classappend="${materialSearchDTO.status == null or materialSearchDTO.status == ''} ? ' active' : ''">
+                                               th:classappend="${storeMaterialSearchDTO.status == null or storeMaterialSearchDTO.status == ''} ? ' active' : ''">
                                             <input type="radio" name="status" value=""
-                                                   th:checked="${materialSearchDTO.status == null}"
+                                                   th:checked="${storeMaterialSearchDTO.status == null}"
                                                    onclick="setFilter('')">전체
                                         </label>
 
                                         <label class="btn medium"
-                                               th:classappend="${materialSearchDTO.status?.name() == 'USE'} ? ' active' : ''">
+                                               th:classappend="${storeMaterialSearchDTO.status?.name() == 'USE'} ? ' active' : ''">
                                             <input type="radio" name="status" value="USE"
-                                                   th:checked="${materialSearchDTO.status?.name() == 'USE'}"
+                                                   th:checked="${storeMaterialSearchDTO.status?.name() == 'USE'}"
                                                    onclick="setFilter('USE')">사용중
                                         </label>
 
                                         <label class="btn medium"
-                                               th:classappend="${materialSearchDTO.status?.name() == 'STOP'} ? ' active' : ''">
+                                               th:classappend="${storeMaterialSearchDTO.status?.name() == 'STOP'} ? ' active' : ''">
                                             <input type="radio" name="status" value="STOP"
-                                                   th:checked="${materialSearchDTO.status?.name() == 'STOP'}"
+                                                   th:checked="${storeMaterialSearchDTO.status?.name() == 'STOP'}"
                                                    onclick="setFilter('STOP')">중단
                                         </label>
                                     </div>
 
                                     <!-- 페이지 사이즈 -->
                                     <div class="pack-left page-size">
-                                        <select title="뷰사이즈" th:field="${materialSearchDTO.size}" class="select medium"
+                                        <select title="뷰사이즈" th:field="${storeMaterialSearchDTO.size}" class="select medium"
                                                 onchange="setPageSize(this.value)">
                                             <option value="10">10</option>
                                             <option value="30">30</option>
@@ -84,9 +93,8 @@
 
                 <section class="pack-down">
                     <div class="list-header pack-both">
-                        <div class="pack-left">
-                            <a href="/admin/material/write" class="btn medium color2">자재등록</a>
-                        </div>
+                        <div class="pack-left"></div>
+
                         <div class="pack-left">
                             <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
                         </div>
@@ -96,46 +104,30 @@
                         <thead>
                         <tr>
                             <th scope="col">CODE</th>
-                            <th scope="col">카테고리</th>
+                            <th scope="col">구분</th>
                             <th scope="col">재료명</th>
-                            <th scope="col">기본단위</th>
-                            <th scope="col">판매단위</th>
+                            <th scope="col">단위</th>
                             <th scope="col">공급업체</th>
                             <th scope="col">상태</th>
-                            <th scope="col">관리</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="material, stat : ${materials.content}">
+                        <tr th:each="material, stat : ${storeMaterials.content}">
                             <td th:text="${material.code}">CODE</td>
-                            <td th:text="${material.categoryDescription}">카테고리</td>
+                            <td th:text="${material.hqMaterial ? '본사' : '가맹점'}"></td>
                             <td>
                                 <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
                             </td>
-                            <td th:text="${material.baseUnit}">기본단위</td>
-                            <td>
-                                <div class="pack-down-center gap-0">
-                                    <span th:text="${material.salesUnit}">판매단위</span>
-                                    <span class="fs-s fc-999 pack-center gap-0">
-                                        <span th:text="${material.conversionRate}">변환비율</span>
-                                        <span th:text="${material.salesUnit}">판매단위</span>
-                                    </span>
-                                </div>
-                            </td>
+                            <td th:text="${material.baseUnit}">단위</td>
                             <td th:text="${material.supplier}">공급업체</td>
                             <td>
-                                <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>
-                            </td>
-                            <td>
-                                <a th:href="@{/material/detail/{id}(id=${material.id})}" class="btn small bdr-gray">
-                                    <span class="material-symbols-outlined md-18">visibility</span>
-                                </a>
+                                <span th:class="'badge rounded-pill ' + (${material.status.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.status.description}">상태</span>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                     <div style="text-align: center;">
-                        <div th:replace="~{fragments/pagination :: pagination (${materials})}"></div>
+                        <div th:replace="~{fragments/pagination :: pagination (${storeMaterials})}"></div>
                     </div>
                 </section>
             </div>
@@ -143,7 +135,18 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
 </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+
 <script>
+    function onStoreChange(storeId) {
+        if (!storeId) {
+            window.location = "/admin/store-material/list";
+            return;
+        }
+        const params = new URLSearchParams(window.location.search);
+        params.set("storeId", storeId);
+        window.location = `/admin/store-material/list?${params.toString()}`;
+    }
+
     function setFilter(status) {
       const params = new URLSearchParams(window.location.search);
 
@@ -154,16 +157,18 @@
       }
 
       const query = params.toString();
-      window.location = `/admin/material/list?${query}`;
+      window.location = `/admin/store-material/list?${query}`;
     }
+
 
     function setPageSize(size) {
         const params = new URLSearchParams(window.location.search);
         params.set('size', size);
         params.set('page', 1);
-        window.location = `/admin/material/list?${params.toString()}`;
+        window.location = `/admin/store-material/list?${params.toString()}`;
     }
-
+</script>
+<script>
     function excelDownload() {
         const formData = new FormData(document.getElementById('frm'));
         const type = formData.get("type");

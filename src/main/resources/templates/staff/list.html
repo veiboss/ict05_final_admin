@@ -33,7 +33,7 @@
             <h2 class="page-title ellipsis">사원 목록</h2>
         </div>
 
-        <div>
+        <main id="content" class="pack-down gap-20">
             <div class="row-4">
                 <div class="col box-wrap">
                     <div>전체 사원</div>
@@ -56,34 +56,28 @@
                     <div>근속 기간</div>
                 </div>
             </div>
-        </div>
-
-        <main id="content">
-            <div class="search box-wrap">
+            <div class="box-wrap">
                 <div id="search" class="search">
                     <form th:action="@{/staff/list}" method="get" th:object="${staffSearchDTO}">
                         <fieldset>
                             <legend class="blind">검색</legend>
                             <div class="pack-both">
-                                <input type="text" id="searchTxt" class="input-text medium form-control"
-                                       th:field="*{keyword}" title="검색어" placeholder="사원명, 사번, 부서로 검색...">
-                            </div>
-
-                            <div class="button-area pack-left">
-                                <button type="submit" class="btn medium color1">검색</button>
+                                <div class="pack-left">
+                                    <input type="text" id="searchTxt" class="input-text medium form-control"
+                                        th:field="*{keyword}" title="검색어" placeholder="사원명, 사번, 부서로 검색...">
+                                    <button type="submit" class="btn medium color1">검색</button>
+                                </div>
+                                <div></div>
                             </div>
                         </fieldset>
                     </form>
                 </div>
-                <div>
+                <section class="pack-down">
                     <div class="list-header pack-both">
-                        <div></div>
-                        <div>
-                            <a th:href="@{/staff/write}" class="btn medium color1">+ 사원 등록</a>
+                        <div class="pack-left">
+                            <a th:href="@{/staff/write}" class="btn medium color2">+ 사원 등록</a>
                         </div>
                     </div>
-                </div>
-                <section class="pack-down">
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -115,8 +109,8 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="btn small bdr-gray">
-                                        <span class="material-symbols-outlined md-18" th:onclick="|location.href='@{/staff/detail/{id}(id=${staff.id})}'|">visibility</span>
+                                    <a th:href="@{/staff/detail/{id}(id=${staff.id})}" class="btn small bdr-gray">
+                                        <span class="material-symbols-outlined md-18">visibility</span>
                                     </a>
                                 </td>
                             </tr>

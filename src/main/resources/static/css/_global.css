@@ -278,7 +278,7 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 .item					{position: relative;}
 
 /* box-wrap > .search */
-.box-wrap > .search + section	{margin-top: 10px;}
+.box-wrap > .search + section	{margin-top: 12px; --gap: 12px}
 .search .page-size {white-space: nowrap;}
 .search .page-size .select {width: 60px;}
 

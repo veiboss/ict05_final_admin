@@ -50,6 +50,21 @@
                                     <input th:field="*{storeName}" type="text" id="storeName" class="input-text medium" title="가맹점명" placeholder="서울 종로점">
                                 </div>
                             </div>
+                           <!-- <div class="field pack-down col">
+                                <label class="label medium required">점주명 (선택)</label>
+                                <div class="input-wrap" style="position:relative;">
+                                    <input id="staffSearch" class="input-text medium"
+                                           placeholder="점주명 입력(선택)" list="staffList" autocomplete="off">
+                                    <input type="hidden" id="staffIdFk" th:field="*{staffIdFk}">
+                                    <datalist id="staffList">
+                                        <option th:each="s : ${staffs}"
+                                                th:value="${s.staffName}"
+                                                th:attr="data-id=${s.staffId}"></option>
+                                    </datalist>
+                                </div>
+                            </div>-->
+                        </div>
+                        <div class="row-2">
                             <div class="field col">
                                 <label class="label medium" for="storeStatus">운영 상태</label>
                                 <div class="insert">
@@ -58,6 +73,7 @@
                                         <option th:each="c : ${StoreStatus}" th:value="${c.name()}" th:text="${c.description}">상태</option>
                                     </select>
                                 </div>
+                                <small id="storeStatusError" class="error" aria-live="polite"></small>
                             </div>
                             <div class="field col">
                                 <label class="label medium" for="storeType">매장 구분</label>
@@ -67,6 +83,7 @@
                                         <option th:each="c : ${StoreType}" th:value="${c.name()}" th:text="${c.description}">구분</option>
                                     </select>
                                 </div>
+                                <small id="storeTypeError" class="error" aria-live="polite"></small>
                             </div>
                         </div>
 
@@ -218,7 +235,7 @@
                 } else {
                     if (data.success) {
                         alert('저장 완료!');
-                        window.location.href = '/admin/staff/list';
+                        window.location.href = '/admin/store/list';
                     }
                 }
             })

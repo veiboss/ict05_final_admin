@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.store.controller;
 
-import com.boot.ict05_final_admin.domain.store.dto.StoreAddFormDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class StoreRestController {
 
     private final StoreService storeService;
 
-    @PostMapping("/store/add")
+    @PostMapping("/store/write")
     @Operation(
             summary = "가맹점 등록",
             description = "본사에서 새로운 가맹점을 등록하는 API입니다.",
@@ -50,7 +50,7 @@ public class StoreRestController {
             }
     )
     public ResponseEntity<Map<String, Object>> addOfficeStaff(
-            @Validated @ModelAttribute StoreAddFormDTO dto,
+            @Validated @ModelAttribute StoreWriteFormDTO dto,
             BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()

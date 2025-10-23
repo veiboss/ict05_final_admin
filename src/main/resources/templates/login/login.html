@@ -1,41 +1,41 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <title>HQ 로그인</title>
-    <link rel="stylesheet" th:href="@{/css/login.css}">
-</head>
-<body>
-<div class="login-wrap">
-    <div class="login-card">
-        <div class="login-logo">🏢</div>
-        <h1 class="login-title">FranFriend ERP (HQ)</h1>
-        <p class="login-subtitle">본사 관리 시스템</p>
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8"/>-->
+<!--    <title>HQ 로그인</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/login.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="login-wrap">-->
+<!--    <div class="login-card">-->
+<!--        <div class="login-logo">🏢</div>-->
+<!--        <h1 class="login-title">FranFriend ERP (HQ)</h1>-->
+<!--        <p class="login-subtitle">본사 관리 시스템</p>-->
 
-        <form method="post" th:action="@{/login}" style="margin-top:8px;">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+<!--        <form method="post" th:action="@{/login}" style="margin-top:8px;">-->
+<!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
 
-            <label class="login-label">이메일</label>
-            <input class="login-input" type="email" name="email" required>
+<!--            <label class="login-label">이메일</label>-->
+<!--            <input class="login-input" type="email" name="email" required>-->
 
-            <label class="login-label">비밀번호</label>
-            <input class="login-input" type="password" name="password" required>
+<!--            <label class="login-label">비밀번호</label>-->
+<!--            <input class="login-input" type="password" name="password" required>-->
 
-            <div th:if="${param.error}" class="login-error">로그인 실패. 이메일/비밀번호를 확인하세요.</div>
-            <div th:if="${param.joined}" class="login-hint-ok">회원가입 완료! 로그인해 주세요.</div>
-            <div th:if="${param.logout}" class="login-hint-ok">로그아웃 되었습니다.</div>
+<!--            <div th:if="${param.error}" class="login-error">로그인 실패. 이메일/비밀번호를 확인하세요.</div>-->
+<!--            <div th:if="${param.joined}" class="login-hint-ok">회원가입 완료! 로그인해 주세요.</div>-->
+<!--            <div th:if="${param.logout}" class="login-hint-ok">로그아웃 되었습니다.</div>-->
 
-            <button type="submit" class="login-btn-primary">로그인</button>
-            <a th:href="@{/join}" class="login-btn-secondary" style="display:block;text-align:center;">회원가입</a>
-        </form>
+<!--            <button type="submit" class="login-btn-primary">로그인</button>-->
+<!--            <a th:href="@{/join}" class="login-btn-secondary" style="display:block;text-align:center;">회원가입</a>-->
+<!--        </form>-->
 
-        <div class="login-demo">
-            <p class="title">데모</p>
-            <p>관리자: admin@hq.com / 1234</p>
-        </div>
+<!--        <div class="login-demo">-->
+<!--            <p class="title">데모</p>-->
+<!--            <p>관리자: qwer@qwer.com / qwer</p>-->
+<!--        </div>-->
 
-        <footer class="login-footer">© 2024 FranFriend ERP HQ</footer>
-    </div>
-</div>
-</body>
-</html>
+<!--        <footer class="login-footer">© 2024 FranFriend ERP HQ</footer>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
