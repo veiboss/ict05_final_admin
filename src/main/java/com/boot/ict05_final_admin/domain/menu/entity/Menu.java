@@ -58,7 +58,7 @@ public class Menu {
     @JoinColumn(name= "menu_category_id_fk")
     private MenuCategory menuCategory;
 
-    // ===== 수정 편의 메서드 =====
+    // 수정 편의 메서드
     /** DTO 기반 필드 수정(카테고리는 별도 changeCategory 사용) */
     public void updateMenu(MenuModifyFormDTO dto) {
         if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
@@ -66,14 +66,12 @@ public class Menu {
         if (dto.getMenuInformation() != null) this.menuInformation = dto.getMenuInformation();
         if (dto.getMenuNameEnglish() != null) this.menuNameEnglish = dto.getMenuNameEnglish();
         if (dto.getMenuKcal() != null) this.menuKcal = dto.getMenuKcal();
-        if (dto.getMenuShow() != null) this.menuShow = (dto.getMenuShow() == MenuShowEnum.SHOW);
+        if (dto.getMenuShow() != null) this.menuShow = dto.getMenuShow(); // Boolean → boolean
         if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
     }
 
     /** 카테고리 교체 */
-    public void changeCategory(MenuCategory category) {
-        this.menuCategory = Objects.requireNonNull(category, "category");
-    }
+    public void changeCategory(MenuCategory category) { this.menuCategory = category; }
 
 }
 

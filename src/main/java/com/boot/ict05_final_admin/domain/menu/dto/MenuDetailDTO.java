@@ -1,8 +1,5 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
-import com.boot.ict05_final_admin.domain.menu.entity.MenuCategoryEnum;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,14 +17,16 @@ public class MenuDetailDTO {
     /** 메뉴 고유 ID */
     private Long menuId;
 
+    /** 메뉴 카테고리 ID (필요시 함께 전달) */
+    private Long menuCategoryId;
+
     /** 메뉴 카테고리 */
-    private MenuCategoryEnum menuCategoryName;
+    private String menuCategoryName;
 
     /** 판매 상태 */
-    private MenuShowEnum menuShow;
+    private Boolean menuShow;
 
     /** 메뉴코드 */
-    @NotNull
     private String menuCode;
 
     /** 메뉴명 */
@@ -43,7 +42,7 @@ public class MenuDetailDTO {
     private String menuInformation;
 
     /** 재료구성 */
-    private List<RecipeItemDTO> mainMaterials;  // 주재료 구성 테이블
+    private List<RecipeItemDTO> mainMaterials;  // 주재료 리스트
     private List<RecipeItemDTO> sauceMaterials; // 소스 구성 테이블
 
 }

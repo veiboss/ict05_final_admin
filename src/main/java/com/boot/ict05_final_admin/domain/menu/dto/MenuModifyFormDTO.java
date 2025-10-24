@@ -1,7 +1,5 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
-import com.boot.ict05_final_admin.domain.menu.entity.MenuCategoryEnum;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -15,13 +13,16 @@ public class MenuModifyFormDTO {
     /** 수정 대상 메뉴 ID */
     private Long menuId;
 
+    /** 메뉴 카테고리 ID (필요시 함께 전달) */
+    private Long menuCategoryId;
+
     /** 카테고리 */
     @NotNull
-    private MenuCategoryEnum menuCategoryName;
+    private String menuCategoryName;
 
     /** 판매 상태 */
     @NotNull
-    private MenuShowEnum menuShow;
+    private Boolean menuShow;
 
     /** 메뉴코드 */
     @NotNull

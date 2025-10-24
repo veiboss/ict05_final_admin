@@ -9,7 +9,6 @@ import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRecipeRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
@@ -45,9 +44,21 @@ public class MenuService {
      * @param pageable      페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 메뉴 리스트 DTO
      */
+//    public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
+//        return menuRepository.listMenu(menuSearchDTO, pageable);
+//    }
     public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
-        return menuRepository.listMenu(menuSearchDTO, pageable);
+        var menus = menuRepository.listMenu(menuSearchDTO, pageable);
+
+        // 🔍 디버깅 로그 추가
+        log.info("rows={}", menus.getNumberOfElements());
+        menus.getContent().forEach(m ->
+                log.info("id={}, name={}, materials={}", m.getMenuId(), m.getMenuName(), m.getMaterialNames())
+        );
+
+        return menus;
     }
+
 
     /**
      * 새로운 메뉴를 등록한다.
@@ -61,17 +72,21 @@ public class MenuService {
         MenuCategory category = menuCategoryRepository.findByMenuCategoryName(dto.getMenuCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 없음: " + dto.getMenuCategoryName()));
 
-        // 메뉴 생성/저장
+        // null -> false 로 처리하고, true만 판매중
+        boolean show = Boolean.TRUE.equals(dto.getMenuShow());
+
         Menu menu = Menu.builder()
                 .menuName(dto.getMenuName())
                 .menuNameEnglish(dto.getMenuNameEnglish())
                 .menuPrice(dto.getMenuPrice())
                 .menuInformation(dto.getMenuInformation())
                 .menuKcal(dto.getMenuKcal())
-                .menuShow(dto.getMenuShow() == MenuShowEnum.SHOW)
+                .menuShow(show)
                 .menuCategory(category)
                 .build();
+
         menuRepository.save(menu);
+
 
         // 주재료 레시피 저장
         if (dto.getMainMaterials() != null && !dto.getMainMaterials().isEmpty()) {

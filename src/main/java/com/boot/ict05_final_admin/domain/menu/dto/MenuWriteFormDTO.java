@@ -1,7 +1,5 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
-import com.boot.ict05_final_admin.domain.menu.entity.MenuCategoryEnum;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -15,13 +13,16 @@ import java.util.List;
 @Builder
 public class MenuWriteFormDTO {
 
+    /** 카테고리 ID */
+    private Long menuCategoryId;
+
     /** 카테고리(필수) */
     @NotNull(message = "카테고리를 선택해주세요")
-    private MenuCategoryEnum menuCategoryName;
+    private String menuCategoryName;
 
     /** 판매 상태(필수) */
     @NotNull(message = "판매상태를 선택해주세요")
-    private MenuShowEnum menuShow;
+    private Boolean menuShow;
 
     /** 메뉴명(필수) */
     @NotBlank
@@ -32,6 +33,10 @@ public class MenuWriteFormDTO {
     @NotBlank
     @Size(max = 150)
     private String menuNameEnglish;
+
+    /** 메뉴코드 */
+    @NotNull
+    private  String menuCode;
 
     /** 가격(필수) */
     @NotNull @DecimalMin("0.0")
