@@ -96,6 +96,9 @@
                     <table class="data-table">
                         <thead>
                         <tr>
+                            <th scope="col" style="width:40px">
+                                <input type="checkbox" id="selectAll">
+                            </th>
                             <th scope="col">판매상태</th>
                             <th scope="col">상품코드</th>
                             <th scope="col">메뉴명</th>
@@ -108,19 +111,23 @@
                         </thead>
                         <tbody>
                         <tr th:each="menu, stat : ${menus.content}">
-                            <td th:text="${menu.menuShow}">판매상태</td>
+                            <td>
+                                <input type="checkbox" class="row-checkbox" th:value="${menu.menuId}">
+                            </td>
+                            <td>
+                                <span th:class="'badge rounded-pill ' + (${menu.menuShow} ? 'bg-success' : 'bg-secondary')"
+                                      th:text="${menu.menuShow} ? '판매중' : '중지'">판매상태</span>
+                            </td>
                             <td th:text="${menu.menuCode}">상품코드</td>
                             <td>
-                                <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
+                                <span class="fc-333 fw-600" th:text="${menu.menuName}">메뉴명</span>
                             </td>
-                            <td th:text="${material.baseUnit}">기본단위</td>
-                            <td th:text="${material.salesUnit}">판매단위</td>
-                            <td th:text="${material.supplier}">공급업체</td>
+                            <td th:text="${menu.menuCategoryName}">카테고리</td>
+                            <td th:text="${#strings.listJoin(menu.materialNames, ', ')}">주재료</td>
+                            <td th:text="${menu.menuPrice}">금액</td>
+                            <td th:text="${menu.menuKcal != null ? menu.menuKcal : 0}">칼로리</td>
                             <td>
-                                <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>
-                            </td>
-                            <td>
-                                <a th:href="@{/material/detail/{id}(id=${material.id})}" class="btn small bdr-gray">
+                                <a th:href="@{/menu/detail/{menuId}(menuId=${menu.menuId})}" class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
                             </td>
@@ -128,7 +135,7 @@
                         </tbody>
                     </table>
                     <div style="text-align: center;">
-                        <div th:replace="~{fragments/pagination :: pagination (${materials})}"></div>
+                        <div th:replace="~{fragments/pagination :: pagination (pageVars=${menus})}"></div>
                     </div>
                 </section>
             </div>
@@ -175,5 +182,20 @@
 
     document.addEventListener('DOMContentLoaded', updateSelectAllState);    // 페이지가 로드될 때(처음 화면 열릴 때) 전체선택 상태 갱신
 </script>
+
+<script>
+    function setFilter(catId){
+        const frm = document.getElementById('frm');
+        const p = document.createElement('input');
+        p.type='hidden'; p.name='page'; p.value='0'; // 첫 페이지로
+        frm.appendChild(p);
+        frm.submit();
+    }
+    document.addEventListener('change', e => {
+        if (e.target.name === 'menuCategoryId') setFilter(e.target.value);
+    });
+</script>
+
+
 </body>
 </html>

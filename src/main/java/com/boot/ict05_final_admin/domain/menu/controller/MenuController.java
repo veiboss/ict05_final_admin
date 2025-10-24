@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -49,7 +51,7 @@ public class MenuController {
     @GetMapping("/menu/list")
     public String listStoreMenu(
             MenuSearchDTO menuSearchDTO,
-            @PageableDefault(page = 1, size = 10, sort = "menuId", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(page = 0, size = 10, sort = "menuId", direction = Sort.Direction.DESC) Pageable pageable,
             Model model,
             HttpServletRequest request) {
 
@@ -61,15 +63,35 @@ public class MenuController {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), size, sort);
 
         Page<MenuListDTO> menus = menuService.selectAllStoreMenu(menuSearchDTO, pageRequest);
-        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+
+        // ✅ 카테고리: 리프(레벨3)만 + "세트메뉴" 하나 추가
+        List<MenuCategory> categories = new ArrayList<>(
+                menuCategoryRepository.findAllByMenuCategoryLevel(3, Sort.by("menuCategoryName").ascending())
+        );
+        List<MenuCategory> finalCategories = categories;
+        menuCategoryRepository.findByMenuCategoryName("세트메뉴")
+                .ifPresent(c -> finalCategories.add(0, c));
+
+        // 혹시라도 중복 방지 (같은 ID가 들어갈 가능성 대비)
+        categories = categories.stream()
+                .collect(java.util.stream.Collectors.collectingAndThen(
+                        java.util.stream.Collectors.toMap(
+                                MenuCategory::getMenuCategoryId,
+                                c -> c,
+                                (a, b) -> a,
+                                LinkedHashMap::new
+                        ),
+                        m -> new ArrayList<>(m.values())
+                ));
 
         model.addAttribute("menus", menus);
-        model.addAttribute("menuSearchDTO", menuSearchDTO);     // 뷰에서 그대로 사용
+        model.addAttribute("menuSearchDTO", menuSearchDTO);
         model.addAttribute("menuCategories", categories);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
 
         return "menu/list";
     }
+
 
 
     // util

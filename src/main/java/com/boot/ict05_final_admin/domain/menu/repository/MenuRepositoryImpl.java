@@ -10,12 +10,14 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class MenuRepositoryImpl implements MenuRepositoryCustom {
@@ -53,7 +55,10 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
+        log.info("[listMenu] pageIds size={}, ids={}", pageIds.size(), pageIds);
+
         if (pageIds.isEmpty()) {
+            log.info("[listMenu] pageIds empty -> return empty page");            // ★ 추가
             return new PageImpl<>(List.of(), pageable, 0);
         }
 
@@ -64,10 +69,11 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                         menu.menuShow,
                         menu.menuName,
                         menu.menuCode,
+                        category.menuCategoryId,
                         category.menuCategoryName,
                         menu.menuPrice,
                         menu.menuKcal,
-                        material.name // ← 실제 프로퍼티명이 name인지 확인
+                        material.name
                 ))
                 .from(menu)
                 .leftJoin(menu.menuCategory, category)
@@ -76,6 +82,8 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                 .where(menu.menuId.in(pageIds))
                 .orderBy(toOrderSpec(menu, sort))
                 .fetch();
+
+        log.info("[listMenu] rows fetched={}", rows.size());
 
         Map<Long, MenuListDTO> map = new LinkedHashMap<>();
         for (var t : rows) {
@@ -86,6 +94,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                 d.setMenuShow(t.get(menu.menuShow));
                 d.setMenuName(t.get(menu.menuName));
                 d.setMenuCode(t.get(menu.menuCode));
+                d.setMenuCategoryId(t.get(category.menuCategoryId));
                 d.setMenuCategoryName(t.get(category.menuCategoryName));
                 d.setMenuPrice(t.get(menu.menuPrice));
                 d.setMenuKcal(t.get(menu.menuKcal));

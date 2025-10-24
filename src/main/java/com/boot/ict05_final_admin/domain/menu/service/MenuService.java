@@ -9,7 +9,6 @@ import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRecipeRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
@@ -45,9 +44,21 @@ public class MenuService {
      * @param pageable      페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 메뉴 리스트 DTO
      */
+//    public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
+//        return menuRepository.listMenu(menuSearchDTO, pageable);
+//    }
     public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
-        return menuRepository.listMenu(menuSearchDTO, pageable);
+        var menus = menuRepository.listMenu(menuSearchDTO, pageable);
+
+        // 🔍 디버깅 로그 추가
+        log.info("rows={}", menus.getNumberOfElements());
+        menus.getContent().forEach(m ->
+                log.info("id={}, name={}, materials={}", m.getMenuId(), m.getMenuName(), m.getMaterialNames())
+        );
+
+        return menus;
     }
+
 
     /**
      * 새로운 메뉴를 등록한다.

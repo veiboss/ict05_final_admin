@@ -37,7 +37,7 @@ public class MenuListDTO {
     private BigDecimal menuPrice;
 
     /** 메뉴 칼로리 */
-    private int menuKcal;
+    private Integer menuKcal;
 
     /** 한글 라벨 : 카테고리 */
     public String getMenuCategoryLabel() {
