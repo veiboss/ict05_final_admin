@@ -69,7 +69,7 @@ public class StaffController {
 
         List<FindStoreDTO> stores = storeService.findStoreName();
 
-        model.addAttribute("staffAddFormDTO", new StaffWriteFormDTO());
+        model.addAttribute("staffWriteFormDTO", new StaffWriteFormDTO());
         model.addAttribute("StaffDepartment", StaffDepartment.values());
         model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
         model.addAttribute("stores", stores);
@@ -91,5 +91,32 @@ public class StaffController {
         model.addAttribute("staff", staffProfile);
 
         return "staff/detail";
+    }
+
+    /**
+     * 특정 사원의 수정 화면을 표시한다.
+     *
+     * @param id    재료 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 사원 수정 페이지 뷰 이름
+     */
+    @GetMapping("/staff/modify/{id}")
+    public String modifyOfficeStaff(@PathVariable Long id, Model model) {
+
+        StaffProfile staffProfile = staffService.detailStaff(id);
+        List<FindStoreDTO> stores = storeService.findStoreName();
+
+        model.addAttribute("staff", staffProfile);
+        model.addAttribute("StaffDepartment", StaffDepartment.values());
+        model.addAttribute("StaffEmploymentType", StaffEmploymentType.values());
+        model.addAttribute("stores", stores);
+
+        return "staff/modify";
+    }
+
+    @GetMapping("/staff/delete/{id}")
+    public String deleteOfficeStaff(@PathVariable Long id, Model model) {
+        staffService.deleteStaff(id);
+        return "redirect:/staff/list";
     }
 }

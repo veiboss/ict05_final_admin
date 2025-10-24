@@ -34,6 +34,10 @@ public class Store {
     @Column(name = "member_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long memberId;  // FK 후보 - 본사 담당자
 
+    /** 점주명 시퀀스 */
+    @Column(name = "staff_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    private Long staffId;
+
     /** 가맹점명 */
     @Column(name = "store_name", length = 150, nullable = false)
     private String name;

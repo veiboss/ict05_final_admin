@@ -30,7 +30,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class StoreListDTO  {
 
-
     /** 매장 고유 Id */
     private Long storeId;
 

@@ -24,7 +24,38 @@
     <script th:src="@{/js/lib/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/js/toast.js}"></script>
 </head>
-<body>
+<body class="scroll-up">
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
 
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">가맹점 상세</h2>
+        </div>
+
+        <main id="content" class="max-900">
+            <div class="box-wrap">
+                    <div class="pack-down gap-20">
+                        <h3 class="fs-2xl fw-600 fc-333" th:text="${store.name}">가맹점명</h3>
+
+                        <div class="row col-3">
+                            <div class="pack-down col">
+                                <span class="fs-ss fc-999">ID</span>
+                                <span th:text="${store.id}">ID</span>
+                            </div>
+                            <div class="pack-down col">
+                                <span class="fs-ss fc-999">점주명</span>
+                                <span th:text="${staffName != null ? staffName : '미지정'}">점주명</span>
+                            </div>
+                           <!-- <div class="pack-down col">
+                                <span class="fs-ss fc-999">본사 담당자명</span>
+                                <span th:text="${store.memberId != null ? store.memberId : '미지정'}">본사 담당자</span>
+                            </div>-->
+                        </div>
+                    </div>
+            </div>
+        </main>
+    </div>
+</div>
 </body>
 </html>

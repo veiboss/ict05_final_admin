@@ -1,8 +1,10 @@
 package com.boot.ict05_final_admin.domain.store.controller;
 
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
+import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreAddFormDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
@@ -29,6 +31,7 @@ import java.util.List;
 public class StoreController {
 
     private final StoreService storeService;
+    private final StaffService staffService;
 
 
     /**
@@ -73,17 +76,17 @@ public class StoreController {
      * @param model 뷰에 전달할 모델 객체
      * @return 가맹점 등록 작성 페이지 뷰 이름
      */
-    @GetMapping("/store/add")
-    public String addForm(Model model) {
+    @GetMapping("/store/write")
+    public String addOfficeStore(Model model) {
 
         List<FindStoreDTO> stores = storeService.findStoreName();
 
-        model.addAttribute("storeAddFormDTO", new StoreAddFormDTO());
+        model.addAttribute("storeWriteFormDTO", new StoreWriteFormDTO());
         model.addAttribute("StoreStatus", StoreStatus.values());
         model.addAttribute("StoreType", StoreType.values());
         model.addAttribute("stores", stores);
 
-        return "store/add";
+        return "store/write";
     }
 
     /**
@@ -95,7 +98,7 @@ public class StoreController {
      */
     @GetMapping("store/detail/{id}")
     public String detailOfficeStore(@PathVariable Long id, Model model) {
-        Store store = storeService.detailStore(id);
+        Store store = storeService.detailOfficeStore(id);
 
         model.addAttribute("store", store);
 
