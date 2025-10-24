@@ -139,12 +139,12 @@
 <script>
     function onStoreChange(storeId) {
         if (!storeId) {
-            window.location = "/admin/store-material/list";
+            window.location = "/admin/material/store/list";
             return;
         }
         const params = new URLSearchParams(window.location.search);
         params.set("storeId", storeId);
-        window.location = `/admin/store-material/list?${params.toString()}`;
+        window.location = `/admin/material/store/list?${params.toString()}`;
     }
 
     function setFilter(status) {
@@ -157,7 +157,7 @@
       }
 
       const query = params.toString();
-      window.location = `/admin/store-material/list?${query}`;
+      window.location = `/admin/material/store/list?${query}`;
     }
 
 
@@ -165,7 +165,7 @@
         const params = new URLSearchParams(window.location.search);
         params.set('size', size);
         params.set('page', 1);
-        window.location = `/admin/store-material/list?${params.toString()}`;
+        window.location = `/admin/material/store/list?${params.toString()}`;
     }
 </script>
 <script>
