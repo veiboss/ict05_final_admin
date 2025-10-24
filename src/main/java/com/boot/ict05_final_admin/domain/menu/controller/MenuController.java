@@ -111,15 +111,17 @@ public class MenuController {
      * @param model 뷰에 전달할 모델 객체
      * @return 메뉴 작성 페이지 뷰 이름
      */
+    // Controller
     @GetMapping("/menu/write")
-    public String addStoreMenu(Model model) {
-        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
-
+    public String writeForm(Model model) {
         model.addAttribute("menuWriteFormDTO", new MenuWriteFormDTO());
-        model.addAttribute("menuCategories", categories);
 
+        List<MenuCategory> categories = menuCategoryRepository.findSetAndLevel3Categories();
+
+        model.addAttribute("menuCategories", categories);
         return "menu/write";
     }
+
 
     /**
      * 특정 메뉴 상세 내용을 조회한다.
