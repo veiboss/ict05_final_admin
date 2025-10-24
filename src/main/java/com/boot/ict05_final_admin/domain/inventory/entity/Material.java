@@ -65,8 +65,8 @@ public class Material {
     private String salesUnit;
 
     /** 변환비율(판매단위 → 기본단위) */
-    @Column(name = "material_conversion_rate", precision = 10, scale = 3, nullable = false,
-            columnDefinition = "INT COMMENT '변환비율(판매단위/기본단위)'")
+    @Column(name = "material_conversion_rate", nullable = false,
+            columnDefinition = "INT default 1000 COMMENT '변환비율(판매단위/기본단위)'")
     private Integer conversionRate;
 
     /** 공급업체명 */
