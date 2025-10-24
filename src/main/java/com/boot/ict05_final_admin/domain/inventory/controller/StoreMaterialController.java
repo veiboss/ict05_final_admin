@@ -2,7 +2,7 @@ package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialSearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.serivce.StoreMaterialService;
+import com.boot.ict05_final_admin.domain.inventory.service.StoreMaterialService;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

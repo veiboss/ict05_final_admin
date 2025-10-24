@@ -7,7 +7,7 @@ import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
-import com.boot.ict05_final_admin.domain.inventory.serivce.MaterialService;
+import com.boot.ict05_final_admin.domain.inventory.service.MaterialService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/material")
 public class MaterialController {
 
     private final MaterialService materialService;
@@ -39,7 +41,7 @@ public class MaterialController {
      * @param model 뷰에 전달할 모델 객체
      * @return 공지사항 작성 페이지 뷰 이름
      */
-    @GetMapping("/material/write")
+    @GetMapping("/write")
     public String addOfficeMaterial(Model model) {
         model.addAttribute("materialWriteFormDTO", new MaterialWriteFormDTO());
         model.addAttribute("MaterialCategory", MaterialCategory.values());
@@ -55,7 +57,7 @@ public class MaterialController {
      * @param model    뷰에 전달할 모델 객체
      * @return 재료 목록 페이지 뷰 이름
      */
-    @GetMapping("/material/list")
+    @GetMapping("/list")
     public String listMaterial(MaterialSearchDTO materialSearchDTO,
                                @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                Model model,
@@ -87,7 +89,7 @@ public class MaterialController {
      * @param model 뷰에 전달할 모델 객체
      * @return 재료 상세 페이지 뷰 이름
      */
-    @GetMapping("/material/detail/{id}")
+    @GetMapping("/detail/{id}")
     public String detailOfficeMaterial(@PathVariable Long id, Model model) {
         Material material = materialService.detailMaterial(id);
         model.addAttribute("material", material);
@@ -102,7 +104,7 @@ public class MaterialController {
      * @param model 뷰에 전달할 모델 객체
      * @return 재료 수정 페이지 뷰 이름
      */
-    @GetMapping("/material/modify/{id}")
+    @GetMapping("/modify/{id}")
     public String modifyOfficeMaterial(@PathVariable Long id, Model model) {
         Material material = materialService.detailMaterial(id);
 
@@ -115,7 +117,7 @@ public class MaterialController {
     }
 
 
-    @GetMapping("/material/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteOfficeMaterial(@PathVariable Long id, Model model) {
         materialService.deleteMaterial(id);
         return "redirect:/material/list";
