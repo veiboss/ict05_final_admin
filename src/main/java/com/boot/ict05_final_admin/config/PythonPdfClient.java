@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -30,21 +31,19 @@ import reactor.core.publisher.Mono;
  * }</pre>
  */
 @Component
-@RequiredArgsConstructor
 public class PythonPdfClient {
 
     /** 재사용 가능한 스레드-세이프 HTTP 클라이언트 */
-    private final WebClient webClient;
+    private final WebClient pdfWebClient;
 
     /**
      * 베이스 URL을 주입받아 {@link WebClient} 를 구성합니다.
      *
      * @param baseUrl FastAPI PDF 서버의 베이스 URL (예: {@code http://localhost:8000})
      */
-    public PythonPdfClient(@Value("${pdf.base-url}") String baseUrl) {
-        this.webClient = WebClient.builder()
-                .baseUrl(baseUrl)
-                .build();
+    @Autowired
+    public PythonPdfClient(@Value("${pdf.python.base-url}") String baseUrl) {
+        this.pdfWebClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 
     /**
@@ -94,7 +93,7 @@ public class PythonPdfClient {
      * @return PDF 바이트 배열 또는 빈 배열
      */
     private byte[] postPdf(String path, Object body) {
-        return webClient.post()
+        return pdfWebClient.post()
                 .uri(path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_PDF)
