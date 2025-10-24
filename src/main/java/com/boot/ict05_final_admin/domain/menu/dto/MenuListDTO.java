@@ -1,7 +1,5 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
-import com.boot.ict05_final_admin.domain.menu.entity.MenuCategoryEnum;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShowEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,14 +15,20 @@ public class MenuListDTO {
     /** 메뉴 시퀀스 */
     private Long menuId;
 
-    /** 판매상태*/
-    private MenuShowEnum menuShow;
+    /** 판매상태(true: 판매중 / false: 중단) */
+    private Boolean menuShow;
 
-    /** 메뉴명*/
+    /** 메뉴명 */
     private String menuName;
 
+    /** 메뉴 코드 */
+    private String menuCode;
+
+    /** 메뉴 카테고리 ID (필요시 함께 전달) */
+    private Long menuCategoryId;
+
     /** 카테고리명 */
-    private MenuCategoryEnum menuCategoryName;
+    private String menuCategoryName;
 
     /** 주재료 리스트 */
     private List<String> materialNames;
@@ -33,16 +37,11 @@ public class MenuListDTO {
     private BigDecimal menuPrice;
 
     /** 메뉴 칼로리 */
-    private int menuKcal;
-
-    /** 한글 라벨: 상태 */
-    public String getMenuShowLabel() {
-        return menuShow != null ? menuShow.getDescription() : "";
-    }
+    private Integer menuKcal;
 
     /** 한글 라벨 : 카테고리 */
     public String getMenuCategoryLabel() {
-        return menuCategoryName != null ? menuCategoryName.getDescription() : "";
+        return menuCategoryName != null ? menuCategoryName : "";
     }
 
     /** 화면에서 문자열로 쓸 때 */

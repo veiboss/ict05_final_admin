@@ -12,6 +12,7 @@ import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -73,9 +74,18 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
     // 검색 필터 - 가맹점명, 주문번호, 지역
     private BooleanExpression eqOrderCode(ReceiveOrderSearchDTO receiveOrderSearchDTO, QReceiveOrder receiveOrder) {
+
+        // BooleanExpression condition = null;
+        // 기본값 true
+//        BooleanExpression condition = Expressions.asBoolean(true).isTrue();
+
         if (receiveOrderSearchDTO.getType() == null || receiveOrderSearchDTO.getS() == null) {
             return null;
         }
+
+//        if (receiveOrderSearchDTO.getStatus() != null && !receiveOrderSearchDTO.getStatus().toString().trim().isEmpty()) {
+//            condition = condition.and(receiveOrder.status.eq(receiveOrderSearchDTO.getStatus()));
+//        }
 
         String keyword = receiveOrderSearchDTO.getS();
 
@@ -89,6 +99,8 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
             default:
                 return null;
         }
+
+//        return condition;
     }
 
     // 리스트 개수 카운팅
@@ -126,14 +138,6 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         store.name.as("storeName"),
                         store.id.as("storeId"),
                         store.location.as("storeLocation"),
-//                        ExpressionUtils.as(
-//                                JPAExpressions
-//                                        .select(rodSub.detailCount.sum())
-//                                        .from(rodSub)
-//                                        .where(rodSub.receiveOrder.eq(ro))
-//                                        .distinct(),
-//                                "totalCount"
-//                        ),
                         ro.totalCount.as("totalCount"),
                         ro.totalPrice,
                         ro.remark,

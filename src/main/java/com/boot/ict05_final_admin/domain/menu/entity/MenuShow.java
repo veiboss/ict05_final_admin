@@ -11,7 +11,7 @@ package com.boot.ict05_final_admin.domain.menu.entity;
  *     <li>STOP: 판매중지</li>
  * </ul>
  */
-public enum MenuShowEnum {
+public enum MenuShow {
 
     SHOW("판매중"),
 
@@ -25,7 +25,7 @@ public enum MenuShowEnum {
      *
      * @param description 각 상태의 한글 설명
      */
-    MenuShowEnum(String description)  { this.description = description; }
+    MenuShow(String description)  { this.description = description; }
 
     /**
      *  메뉴 한글 설명을 반환한다
