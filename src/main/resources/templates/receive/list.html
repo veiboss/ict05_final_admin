@@ -198,7 +198,26 @@
             <h2 class="page-title ellipsis">수주 현황</h2>
         </div>
 
-        <main id="content">
+        <main id="content" class="pack-down gap-20">
+            <div class="row-4">
+                <div class="col box-wrap">
+                    <div>전체 주문</div>
+                    <div>2</div>
+                </div>
+                <div class="col box-wrap">
+                    <div>총 주문액</div>
+                    <div>77만원</div>
+                </div>
+                <div class="col box-wrap">
+                    <div>배송중</div>
+                    <div>1</div>
+                </div>
+                <div class="col box-wrap">
+                    <div>긴급 주문</div>
+                    <div>1</div>
+                </div>
+            </div>
+
             <div class="box-wrap">
                 <div id="search" class="search">
                     <form name="frm" id="frm" method="get">
@@ -216,14 +235,43 @@
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 
-                                <div class="pack-left">
-                                    <select title="뷰사이즈" th:field="${receiveOrderSearchDTO.size}" class="select medium">
-                                        <option value="10">10</option>
-                                        <option value="30">30</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
+                                <!--<div class="pack-left">
+                                    &lt;!&ndash; 상태 필터 &ndash;&gt;
+                                    <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+                                        <label class="btn medium"
+                                               th:classappend="${receiveOrderSearchDTO.status == null or receiveOrderSearchDTO.status == ''} ? ' active' : ''">
+                                            <input type="radio" name="status" value=""
+                                                   th:checked="${receiveOrderSearchDTO.status == null}"
+                                                   onclick="setFilter('')">전체
+                                        </label>
+
+                                        <label class="btn medium"
+                                               th:classappend="${receiveOrderSearchDTO.status?.name() == 'RECEIVED'} ? ' active' : ''">
+                                            <input type="radio" name="status" value="RECEIVED"
+                                                   th:checked="${receiveOrderSearchDTO.status?.name() == 'RECEIVED'}"
+                                                   onclick="setFilter('RECEIVED')">접수
+                                        </label>
+
+                                        <label class="btn medium"
+                                               th:classappend="${receiveOrderSearchDTO.status?.name() == 'PREPARING'} ? ' active' : ''">
+                                            <input type="radio" name="status" value="PREPARING"
+                                                   th:checked="${receiveOrderSearchDTO.status?.name() == 'PREPARING'}"
+                                                   onclick="setFilter('PREPARING')">배송준비
+                                        </label>
+                                    </div>
+
+                                    &lt;!&ndash; 페이지 사이즈 &ndash;&gt;
+                                    <div class="pack-left page-size">
+                                        <select title="뷰사이즈" th:field="${receiveOrderSearchDTO.size}" class="select medium"
+                                                onchange="setPageSize(this.value)">
+                                            <option value="10">10</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <span class="fs-ss">개씩 보기</span>
+                                    </div>
+                                </div>-->
                             </div>
                         </fieldset>
                     </form>
@@ -258,8 +306,17 @@
                             <td th:text="${receiveOrder.storeName}">가맹점명</td>
                             <td th:text="${receiveOrder.orderCode}">주문번호</td>
                             <td th:text="${receiveOrder.storeLocation}">지역</td>
-                            <td th:text="${receiveOrder.statusDescription}">상태</td>
-                            <td th:text="${receiveOrder.priorityDescription}">우선순위</td>
+                            <td>
+                                <span th:class="|badge rounded-pill ${
+                                    receiveOrder.status.name() == 'RECEIVED' ? 'bg-warning' :
+                                    (receiveOrder.status.name() == 'PREPARING' ? 'bg-success' :
+                                    (receiveOrder.status.name() == 'SHIPPING' ? 'bg-primary' : 'bg-secondary')) }|"
+                                    th:text="${receiveOrder.status.description}">
+                                </span>
+                            </td>
+
+                            <td th:text="${receiveOrder.priority.description}"
+                                th:style="${receiveOrder.priority.name() == 'URGENT'} ? 'color:red;' : ''">우선순위</td>
                             <td th:text="${#numbers.formatInteger(receiveOrder.totalPrice, 0, 'COMMA')} + '원'">주문액</td>
                             <td th:text="${receiveOrder.totalCount}">품목수</td>
                             <td th:text="${#temporals.format(receiveOrder.deliveryDate, 'yyyy-MM-dd')}">배송예정일</td>
@@ -372,7 +429,8 @@
                 <h3 style="color:black; font-weight:600;">특이 사항</h3>
                 <hr class="line">
                 <textarea class="textarea medium" rows="4" cols="50"
-                          th:text="${detail.remark}" readonly></textarea>
+                          th:text="${detail.remark}" readonly
+                          style="color: black;"></textarea>
             </section>
 
             <hr class="line">
@@ -467,8 +525,19 @@
 
         // 팝업 열기
         const popup = document.getElementById('popup-' + id);
-        if (popup) popup.classList.add('active');
-        else console.warn('팝업을 찾을 수 없음: popup-' + id);
+        if (!popup) {
+            console.warn('팝업을 찾을 수 없음: popup-' + id);
+            return;
+        }
+        popup.classList.add('active');
+
+        // 업 표시 후 스크롤 초기화 (렌더링 완료 후 실행)
+        setTimeout(() => {
+            const body = popup.querySelector('.popup-body');
+            if (body) {
+                body.scrollTop = 0;
+            }
+        });
 
         // 이 부분에서 id AJAX 요청하거나 데이터 바인딩 수행
         // 예시: 콘솔 출력

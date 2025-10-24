@@ -48,6 +48,14 @@ public class ReceiveOrderController {
             orderDetails.put(listDTO.getId(), receiveOrderService.getReceiveOrderDetail(listDTO.getId()));
         }
 
+//        boolean isFirstLoad = request.getParameter("status") == null
+//                && request.getParameter("s") == null
+//                && request.getParameter("page") == null;
+//        if (receiveOrderSearchDTO.getStatus() != null &&
+//                receiveOrderSearchDTO.getStatus().toString().trim().isEmpty()) {
+//            receiveOrderSearchDTO.setStatus(null);
+//        }
+
         model.addAttribute("receiveOrder", receiveOrder);
         model.addAttribute("orderDetails", orderDetails);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
