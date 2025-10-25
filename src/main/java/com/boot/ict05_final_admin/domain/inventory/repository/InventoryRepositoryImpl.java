@@ -4,9 +4,6 @@ import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
-import com.boot.ict05_final_admin.domain.inventory.entity.QStoreInventory;
-import com.boot.ict05_final_admin.domain.inventory.entity.QStoreMaterial;
-import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -20,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 재고 커스텀 Repository 구현체.
+ * 본사 재고(Inventory) 커스텀 Repository 구현체.
  */
 @Repository
 @RequiredArgsConstructor
@@ -30,68 +27,8 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
 
     @Override
     public Page<InventoryListDTO> listInventory(InventorySearchDTO searchDTO, Pageable pageable) {
-        if ("STORE".equalsIgnoreCase(searchDTO.getInventoryType())) {
-            return listStoreInventory(searchDTO, pageable);
-        } else {
-            return listHqInventory(searchDTO, pageable);
-        }
-    }
-
-    @Override
-    public long countInventory(InventorySearchDTO searchDTO) {
-        if ("STORE".equalsIgnoreCase(searchDTO.getInventoryType())) {
-            return countStoreInventory(searchDTO);
-        } else {
-            return countHqInventory(searchDTO);
-        }
-    }
-
-    // ==================== 본사 재고 ====================
-    private Page<InventoryListDTO> listHqInventory(InventorySearchDTO searchDTO, Pageable pageable) {
-        QHqInventory hq = QHqInventory.hqInventory;
+        QHqInventory inv = QHqInventory.hqInventory;
         QMaterial material = QMaterial.material;
-
-        List<InventoryListDTO> content = queryFactory
-                .select(Projections.fields(InventoryListDTO.class,
-                        hq.id,
-                        material.name.as("materialName"),
-                        material.materialCategory.stringValue().as("categoryName"),
-                        hq.quantity,
-                        hq.optimalQuantity,
-                        hq.status,
-                        hq.updateDate))
-                .from(hq)
-                .join(hq.material, material)
-                .where(hqInventoryFilter(searchDTO))
-                .orderBy(hq.id.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        long total = countHqInventory(searchDTO);
-        return new PageImpl<>(content, pageable, total);
-    }
-
-    private long countHqInventory(InventorySearchDTO searchDTO) {
-        QHqInventory hq = QHqInventory.hqInventory;
-        QMaterial material = QMaterial.material;
-
-        Long total = queryFactory
-                .select(hq.count())
-                .from(hq)
-                .join(hq.material, material)
-                .where(hqInventoryFilter(searchDTO))
-                .fetchFirst();
-
-        return total != null ? total : 0L;
-    }
-
-    // ==================== 가맹점 재고 ====================
-    private Page<InventoryListDTO> listStoreInventory(InventorySearchDTO searchDTO, Pageable pageable) {
-        QStoreInventory inv = QStoreInventory.storeInventory;
-        QStoreMaterial sm = QStoreMaterial.storeMaterial;
-        QMaterial material = QMaterial.material;
-        QStore store = QStore.store;
 
         List<InventoryListDTO> content = queryFactory
                 .select(Projections.fields(InventoryListDTO.class,
@@ -101,76 +38,56 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         inv.quantity,
                         inv.optimalQuantity,
                         inv.status,
-                        inv.updateDate,
-                        store.name.as("storeName")))
+                        inv.updateDate))
                 .from(inv)
-                .join(inv.storeMaterial, sm)
-                .join(sm.material, material)
-                .join(inv.store, store)
-                .where(storeInventoryFilter(searchDTO))
+                .join(inv.material, material)
+                .where(applyFilter(searchDTO))
                 .orderBy(inv.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = countStoreInventory(searchDTO);
+        long total = countInventory(searchDTO);
         return new PageImpl<>(content, pageable, total);
     }
 
-    private long countStoreInventory(InventorySearchDTO searchDTO) {
-        QStoreInventory inv = QStoreInventory.storeInventory;
-        QStoreMaterial sm = QStoreMaterial.storeMaterial;
+    @Override
+    public long countInventory(InventorySearchDTO searchDTO) {
+        QHqInventory inv = QHqInventory.hqInventory;
         QMaterial material = QMaterial.material;
-        QStore store = QStore.store;
 
         Long total = queryFactory
                 .select(inv.count())
                 .from(inv)
-                .join(inv.storeMaterial, sm)
-                .join(sm.material, material)
-                .join(inv.store, store)
-                .where(storeInventoryFilter(searchDTO))
-                .fetchFirst();
+                .join(inv.material, material)
+                .where(applyFilter(searchDTO))
+                .fetchOne();
 
         return total != null ? total : 0L;
     }
 
-    // ==================== 조건 필터 ====================
-    private BooleanExpression hqInventoryFilter(InventorySearchDTO dto) {
-        QHqInventory hq = QHqInventory.hqInventory;
+    /**
+     * 검색 필터 구성
+     */
+    private BooleanExpression applyFilter(InventorySearchDTO dto) {
+        QHqInventory inv = QHqInventory.hqInventory;
         QMaterial material = QMaterial.material;
+
         BooleanExpression condition = Expressions.asBoolean(true).isTrue();
 
-        if (dto.getMaterialName() != null && !dto.getMaterialName().isEmpty()) {
-            condition = condition.and(material.name.containsIgnoreCase(dto.getMaterialName()));
+        // 검색어(s)
+        if (dto.getS() != null && !dto.getS().isEmpty()) {
+            condition = condition.and(
+                    material.name.containsIgnoreCase(dto.getS())
+                            .or(material.materialCategory.stringValue().containsIgnoreCase(dto.getS()))
+            );
         }
-        if (dto.getCategoryName() != null && !dto.getCategoryName().isEmpty()) {
-            condition = condition.and(material.materialCategory.stringValue().eq(dto.getCategoryName()));
-        }
-        if (dto.getStatus() != null) {
-            condition = condition.and(hq.status.eq(dto.getStatus()));
-        }
-        return condition;
-    }
 
-    private BooleanExpression storeInventoryFilter(InventorySearchDTO dto) {
-        QStoreInventory inv = QStoreInventory.storeInventory;
-        QStoreMaterial sm = QStoreMaterial.storeMaterial;
-        QMaterial material = QMaterial.material;
-        BooleanExpression condition = Expressions.asBoolean(true).isTrue();
-
-        if (dto.getMaterialName() != null && !dto.getMaterialName().isEmpty()) {
-            condition = condition.and(material.name.containsIgnoreCase(dto.getMaterialName()));
-        }
-        if (dto.getCategoryName() != null && !dto.getCategoryName().isEmpty()) {
-            condition = condition.and(material.materialCategory.stringValue().eq(dto.getCategoryName()));
-        }
+        // 상태 필터
         if (dto.getStatus() != null) {
             condition = condition.and(inv.status.eq(dto.getStatus()));
         }
-        if (dto.getStoreId() != null) {
-            condition = condition.and(inv.store.id.eq(dto.getStoreId()));
-        }
+
         return condition;
     }
 }

@@ -157,15 +157,13 @@
       window.location = `/admin/material/list?${query}`;
     }
 
-
     function setPageSize(size) {
         const params = new URLSearchParams(window.location.search);
         params.set('size', size);
         params.set('page', 1);
         window.location = `/admin/material/list?${params.toString()}`;
     }
-</script>
-<script>
+
     function excelDownload() {
         const formData = new FormData(document.getElementById('frm'));
         const type = formData.get("type");

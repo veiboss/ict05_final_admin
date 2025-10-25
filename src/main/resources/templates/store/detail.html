@@ -18,7 +18,7 @@
     <link rel="icon" th:href="@{/images/logo/favi_ad.png}" type="image/x-icon"/>
 
     <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/css/toast.css}" />
+    <link rel="stylesheet" th:href="@{/css/toast.css}"/>
 
     <!-- JS -->
     <script th:src="@{/js/lib/jquery-3.2.1.min.js}"></script>
@@ -35,26 +35,81 @@
 
         <main id="content" class="max-900">
             <div class="box-wrap">
-                    <div class="pack-down gap-20">
-                        <h3 class="fs-2xl fw-600 fc-333" th:text="${store.name}">가맹점명</h3>
+                <div class="pack-down gap-20">
+                    <h3 class="fs-2xl fw-600 fc-333" th:text="${store.name}">가맹점명</h3>
 
-                        <div class="row col-3">
-                            <div class="pack-down col">
-                                <span class="fs-ss fc-999">ID</span>
-                                <span th:text="${store.id}">ID</span>
-                            </div>
-                            <div class="pack-down col">
-                                <span class="fs-ss fc-999">점주명</span>
-                                <span th:text="${staffName != null ? staffName : '미지정'}">점주명</span>
-                            </div>
-                           <!-- <div class="pack-down col">
-                                <span class="fs-ss fc-999">본사 담당자명</span>
-                                <span th:text="${store.memberId != null ? store.memberId : '미지정'}">본사 담당자</span>
-                            </div>-->
+                    <div class="row col-3">
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">ID</span>
+                            <span th:text="${store.id}">ID</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">점주명</span>
+                            <span th:text="${staffName != null ? staffName : '미지정'}">점주명</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">월 매출</span>
+                            <span th:text="${store.monthlySales}">월 매출</span>
                         </div>
                     </div>
+
+                    <div class="row col-3">
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">사업장등록번호</span>
+                            <span th:text="${store.businessRegistrationNumber}">사업장등록번호</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">매장 연락처</span>
+                            <span th:text="${store.phone}">매장 연락처</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">주소</span>
+                            <span th:text="${store.location != null ? store.location : '미지정'}">주소</span>
+                        </div>
+                    </div>
+
+                    <div class="row col-3">
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">계약일</span>
+                            <span th:text="${store.contractStartDate}">계약일</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">가맹일</span>
+                            <span th:text="${store.contractAffiliateDate}">가맹일</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">계약기간</span>
+                            <span th:text="${store.contractTerm}">계약기간</span>
+                        </div>
+                    </div>
+
+                    <div class="row col-3">
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">가맹비</span>
+                            <span th:text="${store.affiliatePrice}">가맹비</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">월 로열티</span>
+                            <span th:text="${store.royalty}">월 로열티</span>
+                        </div>
+                    </div>
+
+                    <div class="row col-3">
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">특이사항</span>
+                            <span th:text="${store.comment}">월 특이사항</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-area pack-both">
+                    <a th:href="@{/store/modify/{id}(id=${store.id})}" class="btn medium color1">수정</a>
+                </div>
+            </div>
+            <div class="button-area pack-both">
+                <a href="/admin/store/list" class="btn medium color1">목록</a>
             </div>
         </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
 </body>

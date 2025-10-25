@@ -1,4 +1,4 @@
-package com.boot.ict05_final_admin.domain.inventory.serivce;
+package com.boot.ict05_final_admin.domain.inventory.service;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialSearchDTO;
