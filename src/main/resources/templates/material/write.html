@@ -85,7 +85,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="">
+                        <div class="row-3">
+                            <!-- 적정수량 추가 -->
+                            <div class="field pack-down col">
+                                <label class="label medium required" for="materialOptimalQuantity">적정 수량</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="materialOptimalQuantity" class="input-text medium"
+                                           th:field="*{optimalQuantity}"
+                                           title="적정 수량" placeholder="예: 5000 (기본단위 기준)" />
+                                    <p id="optimalQuantityError" class="warning"></p>
+                                </div>
+                            </div>
+
                             <div class="field pack-down col">
                                 <label class="label medium required" for="supplier">공급업체명</label>
                                 <div class="insert pack-down">
@@ -95,8 +106,7 @@
                                     <p id="supplierError" class="warning"></p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="">
+
                             <div class="field pack-down col">
                                 <label class="label medium required" for="materialTemperature">보관온도</label>
                                 <div class="insert pack-down">

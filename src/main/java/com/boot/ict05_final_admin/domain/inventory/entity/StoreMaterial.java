@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -102,14 +103,14 @@ public class StoreMaterial {
     private MaterialStatus status;
 
     /** 현재 수량 */
-    @Column(name = "store_material_quantity", nullable = false,
-            columnDefinition = "INT DEFAULT 0 COMMENT '현재 수량'")
-    private Integer quantity;
+    @Column(name = "store_material_quantity", nullable = false, precision = 15, scale = 3,
+            columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '현재 수량'")
+    private BigDecimal quantity;
 
     /** 적정 수량 */
-    @Column(name = "store_material_optimal_quantity",
-            columnDefinition = "INT COMMENT '적정 수량'")
-    private Integer optimalQuantity;
+    @Column(name = "store_material_optimal_quantity", precision = 15, scale = 3,
+            columnDefinition = "DECIMAL(15,3) COMMENT '적정 수량'")
+    private BigDecimal optimalQuantity;
 
     /** 매입가 */
     @Column(name = "store_material_purchase_price",

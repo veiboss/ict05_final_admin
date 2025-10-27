@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 재료 등록 폼 DTO
  *
@@ -46,4 +48,8 @@ public class MaterialWriteFormDTO {
     /** 보관 온도 (필수) */
     @NotNull(message = "보관 온도를 선택해주세요")
     private MaterialTemperature materialTemperature;
+
+    /** 본사 기준 적정 재고 수량 */
+    @NotNull(message = "적정 수량을 입력해주세요")
+    private BigDecimal optimalQuantity;
 }
