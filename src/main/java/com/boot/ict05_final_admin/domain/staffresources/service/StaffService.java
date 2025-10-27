@@ -4,6 +4,7 @@ import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffWriteFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -121,4 +125,20 @@ public class StaffService {
     public void deleteStaff(Long id) {
         staffRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> listHeaderStats() {
+        long total = staffRepository.countAll();
+        long active = staffRepository.countActive();
+        long office = staffRepository.countByDepartment(StaffDepartment.OFFICE);
+        double avgYr = staffRepository.avgTenureYears(LocalDateTime.now());
+
+        return Map.of(
+                "totalStaff", total,
+                "activeStaff", active,
+                "officeStaff", office,
+                "avgTenureYears", avgYr
+        );
+    }
 }
+

@@ -2,12 +2,11 @@ package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderDetail;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderPriority;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
@@ -21,7 +20,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -29,6 +31,44 @@ import java.util.Optional;
 public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
+
+    // 상단 카드 데이터
+    @Override
+    public ReceiveOrderSummaryDTO getSummary() {
+        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+
+        Long totalCount = queryFactory
+                .select(ro.id.count())
+                .from(ro)
+                .where(ro.totalPrice.gt(BigDecimal.ZERO)
+                        .and(ro.totalCount.gt(0)))
+                .fetchOne();
+
+        Long shippingCount = queryFactory
+                .select(ro.id.count())
+                .from(ro)
+                .where(ro.status.eq(ReceiveOrderStatus.SHIPPING))
+                .fetchOne();
+
+        Long urgentCount = queryFactory
+                .select(ro.id.count())
+                .from(ro)
+                .where(ro.priority.eq(ReceiveOrderPriority.URGENT))
+                .fetchOne();
+
+        BigDecimal totalAmount = queryFactory
+                .select(ro.totalPrice.sum().coalesce(BigDecimal.ZERO))
+                .from(ro)
+                .where(ro.totalPrice.gt(BigDecimal.ZERO))
+                .fetchOne();
+
+        return new ReceiveOrderSummaryDTO(
+                totalCount != null ? totalCount : 0L,
+                totalAmount != null ? totalAmount : BigDecimal.ZERO,
+                shippingCount != null ? shippingCount : 0L,
+                urgentCount != null ? urgentCount : 0L
+        );
+    }
 
     @Override
     public Page<ReceiveOrderListDTO> listReceive(ReceiveOrderSearchDTO receiveOrderSearchDTO, Pageable pageable) {
@@ -73,34 +113,45 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     }
 
     // 검색 필터 - 가맹점명, 주문번호, 지역
-    private BooleanExpression eqOrderCode(ReceiveOrderSearchDTO receiveOrderSearchDTO, QReceiveOrder receiveOrder) {
+    private BooleanExpression eqOrderCode(ReceiveOrderSearchDTO dto, QReceiveOrder ro) {
 
         // BooleanExpression condition = null;
         // 기본값 true
-//        BooleanExpression condition = Expressions.asBoolean(true).isTrue();
+        BooleanExpression condition = Expressions.asBoolean(true).isTrue();
 
-        if (receiveOrderSearchDTO.getType() == null || receiveOrderSearchDTO.getS() == null) {
-            return null;
+        // 상태 필터
+        if (dto.getReceiveOrderStatus() != null) {
+            condition = condition.and(ro.status.eq(dto.getReceiveOrderStatus()));
         }
 
-//        if (receiveOrderSearchDTO.getStatus() != null && !receiveOrderSearchDTO.getStatus().toString().trim().isEmpty()) {
-//            condition = condition.and(receiveOrder.status.eq(receiveOrderSearchDTO.getStatus()));
-//        }
+        String type = dto.getType();
+        String keyword = dto.getS();
 
-        String keyword = receiveOrderSearchDTO.getS();
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return condition; // 상태만 필터링
+        }
 
-        switch (receiveOrderSearchDTO.getType()) {
+        switch (type) {
             case "orderCode":
-                return receiveOrder.orderCode.containsIgnoreCase(keyword);
+                condition = condition.and(ro.orderCode.containsIgnoreCase(keyword));
+                break;
             case "storeName":
-                return receiveOrder.store.name.containsIgnoreCase(keyword);
+                condition = condition.and(ro.store.name.containsIgnoreCase(keyword));
+                break;
             case "storeLocation":
-                return receiveOrder.store.location.containsIgnoreCase(keyword);
+                condition = condition.and(ro.store.location.containsIgnoreCase(keyword));
+                break;
+            case "all":
             default:
-                return null;
+                condition = condition.and(
+                        ro.orderCode.containsIgnoreCase(keyword)
+                                .or(ro.store.name.containsIgnoreCase(keyword))
+                                .or(ro.store.location.containsIgnoreCase(keyword))
+                );
+                break;
         }
 
-//        return condition;
+        return condition;
     }
 
     // 리스트 개수 카운팅
@@ -174,6 +225,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 .where(rod.receiveOrder.id.eq(id))
                 .fetch();
     }
+
 
 
 }

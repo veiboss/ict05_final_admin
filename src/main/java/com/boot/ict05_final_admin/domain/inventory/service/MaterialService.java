@@ -56,9 +56,11 @@ public class MaterialService {
                 .name(dto.getName())
                 .baseUnit(dto.getBaseUnit())
                 .salesUnit(dto.getSalesUnit())
+                .conversionRate(dto.getConversionRate())
                 .supplier(dto.getSupplier())
                 .materialStatus(MaterialStatus.USE)
                 .materialTemperature(dto.getMaterialTemperature())
+                .optimalQuantity(dto.getOptimalQuantity()) // 적정재고 추가
                 .regDate(LocalDateTime.now())
                 .build();
 

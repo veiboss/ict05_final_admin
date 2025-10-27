@@ -1,9 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.service;
 
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
@@ -37,7 +34,7 @@ public class ReceiveOrderService {
         return receiveOrderRepository.listReceive(receiveOrderSearchDTO, pageable);
     }
 
-    /* 주문 상세 정보 조회 */
+    /** 주문 상세 정보 조회 */
     public ReceiveOrderDetailDTO getReceiveOrderDetail(Long id) {
         ReceiveOrderDetailDTO dto = receiveOrderRepository.findDetailById(id)
                 .orElseThrow(() -> new NoSuchElementException("수주 내역이 존재하지 않습니다. id=" + id));
@@ -48,7 +45,7 @@ public class ReceiveOrderService {
         return dto;
     }
 
-    /* 배송 상태 변경 */
+    /** 배송 상태 변경 */
     @Transactional
     public void advanceStatus(Long id) {
         ReceiveOrder order = receiveOrderRepository.findById(id)
@@ -68,6 +65,9 @@ public class ReceiveOrderService {
         receiveOrderRepository.save(order);
     }
 
-
+    /** 상단 카드 데이터 */
+    public ReceiveOrderSummaryDTO getSummary() {
+        return receiveOrderRepository.getSummary();
+    }
 
 }
