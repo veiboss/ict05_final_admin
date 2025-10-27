@@ -10,16 +10,22 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 본사 재고 목록 DTO
+ * 가맹점 재고 목록 DTO
  */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InventoryListDTO {
+public class StoreInventoryListDTO {
 
     /** 재고 ID */
     private Long id;
+
+    /** 가맹점 ID */
+    private Long storeId;
+
+    /** 가맹점명 */
+    private String storeName;
 
     /** 재료명 */
     private String materialName;
