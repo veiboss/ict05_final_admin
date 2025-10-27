@@ -1,0 +1,161 @@
+<!-- src/main/resources/templates/analytics/orders.html -->
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+  <link href="/admin/css/toast.css" rel="stylesheet"/>
+  <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+  <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <div id="container" class="container">
+    <div class="title-bar">
+      <h2 class="page-title ellipsis">주문 분석</h2>
+    </div>
+
+    <section id="ord-cards" class="row-4">
+      <div class="col box-wrap"><div class="k">Sales</div><div id="oc-sales" class="v ta-r">0</div></div>
+      <div class="col box-wrap"><div class="k">Transaction</div><div id="oc-trx" class="v ta-r">0</div></div>
+      <div class="col box-wrap"><div class="k">Category / Menu</div>
+        <div class="v ta-r"><span id="oc-cat">0</span> / <span id="oc-menu">0</span></div>
+      </div>
+      <div class="col box-wrap"><div class="k">방문/포장/배달</div>
+        <div class="v ta-r"><span id="oc-visit">0%</span> / <span id="oc-takeout">0%</span> / <span id="oc-delivery">0%</span></div>
+      </div>
+    </section>
+
+
+    <main id="content">
+      <div class="box-wrap">
+
+        <div id="search" class="search">
+          <form id="frm" onsubmit="return false;">
+            <fieldset>
+              <legend class="blind">검색</legend>
+              <div class="pack-both">
+                <div class="pack-left">
+                  <input type="text" name="storeIds" class="input-text medium form-control"
+                         placeholder="가맹점 ID들(쉼표)"/>
+                </div>
+
+                <div class="pack-left">
+                  <input type="date" name="startDate" class="input-text medium form-control"
+                         th:value="${#temporals.format(search.startDate, 'yyyy-MM-dd')}"/>
+                  <input type="date" name="endDate" class="input-text medium form-control"
+                         th:value="${#temporals.format(search.endDate, 'yyyy-MM-dd')}"/>
+
+                  <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+                    <label class="btn medium active">
+                      <input type="radio" name="viewBy" value="DAY" checked>일별
+                    </label>
+                    <label class="btn medium">
+                      <input type="radio" name="viewBy" value="MONTH">월별
+                    </label>
+                  </div>
+
+                  <div class="pack-left page-size">
+                    <select title="출력개수" name="limit" class="select medium">
+                      <option>20</option><option selected>40</option><option>60</option>
+                      <option>80</option><option>100</option><option>200</option>
+                    </select>
+                    <span class="fs-ss">개씩 보기</span>
+                  </div>
+
+                  <button type="button" class="btn medium color1" onclick="fetchData()">조회</button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+        <section class="pack-down">
+          <table class="data-table" id="tbl">
+            <thead>
+            <tr>
+              <th>Store</th>
+              <th>CountOrder</th>
+              <th>SalesOrder</th>
+              <th>Category</th>
+              <th>Menu</th>
+              <th>CountMenu</th>
+              <th>SalesMenu</th>
+              <th>OrderType</th>
+              <th>OrderDate</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+      </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </div>
+</div>
+
+<script>
+  function fmtN(v){return (v??0).toLocaleString();}
+  function fmtPct(v){return (v==null)?'0%':Number(v).toFixed(1)+'%';}
+  function fetchOrderCards(){
+    const storeIds = new FormData(document.getElementById('frm')).get('storeIds');
+    const qs = storeIds ? ('?storeIds='+encodeURIComponent(storeIds)) : '';
+    fetch('/admin/API/analytics/orders/cards'+qs)
+      .then(r=>r.json()).then(c=>{
+        document.getElementById('oc-sales').textContent   = fmtN(c.sales);
+        document.getElementById('oc-trx').textContent     = fmtN(c.transaction);
+        document.getElementById('oc-cat').textContent     = (c.categoryCount??0);
+        document.getElementById('oc-menu').textContent    = (c.menuCount??0);
+        document.getElementById('oc-visit').textContent   = fmtPct(c.visitRatio);
+        document.getElementById('oc-takeout').textContent = fmtPct(c.takeoutRatio);
+        document.getElementById('oc-delivery').textContent= fmtPct(c.deliveryRatio);
+      }).catch(()=>toast('카드 요약 조회 중 오류가 발생했습니다.'));
+  }
+  document.addEventListener('DOMContentLoaded', ()=>{
+    fetchOrderCards();
+    fetchData();
+  });
+</script>
+
+
+<script>
+  function params() {
+    const fd = new FormData(document.getElementById('frm'));
+    const p = new URLSearchParams();
+    for (const [k, v] of fd.entries()) if (v) p.append(k, v);
+    return p.toString();
+  }
+  function fetchData() {
+    fetch('/admin/API/analytics/orders?' + params())
+      .then(r => r.json())
+      .then(rows => {
+        const tbody = document.querySelector('#tbl tbody');
+        tbody.innerHTML = '';
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.storeName ?? ''}</td>
+            <td class="ta-r">${r.countOrder ?? 0}</td>
+            <td class="ta-r">${r.salesOrder ?? 0}</td>
+            <td>${r.category ?? ''}</td>
+            <td>${r.menu ?? ''}</td>
+            <td class="ta-r">${r.countMenu ?? 0}</td>
+            <td class="ta-r">${r.salesMenu ?? 0}</td>
+            <td>${r.orderType ?? ''}</td>
+            <td>${r.orderDate ?? ''}</td>`;
+          tbody.appendChild(tr);
+        });
+      }).catch(() => toast('데이터 조회 중 오류가 발생했습니다.'));
+  }
+  document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>

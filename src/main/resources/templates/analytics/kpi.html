@@ -1,0 +1,186 @@
+<!-- src/main/resources/templates/analytics/kpi.html -->
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+  <link href="/admin/css/toast.css" rel="stylesheet"/>
+  <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+  <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <div id="container" class="container">
+    <div class="title-bar">
+      <h2 class="page-title ellipsis">KPI 분석</h2>
+    </div>
+
+    <section id="kpi-cards" class="cards grid-4 gap">
+      <div class="card"><div class="k">Sales</div><div id="kc-sales" class="v ta-r">0</div></div>
+      <div class="card"><div class="k">Transaction</div><div id="kc-trx" class="v ta-r">0</div></div>
+      <div class="card"><div class="k">UPT / ADS / AUR</div>
+        <div class="v ta-r"><span id="kc-upt">0</span> / <span id="kc-ads">0</span> / <span id="kc-aur">0</span></div>
+      </div>
+      <div class="card"><div class="k">Comp(MoM / YoY)</div>
+        <div class="v ta-r"><span id="kc-mom">0%</span> / <span id="kc-yoy">0%</span></div>
+      </div>
+    </section>
+    <section class="cards grid-3 gap">
+      <div class="card"><div class="k">Visit</div><div id="kc-visit" class="v ta-r">0%</div></div>
+      <div class="card"><div class="k">Takeout</div><div id="kc-takeout" class="v ta-r">0%</div></div>
+      <div class="card"><div class="k">Delivery</div><div id="kc-delivery" class="v ta-r">0%</div></div>
+    </section>
+
+    <main id="content">
+      <div class="box-wrap">
+        <!-- 검색 영역 -->
+        <div id="search" class="search">
+          <form id="frm" method="get" onsubmit="return false;">
+            <fieldset>
+              <legend class="blind">검색</legend>
+
+              <div class="pack-both">
+
+                <div class="pack-left">
+                  <label class="fs-ss">가맹점 선택(쉼표로 다중):</label>
+                  <input type="text" class="input-text medium form-control" name="storeIds"
+                         placeholder="예: 1,2,3 (미입력=전체)"/>
+                </div>
+
+                <div class="pack-left">
+                  <label class="fs-ss">조회시작일</label>
+                  <input type="date" class="input-text medium form-control" name="startDate"
+                         th:value="${#temporals.format(search.startDate, 'yyyy-MM-dd')}"/>
+                  <label class="fs-ss">조회종료일</label>
+                  <input type="date" class="input-text medium form-control" name="endDate"
+                         th:value="${#temporals.format(search.endDate, 'yyyy-MM-dd')}"/>
+                </div>
+
+                <div class="pack-left">
+                  <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+                    <label class="btn medium active">
+                      <input type="radio" name="viewBy" value="DAY" checked>일별
+                    </label>
+                    <label class="btn medium">
+                      <input type="radio" name="viewBy" value="MONTH">월별
+                    </label>
+                  </div>
+
+                  <div class="pack-left page-size">
+                    <select title="출력개수" name="limit" class="select medium">
+                      <option>20</option>
+                      <option selected>40</option>
+                      <option>60</option>
+                      <option>80</option>
+                      <option>100</option>
+                      <option>200</option>
+                    </select>
+                    <span class="fs-ss">개씩 보기</span>
+                  </div>
+
+                  <button type="button" class="btn medium color1" onclick="fetchData()">조회</button>
+                </div>
+
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+        <!-- 목록 테이블 -->
+        <section class="pack-down">
+          <table class="data-table" id="tbl">
+            <thead>
+            <tr>
+              <th>Store</th>
+              <th>Sales</th>
+              <th>Transaction</th>
+              <th>UPT</th>
+              <th>ADS</th>
+              <th>AUR</th>
+              <th>Comp.(MoM)</th>
+              <th>Comp.(YoY)</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </div>
+</div>
+
+<script>
+  function fmtN(v){return (v??0).toLocaleString();}
+  function fmtP(v){return (v==null)?'-':(Number(v)*100).toFixed ? (Number(v)*100).toFixed(1)+'%' : (v.toFixed(1)+'%');}
+  function fmtPct(v){return (v==null)?'0%':Number(v).toFixed(1)+'%';}
+
+  function fetchKpiCards(){
+    const storeIds = new FormData(document.getElementById('frm')).get('storeIds');
+    const qs = storeIds ? ('?storeIds='+encodeURIComponent(storeIds)) : '';
+    fetch('/admin/API/analytics/kpi/cards'+qs)
+      .then(r=>r.json()).then(c=>{
+        document.getElementById('kc-sales').textContent = fmtN(c.sales);
+        document.getElementById('kc-trx').textContent   = fmtN(c.transaction);
+        document.getElementById('kc-upt').textContent   = (c.upt??0).toFixed(2);
+        document.getElementById('kc-ads').textContent   = fmtN(c.ads);
+        document.getElementById('kc-aur').textContent   = fmtN(c.aur);
+        document.getElementById('kc-mom').textContent   = fmtP(c.compMoM);
+        document.getElementById('kc-yoy').textContent   = fmtP(c.compYoY);
+        document.getElementById('kc-visit').textContent    = fmtPct(c.visitRatio);
+        document.getElementById('kc-takeout').textContent  = fmtPct(c.takeoutRatio);
+        document.getElementById('kc-delivery').textContent = fmtPct(c.deliveryRatio);
+      }).catch(()=>toast('카드 요약 조회 중 오류가 발생했습니다.'));
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    fetchKpiCards();   // 페이지 진입 시 항상 호출
+    fetchData();       // 기존 목록 호출 유지
+  });
+</script>
+
+<script>
+  function params() {
+    const fd = new FormData(document.getElementById('frm'));
+    const p = new URLSearchParams();
+    for (const [k, v] of fd.entries()) {
+      if (v !== null && v !== '') p.append(k, v);
+    }
+    return p.toString();
+  }
+
+  function fetchData() {
+    fetch('/admin/API/analytics/kpi?' + params())
+      .then(r => r.json())
+      .then(rows => {
+        const tbody = document.querySelector('#tbl tbody');
+        tbody.innerHTML = '';
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.storeName ?? ''}</td>
+            <td class="ta-r">${r.sales ?? 0}</td>
+            <td class="ta-r">${r.transaction ?? 0}</td>
+            <td class="ta-r">${r.upt ?? 0}</td>
+            <td class="ta-r">${r.ads ?? 0}</td>
+            <td class="ta-r">${r.aur ?? 0}</td>
+            <td class="ta-r">${r.compMoM ?? 0}</td>
+            <td class="ta-r">${r.compYoY ?? 0}</td>`;
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(() => toast('데이터 조회 중 오류가 발생했습니다.'));
+  }
+
+  // 최초 1회 자동 조회(옵션)
+  document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>

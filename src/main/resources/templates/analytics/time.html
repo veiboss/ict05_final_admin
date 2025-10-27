@@ -1,0 +1,141 @@
+<!-- src/main/resources/templates/analytics/time.html -->
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+  <link href="/admin/css/toast.css" rel="stylesheet"/>
+  <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+  <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <div id="container" class="container">
+    <div class="title-bar">
+      <h2 class="page-title ellipsis">시간·요일 분석</h2>
+    </div>
+
+    <main id="content">
+      <div class="box-wrap">
+
+        <!-- 누적 미니 차트 자리 -->
+        <section class="pack-down" style="background:#e9f2f5;padding:16px;border-radius:8px;margin-bottom:12px;">
+          <div style="display:flex;gap:16px;">
+            <div style="flex:1;min-height:140px;background:#fff;border-radius:8px;padding:12px;">시간대별 선 그래프(올해 누적)</div>
+            <div style="flex:1;min-height:140px;background:#fff;border-radius:8px;padding:12px;">요일별 막대 그래프(올해 누적)</div>
+          </div>
+        </section>
+
+        <div id="search" class="search">
+          <form id="frm" onsubmit="return false;">
+            <fieldset>
+              <legend class="blind">검색</legend>
+              <div class="pack-both">
+                <div class="pack-left">
+                  <input type="text" name="storeIds" class="input-text medium form-control"
+                         placeholder="가맹점 ID들(쉼표)"/>
+                </div>
+
+                <div class="pack-left">
+                  <input type="date" name="startDate" class="input-text medium form-control"
+                         th:value="${#temporals.format(search.startDate, 'yyyy-MM-dd')}"/>
+                  <input type="date" name="endDate" class="input-text medium form-control"
+                         th:value="${#temporals.format(search.endDate, 'yyyy-MM-dd')}"/>
+
+                  <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+                    <label class="btn medium active">
+                      <input type="radio" name="viewBy" value="DAY" checked>일별
+                    </label>
+                    <label class="btn medium">
+                      <input type="radio" name="viewBy" value="MONTH">월별
+                    </label>
+                  </div>
+
+                  <div class="pack-left page-size">
+                    <select title="출력개수" name="limit" class="select medium">
+                      <option>20</option><option selected>40</option><option>60</option>
+                      <option>80</option><option>100</option><option>200</option>
+                    </select>
+                    <span class="fs-ss">개씩 보기</span>
+                  </div>
+
+                  <button type="button" class="btn medium color1" onclick="fetchData()">조회</button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+        <!-- 검색조건에 대한 표 + 하단 미니 차트 -->
+        <section class="pack-down">
+          <table class="data-table" id="tbl">
+            <thead>
+            <tr>
+              <th>Store</th>
+              <th>시간대</th>
+              <th>요일</th>
+              <th>주문ID</th>
+              <th>주문금액</th>
+              <th>카테고리</th>
+              <th>메뉴</th>
+              <th>OrderType</th>
+              <th>OrderDate</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section class="pack-down" style="background:#e9f2f5;padding:16px;border-radius:8px;">
+          <div style="display:flex;gap:16px;">
+            <div style="flex:1;min-height:140px;background:#fff;border-radius:8px;padding:12px;">시간대별 미니차트</div>
+            <div style="flex:1;min-height:140px;background:#fff;border-radius:8px;padding:12px;">요일별 미니차트</div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </div>
+</div>
+
+<script>
+  function params() {
+    const fd = new FormData(document.getElementById('frm'));
+    const p = new URLSearchParams();
+    for (const [k, v] of fd.entries()) if (v) p.append(k, v);
+    return p.toString();
+  }
+  function fetchData() {
+    fetch('/admin/API/analytics/time?' + params())
+      .then(r => r.json())
+      .then(rows => {
+        const tbody = document.querySelector('#tbl tbody');
+        tbody.innerHTML = '';
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.storeName ?? ''}</td>
+            <td>${r.hourSlot ?? ''}</td>
+            <td>${r.dayOfWeek ?? ''}</td>
+            <td class="ta-r">${r.orderId ?? ''}</td>
+            <td class="ta-r">${r.orderAmount ?? 0}</td>
+            <td>${r.category ?? ''}</td>
+            <td>${r.menu ?? ''}</td>
+            <td>${r.orderType ?? ''}</td>
+            <td>${r.orderDate ?? ''}</td>`;
+          tbody.appendChild(tr);
+        });
+      }).catch(() => toast('데이터 조회 중 오류가 발생했습니다.'));
+  }
+  document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>
