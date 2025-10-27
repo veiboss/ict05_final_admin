@@ -1,11 +1,13 @@
 package com.boot.ict05_final_admin.domain.menu.controller;
 
 import com.boot.ict05_final_admin.config.ProjectAttribute;
+import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.service.MenuService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +41,7 @@ public class MenuController {
     private final MenuService menuService;      // private final : 바꿀 수 없는 변수
     private final ProjectAttribute projectAttribute;
     private final MenuCategoryRepository menuCategoryRepository;
+    private final MaterialRepository materialRepository;
 
     /**
      * 메뉴 목록을 페이징 처리하여 조회한다.
@@ -114,11 +117,19 @@ public class MenuController {
     // Controller
     @GetMapping("/menu/write")
     public String writeForm(Model model) {
-        model.addAttribute("menuWriteFormDTO", new MenuWriteFormDTO());
+        MenuWriteFormDTO form = new MenuWriteFormDTO();
+        form.setMenuShow(MenuShow.SHOW);
+
+        model.addAttribute("menuWriteFormDTO", form);   // 템플릿의 th:object와 맞춤
+        model.addAttribute("menuShowValues", MenuShow.values()); // 라디오 반복용
 
         List<MenuCategory> categories = menuCategoryRepository.findSetAndLevel3Categories();
+        model.addAttribute("menuCategories", categories); // 셀렉트 옵션용
 
-        model.addAttribute("menuCategories", categories);
+        model.addAttribute("materials", materialRepository.findAll()); // id, name 있는 엔티티라고 가정
+        // 단위 옵션 간단 예시
+        model.addAttribute("units", List.of("g", "ml", "개"));
+
         return "menu/write";
     }
 

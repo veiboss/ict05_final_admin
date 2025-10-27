@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class MenuListDTO {
     private Long menuId;
 
     /** 판매상태(true: 판매중 / false: 중단) */
-    private Boolean menuShow;
+    private MenuShow menuShow;
 
     /** 메뉴명 */
     private String menuName;

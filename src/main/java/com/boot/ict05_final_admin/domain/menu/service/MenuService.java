@@ -9,6 +9,7 @@ import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRecipeRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
@@ -44,13 +45,10 @@ public class MenuService {
      * @param pageable      페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 메뉴 리스트 DTO
      */
-//    public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
-//        return menuRepository.listMenu(menuSearchDTO, pageable);
-//    }
     public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
         var menus = menuRepository.listMenu(menuSearchDTO, pageable);
 
-        // 🔍 디버깅 로그 추가
+        // 디버깅 로그 추가
         log.info("rows={}", menus.getNumberOfElements());
         menus.getContent().forEach(m ->
                 log.info("id={}, name={}, materials={}", m.getMenuId(), m.getMenuName(), m.getMaterialNames())
@@ -68,12 +66,10 @@ public class MenuService {
      */
     @Transactional
     public Long insertStoreMenu(MenuWriteFormDTO dto) {
-        // 카테고리 조회
-        MenuCategory category = menuCategoryRepository.findByMenuCategoryName(dto.getMenuCategoryName())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 없음: " + dto.getMenuCategoryName()));
+        MenuCategory category = menuCategoryRepository.findById(dto.getMenuCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 없음: " + dto.getMenuCategoryId()));
 
-        // null -> false 로 처리하고, true만 판매중
-        boolean show = Boolean.TRUE.equals(dto.getMenuShow());
+        MenuShow show = dto.getMenuShow() != null ? dto.getMenuShow() : MenuShow.HIDE;
 
         Menu menu = Menu.builder()
                 .menuName(dto.getMenuName())
@@ -87,13 +83,11 @@ public class MenuService {
 
         menuRepository.save(menu);
 
-
-        // 주재료 레시피 저장
-        if (dto.getMainMaterials() != null && !dto.getMainMaterials().isEmpty()) {
+        // 재료는 선택 입력이므로 있을 때만 저장
+        if (dto.getMainMaterials() != null) {
             dto.getMainMaterials().forEach(item -> {
                 Material material = materialRepository.findById(item.getMaterialId())
                         .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + item.getMaterialId()));
-
                 MenuRecipe recipe = MenuRecipe.builder()
                         .menu(menu)
                         .material(material)
@@ -105,13 +99,10 @@ public class MenuService {
                 menuRecipeRepository.save(recipe);
             });
         }
-
-        // 소스 레시피 저장
-        if (dto.getSauceMaterials() != null && !dto.getSauceMaterials().isEmpty()) {
+        if (dto.getSauceMaterials() != null) {
             dto.getSauceMaterials().forEach(item -> {
                 Material material = materialRepository.findById(item.getMaterialId())
                         .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + item.getMaterialId()));
-
                 MenuRecipe recipe = MenuRecipe.builder()
                         .menu(menu)
                         .material(material)
@@ -123,8 +114,10 @@ public class MenuService {
                 menuRecipeRepository.save(recipe);
             });
         }
+
         return menu.getMenuId();
     }
+
 
     /**
      * ID를 기준으로 메뉴를 조회한다.

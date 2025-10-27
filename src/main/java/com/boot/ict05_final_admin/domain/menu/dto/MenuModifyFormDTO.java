@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -22,7 +23,7 @@ public class MenuModifyFormDTO {
 
     /** 판매 상태 */
     @NotNull
-    private Boolean menuShow;
+    private MenuShow menuShow;
 
     /** 메뉴코드 */
     @NotNull

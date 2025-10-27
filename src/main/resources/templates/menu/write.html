@@ -27,9 +27,11 @@
 
         <main id="content">
             <div class="write-form box-wrap">
-                <form name="frm" id="frm" th:object="${menuWriteFormDTO}">
-                    <fieldset class="pack-down gap-12">
+                <form id="frm" th:object="${menuWriteFormDTO}" method="post" th:action="@{/admin/menu/write}">
+                <fieldset class="pack-down gap-12" th:object="${menuWriteFormDTO}">
                         <legend class="blind">기본 정보</legend>
+
+                        <!-- 카테고리 -->
                         <div class="">
                             <div class="field pack-down col">
                                 <label class="label medium required" for="menuCategoryId">카테고리 *</label>
@@ -38,19 +40,17 @@
                                         <option value="" disabled selected>카테고리 선택</option>
                                         <option th:each="c : ${menuCategories}"
                                                 th:value="${c.menuCategoryId}"
-                                        th:text="${c.menuCategoryName}">
+                                                th:text="${c.menuCategoryName}">
                                         </option>
                                     </select>
 
                                     <!-- 검증 메시지 표시 -->
-                                    <p id="menuCategoryError" class="warning"
-                                       th:if="${#fields.hasErrors('menuCategoryId')}"
-                                       th:errors="*{menuCategoryId}">
-                                    </p>
+                                    <p id="menuCategoryError" class="warning"></p>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- 메뉴명 -->
                         <div class="row-2">
                             <div class="field pack-down col">
                                 <label class="label medium" for="menuName">메뉴명 *</label>
@@ -62,6 +62,7 @@
                                 </div>
                             </div>
 
+                            <!-- 영문명 -->
                             <div class="field pack-down col">
                                 <label class="label medium" for="menuNameEnglish">영문명 *</label>
                                 <div class="insert pack-down">
@@ -73,6 +74,7 @@
                             </div>
                         </div>
 
+                        <!-- 가격 -->
                         <div class="row-2">
                             <div class="field pack-down col">
                                 <label class="label medium" for="menuPrice">가격 (원) *</label>
@@ -84,6 +86,7 @@
                                 </div>
                             </div>
 
+                            <!-- 칼로리 -->
                             <div class="field pack-down col">
                                 <label class="label medium" for="menuKcal">칼로리 (kcal) *</label>
                                 <div class="insert pack-down">
@@ -95,6 +98,7 @@
                             </div>
                         </div>
 
+                        <!-- 설명 -->
                         <div class="">
                             <div class="field pack-down col">
                                 <label class="label medium" for="menuInformation">설명 *</label>
@@ -107,34 +111,30 @@
                             </div>
                         </div>
 
-                        <div class=" ">
+                        <div class="row-2">
                             <div class="field pack-down col">
-                                <label class="label medium required">판매 상태 *</label>
+                                <span class="fs-ss fc-999">판매 상태 *</span>
+                                <div class="pack-down">
+                                    <div class="select-options r4">
+                                        <label th:each="s : ${menuShowValues}">
+                                            <input type="radio" th:field="*{menuShow}" th:value="${s}" required>
+                                            <span class="btn medium r4" th:text="${s.description}">판매상태</span>
+                                        </label>
+                                    </div>
+                                    <p id="menuShowError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium" for="menuCode">상품코드 *</label>
                                 <div class="insert pack-down">
-                                    <label><input type="radio" th:field="*{menuShow}" value="true"> 판매중</label>
-                                    <label><input type="radio" th:field="*{menuShow}" value="false"> 미판매</label>
-                                    <p id="menuShowError" class="warning"
-                                       th:if="${#fields.hasErrors('menuShow')}" th:errors="*{menuShow}"></p>
+                                    <input type="text" id="menuCode" class="input-text large"
+                                           th:field="*{menuCode}"
+                                           title="상품코드" placeholder="상품에 대한 코드를 입력하세요." />
+                                    <p id="menuCodeError" class="warning"></p>
                                 </div>
                             </div>
                         </div>
-
-<!--                        <div class="">-->
-<!--                            <div class="field pack-down col">-->
-<!--                                <label class="label medium required" for="materialTemperature">보관온도</label>-->
-<!--                                <div class="insert pack-down">-->
-<!--                                    <select id="materialTemperature" class="select medium"-->
-<!--                                            th:field="*{materialTemperature}">-->
-<!--                                        <option value="">보관온도 선택</option>-->
-<!--                                        <option th:each="t : ${MaterialTemperature}"-->
-<!--                                                th:value="${t}"-->
-<!--                                                th:text="${t.description}">-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                    <p id="materialTemperatureError" class="warning"></p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
 
                         <div class="button-area pack-center">
                             <button type="submit" class="btn large color1">저장</button>
@@ -153,34 +153,35 @@
     document.getElementById("frm").addEventListener("submit", function(e) {
         e.preventDefault();
 
-        const formData = new FormData(this); // 폼의 모든 input 포함
+        const formData = new FormData(frm);
+        const csrfHeader = document.querySelector('input[name="_csrf_header"]')?.value;
+        const csrfToken  = document.querySelector('input[name="_csrf"]')?.value
+            || document.querySelector('input[name="_csrf"]')?.getAttribute('value');
 
         fetch("/admin/API/menu/write", {
             method: "POST",
-            body: formData
+            body: formData,
+            headers: csrfHeader && csrfToken ? { [csrfHeader]: csrfToken } : {}
         })
             .then(async response => {
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
                 if (!response.ok) {
                     if (response.status === 400 && data.errors) {
                         Object.keys(data.errors).forEach(field => {
-                            const errorMsg = data.errors[field];
-                            const errorElement = document.getElementById(field + 'Error');
-                            if (errorElement) errorElement.textContent = errorMsg;
+                            const el = document.getElementById(field + "Error");
+                            if (el) el.textContent = data.errors[field];
                         });
                     }
                     throw new Error("서버 검증 오류");
-                } else {
-                    if (data.success) {
-                        alert('저장 완료!');
-                        window.location.href = '/admin/menu/detail/' + data.id;
-                    }
+                }
+                if (data.success) {
+                    alert("저장 완료!");
+                    window.location.href = "/admin/menu/detail/" + data.id;
                 }
             })
-            .catch(error => {
-                console.error("에러 발생:", error);
-            });
+            .catch(err => console.error("에러 발생:", err));
     });
 </script>
+
 </body>
 </html>
