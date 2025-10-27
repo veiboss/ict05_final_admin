@@ -16,8 +16,12 @@
     <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="title-bar">
-            <h2 class="page-title ellipsis">본사 재고 목록</h2>
+        <div class="pack-both">
+            <div class="title-bar">
+                <h2 class="page-title ellipsis">본사 재고 현황</h2>
+            </div>
+
+            <a href="/admin/inventory/store/list" class="btn small bdr-color2">가맹점 재고 현황</a>
         </div>
 
         <main id="content">
