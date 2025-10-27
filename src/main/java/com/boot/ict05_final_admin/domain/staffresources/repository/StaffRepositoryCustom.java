@@ -11,4 +11,12 @@ public interface StaffRepositoryCustom {
 
     long countStaff(StaffSearchDTO staffSearchDTO);
 
+    long countAll();
+
+    long countActive();
+
+    long countByDepartment(com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment dept);
+
+    double avgTenureYears(java.time.LocalDateTime now);
+
 }
