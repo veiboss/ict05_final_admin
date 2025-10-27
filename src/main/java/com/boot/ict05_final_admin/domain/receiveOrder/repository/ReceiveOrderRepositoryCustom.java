@@ -1,9 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
@@ -21,5 +18,7 @@ public interface ReceiveOrderRepositoryCustom {
     Optional<ReceiveOrderDetailDTO> findDetailById(Long id);
     // 수주 상세 - 주문 상품 리스트
     List<ReceiveOrderItemDTO> findItemsByOrderId(Long id);
+    // 상단 카드 데이터
+    ReceiveOrderSummaryDTO getSummary();
 
 }
