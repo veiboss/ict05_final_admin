@@ -3,9 +3,12 @@ package com.boot.ict05_final_admin.domain.order.entity;
 /** 주문 상태 (DB에는 한글 값 저장) */
 public enum OrderStatus {
     PENDING("대기"),
+    PAID("결제완료"),
     PREPARING("준비중"),
     COMPLETED("완료"),
-    CANCELED("취소");
+    CANCELED("취소"),
+    READY("픽업대기"),
+    REFUNDED("황불");
 
     private final String dbValue;
 
