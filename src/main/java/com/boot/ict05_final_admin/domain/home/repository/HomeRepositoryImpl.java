@@ -119,9 +119,13 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
         long curRevenue = curSum == null ? 0L : curSum.longValue();
         long prevRevenue = prevSum == null ? 0L : prevSum.longValue();
 
-        double growthPct = (prevRevenue > 0)
-                ? ((curRevenue - prevRevenue) * 100.0 / prevRevenue)
-                : 0.0;
+        double growthPct;
+        if (prevRevenue > 0) {
+            growthPct = ((curRevenue - prevRevenue) * 100.0 / prevRevenue);
+        } else {
+            // 전기간 0 → 이번기간이 있으면 100%, 없으면 0%
+            growthPct = (curRevenue > 0) ? 100.0 : 0.0;
+        }
 
         return new KpiSummary(
                 curRevenue,
@@ -307,8 +311,14 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                     String name  = e.getValue().name();
                     long curSum  = e.getValue().sum();
                     long prevSum = prev.getOrDefault(storeId, 0L);
-                    double pct  = (prevSum > 0) ? ((curSum - prevSum) * 100.0 / prevSum) : 0.0;
+                    double pct;
+                    if (prevSum > 0) {
+                        pct = ((curSum - prevSum) * 100.0 / prevSum);
+                    } else {
+                        pct = (curSum > 0) ? 100.0 : 0.0; // 또는 Double.NaN/ null 로 두고 화면에서 "—" 처리
+                    }
                     return new StoreGrowth(storeId, name, curSum, prevSum, pct);
+
                 })
                 .sorted(java.util.Comparator.comparing(StoreGrowth::growthPct).reversed())
                 .limit(limit)
