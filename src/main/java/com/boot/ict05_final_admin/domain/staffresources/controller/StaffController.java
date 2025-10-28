@@ -55,6 +55,12 @@ public class StaffController {
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("staffSearchDTO", staffSearchDTO);
 
+        var stats = staffService.listHeaderStats();
+        model.addAttribute("totalStaff",      stats.get("totalStaff"));
+        model.addAttribute("activeStaff",     stats.get("activeStaff"));
+        model.addAttribute("officeStaff",     stats.get("officeStaff"));
+        model.addAttribute("avgTenureYears",  stats.get("avgTenureYears"));
+
         return "staff/list";
     }
 

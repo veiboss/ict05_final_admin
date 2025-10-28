@@ -1,10 +1,186 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
 </head>
 <body>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
 
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">메뉴 등록</h2>
+        </div>
+
+        <main id="content">
+            <div class="write-form box-wrap">
+                <form name="frm" id="frm" th:object="${menuWriteFormDTO}">
+                    <fieldset class="pack-down gap-12">
+                        <legend class="blind">기본 정보</legend>
+                        <div class="">
+                            <div class="field pack-down col">
+                                <label class="label medium required" for="menuCategoryId">카테고리 *</label>
+                                <div class="insert pack-down">
+                                    <select id="menuCategoryId" class="select medium" th:field="*{menuCategoryId}">
+                                        <option value="" disabled selected>카테고리 선택</option>
+                                        <option th:each="c : ${menuCategories}"
+                                                th:value="${c.menuCategoryId}"
+                                        th:text="${c.menuCategoryName}">
+                                        </option>
+                                    </select>
+
+                                    <!-- 검증 메시지 표시 -->
+                                    <p id="menuCategoryError" class="warning"
+                                       th:if="${#fields.hasErrors('menuCategoryId')}"
+                                       th:errors="*{menuCategoryId}">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-2">
+                            <div class="field pack-down col">
+                                <label class="label medium" for="menuName">메뉴명 *</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="menuName" class="input-text large"
+                                           th:field="*{menuName}"
+                                           title="메뉴명" placeholder="예 : 베이컨 에그 토스트" />
+                                    <p id="menuNameError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium" for="menuNameEnglish">영문명 *</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="menuNameEnglish" class="input-text large"
+                                           th:field="*{menuNameEnglish}"
+                                           title="영문명" placeholder="예 : Bacon Egg Toast" />
+                                    <p id="menuNameEnglishError" class="warning"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-2">
+                            <div class="field pack-down col">
+                                <label class="label medium" for="menuPrice">가격 (원) *</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="menuPrice" class="input-text large"
+                                           th:field="*{menuPrice}"
+                                           title="가격(원)" placeholder="4500" />
+                                    <p id="menuPriceError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium" for="menuKcal">칼로리 (kcal) *</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="menuKcal" class="input-text large"
+                                           th:field="*{menuKcal}"
+                                           title="영문명" placeholder="예 : 320" />
+                                    <p id="menuKcalError" class="warning"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="">
+                            <div class="field pack-down col">
+                                <label class="label medium" for="menuInformation">설명 *</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="menuInformation" class="input-text large"
+                                           th:field="*{menuInformation}"
+                                           title="영문명" placeholder="상품에 대한 설명을 입력하세요." />
+                                    <p id="menuInformationError" class="warning"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class=" ">
+                            <div class="field pack-down col">
+                                <label class="label medium required">판매 상태 *</label>
+                                <div class="insert pack-down">
+                                    <label><input type="radio" th:field="*{menuShow}" value="true"> 판매중</label>
+                                    <label><input type="radio" th:field="*{menuShow}" value="false"> 미판매</label>
+                                    <p id="menuShowError" class="warning"
+                                       th:if="${#fields.hasErrors('menuShow')}" th:errors="*{menuShow}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+<!--                        <div class="">-->
+<!--                            <div class="field pack-down col">-->
+<!--                                <label class="label medium required" for="materialTemperature">보관온도</label>-->
+<!--                                <div class="insert pack-down">-->
+<!--                                    <select id="materialTemperature" class="select medium"-->
+<!--                                            th:field="*{materialTemperature}">-->
+<!--                                        <option value="">보관온도 선택</option>-->
+<!--                                        <option th:each="t : ${MaterialTemperature}"-->
+<!--                                                th:value="${t}"-->
+<!--                                                th:text="${t.description}">-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                    <p id="materialTemperatureError" class="warning"></p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="button-area pack-center">
+                            <button type="submit" class="btn large color1">저장</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div><!--.write-form.box-wrap -->
+            <div class="button-area pack-both">
+                <a href="/admin/menu/list" class="btn medium color1">목록</a>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
+<script>
+    document.getElementById("frm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this); // 폼의 모든 input 포함
+
+        fetch("/admin/API/menu/write", {
+            method: "POST",
+            body: formData
+        })
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok) {
+                    if (response.status === 400 && data.errors) {
+                        Object.keys(data.errors).forEach(field => {
+                            const errorMsg = data.errors[field];
+                            const errorElement = document.getElementById(field + 'Error');
+                            if (errorElement) errorElement.textContent = errorMsg;
+                        });
+                    }
+                    throw new Error("서버 검증 오류");
+                } else {
+                    if (data.success) {
+                        alert('저장 완료!');
+                        window.location.href = '/admin/menu/detail/' + data.id;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
+    });
+</script>
 </body>
 </html>

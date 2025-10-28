@@ -1,20 +1,27 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.service;
 
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -37,7 +44,7 @@ public class ReceiveOrderService {
         return receiveOrderRepository.listReceive(receiveOrderSearchDTO, pageable);
     }
 
-    /* 주문 상세 정보 조회 */
+    /** 주문 상세 정보 조회 */
     public ReceiveOrderDetailDTO getReceiveOrderDetail(Long id) {
         ReceiveOrderDetailDTO dto = receiveOrderRepository.findDetailById(id)
                 .orElseThrow(() -> new NoSuchElementException("수주 내역이 존재하지 않습니다. id=" + id));
@@ -48,7 +55,7 @@ public class ReceiveOrderService {
         return dto;
     }
 
-    /* 배송 상태 변경 */
+    /** 배송 상태 변경 */
     @Transactional
     public void advanceStatus(Long id) {
         ReceiveOrder order = receiveOrderRepository.findById(id)
@@ -68,6 +75,57 @@ public class ReceiveOrderService {
         receiveOrderRepository.save(order);
     }
 
+    /** 상단 카드 데이터 */
+    public ReceiveOrderSummaryDTO getSummary() {
+        return receiveOrderRepository.getSummary();
+    }
 
+    /**
+     * 수주 목록을 엑셀 파일로 다운로드한다.
+     * @return
+     * @throws IOException
+     */
+    public byte[] downloadExcel(ReceiveOrderSearchDTO receiveOrderSearchDTO, Pageable pageable)
+            throws IOException {
+
+        Workbook workbook = new XSSFWorkbook();
+
+        Sheet sheet = workbook.createSheet("수주목록");
+
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("ID");
+        header.createCell(1).setCellValue("가맹점명");
+        header.createCell(2).setCellValue("주문번호");
+        header.createCell(3).setCellValue("지역");
+        header.createCell(4).setCellValue("상태");
+        header.createCell(5).setCellValue("우선순위");
+        header.createCell(6).setCellValue("주문액");
+        header.createCell(7).setCellValue("품목수");
+        header.createCell(8).setCellValue("배송예정일");
+
+        long count = receiveOrderRepository.countReceive(receiveOrderSearchDTO);
+        PageRequest pageRequest = PageRequest.of(0, (int) count, Sort.by("id").descending());
+        Page<ReceiveOrderListDTO> list = receiveOrderRepository.listReceive(receiveOrderSearchDTO, pageRequest);
+
+        int i = 1;
+        for (ReceiveOrderListDTO ro : list) {
+            Row sheet1_row = sheet.createRow(i);
+            sheet1_row.createCell(0).setCellValue(ro.getId());
+            sheet1_row.createCell(1).setCellValue(ro.getStoreName());
+            sheet1_row.createCell(2).setCellValue(ro.getStoreLocation());
+            sheet1_row.createCell(3).setCellValue(String.valueOf(ro.getStatus()));
+            sheet1_row.createCell(4).setCellValue(String.valueOf(ro.getPriority()));
+            sheet1_row.createCell(5).setCellValue(ro.getTotalPrice() != null ? ro.getTotalPrice().doubleValue() : 0.0);
+            sheet1_row.createCell(6).setCellValue(ro.getTotalCount());
+            sheet1_row.createCell(7).setCellValue(ro.getDeliveryDate());
+            i++;
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        return outputStream.toByteArray();
+    }
 
 }

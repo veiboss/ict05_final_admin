@@ -89,6 +89,13 @@
 
                             <div class="row col-3">
                                 <div class="pack-down col">
+                                    <label class="fs-ss fc-999" for="materialOptimalQuantity">적정 수량</label>
+                                    <input type="text" name="materialOptimalQuantity" id="materialOptimalQuantity" class="input-text medium"
+                                           th:value="${material.optimalQuantity}"
+                                           title="적정 수량" placeholder="적정 수량 입력" />
+                                </div>
+
+                                <div class="pack-down col">
                                     <label class="fs-ss fc-999" for="supplier">공급업체명</label>
                                     <input type="text" name="supplier" id="supplier" class="input-text medium"
                                            th:value="${material.supplier}"
@@ -107,7 +114,9 @@
                                         </option>
                                     </select>
                                 </div>
+                            </div>
 
+                            <div class="row col-3">
                                 <div class="pack-down col">
                                     <span class="fs-ss fc-999" for="materialTemperature">재료 상태(사용 여부)</span>
                                     <div class="pack-down">
@@ -124,6 +133,8 @@
                                         <p id="materialStatusError" class="warning"></p>
                                     </div>
                                 </div>
+                                <div class="pack-down col">&nbsp;</div>
+                                <div class="pack-down col">&nbsp;</div>
                             </div>
                         </div><!--pack-down.gap-12-->
 
@@ -134,7 +145,7 @@
                 </form>
             </div><!--.write-form.box-wrap -->
             <div class="button-area pack-both">
-                <a href="/admin/material/list" class="btn bdr-color1">목록으로</a>
+                <a href="/admin/material/list" class="btn medium color1">목록</a>
             </div>
         </main>
     <div th:replace="~{fragments/footer :: footer}"></div>

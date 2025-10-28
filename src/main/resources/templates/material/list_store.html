@@ -21,17 +21,20 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="title-bar pack-left gap-8">
-            <select title="가맹점 선택" class="select large" style="width: 120px;"
-                    id="storeSelect" onchange="onStoreChange(this.value)">
-                <option value="">전가맹점</option>
-                <option th:each="store : ${stores}"
-                        th:value="${store.storeId}"
-                        th:text="${store.storeName}"
-                        th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
-                </option>
-            </select>
-            <h2 class="page-title ellipsis">재료 목록</h2>
+        <div class="pack-both">
+            <div class="title-bar pack-left gap-8">
+                <select title="가맹점 선택" class="select large" style="width: 120px;"
+                        id="storeSelect" onchange="onStoreChange(this.value)">
+                    <option value="">전가맹점</option>
+                    <option th:each="store : ${stores}"
+                            th:value="${store.storeId}"
+                            th:text="${store.storeName}"
+                            th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
+                    </option>
+                </select>
+                <h2 class="page-title ellipsis">재료 목록</h2>
+            </div>
+            <a href="/admin/material/store/list" class="btn small bdr-color2">본사 재료 목록</a>
         </div>
 
         <main id="content">
@@ -139,12 +142,12 @@
 <script>
     function onStoreChange(storeId) {
         if (!storeId) {
-            window.location = "/admin/store-material/list";
+            window.location = "/admin/material/store/list";
             return;
         }
         const params = new URLSearchParams(window.location.search);
         params.set("storeId", storeId);
-        window.location = `/admin/store-material/list?${params.toString()}`;
+        window.location = `/admin/material/store/list?${params.toString()}`;
     }
 
     function setFilter(status) {
@@ -157,18 +160,16 @@
       }
 
       const query = params.toString();
-      window.location = `/admin/store-material/list?${query}`;
+      window.location = `/admin/material/store/list?${query}`;
     }
-
 
     function setPageSize(size) {
         const params = new URLSearchParams(window.location.search);
         params.set('size', size);
         params.set('page', 1);
-        window.location = `/admin/store-material/list?${params.toString()}`;
+        window.location = `/admin/material/store/list?${params.toString()}`;
     }
-</script>
-<script>
+
     function excelDownload() {
         const formData = new FormData(document.getElementById('frm'));
         const type = formData.get("type");

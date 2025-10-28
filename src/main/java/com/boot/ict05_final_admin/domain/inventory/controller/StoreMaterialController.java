@@ -20,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/store-material")
+@RequestMapping("/material/store")
 public class StoreMaterialController {
 
     private final StoreMaterialService storeMaterialService;

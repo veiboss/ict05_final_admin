@@ -6,10 +6,12 @@ import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiveOrderItemDTO {
