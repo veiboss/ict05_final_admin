@@ -2,8 +2,7 @@ package com.boot.ict05_final_admin.domain.inventory.service;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 본사 재고 서비스
@@ -35,5 +36,14 @@ public class InventoryService {
     @Transactional(readOnly = true)
     public Page<InventoryListDTO> getInventoryList(InventorySearchDTO inventorySearchDTO, Pageable pageable) {
         return inventoryRepository.listInventory(inventorySearchDTO, pageable);
+    }
+
+
+    /**
+     * 본사 입고 등록용 - 재고 선택 목록 조회
+     * (재고 + 재료명 출력용)
+     */
+    public List<HqInventory> findAllForSelect() {
+        return inventoryRepository.findAll();
     }
 }

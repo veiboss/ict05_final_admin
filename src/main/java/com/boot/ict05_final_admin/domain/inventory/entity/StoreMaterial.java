@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -133,12 +135,14 @@ public class StoreMaterial {
     private boolean isHqMaterial;
 
     /** 등록일 */
+    @CreationTimestamp
     @Column(name = "store_material_reg_date", nullable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '등록일'")
     private LocalDateTime regDate;
 
     /** 수정일 */
-    @Column(name = "store_material_modify_date", nullable = false,
+    @UpdateTimestamp
+    @Column(name = "store_material_modify_date",
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'")
     private LocalDateTime modifyDate;
 }
