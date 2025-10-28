@@ -2,10 +2,7 @@ package com.boot.ict05_final_admin.domain.menu.service;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuModifyFormDTO;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
+import com.boot.ict05_final_admin.domain.menu.dto.*;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
@@ -35,8 +32,8 @@ public class MenuService {
 
     private final MenuRepository menuRepository;    // @RequiredArgsConstructor가 자동으로 주입해 줘서 @Autowired가 필요 없음
     private final MaterialRepository materialRepository;
-    private final MenuCategoryRepository menuCategoryRepository;
     private final MenuRecipeRepository menuRecipeRepository;
+    private final MenuCategoryRepository menuCategoryRepository;
 
     /**
      * 작성자 이름으로 필터링하여 메뉴 목록을 페이지 단위로 조회한다.
@@ -83,37 +80,9 @@ public class MenuService {
 
         menuRepository.save(menu);
 
-        // 재료는 선택 입력이므로 있을 때만 저장
-        if (dto.getMainMaterials() != null) {
-            dto.getMainMaterials().forEach(item -> {
-                Material material = materialRepository.findById(item.getMaterialId())
-                        .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + item.getMaterialId()));
-                MenuRecipe recipe = MenuRecipe.builder()
-                        .menu(menu)
-                        .material(material)
-                        .recipeQty(new BigDecimal(item.getRecipeQty()))
-                        .recipeUnit(item.getRecipeUnit())
-                        .recipeRole(MenuRecipe.RecipeRole.MAIN)
-                        .recipeSort(item.getRecipeSortNo())
-                        .build();
-                menuRecipeRepository.save(recipe);
-            });
-        }
-        if (dto.getSauceMaterials() != null) {
-            dto.getSauceMaterials().forEach(item -> {
-                Material material = materialRepository.findById(item.getMaterialId())
-                        .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + item.getMaterialId()));
-                MenuRecipe recipe = MenuRecipe.builder()
-                        .menu(menu)
-                        .material(material)
-                        .recipeQty(new BigDecimal(item.getRecipeQty()))
-                        .recipeUnit(item.getRecipeUnit())
-                        .recipeRole(MenuRecipe.RecipeRole.SAUCE)
-                        .recipeSort(item.getRecipeSortNo())
-                        .build();
-                menuRecipeRepository.save(recipe);
-            });
-        }
+        // 레시피 저장 (자유 입력: material FK 없음)
+        saveRecipes(menu, dto.getMainMaterials(),  MenuRecipe.RecipeRole.MAIN);
+        saveRecipes(menu, dto.getSauceMaterials(), MenuRecipe.RecipeRole.SAUCE);
 
         return menu.getMenuId();
     }
@@ -157,39 +126,9 @@ public class MenuService {
         if (dto.getMainMaterials() != null || dto.getSauceMaterials() != null) {
             menuRecipeRepository.deleteAllByMenu(menu); // 기존 레시피 삭제
 
-            // 주재료 다시 저장
-            if (dto.getMainMaterials() != null && !dto.getMainMaterials().isEmpty()) {
-                dto.getMainMaterials().forEach(item -> {
-                    Material material = materialRepository.findById(item.getMaterialId())
-                            .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + item.getMaterialId()));
-                    MenuRecipe recipe = MenuRecipe.builder()
-                            .menu(menu)
-                            .material(material)
-                            .recipeQty(new BigDecimal(item.getRecipeQty()))
-                            .recipeUnit(item.getRecipeUnit())
-                            .recipeRole(MenuRecipe.RecipeRole.MAIN)
-                            .recipeSort(item.getRecipeSortNo())
-                            .build();
-                    menuRecipeRepository.save(recipe);
-                });
-            }
+            saveRecipes(menu, dto.getMainMaterials(),  MenuRecipe.RecipeRole.MAIN);
+            saveRecipes(menu, dto.getSauceMaterials(), MenuRecipe.RecipeRole.SAUCE);
 
-            // 소스 재등록
-            if (dto.getSauceMaterials() != null && !dto.getSauceMaterials().isEmpty()) {
-                dto.getSauceMaterials().forEach(item -> {
-                    Material material = materialRepository.findById(item.getMaterialId())
-                            .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + item.getMaterialId()));
-                    MenuRecipe recipe = MenuRecipe.builder()
-                            .menu(menu)
-                            .material(material)
-                            .recipeQty(new BigDecimal(item.getRecipeQty()))
-                            .recipeUnit(item.getRecipeUnit())
-                            .recipeRole(MenuRecipe.RecipeRole.SAUCE)
-                            .recipeSort(item.getRecipeSortNo())
-                            .build();
-                    menuRecipeRepository.save(recipe);
-                });
-            }
         }
 
         return menu;
@@ -204,5 +143,31 @@ public class MenuService {
     public Menu detailMenu(Long menuId) {
         return menuRepository.findById(menuId).orElse(null);
     }
+
+    /**
+     * 자유입력 레시피 저장 유틸 (옵션 A)
+     * - material FK 사용 안 함
+     * - recipeItemName / recipeQty / recipeUnit / recipeRole / recipeSort 만 저장
+     */
+    private void saveRecipes(Menu menu, java.util.List<RecipeItemDTO> items, MenuRecipe.RecipeRole role) {
+        if (items == null || items.isEmpty()) return;
+
+        items.forEach(item -> {
+            MenuRecipe recipe = MenuRecipe.builder()
+                    .menu(menu)
+                    .recipeItemName(item.getItemName())     // ★ 항목명(자유입력)
+                    .recipeQty(item.getRecipeQty())         // BigDecimal
+                    .recipeUnit(item.getRecipeUnit())       // Enum(RecipeUnit) 또는 String
+                    .recipeRole(role)                       // MAIN / SAUCE
+                    .recipeSort(item.getRecipeSortNo())     // 표시 순서
+                    .build();
+
+            // material FK 없음 (자유입력). 필요하면 엔티티에서 nullable=true로 선언
+            // recipe.setMaterial(null);
+
+            menuRecipeRepository.save(recipe);
+        });
+    }
+    private BigDecimal nvl(BigDecimal v) { return v == null ? BigDecimal.ZERO : v; }
 
 }

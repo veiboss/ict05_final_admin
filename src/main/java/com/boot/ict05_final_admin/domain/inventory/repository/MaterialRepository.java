@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
+
 public interface MaterialRepository  extends JpaRepository<Material, Long>, MaterialRepositoryCustom {
 
     @Query("SELECT MAX(m.code) FROM Material m WHERE m.materialCategory = :category")
     String findMaxCodeByCategory(@Param("category") MaterialCategory category);
+
+    Collection<Object> findAllByMaterialCategory(MaterialCategory materialCategory);
 }

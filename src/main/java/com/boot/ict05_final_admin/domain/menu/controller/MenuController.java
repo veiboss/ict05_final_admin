@@ -1,7 +1,9 @@
 package com.boot.ict05_final_admin.domain.menu.controller;
 
 import com.boot.ict05_final_admin.config.ProjectAttribute;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
+import com.boot.ict05_final_admin.domain.menu.dto.MaterialSimpleDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
@@ -117,18 +119,21 @@ public class MenuController {
     // Controller
     @GetMapping("/menu/write")
     public String writeForm(Model model) {
+
         MenuWriteFormDTO form = new MenuWriteFormDTO();
         form.setMenuShow(MenuShow.SHOW);
 
         model.addAttribute("menuWriteFormDTO", form);   // 템플릿의 th:object와 맞춤
         model.addAttribute("menuShowValues", MenuShow.values()); // 라디오 반복용
 
+        model.addAttribute("units", List.of("g", "ml", "개", "장"));
+
         List<MenuCategory> categories = menuCategoryRepository.findSetAndLevel3Categories();
         model.addAttribute("menuCategories", categories); // 셀렉트 옵션용
 
-        model.addAttribute("materials", materialRepository.findAll()); // id, name 있는 엔티티라고 가정
-        // 단위 옵션 간단 예시
-        model.addAttribute("units", List.of("g", "ml", "개"));
+        // 재료 셀렉트용 간단 목록
+        List<MaterialSimpleDTO> materials = materialRepository.findSimpleList(); // (id, name)만 담는 쿼리/DTO
+        model.addAttribute("materials", materials);
 
         return "menu/write";
     }
