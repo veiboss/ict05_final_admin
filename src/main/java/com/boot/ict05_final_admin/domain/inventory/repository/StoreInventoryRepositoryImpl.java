@@ -40,8 +40,8 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
                         si.id.as("id"),
                         store.id.as("storeId"),
                         store.name.as("storeName"),
-                        sm.material.name.as("materialName"),
-                        sm.material.materialCategory.stringValue().as("categoryName"),
+                        Expressions.stringTemplate("COALESCE({0}, {1})", sm.material.name, sm.name).as("materialName"),
+                        Expressions.stringTemplate("COALESCE({0}, {1})", sm.material.materialCategory.stringValue(), sm.category).as("categoryName"),
                         si.quantity.as("quantity"),
                         si.optimalQuantity.as("optimalQuantity"),
                         si.status.as("status"),
@@ -49,6 +49,7 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
                 ))
                 .from(si)
                 .join(si.storeMaterial, sm)
+                .leftJoin(sm.material)
                 .join(si.store, store)
                 .where(applyFilter(searchDTO))
                 .orderBy(si.id.desc())
@@ -73,6 +74,7 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
                 .select(si.count())
                 .from(si)
                 .join(si.storeMaterial, sm)
+                .leftJoin(sm.material)
                 .join(si.store, store)
                 .where(applyFilter(searchDTO))
                 .fetchOne();

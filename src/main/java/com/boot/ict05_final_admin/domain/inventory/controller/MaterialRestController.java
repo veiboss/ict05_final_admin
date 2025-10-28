@@ -1,8 +1,10 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialWriteFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.MaterialService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -201,5 +204,21 @@ public class MaterialRestController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of("success", true, "id", id));
+    }
+
+    /**
+     * 카테고리별 재료 목록 조회 API
+     *
+     * 본사 입고 등록 시, 선택된 재료 카테고리에 속한
+     * 본사 사용 재료만 반환한다.
+     *
+     * @param category 재료 카테고리 (예: BASE, SAUCE 등)
+     * @return 카테고리 조건에 맞는 재료 목록
+     */
+    @GetMapping("/material/list")
+    public ResponseEntity<List<MaterialListDTO>> getMaterialsByCategory(
+            @RequestParam MaterialCategory category) {
+        List<MaterialListDTO> list = materialService.findByCategory(category);
+        return ResponseEntity.ok(list);
     }
 }
