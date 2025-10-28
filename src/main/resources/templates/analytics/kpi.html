@@ -21,23 +21,65 @@
       <h2 class="page-title ellipsis">KPI 분석</h2>
     </div>
 
-    <section id="kpi-cards" class="cards grid-4 gap">
-      <div class="card"><div class="k">Sales</div><div id="kc-sales" class="v ta-r">0</div></div>
-      <div class="card"><div class="k">Transaction</div><div id="kc-trx" class="v ta-r">0</div></div>
-      <div class="card"><div class="k">UPT / ADS / AUR</div>
-        <div class="v ta-r"><span id="kc-upt">0</span> / <span id="kc-ads">0</span> / <span id="kc-aur">0</span></div>
-      </div>
-      <div class="card"><div class="k">Comp(MoM / YoY)</div>
-        <div class="v ta-r"><span id="kc-mom">0%</span> / <span id="kc-yoy">0%</span></div>
-      </div>
-    </section>
-    <section class="cards grid-3 gap">
-      <div class="card"><div class="k">Visit</div><div id="kc-visit" class="v ta-r">0%</div></div>
-      <div class="card"><div class="k">Takeout</div><div id="kc-takeout" class="v ta-r">0%</div></div>
-      <div class="card"><div class="k">Delivery</div><div id="kc-delivery" class="v ta-r">0%</div></div>
-    </section>
-
     <main id="content">
+      <div th:each="c : ${kpiCards}">
+        <div class="row-4">
+          <div class="col box-wrap">
+            <div class="title">Sales</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.sales, 0, 'COMMA', 0, 'POINT')} 원|">0 원</div>
+            <span class="hint">올해 누적</span>
+          </div>
+          <div class="col box-wrap">
+            <div class="title">Transaction</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.transaction, 0, 'COMMA', 0, 'POINT')} 건|">0 건</div>
+            <span class="hint">올해 누적</span>
+          </div>
+          <div class="col box-wrap">
+            <div class="title">UPT</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.upt, 2, 'COMMA', 2, 'POINT')} 개/건|">0.00 개/건</div>
+            <span class="hint">올해 누적</span>
+          </div>
+          <div class="col box-wrap">
+            <div class="title">ADS</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.ads, 0, 'COMMA', 0, 'POINT')} 원/건|">0 원/건</div>
+            <span class="hint">올해 누적</span>
+          </div>
+        </div>
+        <br>
+        <div class="row-4">
+          <div class="col box-wrap">
+            <div class="title">AUR</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.aur, 0, 'COMMA', 0, 'POINT')} 원/개|">0 원/개</div>
+            <span class="hint">올해 누적</span>
+          </div>
+          <div class="col box-wrap">
+            <div class="title">Comp.(MoM)</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.compMoM, 1, 'COMMA', 1, 'POINT')} %|">0.0 %</div>
+            <span class="hint">올해 누적</span>
+          </div>
+          <div class="col box-wrap">
+            <div class="title">Comp.(YoY)</div>
+            <div class="card"
+                 th:text="|${#numbers.formatDecimal(c.compYoY, 1, 'COMMA', 1, 'POINT')} %|">0.0 %</div>
+            <span class="hint">올해 누적</span>
+          </div>
+          <div class="col box-wrap">
+            <div class="title">Order Type Ratio</div>
+            <div class="card"
+                 th:text="|방문 ${#numbers.formatDecimal(c.visitRatio,1,'COMMA',1,'POINT')}%, 포장 ${#numbers.formatDecimal(c.takeoutRatio,1,'COMMA',1,'POINT')}%, 배달 ${#numbers.formatDecimal(c.deliveryRatio,1,'COMMA',1,'POINT')}%|">
+              0%
+            </div>
+            <span class="hint">올해 누적</span>
+          </div>
+        </div>
+      </div>
+
       <div class="box-wrap">
         <!-- 검색 영역 -->
         <div id="search" class="search">
@@ -74,12 +116,12 @@
 
                   <div class="pack-left page-size">
                     <select title="출력개수" name="limit" class="select medium">
-                      <option>20</option>
-                      <option selected>40</option>
-                      <option>60</option>
-                      <option>80</option>
+                      <option selected>50</option>
                       <option>100</option>
+                      <option>150</option>
                       <option>200</option>
+                      <option>250</option>
+                      <option>300</option>
                     </select>
                     <span class="fs-ss">개씩 보기</span>
                   </div>
@@ -116,35 +158,6 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
   </div>
 </div>
-
-<script>
-  function fmtN(v){return (v??0).toLocaleString();}
-  function fmtP(v){return (v==null)?'-':(Number(v)*100).toFixed ? (Number(v)*100).toFixed(1)+'%' : (v.toFixed(1)+'%');}
-  function fmtPct(v){return (v==null)?'0%':Number(v).toFixed(1)+'%';}
-
-  function fetchKpiCards(){
-    const storeIds = new FormData(document.getElementById('frm')).get('storeIds');
-    const qs = storeIds ? ('?storeIds='+encodeURIComponent(storeIds)) : '';
-    fetch('/admin/API/analytics/kpi/cards'+qs)
-      .then(r=>r.json()).then(c=>{
-        document.getElementById('kc-sales').textContent = fmtN(c.sales);
-        document.getElementById('kc-trx').textContent   = fmtN(c.transaction);
-        document.getElementById('kc-upt').textContent   = (c.upt??0).toFixed(2);
-        document.getElementById('kc-ads').textContent   = fmtN(c.ads);
-        document.getElementById('kc-aur').textContent   = fmtN(c.aur);
-        document.getElementById('kc-mom').textContent   = fmtP(c.compMoM);
-        document.getElementById('kc-yoy').textContent   = fmtP(c.compYoY);
-        document.getElementById('kc-visit').textContent    = fmtPct(c.visitRatio);
-        document.getElementById('kc-takeout').textContent  = fmtPct(c.takeoutRatio);
-        document.getElementById('kc-delivery').textContent = fmtPct(c.deliveryRatio);
-      }).catch(()=>toast('카드 요약 조회 중 오류가 발생했습니다.'));
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    fetchKpiCards();   // 페이지 진입 시 항상 호출
-    fetchData();       // 기존 목록 호출 유지
-  });
-</script>
 
 <script>
   function params() {

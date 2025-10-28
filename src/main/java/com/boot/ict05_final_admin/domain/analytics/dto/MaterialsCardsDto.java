@@ -7,9 +7,6 @@ import java.time.LocalDate;
 @Getter @Setter @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class MaterialsCardsDto {
-    private LocalDate ytdStart;
-    private LocalDate ytdEnd;
-
     private BigDecimal hqStockQtyNow;     // 현재 본사 재고 수량
     private BigDecimal storeStockQtyNow;  // 현재 가맹점 총 재고 수량(선택 매장 합)
     private BigDecimal orderQtyYtd;       // YTD 자재 발주 수량

@@ -4,12 +4,12 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter @Setter @Builder
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class KpiCardsDto {
-    private LocalDate ytdStart;  // 올해 1/1
-    private LocalDate ytdEnd;    // 어제
-
     private BigDecimal sales;    // YTD 총매출
     private Long transaction;    // YTD 결제건수
     private BigDecimal upt;      // 총판매메뉴수 / 결제건수

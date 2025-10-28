@@ -1,6 +1,8 @@
 package com.boot.ict05_final_admin.domain.analytics.controller;
 
 import com.boot.ict05_final_admin.domain.analytics.dto.AnalyticsSearchDto;
+import com.boot.ict05_final_admin.domain.analytics.dto.KpiCardsDto;
+import com.boot.ict05_final_admin.domain.analytics.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/analytics")
 public class AnalyticsController {
 
+    private final AnalyticsService analyticsService;
+
     /**
      * KPI 분석 화면
      */
     @GetMapping("/kpi")
     public String kpi(AnalyticsSearchDto search, Model model) {
+        model.addAttribute("kpiCards", analyticsService.getKpiCards());
         model.addAttribute("search", AnalyticsSearchDto.withDefaults(search));
         return "analytics/kpi";
     }

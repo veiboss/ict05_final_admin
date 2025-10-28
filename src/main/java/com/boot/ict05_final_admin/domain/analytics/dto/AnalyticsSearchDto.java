@@ -35,7 +35,7 @@ public class AnalyticsSearchDto {
     private ViewBy viewBy = ViewBy.DAY;
 
     /** 출력 개수(테이블 상단 셀렉트와 연동) */
-    private Integer limit = 40;
+    private Integer limit = 50;
 
     public enum ViewBy { DAY, MONTH }
 

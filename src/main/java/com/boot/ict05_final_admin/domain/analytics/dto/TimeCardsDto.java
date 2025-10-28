@@ -10,10 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class TimeCardsDto {
-    // 기준 구간
-    private LocalDate ytdStart;   // 올해 1/1
-    private LocalDate ytdEnd;     // 어제
-
     // 시간대별(0~23) - YTD 누적
     private List<BigDecimal> salesByHour; // 크기 24
     private List<Long>       trxByHour;   // 크기 24
