@@ -70,10 +70,12 @@
         </tr>
 
     </table>
-    <a href="/admin/notice/list" class="btn btn-secondary">목록</a>
-    <a th:href="@{/notice/modify/{id}(id=${notice.id})}" class="btn btn-secondary">수정</a>
-    <a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn btn-secondary">삭제</a>
-    <a href="/admin/notice/write" class="btn btn-secondary">게시물작성</a>
+    <div class="button-area">
+        <a href="/admin/notice/list" class="btn medium color1">목록</a>
+        <a th:href="@{/notice/modify/{id}(id=${notice.id})}" class="btn medium color2">수정</a>
+        <a th:href="@{/notice/delete/{id}(id=${notice.id})}" class="btn medium color2">삭제</a>
+        <a href="/admin/notice/write" class="btn medium color1">게시물작성</a>
+    </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>

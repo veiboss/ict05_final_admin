@@ -27,70 +27,82 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<form name="frm" id="frm">
-    <input type="hidden" name="id" id="id" th:value="${notice.id}">
-    <table>
-        <tr>
-            <td style="width:100px;">카테고리</td>
-            <td>
-                <select name="noticeCategory" id="noticeCategory">
-                    <option>선택</option>
-                    <option th:each="c : ${NoticeCategory}"
-                            th:value="${c.name()}"
-                            th:text="${c.description}"
-                            th:selected="${c == notice.noticeCategory}">
-                        일반
-                    </option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>상태</td>
-            <td>
-                <select name="noticePriority" id="noticePriority">
-                    <option>선택</option>
-                    <option th:each="c : ${NoticePriority}"
-                            th:value="${c.name()}"
-                            th:text="${c.description}"
-                            th:selected="${c == notice.noticePriority}">
-                        일반
-                    </option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>노출여부</td>
-            <td>
-                <input type="checkbox" name="isShow" id="isShow" value="1" th:checked="${notice.isShow}"/>
-                <p id="isShowError" style="color:red"></p>
-            </td>
-        </tr>
-        <tr>
-            <td>이름</td>
-            <td><input type="text" name="writer" th:value="${notice.writer}" /></td>
-        </tr>
-        <tr>
-            <td>제목</td>
-            <td><input type="text" name="title" th:value="${notice.title}" /></td>
-        </tr>
-        <tr>
-            <td>내용</td>
-            <td><textarea name="body" class="body" th:text="${notice.body}"></textarea></td>
-        </tr>
-        <tr>
-            <td>첨부파일</td>
-            <td>
-                <input type="file" name="files" id="files" multiple />
-            </td>
-        </tr>
-    </table>
-    <div>첨부파일목록 : </div>
-    <ul>
-        <li th:each="attachment : ${attachments}" th:text="${attachment.url}"></li>
-    </ul>
-    <input type="submit" class="btn btn-primary" value="전송"/>
-</form>
-<a href="/admin/notice/list" class="btn btn-secondary">목록</a>
+<div id="container" class="container">
+    <form name="frm" id="frm">
+        <input type="hidden" name="id" id="id" th:value="${notice.id}">
+        <table>
+            <tr>
+                <td style="width:100px;">카테고리</td>
+                <td>
+                    <div class="insert pack-down">
+                        <select name="noticeCategory" id="noticeCategory" class="select medium">
+                            <option>선택</option>
+                            <option th:each="c : ${NoticeCategory}"
+                                    th:value="${c.name()}"
+                                    th:text="${c.description}"
+                                    th:selected="${c == notice.noticeCategory}">
+                                일반
+                            </option>
+                        </select>
+                    </div>
+                    <p id="noticeCategoryError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>상태</td>
+                <td>
+                    <div class="insert pack-down">
+                        <select name="noticePriority" id="noticePriority" class="select medium">
+                            <option>선택</option>
+                            <option th:each="c : ${NoticePriority}"
+                                    th:value="${c.name()}"
+                                    th:text="${c.description}"
+                                    th:selected="${c == notice.noticePriority}">
+                                일반
+                            </option>
+                        </select>
+                    </div>
+                    <p id="noticePriorityError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>노출여부</td>
+                <td>
+                    <input type="checkbox" name="isShow" id="isShow" value="1" th:checked="${notice.isShow}" class="checkbox"/>
+                    <p id="isShowError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td><input type="text" name="writer" th:value="${notice.writer}" class="input-text"/></td>
+            </tr>
+            <tr>
+                <td>제목</td>
+                <td><input type="text" name="title" th:value="${notice.title}" class="input-text"/></td>
+            </tr>
+            <tr>
+                <td>내용</td>
+                <td><textarea name="body" class="body" th:text="${notice.body}"></textarea></td>
+            </tr>
+            <tr>
+                <td>첨부파일</td>
+                <td>
+                    <input type="file" name="files" id="files" multiple/>
+                </td>
+            </tr>
+        </table>
+        <div>첨부파일목록 :</div>
+        <ul>
+            <li th:each="attachment : ${attachments}" th:text="${attachment.url}"></li>
+        </ul>
+        <div class="button-area pack-center">
+            <input type="submit" class="btn large color1" value="전송"/>
+        </div>
+    </form>
+    <div class="button-area pack-both">
+        <a href="/admin/notice/list" class="btn medium color1">목록</a>
+    </div>
+</div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     ClassicEditor.create(document.querySelector(".body"), {
@@ -102,7 +114,7 @@
     });
 </script>
 <script>
-    document.getElementById("frm").addEventListener("submit", function(e) {
+    document.getElementById("frm").addEventListener("submit", function (e) {
         e.preventDefault(); // 폼 기본 제출 막기
 
         const formData = new FormData(this);
