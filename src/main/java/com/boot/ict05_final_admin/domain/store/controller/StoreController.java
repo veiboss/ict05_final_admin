@@ -1,12 +1,11 @@
 package com.boot.ict05_final_admin.domain.store.controller;
 
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.service.StaffService;
-import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
+import com.boot.ict05_final_admin.domain.store.dto.*;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
 import com.boot.ict05_final_admin.domain.store.entity.StoreType;
@@ -37,20 +36,20 @@ public class StoreController {
     /**
      * 공지사항 목록을 페이징 처리하여 조회한다.
      *
-     * @param storeSearchDTO   (선택) 작성자 이름으로 검색할 경우 전달되는 값
-     * @param pageable 페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
-     * @param model    뷰에 전달할 모델 객체
+     * @param storeSearchDTO (선택) 작성자 이름으로 검색할 경우 전달되는 값
+     * @param pageable       페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
+     * @param model          뷰에 전달할 모델 객체
      * @return 공지사항 목록 페이지 뷰 이름
      */
     @GetMapping("/store/list")
     public String listOfficeStore(StoreSearchDTO storeSearchDTO,
-                                   @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                   Model model,
-                                   HttpServletRequest request) {
+                                  @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                  Model model,
+                                  HttpServletRequest request) {
 
         // 정렬은 id 기준 내림차순으로 고정(요구 시 동적 정렬로 확장 가능)
         PageRequest pageRequest = PageRequest.of(
-                pageable.getPageNumber()-1,     // 1기반 -> 0기반 변환
+                pageable.getPageNumber() - 1,     // 1기반 -> 0기반 변환
                 pageable.getPageSize(),                   // 페이지 크기 유지
                 Sort.by("id").descending()      // id DESC 정렬
         );
@@ -104,4 +103,23 @@ public class StoreController {
 
         return "store/detail";
     }
+
+    /**
+     * 특정 가맹점의 수정 화면을 표시한다.
+     *
+     * @param id    가맹점 ID
+     * @param model 뷰에 전달할 모델 객체
+     * @return 가맹점 수정 페이지 뷰 이름
+     */
+    @GetMapping("/store/modify/{id}")
+    public String modifyOfficeStore(@PathVariable Long id, Model model) {
+        Store store = storeService.modifyOfficeStore(id);
+
+        model.addAttribute("store", store);
+        model.addAttribute("StoreStatus", StoreStatus.values());
+        model.addAttribute("StoreType", StoreType.values());
+
+        return "store/modify";
+    }
+
 }

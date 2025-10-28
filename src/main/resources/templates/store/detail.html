@@ -47,9 +47,16 @@
                             <span class="fs-ss fc-999">점주명</span>
                             <span th:text="${staffName != null ? staffName : '미지정'}">점주명</span>
                         </div>
+                    </div>
+
+                    <div class="row col-3">
                         <div class="pack-down col">
                             <span class="fs-ss fc-999">월 매출</span>
                             <span th:text="${store.monthlySales}">월 매출</span>
+                        </div>
+                        <div class="pack-down col">
+                            <span class="fs-ss fc-999">총 직원 수</span>
+                            <span th:text="${store.totalEmployees}">총 직원 수</span>
                         </div>
                     </div>
 

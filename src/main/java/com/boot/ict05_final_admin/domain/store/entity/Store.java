@@ -58,6 +58,10 @@ public class Store {
     @Builder.Default
     private StoreStatus status = StoreStatus.OPERATING;
 
+    /** 총 직원수*/
+    @Column(name = "store_total_employees")
+    private Integer totalEmployees;
+
     /** 가맹점 계약 시작일 */
     @Column(name = "store_contract_start_date")
     private LocalDate contractStartDate;
@@ -93,6 +97,5 @@ public class Store {
     /** 가맹점 로열티 */
     @Column(name = "store_royalty", precision = 8, scale = 4)
     private BigDecimal royalty;
-
 
 }

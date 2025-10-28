@@ -1,9 +1,8 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
-import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
+import com.boot.ict05_final_admin.domain.store.dto.*;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +35,8 @@ public class StoreService {
     /**
      * 가맹점 이름으로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
      *
-     * @param storeSearchDTO   작성자 이름 (선택, null 가능)
-     * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
+     * @param storeSearchDTO 작성자 이름 (선택, null 가능)
+     * @param pageable       페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 공지사항 리스트 DTO
      */
     public Page<StoreListDTO> selectAllOfficeStore(StoreSearchDTO storeSearchDTO, Pageable pageable) {
@@ -64,6 +63,7 @@ public class StoreService {
                 .phone(dto.getStorePhone())
                 .status(dto.getStoreStatus())
                 .type(dto.getStoreType())
+                .totalEmployees(dto.getStoreTotalEmployees())
                 .location(dto.getStoreLocation())
                 .contractStartDate(dto.getStoreContractStartDate())
                 .contractAffiliateDate(dto.getStoreContractAffiliateDate())
@@ -96,8 +96,34 @@ public class StoreService {
      * @param id 가맹점 ID
      * @return 가맹점 엔티티, 존재하지 않으면 null
      */
-    public Store detailOfficeStore(Long id) { return storeRepository.findById(id).orElse(null); }
+    public Store detailOfficeStore(Long id) {
+        return storeRepository.findById(id).orElse(null);
     }
+
+    /**
+     * 기존 가맹점 정보를 수정한다.
+     *
+     * @param dto 수정할 데이터
+     * @return 수정된 가맹점 엔티티
+     */
+    public Store modifyOfficeStore(StoreModifyFormDTO dto) {
+
+        String address = "";
+        String address1 = dto.getUserAddress1();
+        String address2 = dto.getUserAddress2();
+        address = address1 + "," + address2;
+        dto.setStoreLocation(address);
+
+        Store store = Id(dto.getStoreId());
+        if (store == null) throw new IllegalArgumentException("해당 가맹점이 존재하지 않습니다.");
+
+        store.(dto);
+
+        return store;
+    }
+}
+
+
 
 
 
