@@ -48,7 +48,10 @@
                                     <input type="hidden" name="type" th:value="${storeMaterialSearchDTO.type}" />
                                     <input type="hidden" name="size" th:value="${storeMaterialSearchDTO.size}" />
 
-                                    <input title="검색어" type="search" name="s" th:value="${storeMaterialSearchDTO.s}" class="input-text medium form-control" placeholder="재료명, 검색어, 카테고리 검색" />
+                                    <input title="검색어" type="search" name="s"
+                                           th:value="${storeMaterialSearchDTO.s}"
+                                           class="input-text medium form-control"
+                                           placeholder="재료명, 카테고리 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 
@@ -122,7 +125,7 @@
                                 <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
                             </td>
                             <td th:text="${material.baseUnit}">단위</td>
-                            <td th:text="${material.supplier}">공급업체</td>
+                            <td th:text="${material.hqMaterial ? '본사' : material.supplier}"></td>
                             <td>
                                 <span th:class="'badge rounded-pill ' + (${material.status.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.status.description}">상태</span>
                             </td>
