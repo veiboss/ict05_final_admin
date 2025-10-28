@@ -151,10 +151,12 @@
 
 <script>
     function onStoreChange(storeId) {
-        const params = new URLSearchParams(window.location.search);
-        if (storeId) params.set("storeId", storeId);
-        else params.delete("storeId");
-        window.location = `/admin/inventory/store/list?${params.toString()}`;
+        if (!storeId) {
+            window.location = "/admin/inventory/store/list";
+            return;
+        }
+        // 기존 검색 조건, 페이징, 상태 필터 등 초기화
+        window.location = `/admin/inventory/store/list?storeId=${storeId}`;
     }
 
     function setFilter(status) {

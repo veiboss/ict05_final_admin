@@ -148,9 +148,8 @@
             window.location = "/admin/material/store/list";
             return;
         }
-        const params = new URLSearchParams(window.location.search);
-        params.set("storeId", storeId);
-        window.location = `/admin/material/store/list?${params.toString()}`;
+        // 기존 검색어나 상태 필터 초기화
+        window.location = `/admin/material/store/list?storeId=${storeId}`;
     }
 
     function setFilter(status) {
