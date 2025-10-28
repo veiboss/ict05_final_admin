@@ -51,6 +51,13 @@
                                         </label>
 
                                         <label class="btn medium"
+                                               th:classappend="${inventorySearchDTO.status?.name() == 'SUFFICIENT'} ? ' active' : ''">
+                                            <input type="radio" name="status" value="LOW"
+                                                   th:checked="${inventorySearchDTO.status?.name() == 'SUFFICIENT'}"
+                                                   onclick="setFilter('SUFFICIENT')">충분
+                                        </label>
+
+                                        <label class="btn medium"
                                                th:classappend="${inventorySearchDTO.status?.name() == 'LOW'} ? ' active' : ''">
                                             <input type="radio" name="status" value="LOW"
                                                    th:checked="${inventorySearchDTO.status?.name() == 'LOW'}"

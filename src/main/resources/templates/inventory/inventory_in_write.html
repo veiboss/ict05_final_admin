@@ -19,21 +19,37 @@
 
         <main id="content">
             <div class="write-form box-wrap">
-                <form id="frm" name="frm" action="/inventory/in/write" method="post">
+                <form id="frm" name="frm" method="post">
                     <fieldset class="pack-down gap-12">
                         <legend class="blind">입고 정보</legend>
 
-                        <!-- 재료 선택 -->
-                        <div class="field pack-down">
-                            <label class="label medium required" for="inventoryId">재료 선택</label>
-                            <div class="insert pack-down">
-                                <select id="inventoryId" name="inventoryId" class="select medium" required>
-                                    <option value="">재료 선택</option>
-                                    <option th:each="inv : ${inventoryList}"
-                                            th:value="${inv.id}"
-                                            th:text="${inv.material.name}"></option>
-                                </select>
-                                <p id="inventoryIdError" class="warning"></p>
+                        <div class="row-3">
+                            <!-- 카테고리 선택 -->
+                            <div class="field pack-down col">
+                                <label class="label medium required" for="categorySelect">재료 카테고리</label>
+                                <div class="insert pack-down">
+                                    <select id="categorySelect" class="select medium" required onchange="onCategoryChange(this.value)">
+                                        <option value="">카테고리 선택</option>
+                                        <option value="BASE">주재료</option>
+                                        <option value="SAUCE">소스</option>
+                                        <option value="TOPPING">토핑</option>
+                                        <option value="BEVERAGE">음료</option>
+                                        <option value="PACKAGE">패키지</option>
+                                        <option value="ETC">기타</option>
+                                    </select>
+                                    <p id="categoryError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <!-- 재료 선택 -->
+                            <div class="field pack-down col-2">
+                                <label class="label medium required" for="materialSelect">재료 선택</label>
+                                <div class="insert pack-down">
+                                    <select id="materialSelect" name="materialId" class="select medium" required>
+                                        <option value="">재료 선택</option>
+                                    </select>
+                                    <p id="materialError" class="warning"></p>
+                                </div>
                             </div>
                         </div>
 
@@ -102,25 +118,46 @@
 </div>
 
 <script>
+    // 카테고리 변경 시 재료 목록 로드
+    function onCategoryChange(category) {
+        const materialSelect = document.getElementById("materialSelect");
+        materialSelect.innerHTML = '<option value="">재료 선택</option>';
+
+        if (!category) return;
+
+        fetch(`/admin/API/material/list?category=${category}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(m => {
+                    const opt = document.createElement("option");
+                    opt.value = m.id;
+                    opt.textContent = `${m.name} (${m.code})`;
+                    materialSelect.appendChild(opt);
+                });
+            })
+            .catch(err => console.error("재료 목록 로드 실패:", err));
+    }
+
+    // 입고 등록
     document.getElementById("frm").addEventListener("submit", function (e) {
-      e.preventDefault();
+        e.preventDefault();
 
-      const formData = new FormData(this);
+        const formData = new FormData(this);
 
-      fetch("/admin/API/inventory/in/write", {
-        method: "POST",
-        body: formData
-      })
-        .then(async res => {
-          const data = await res.json();
-          if (res.ok && data.success) {
-            alert("입고 등록이 완료되었습니다.");
-            window.location.href = "/admin/inventory/list";
-          } else {
-            alert("입고 등록 실패. 입력값을 확인하세요.");
-          }
+        fetch("/admin/API/inventory/in/write", {
+            method: "POST",
+            body: formData
         })
-        .catch(err => console.error("에러 발생:", err));
+            .then(async res => {
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert("입고 등록이 완료되었습니다.");
+                    window.location.href = "/admin/inventory/list";
+                } else {
+                    alert("입고 등록 실패. 입력값을 확인하세요.");
+                }
+            })
+            .catch(err => console.error("에러 발생:", err));
     });
 </script>
 </body>
