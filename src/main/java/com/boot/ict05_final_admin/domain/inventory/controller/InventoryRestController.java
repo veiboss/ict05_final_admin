@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.controller;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryInService;
+import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 public class InventoryRestController {
 
     private final InventoryService inventoryService;
-    private final InventoryInService inventoryInService;
+    private final InventoryInOutService inventoryInOutService;
 
     /**
      * 본사 재고 목록 조회
@@ -80,7 +81,31 @@ public class InventoryRestController {
                     .body(Map.of("success", false, "errors", errors));
         }
 
-        Long id = inventoryInService.insertInventoryIn(dto);
+        Long id = inventoryInOutService.insertInventoryIn(dto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Map.of("success", true, "id", id));
+    }
+
+    /**
+     * 본사 재고 출고 등록
+     *
+     * @param materialId 출고할 재료 ID
+     * @param quantity   출고 수량
+     * @param storeId    출고 대상 가맹점 ID (없을 경우 null)
+     * @param memo       비고
+     * @return 등록 성공 여부 및 출고 ID
+     */
+    @PostMapping("/out/write")
+    @Operation(summary = "본사 재고 출고 등록", description = "가맹점 주문 또는 내부 출고 사유에 따라 본사 재고를 차감하고 출고 이력을 기록한다.")
+    public ResponseEntity<Map<String, Object>> insertInventoryOut(
+            @RequestParam("materialId") Long materialId,
+            @RequestParam("quantity") BigDecimal quantity,
+            @RequestParam(value = "storeId", required = false) Long storeId,
+            @RequestParam(value = "memo", required = false) String memo) {
+
+        Long id = inventoryInOutService.insertInventoryOut(materialId, quantity, storeId, memo);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of("success", true, "id", id));
