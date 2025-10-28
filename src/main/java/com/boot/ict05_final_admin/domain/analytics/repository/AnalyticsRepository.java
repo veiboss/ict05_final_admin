@@ -17,6 +17,9 @@ import java.util.List;
  * @since 1.0
  */
 public interface AnalyticsRepository {
+
+    List<StoreOptionDto> findStoreOptions();
+
     // ===================== Summary Cards =================
 
     List<KpiCardsDto> findKpiSummary();
