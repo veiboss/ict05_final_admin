@@ -27,65 +27,78 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<form name="frm" id="frm" th:object="${noticeWriteFormDTO}">
-    <table>
-        <tr>
-            <td style="width:100px;">카테고리</td>
-            <td>
-                <select th:field="*{noticeCategory}">
-                    <option value="">선택</option>
-                    <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반</option>
-                </select>
-                <p id="noticeCategoryError" style="color:red"></p>
-            </td>
-        </tr>
-        <tr>
-            <td>상태</td>
-            <td>
-                <select th:field="*{noticePriority}">
-                    <option value="">선택</option>
-                    <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반</option>
-                </select>
-                <p id="noticePriorityError" style="color:red"></p>
-            </td>
-        </tr>
-        <tr>
-            <td>노출여부</td>
-            <td>
-                <input type="checkbox" th:field="*{isShow}" />
-                <p id="isShowError" style="color:red"></p>
-            </td>
-        </tr>
-        <tr>
-            <td>이름</td>
-            <td>
-                <input type="text" th:field="*{writer}" />
-                <p id="writerError" style="color:red"></p>
-            </td>
-        </tr>
-        <tr>
-            <td>제목</td>
-            <td>
-                <input type="text" th:field="*{title}" />
-                <p id="titleError" style="color:red"></p>
-            </td>
-        </tr>
-        <tr>
-            <td>내용</td>
-            <td>
-                <textarea th:field="*{body}" class="body"></textarea>
-                <p id="bodyError" style="color:red"></p>
-            </td>
-        </tr><tr>
-            <td>첨부파일</td>
-            <td>
-                <input type="file" th:field="*{files}" multiple />
-            </td>
-        </tr>
-    </table>
-    <input type="submit" class="btn btn-primary" value="전송"/>
-</form>
-<a href="/admin/notice/list" class="btn btn-secondary">목록</a>
+<div id="container" class="container">
+    <form name="frm" id="frm" th:object="${noticeWriteFormDTO}">
+        <table>
+            <tr>
+                <td style="width:100px;">카테고리</td>
+                <td>
+                    <div class="insert pack-down">
+                        <select id="noticeCategory" class="select medium" th:field="*{noticeCategory}">
+                            <option value="">선택</option>
+                            <option th:each="c : ${NoticeCategory}" th:value="${c.name()}" th:text="${c.description}">일반
+                            </option>
+                        </select>
+                    </div>
+                    <p id="noticeCategoryError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>상태</td>
+                <td>
+                    <div class="insert pack-down">
+                        <select class="select medium" th:field="*{noticePriority}">
+                            <option value="">선택</option>
+                            <option th:each="c : ${NoticePriority}" th:value="${c.name()}" th:text="${c.description}">일반
+                            </option>
+                        </select>
+                    </div>
+                    <p id="noticePriorityError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>노출여부</td>
+                <td>
+                    <input type="checkbox" th:field="*{isShow}" class="checkbox"/>
+                    <p id="isShowError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td>
+                    <input type="text" th:field="*{writer}" class="input-text"/>
+                    <p id="writerError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>제목</td>
+                <td>
+                    <input type="text" th:field="*{title}" class="input-text"/>
+                    <p id="titleError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>내용</td>
+                <td>
+                    <textarea th:field="*{body}" class="body"></textarea>
+                    <p id="bodyError" style="color:red"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>첨부파일</td>
+                <td>
+                    <input type="file" th:field="*{files}" multiple/>
+                </td>
+            </tr>
+        </table>
+        <div class="button-area pack-center">
+            <input type="submit" class="btn large color1" value="전송"/>
+        </div>
+    </form>
+    <div class="button-area pack-both">
+        <a href="/admin/notice/list" class="btn medium color1">목록</a>
+    </div>
+</div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     ClassicEditor.create(document.querySelector(".body"), {
@@ -97,7 +110,7 @@
     });
 </script>
 <script>
-    document.getElementById("frm").addEventListener("submit", function(e) {
+    document.getElementById("frm").addEventListener("submit", function (e) {
         e.preventDefault();
 
         const formData = new FormData(this); // 폼의 모든 input 포함
