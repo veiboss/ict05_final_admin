@@ -1,0 +1,79 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+
+    <style>
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .label {
+            color: #888;
+            font-weight: 500;
+            width: 30%;
+        }
+
+        .value {
+            width: 70%;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">마이페이지</h2>
+        </div>
+
+        <main id="content">
+            <div class="box-wrap">
+                <div class="info-item">
+                    <div class="label">회원번호</div>
+                    <div class="value" th:text="${member.id}">1</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">이름</div>
+                    <div class="value" th:text="${member.name}">StoreOwner01</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">이메일</div>
+                    <div class="value" th:text="${member.email}">owner01@toastlab.test</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">전화번호</div>
+                    <div class="value" th:text="${member.phone}">010-901-0037</div>
+                </div>
+
+                <div class="pack-right">
+                    <a th:href="@{/admin/mypage/modify}" class="btn medium color1">정보 수정</a>
+                </div>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
+</body>
+</html>
