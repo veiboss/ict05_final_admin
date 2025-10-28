@@ -3,7 +3,6 @@ package com.boot.ict05_final_admin.domain.inventory.dto;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

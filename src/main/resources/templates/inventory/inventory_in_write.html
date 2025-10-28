@@ -1,0 +1,127 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>입고 등록</title>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">본사 재고 입고 등록</h2>
+        </div>
+
+        <main id="content">
+            <div class="write-form box-wrap">
+                <form id="frm" name="frm" action="/inventory/in/write" method="post">
+                    <fieldset class="pack-down gap-12">
+                        <legend class="blind">입고 정보</legend>
+
+                        <!-- 재료 선택 -->
+                        <div class="field pack-down">
+                            <label class="label medium required" for="inventoryId">재료 선택</label>
+                            <div class="insert pack-down">
+                                <select id="inventoryId" name="inventoryId" class="select medium" required>
+                                    <option value="">재료 선택</option>
+                                    <option th:each="inv : ${inventoryList}"
+                                            th:value="${inv.id}"
+                                            th:text="${inv.material.name}"></option>
+                                </select>
+                                <p id="inventoryIdError" class="warning"></p>
+                            </div>
+                        </div>
+
+                        <div class="row-3">
+                            <div class="field pack-down col">
+                                <label class="label medium required" for="quantity">입고 수량</label>
+                                <div class="insert pack-down">
+                                    <input type="number" step="0.001" id="quantity" name="quantity"
+                                           class="input-text medium" placeholder="예: 100.000" required>
+                                    <p id="quantityError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium required" for="unitPrice">입고 단가 (본사 매입가)</label>
+                                <div class="insert pack-down">
+                                    <input type="number" id="unitPrice" name="unitPrice"
+                                           class="input-text medium" placeholder="예: 5000" required>
+                                    <p id="unitPriceError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium" for="sellingPrice">출고 단가 (가맹점 공급가)</label>
+                                <div class="insert pack-down">
+                                    <input type="number" id="sellingPrice" name="sellingPrice"
+                                           class="input-text medium" placeholder="예: 6000">
+                                    <p id="sellingPriceError" class="warning"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-2">
+                            <div class="field pack-down col">
+                                <label class="label medium required" for="inDate">입고일</label>
+                                <div class="insert pack-down">
+                                    <input type="date" id="inDate" name="inDate"
+                                           class="input-text medium" required>
+                                    <p id="inDateError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium" for="memo">비고</label>
+                                <div class="insert pack-down">
+                                    <input type="text" id="memo" name="memo"
+                                           class="input-text medium" placeholder="비고 입력 (선택)">
+                                    <p id="memoError" class="warning"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-area pack-center">
+                            <button type="submit" class="btn large color1">입고 등록</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="button-area pack-both">
+                <a href="/admin/inventory/list" class="btn medium color1">목록</a>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("frm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch("/admin/API/inventory/in/write", {
+        method: "POST",
+        body: formData
+      })
+        .then(async res => {
+          const data = await res.json();
+          if (res.ok && data.success) {
+            alert("입고 등록이 완료되었습니다.");
+            window.location.href = "/admin/inventory/list";
+          } else {
+            alert("입고 등록 실패. 입력값을 확인하세요.");
+          }
+        })
+        .catch(err => console.error("에러 발생:", err));
+    });
+</script>
+</body>
+</html>

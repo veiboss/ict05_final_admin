@@ -1,7 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.entity;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
