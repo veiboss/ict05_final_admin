@@ -26,8 +26,8 @@ public class MenuRecipe {
     @JoinColumn(name = "menu_id_fk", nullable = false)
     private Menu menu;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "material_id_fk", nullable = false)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "material_id_fk", nullable = true)
     private Material material;
 
     @Column(name = "recipe_qty", precision = 12, scale = 3, nullable = false)
