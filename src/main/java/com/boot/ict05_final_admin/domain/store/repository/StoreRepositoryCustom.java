@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.store.repository;
 
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreDetailDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import org.springframework.data.domain.Page;
@@ -35,4 +36,8 @@ public interface StoreRepositoryCustom {
     long countStore(StoreSearchDTO storeSearchDTO);
 
     List<FindStoreDTO> findStoreName ();
+
+    StoreDetailDTO findByStoreDetail(Long id);
 }
+
+

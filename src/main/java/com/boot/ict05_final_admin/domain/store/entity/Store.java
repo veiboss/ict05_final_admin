@@ -1,5 +1,8 @@
 package com.boot.ict05_final_admin.domain.store.entity;
 
+import com.boot.ict05_final_admin.domain.auth.entity.Member;
+import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreModifyFormDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,12 +34,9 @@ public class Store {
     private Long id;
 
     /** 본사 담당자 시퀀스 */
-    @Column(name = "member_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long memberId;  // FK 후보 - 본사 담당자
-
-    /** 점주명 시퀀스 */
-    @Column(name = "staff_id_fk", nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long staffId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id_fk", nullable = true)
+    private Member member;  // FK 후보 - 본사 담당자
 
     /** 가맹점명 */
     @Column(name = "store_name", length = 150, nullable = false)
@@ -98,4 +98,28 @@ public class Store {
     @Column(name = "store_royalty", precision = 8, scale = 4)
     private BigDecimal royalty;
 
+    /**
+     * 가맹점 정보를 수정하는 메서드
+     *
+     * <p>입력된 {@link StoreModifyFormDTO} 객체의 데이터를 기준으로
+     * 가맹점 엔티티의 상태를 변경합니다.</p>
+     *
+     * @param dto 수정할 직원 정보를 담고 있는 DTO 객체
+     */
+    public void updateStore(StoreModifyFormDTO dto) {
+        this.name = dto.getStoreName();
+        this.location = dto.getStoreLocation();
+        this.type = dto.getStoreType();
+        this.status = dto.getStoreStatus();
+        this.totalEmployees = dto.getStoreTotalEmployees();
+        this.contractStartDate = dto.getStoreContractStartDate();
+        this.contractAffiliateDate = dto.getStoreContractAffiliateDate();
+        this.contractTerm = dto.getStoreContractTerm();
+        this.affiliatePrice = dto.getStoreAffiliatePrice();
+        this.monthlySales = dto.getStoreMonthlySales();
+        this.phone = dto.getStorePhone();
+        this.businessRegistrationNumber = dto.getBusinessRegistrationNumber();
+        this.comment = dto.getComment();
+        this.royalty = dto.getRoyalty();
+    }
 }

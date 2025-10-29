@@ -1,8 +1,10 @@
 package com.boot.ict05_final_admin.domain.store.repository;
 
+import com.boot.ict05_final_admin.domain.auth.entity.QMember;
 import com.boot.ict05_final_admin.domain.staffresources.entity.QStaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
+import com.boot.ict05_final_admin.domain.store.dto.StoreDetailDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
 import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
@@ -16,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 /**
@@ -65,19 +66,22 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 )) // member.name 매핑
                 .from(store)
                 .where(
-                        eqSearchStore(storeSearchDTO, store)
+                        eqSearchStore(storeSearchDTO, store),
+                        eqStatus(storeSearchDTO, store) // ✅ 상태 필터 추가
                 )
                 .orderBy(store.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
+
         // 2) 전체 카운트 조회 (동일 WHERE 적용)
         long total = queryFactory
                 .select(store.count())
                 .from(store)
                 .where(
-                        eqSearchStore(storeSearchDTO, store)
+                        eqSearchStore(storeSearchDTO, store),
+                        eqStatus(storeSearchDTO, store) // ✅ 상태 필터 추가
                 )
                 .fetchOne();
 
@@ -99,6 +103,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
 
        return store.id.stringValue().containsIgnoreCase(keyword)
                .or(store.name.stringValue().containsIgnoreCase(keyword));
+    }
+
+    // ✅ 상태 필터
+    private BooleanExpression eqStatus(StoreSearchDTO dto, QStore store) {
+        return dto.getStatus() != null ? store.status.eq(dto.getStatus()) : null;
     }
 
     /**
@@ -133,4 +142,61 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 .orderBy(store.id.desc())
                 .fetch();
     }
+
+    @Override
+    public StoreDetailDTO findByStoreDetail(Long id) {
+        QStore store = QStore.store;
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
+        QMember member = QMember.member;
+
+        return queryFactory
+                .select(Projections.fields(StoreDetailDTO.class,
+                        store.id.as("storeId"),
+                        store.name.as("storeName"),
+                        store.status.as("storeStatus"),
+                        store.businessRegistrationNumber.as("businessRegistrationNumber"),
+                        store.phone.as("storePhone"),
+                        store.location.as("storeLocation"),
+                        store.type.as("storeType"),
+                        store.contractStartDate.as("storeContractStartDate"),
+                        store.contractAffiliateDate.as("storeContractAffiliateDate"),
+                        store.contractTerm.as("storeContractTerm"),
+                        store.affiliatePrice.as("storeAffiliatePrice"),
+                        store.monthlySales.as("storeMonthlySales"),
+                        store.royalty.as("royalty"),
+                        store.comment.as("comment"),
+
+                        // ★ 명시적 LEFT JOIN으로 가져온 member 컬럼
+                        member.name.as("memberName"),
+                        member.email.as("memberEmail"),
+
+                        // 점주명(OWNER 1명 가정) – 서브쿼리 유지
+                        ExpressionUtils.as(
+                                JPAExpressions.select(staffProfile.staffName)
+                                        .from(staffProfile)
+                                        .where(
+                                                staffProfile.store.id.eq(store.id),
+                                                staffProfile.staffEmploymentType.eq(StaffEmploymentType.OWNER)
+                                        ),
+                                "staffName"
+                        ),
+
+                        // 총 직원수 – 카운트 서브쿼리 (limit 불필요)
+                        ExpressionUtils.as(
+                                JPAExpressions.select(staffProfile.id.count())
+                                        .from(staffProfile)
+                                        .where(
+                                                staffProfile.store.id.eq(store.id),
+                                                staffProfile.staffEndDate.isNull()
+                                        ),
+                                "storeTotalEmployees"
+                        )
+                ))
+                .from(store)
+                // ★ 명시적 LEFT JOIN — member가 없더라도 null로 안전히 들어옴
+                .leftJoin(store.member, member)
+                .where(store.id.eq(id))
+                .fetchOne();
+    }
+
 }

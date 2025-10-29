@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
+import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.store.dto.*;
@@ -93,10 +94,21 @@ public class StoreService {
     /**
      * 가맹점 상세 정보를 조회한다.
      *
+     * @param id 재료 ID
+     * @return 가맹점 엔티티, 존재하지 않으면 null
+     */
+    public StoreDetailDTO detailOfficeStore(Long id) {
+        return storeRepository.findByStoreDetail(id);
+    }
+
+    /**
+     * ID를 기준으로 가맹점을 조회한다.
+     *
      * @param id 가맹점 ID
      * @return 가맹점 엔티티, 존재하지 않으면 null
      */
-    public Store detailOfficeStore(Long id) {
+    @Transactional(readOnly = true)
+    public Store findById(Long id) {
         return storeRepository.findById(id).orElse(null);
     }
 
@@ -106,7 +118,7 @@ public class StoreService {
      * @param dto 수정할 데이터
      * @return 수정된 가맹점 엔티티
      */
-    public Store modifyOfficeStore(StoreModifyFormDTO dto) {
+    public Store storeModify(StoreModifyFormDTO dto) {
 
         String address = "";
         String address1 = dto.getUserAddress1();
@@ -114,10 +126,10 @@ public class StoreService {
         address = address1 + "," + address2;
         dto.setStoreLocation(address);
 
-        Store store = Id(dto.getStoreId());
+        Store store = findById(dto.getStoreId());
         if (store == null) throw new IllegalArgumentException("해당 가맹점이 존재하지 않습니다.");
 
-        store.(dto);
+        store.updateStore(dto);
 
         return store;
     }
