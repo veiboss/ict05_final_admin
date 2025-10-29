@@ -406,9 +406,10 @@ table p + p						{margin-top: 1rem;}
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
-[class*="row"] > .col							{
+[class*="row"] > [class*="col"]				{
 	flex: 1;
 }
+[class*="col"] > .insert.pack-down         {width: 100%;}
 @media (max-width: 767px) {
 	[class*="row-"]							{
 		flex-direction: column;

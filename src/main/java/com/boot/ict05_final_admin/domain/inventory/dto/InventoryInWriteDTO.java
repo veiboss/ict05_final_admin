@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Data
 public class InventoryInWriteDTO {
 
-    /** 재고 ID (HqInventory 기준) */
-    private Long inventoryId;
+    /** 입고 대상 재료 ID */
+    private Long materialId;
 
     /** 입고 수량 */
     private BigDecimal quantity;

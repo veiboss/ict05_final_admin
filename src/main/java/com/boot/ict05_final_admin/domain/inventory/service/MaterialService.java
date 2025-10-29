@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 재료 관련 비즈니스 로직 처리 서비스 클래스
@@ -189,6 +191,22 @@ public class MaterialService {
         }
 
         return String.format("%s%04d", prefix, nextNum);
+    }
+
+    /**
+     * 카테고리별 재료 목록 조회
+     * 본사 입고 등록 시, 선택된 재료 카테고리에 해당하는
+     * 사용중(USE) 상태의 재료 목록을 반환한다.
+     *
+     * @param category 재료 카테고리 (예: BASE, SAUCE 등)
+     * @return 조건에 맞는 재료 목록 DTO 리스트
+     */
+    @Transactional(readOnly = true)
+    public List<MaterialListDTO> findByCategory(MaterialCategory category) {
+        return materialRepository.findByCategory(category)
+                .stream()
+                .map(MaterialListDTO::new)
+                .collect(Collectors.toList());
     }
 
 }
