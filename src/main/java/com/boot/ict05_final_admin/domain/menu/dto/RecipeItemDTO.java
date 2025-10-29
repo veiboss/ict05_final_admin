@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 
 @AllArgsConstructor
 @Getter @Setter
+@NoArgsConstructor
 public class RecipeItemDTO {
 
     @NotNull(message = "재료를 선택하세요")

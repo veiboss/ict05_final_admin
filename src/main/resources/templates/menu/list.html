@@ -115,8 +115,8 @@
                                 <input type="checkbox" class="row-checkbox" th:value="${menu.menuId}">
                             </td>
                             <td>
-                                <span th:class="'badge rounded-pill ' + (${menu.menuShow} ? 'bg-success' : 'bg-secondary')"
-                                      th:text="${menu.menuShow} ? '판매중' : '중지'">판매상태</span>
+                                <span th:class="'badge rounded-pill '+ (${menu.menuShow.name() == 'SHOW'} ? 'bg-success text-white' : 'bg-danger text-white')"
+                                      th:text="${menu.menuShow.name() == 'SHOW'} ? '판매중' : '중지'">판매상태</span>
                             </td>
                             <td th:text="${menu.menuCode}">상품코드</td>
                             <td>

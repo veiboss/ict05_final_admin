@@ -59,7 +59,7 @@ public class MenuRestController {
     @PostMapping(value = "/menu/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "메뉴 등록",
-            description = "본사에서 새로운 메뉴를 등록하는 API입니다. 첨부파일도 함께 업로드 가능합니다.",
+            description = "본사에서 새로운 메뉴를 등록하는 API입니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "메뉴 등록 정보",
                     required = true
@@ -111,7 +111,7 @@ public class MenuRestController {
     @PostMapping(value = "/menu/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "메뉴 수정",
-            description = "기존 매뉴를 수정하는 API입니다. 첨부파일 변경/추가도 가능합니다.",
+            description = "기존 매뉴를 수정하는 API입니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "메뉴 수정 정보",
                     required = true

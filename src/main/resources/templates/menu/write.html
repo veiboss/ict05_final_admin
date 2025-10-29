@@ -15,18 +15,10 @@
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
 
-    <style>
-        .pack-end{ display:flex !important; justify-content:flex-end !important; padding:12px 0 !important; }
-        .btn.btn-primary{ display:inline-block !important; visibility:visible !important; opacity:1 !important; }
-        /* 하단 버튼 중앙 정렬 원하면 아래 주석 해제 */
-        /* .button-area.pack-both { display:flex; justify-content:center; gap:20px; } */
-    </style>
 </head>
-
 <body>
 <div id="wrap" class="frame">
     <div th:replace="~{fragments/header :: header}"></div>
-
     <div id="container" class="container">
         <div class="title-bar">
             <h2 class="page-title ellipsis">메뉴 등록</h2>
@@ -35,25 +27,26 @@
         <main id="content">
             <div class="write-form box-wrap">
 
-                <!-- ✅ API 엔드포인트로 맞춤 (컨트롤러 @PostMapping("/admin/API/menu/write") 가정) -->
-                <form id="frm" th:object="${menuWriteFormDTO}" method="post" th:action="@{/API/menu/write}">
+                <form id="frm"
+                      th:object="${menuWriteFormDTO}"
+                      method="post"
+                      th:action="@{/menu/write}"
+                      enctype="multipart/form-data">
+
                     <fieldset class="pack-down gap-12">
                         <legend class="blind">기본 정보</legend>
 
                         <!-- 카테고리 -->
-                        <div class="">
-                            <div class="field pack-down col">
-                                <label class="label medium required" for="menuCategoryId">카테고리 *</label>
-                                <div class="insert pack-down">
-                                    <select id="menuCategoryId" class="select medium" th:field="*{menuCategoryId}">
-                                        <option value="" disabled selected>카테고리 선택</option>
-                                        <option th:each="c : ${menuCategories}"
-                                                th:value="${c.menuCategoryId}"
-                                                th:text="${c.menuCategoryName}">
-                                        </option>
-                                    </select>
-                                    <p id="menuCategoryError" class="warning"></p>
-                                </div>
+                        <div class="field pack-down col">
+                            <label class="label medium required" for="menuCategoryId">카테고리 *</label>
+                            <div class="insert pack-down">
+                                <select id="menuCategoryId" class="select medium" th:field="*{menuCategoryId}">
+                                    <option value="" disabled selected>카테고리 선택</option>
+                                    <option th:each="c : ${menuCategories}"
+                                            th:value="${c.menuCategoryId}"
+                                            th:text="${c.menuCategoryName}">
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -63,8 +56,7 @@
                                 <label class="label medium" for="menuName">메뉴명 *</label>
                                 <div class="insert pack-down">
                                     <input type="text" id="menuName" class="input-text large"
-                                           th:field="*{menuName}" title="메뉴명" placeholder="예 : 베이컨 에그 토스트" />
-                                    <p id="menuNameError" class="warning"></p>
+                                           th:field="*{menuName}" placeholder="예: 베이컨 에그 토스트"/>
                                 </div>
                             </div>
 
@@ -72,8 +64,7 @@
                                 <label class="label medium" for="menuNameEnglish">영문명 *</label>
                                 <div class="insert pack-down">
                                     <input type="text" id="menuNameEnglish" class="input-text large"
-                                           th:field="*{menuNameEnglish}" title="영문명" placeholder="예 : Bacon Egg Toast" />
-                                    <p id="menuNameEnglishError" class="warning"></p>
+                                           th:field="*{menuNameEnglish}" placeholder="예: Bacon Egg Toast"/>
                                 </div>
                             </div>
                         </div>
@@ -81,37 +72,32 @@
                         <!-- 가격 / 칼로리 -->
                         <div class="row-2">
                             <div class="field pack-down col">
-                                <label class="label medium" for="menuPrice">가격 (원) *</label>
+                                <label class="label medium" for="menuPrice">가격(원) *</label>
                                 <div class="insert pack-down">
                                     <input type="text" id="menuPrice" class="input-text large"
-                                           th:field="*{menuPrice}" title="가격(원)" placeholder="4500" />
-                                    <p id="menuPriceError" class="warning"></p>
+                                           th:field="*{menuPrice}" placeholder="4500"/>
                                 </div>
                             </div>
 
                             <div class="field pack-down col">
-                                <label class="label medium" for="menuKcal">칼로리 (kcal) *</label>
+                                <label class="label medium" for="menuKcal">칼로리(kcal) *</label>
                                 <div class="insert pack-down">
                                     <input type="text" id="menuKcal" class="input-text large"
-                                           th:field="*{menuKcal}" title="칼로리" placeholder="예 : 320" />
-                                    <p id="menuKcalError" class="warning"></p>
+                                           th:field="*{menuKcal}" placeholder="예: 320"/>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 설명 -->
-                        <div class="">
-                            <div class="field pack-down col">
-                                <label class="label medium" for="menuInformation">설명 *</label>
-                                <div class="insert pack-down">
-                                    <input type="text" id="menuInformation" class="input-text large"
-                                           th:field="*{menuInformation}" title="설명" placeholder="상품에 대한 설명을 입력하세요." />
-                                    <p id="menuInformationError" class="warning"></p>
-                                </div>
+                        <div class="field pack-down col">
+                            <label class="label medium" for="menuInformation">설명 *</label>
+                            <div class="insert pack-down">
+                                <input type="text" id="menuInformation" class="input-text large"
+                                       th:field="*{menuInformation}" placeholder="상품 설명"/>
                             </div>
                         </div>
 
-                        <!-- 판매 상태 / 상품코드 -->
+                        <!-- 판매 상태 / 코드 -->
                         <div class="row-2">
                             <div class="field pack-down col">
                                 <span class="fs-ss fc-999">판매 상태 *</span>
@@ -119,10 +105,9 @@
                                     <div class="select-options r4">
                                         <label th:each="s : ${menuShowValues}">
                                             <input type="radio" th:field="*{menuShow}" th:value="${s}" required>
-                                            <span class="btn medium r4" th:text="${s.description}">판매상태</span>
+                                            <span class="btn medium r4" th:text="${s.description}"></span>
                                         </label>
                                     </div>
-                                    <p id="menuShowError" class="warning"></p>
                                 </div>
                             </div>
 
@@ -130,66 +115,101 @@
                                 <label class="label medium" for="menuCode">상품코드 *</label>
                                 <div class="insert pack-down">
                                     <input type="text" id="menuCode" class="input-text large"
-                                           th:field="*{menuCode}" title="상품코드" placeholder="상품에 대한 코드를 입력하세요." />
-                                    <p id="menuCodeError" class="warning"></p>
+                                           th:field="*{menuCode}" placeholder="상품 코드"/>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 재료구성 -->
-                        <h5 class="mt-4">재료구성</h5>
+                        <div class="card p-3">
+                            <h5 class="mb-3">재료구성</h5>
 
-                        <div class="box-wrap" style="padding:12px 16px;">
-                            <div class="row-2">
+                            <div class="row">
                                 <!-- 주재료 -->
-                                <div class="col">
-                                    <div class="pack-between">
-                                        <span class="label medium">주재료 구성</span>
-                                        <button type="button" id="btnAddMain" class="btn small">+ 주재료 추가</button>
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong>주재료 구성</strong>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addMainRow()">+ 재료 추가</button>
                                     </div>
-                                    <div id="mainList" class="pack-down"></div>
+                                    <div id="mainRows" class="border border-2 rounded p-3" style="min-height:84px;">
+                                        <div class="text-muted small" data-placeholder="main">주재료를 추가해주세요</div>
+                                    </div>
                                 </div>
 
                                 <!-- 소스 -->
-                                <div class="col">
-                                    <div class="pack-between">
-                                        <span class="label medium">소스 구성</span>
-                                        <button type="button" id="btnAddSauce" class="btn small">+ 소스 추가</button>
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong>소스 구성</strong>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addSauceRow()">+ 소스 추가</button>
                                     </div>
-                                    <div id="sauceList" class="pack-down"></div>
+                                    <div id="sauceRows" class="border border-2 rounded p-3" style="min-height:84px;">
+                                        <div class="text-muted small" data-placeholder="sauce">소스를 추가해주세요</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 행 템플릿(렌더되지 않음) -->
-                        <template id="tpl-row">
-                            <div class="recipe-row pack-between align-center gap-8" style="margin-top:8px;">
-                                <input type="text" class="input-text medium itemNameInp" placeholder="예: 베이컨" style="min-width:160px;">
-                                <input type="number" class="input-text small qtyInp" placeholder="예: 30" min="0" step="0.01" style="width:100px;">
-                                <select class="select small unitSel" style="width:90px;">
-                                    <option value="G">g</option>
-                                    <option value="ML">ml</option>
-                                    <option value="EA">개</option>
-                                    <option value="SHEET">장</option>
-                                </select>
-                                <button type="button" class="btn small color2 btnDel">×</button>
+                        <!-- 템플릿 -->
+                        <!-- 주재료 -->
+                        <template id="tpl-main-row">
+                            <div class="row g-2 align-items-center mb-2" data-role="row">
+                                <div class="col-3">
+                                    <select class="form-select" name="mainMaterials[__INDEX__].materialId" required>
+                                        <option value="" selected disabled>재료 선택</option>
+                                        <th:block th:each="m : ${mainOptions}">
+                                            <option th:value="${m.materialId}" th:text="${m.materialName}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <input type="number" step="0.1" min="0" class="form-control"
+                                           name="mainMaterials[__INDEX__].recipeQty" placeholder="수량" required>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-select" name="mainMaterials[__INDEX__].recipeUnit" required>
+                                        <option value="" selected disabled>단위</option>
+                                        <option th:each="u : ${units}" th:value="${u}" th:text="${u}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-1 text-end">
+                                    <button type="button" class="btn btn-light border" onclick="removeRow(this)">×</button>
+                                </div>
+                            </div>
+                        </template>
 
-                                <!-- hidden (서버 전송용) -->
-                                <input type="hidden" class="name-itemName"     name="__prefix__[__idx__].itemName">
-                                <input type="hidden" class="name-recipeQty"    name="__prefix__[__idx__].recipeQty">
-                                <input type="hidden" class="name-recipeUnit"   name="__prefix__[__idx__].recipeUnit">
-                                <input type="hidden" class="name-recipeSortNo" name="__prefix__[__idx__].recipeSortNo">
+                        <!-- 소스 -->
+                        <template id="tpl-sauce-row">
+                            <div class="row g-2 align-items-center mb-2" data-role="row">
+                                <div class="col-3">
+                                    <select class="form-select" name="sauceMaterials[__INDEX__].materialId" required>
+                                        <option value="" selected disabled>소스 선택</option>
+                                        <th:block th:each="s : ${sauceOptions}">
+                                            <option th:value="${s.materialId}" th:text="${s.materialName}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <input type="number" step="0.1" min="0" class="form-control"
+                                           name="sauceMaterials[__INDEX__].recipeQty" placeholder="수량" required>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-select" name="sauceMaterials[__INDEX__].recipeUnit" required>
+                                        <option value="" selected disabled>단위</option>
+                                        <option th:each="u : ${units}" th:value="${u}" th:text="${u}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-1 text-end">
+                                    <button type="button" class="btn btn-light border" onclick="removeRow(this)">×</button>
+                                </div>
                             </div>
                         </template>
                     </fieldset>
                 </form>
+            </div>
 
-            </div><!-- .write-form.box-wrap -->
-
-            <!-- 하단 버튼바: 중앙 정렬 원하면 style 조정 -->
             <div class="button-area pack-both" style="display:flex; justify-content:space-between; gap:20px; margin-top:20px;">
                 <a href="/admin/menu/list" class="btn medium color1">목록</a>
-                <a id="btnSave" href="#" class="btn medium color1">저장</a>
+                <a id="btnSave" href="#" class="btn large color1">저장</a>
             </div>
         </main>
 
@@ -198,144 +218,39 @@
 </div>
 
 <script>
-    (() => {
-        const formEl    = document.getElementById('frm');
-        const mainList  = document.getElementById('mainList');
-        const sauceList = document.getElementById('sauceList');
-        const tpl       = document.getElementById('tpl-row').content;
+    let mainIdx = 0, sauceIdx = 0;
+    function addMainRow() { addRow('tpl-main-row','mainRows','main',mainIdx++); }
+    function addSauceRow() { addRow('tpl-sauce-row','sauceRows','sauce',sauceIdx++); }
 
-        let mainIdx = 0;
-        let sauceIdx = 0;
+    function addRow(tplId, containerId, kind, idx) {
+        const container = document.getElementById(containerId);
+        const tpl = document.getElementById(tplId);
+        const ph = container.querySelector('[data-placeholder]');
+        if (ph) ph.remove();
+        const frag = tpl.content.cloneNode(true);
+        frag.querySelectorAll('[name]').forEach(el => el.name = el.name.replace('__INDEX__', idx));
+        container.appendChild(frag);
+    }
 
-        document.getElementById('btnAddMain').addEventListener('click', () => addRow('main'));
-        document.getElementById('btnAddSauce').addEventListener('click', () => addRow('sauce'));
-
-        function addRow(kind) {
-            const clone = document.importNode(tpl, true);
-            const row = clone.querySelector('.recipe-row');
-            row.dataset.kind = kind;
-
-            const prefix = (kind === 'main') ? 'mainMaterials' : 'sauceMaterials';
-            const idx = (kind === 'main') ? mainIdx++ : sauceIdx++;
-
-            row.querySelectorAll('[name]').forEach(el => {
-                el.name = el.name.replace('__prefix__', prefix).replace('__idx__', idx);
-            });
-
-            const itemNameInp = row.querySelector('.itemNameInp');
-            const qtyInp      = row.querySelector('.qtyInp');
-            const unitSel     = row.querySelector('.unitSel');
-            const materialSel = row.querySelector('.materialSel');
-            const hMaterialId = row.querySelector('.name-materialId');
-
-            const hName   = row.querySelector('.name-itemName');
-            const hQty    = row.querySelector('.name-recipeQty');
-            const hUnit   = row.querySelector('.name-recipeUnit');
-            const hSortNo = row.querySelector('.name-recipeSortNo');
-
-            const sync = () => {
-                hMaterialId.value = materialSel.value;
-                hName.value = itemNameInp.value;
-                hQty.value  = qtyInp.value;
-                hUnit.value = unitSel.value; // G/ML/EA/SHEET
-            };
-            itemNameInp.addEventListener('input',  sync);
-            qtyInp.addEventListener('input',       sync);
-            unitSel.addEventListener('change',     sync);
-            sync();
-
-            row.querySelector('.btnDel').addEventListener('click', () => {
-                row.remove();
-                reindex(kind);
-            });
-
-            (kind === 'main' ? mainList : sauceList).appendChild(clone);
-            reindex(kind);
+    function removeRow(btn) {
+        const row = btn.closest('[data-role="row"]');
+        const container = row.parentElement;
+        row.remove();
+        if (container && container.children.length === 0) {
+            const kind = (container.id === 'mainRows') ? 'main' : 'sauce';
+            const div = document.createElement('div');
+            div.className = 'text-muted small';
+            div.dataset.placeholder = kind;
+            div.textContent = (kind === 'main') ? '주재료를 추가해주세요' : '소스를 추가해주세요';
+            container.appendChild(div);
+            if (kind === 'main') mainIdx = 0; else sauceIdx = 0;
         }
+    }
 
-        function reindex(kind) {
-            const prefix = (kind === 'main') ? 'mainMaterials' : 'sauceMaterials';
-            const parent = (kind === 'main') ? mainList : sauceList;
-            const rows = Array.from(parent.querySelectorAll('.recipe-row')).filter(r => r.dataset.kind === kind);
-
-            rows.forEach((row, i) => {
-                row.querySelector('.name-recipeSortNo').value = (i + 1);
-                row.querySelectorAll('[name]').forEach(el => {
-                    el.name = el.name.replace(/\[(\d+)\]/, `[${i}]`).replace(/^(mainMaterials|sauceMaterials)/, prefix);
-                });
-            });
-
-            if (kind === 'main') mainIdx = rows.length; else sauceIdx = rows.length;
-        }
-
-        // 기본 1행씩
-        addRow('main');
-        addRow('sauce');
-
-        // 폼 제출 핸들러 (fetch)
-        formEl.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // 마지막 동기화
-            document.querySelectorAll('.recipe-row').forEach(row => {
-                const itemNameInp = row.querySelector('.itemNameInp');
-                const qtyInp      = row.querySelector('.qtyInp');
-                const unitSel     = row.querySelector('.unitSel');
-                row.querySelector('.name-itemName').value   = itemNameInp.value;
-                row.querySelector('.name-recipeQty').value  = qtyInp.value;
-                row.querySelector('.name-recipeUnit').value = unitSel.value;
-            });
-
-            const formData  = new FormData(formEl);
-
-            // CSRF
-            const csrfHeader = document.querySelector('input[name="_csrf_header"]')?.value;
-            const csrfToken  = document.querySelector('input[name="_csrf"]')?.value
-                || document.querySelector('input[name="_csrf"]')?.getAttribute('value');
-
-            // ✅ action 절대경로 보정 (중복 /admin 문제 방지)
-            const rawAction = formEl.getAttribute('action') || '';
-            const actionUrl = rawAction.startsWith('http')
-                ? rawAction
-                : new URL(rawAction.startsWith('/') ? rawAction : '/' + rawAction, window.location.origin).toString();
-
-            try {
-                const res = await fetch(actionUrl, {
-                    method: 'POST',
-                    body: formData,
-                    headers: (csrfHeader && csrfToken) ? { [csrfHeader]: csrfToken } : {}
-                });
-
-                const data = await res.json().catch(() => ({}));
-
-                if (!res.ok) {
-                    if (res.status === 400 && data.errors) {
-                        Object.entries(data.errors).forEach(([field, msg]) => {
-                            const el = document.getElementById(field + 'Error');
-                            if (el) el.textContent = msg;
-                        });
-                    }
-                    throw new Error('서버 검증 오류');
-                }
-
-                if (data.success) {
-                    alert('저장 완료!');
-                    window.location.href = '/admin/menu/detail/' + data.id;
-                }
-            } catch (err) {
-                console.error(err);
-                alert('저장에 실패했습니다.');
-            }
-        });
-
-        // 하단 저장 버튼 → 폼 제출 트리거
-        document.getElementById('btnSave').addEventListener('click', (e) => {
-            e.preventDefault();
-            formEl.requestSubmit();
-        });
-
-    })();
+    document.getElementById('btnSave')?.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('frm')?.requestSubmit();
+    });
 </script>
-
 </body>
 </html>

@@ -152,21 +152,28 @@ public class MenuService {
     private void saveRecipes(Menu menu, java.util.List<RecipeItemDTO> items, MenuRecipe.RecipeRole role) {
         if (items == null || items.isEmpty()) return;
 
-        items.forEach(item -> {
+        int sort = 1;
+        for (RecipeItemDTO it : items) {
+            if (it == null) continue;
+
+            // materialId 없으면(행을 안 추가했거나 선택 안 함) 저장 스킵
+            if (it.getMaterialId() == null) continue;
+
+            Material material = materialRepository.findById(it.getMaterialId())
+                    .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + it.getMaterialId()));
+
             MenuRecipe recipe = MenuRecipe.builder()
                     .menu(menu)
-                    .recipeItemName(item.getItemName())     // ★ 항목명(자유입력)
-                    .recipeQty(item.getRecipeQty())         // BigDecimal
-                    .recipeUnit(item.getRecipeUnit())       // Enum(RecipeUnit) 또는 String
-                    .recipeRole(role)                       // MAIN / SAUCE
-                    .recipeSort(item.getRecipeSortNo())     // 표시 순서
+                    .material(material)                         // NOT NULL FK
+                    .recipeItemName(it.getItemName())           // 자유 입력
+                    .recipeQty(it.getRecipeQty())
+                    .recipeUnit(it.getRecipeUnit())
+                    .recipeSort(sort++)
+                    .recipeRole(role)
                     .build();
 
-            // material FK 없음 (자유입력). 필요하면 엔티티에서 nullable=true로 선언
-            // recipe.setMaterial(null);
-
             menuRecipeRepository.save(recipe);
-        });
+        }
     }
     private BigDecimal nvl(BigDecimal v) { return v == null ? BigDecimal.ZERO : v; }
 

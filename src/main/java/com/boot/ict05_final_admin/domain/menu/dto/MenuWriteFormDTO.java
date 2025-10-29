@@ -1,10 +1,12 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
 import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,9 +20,9 @@ public class MenuWriteFormDTO {
     @NotNull(message = "카테고리를 선택해주세요")
     private Long menuCategoryId;
 
-    /** 카테고리(필수) */
+    /** 카테고리(필수) *//*
     @NotNull(message = "카테고리를 선택해주세요")
-    private String menuCategoryName;
+    private String menuCategoryName;*/
 
     /** 판매 상태(필수) */
     @NotNull(message = "판매상태를 선택해주세요")
@@ -54,10 +56,10 @@ public class MenuWriteFormDTO {
     private Integer menuKcal;
 
     /** 재료구성 – 주재료(필수) */
-    // @NotNull
-    private List<RecipeItemDTO> mainMaterials;
+    @Valid
+    private List<RecipeItemDTO> mainMaterials = new ArrayList<>();
 
     /** 재료구성 – 소스(필수) */
-    // @NotNull
-    private List<RecipeItemDTO> sauceMaterials;
+    @Valid
+    private List<RecipeItemDTO> sauceMaterials= new ArrayList<>();
 }
