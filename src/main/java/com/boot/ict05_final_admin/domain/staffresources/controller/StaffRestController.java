@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 인사 급여 도메인의 REST 컨트롤러
+ *
+ * 사원 등록 조회 수정 삭제에 관한 API 엔드포인트를 제공한다
+ * 성공 응답은 success 키를 중심으로 반환하며 검증 오류 시 400과 함께 errors 맵을 전달한다
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/API")
