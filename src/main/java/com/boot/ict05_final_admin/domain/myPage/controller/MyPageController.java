@@ -10,6 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 관리자 마이페이지 관련 컨트롤러
+ * <p>
+ * 마이페이지 상세 조회, 수정 화면을 제공한다.
+ * 비밀번호 변경, 탈퇴 기능을 지원한다.
+ */
 @Controller
 @RequiredArgsConstructor
 public class MyPageController {
@@ -113,7 +119,18 @@ public class MyPageController {
         return "redirect:/mypage";
     }
 
-    // 비밀번호 검증
+    /**
+     * 비밀번호 검증 (AJAX 요청)
+     *
+     * <p>
+     * 현재 비밀번호가 DB에 저장된 값과 일치하는지 확인한다.<br>
+     * 클라이언트는 AJAX로 `/mypage/check-password`에 POST 요청을 보내며,
+     * 비밀번호가 일치하면 true, 일치하지 않으면 false를 반환한다.
+     * </p>
+     *
+     * @param currentPassword 사용자가 입력한 현재 비밀번호
+     * @return 일치 여부 (true = 일치, false = 불일치)
+     */
     @PostMapping("/mypage/check-password")
     @ResponseBody
     public boolean checkCurrentPassword(@RequestParam String currentPassword) {
@@ -128,10 +145,19 @@ public class MyPageController {
         return myPageService.checkCurrentPassword(memberId, currentPassword);
     }
 
-    // 탈퇴 처리
+    /**
+     * 회원 탈퇴 처리
+     *
+     * <p>
+     * 회원의 상태를 'WITHDRAWN'으로 변경하여 비활성화(Soft Delete) 처리한다.<br>
+     * 처리 후에는 세션을 무효화하여 로그아웃 상태로 만든다.
+     * </p>
+     *
+     * @param session 현재 사용자의 세션 객체 (로그아웃 처리를 위함)
+     * @return 탈퇴 후 리다이렉트 경로 (현재는 로그인 페이지로 이동)
+     */
     @PostMapping("/mypage/withdraw")
     public String withdrawMember(HttpSession session) {
-        System.out.println(">>> 탈퇴 컨트롤러 진입 확인");
 
         Long memberId = 52L; // 로그인 연동 전 임시
 

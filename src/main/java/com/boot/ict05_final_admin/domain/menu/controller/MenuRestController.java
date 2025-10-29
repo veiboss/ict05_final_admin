@@ -1,16 +1,15 @@
 package com.boot.ict05_final_admin.domain.menu.controller;
 
 
-import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.service.MenuService;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuModifyFormDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -57,10 +56,10 @@ public class MenuRestController {
      * @return 등록 성공 여부 및 생성된 메뉴 ID
      * @throws Exception DB 저장 오류
      */
-    @PostMapping("/menu/write")
+    @PostMapping(value = "/menu/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "메뉴 등록",
-            description = "본사에서 새로운 메뉴를 등록하는 API입니다. 첨부파일도 함께 업로드 가능합니다.",
+            description = "본사에서 새로운 메뉴를 등록하는 API입니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "메뉴 등록 정보",
                     required = true
@@ -80,32 +79,22 @@ public class MenuRestController {
             }
     )
     public ResponseEntity<Map<String, Object>> addStoreMenu(
-          @Validated @ModelAttribute MenuWriteFormDTO dto,
-          BindingResult bindingResult) throws Exception {
+            @Validated @ModelAttribute MenuWriteFormDTO dto,
+            BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.toMap(
-                            fieldError ->  fieldError.getField(),
-                            fieldError -> fieldError.getDefaultMessage()
+                            e -> e.getField(),
+                            e -> e.getDefaultMessage(),
+                            (a, b) -> a // 중복 키 처리
                     ));
-
-            return  ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of(
-                            "succes", false,
-                            "errors", errors
-                    ));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("success", false, "errors", errors));
         }
 
         Long menuId = menuService.insertStoreMenu(dto);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(Map.of(
-                        "succes", true,
-                        "menuId", menuId
-                ));
+        return ResponseEntity.ok(Map.of("success", true, "menuId", menuId));
     }
 
     /**
@@ -119,10 +108,10 @@ public class MenuRestController {
      * @return 수정 성공 여부 및 수정된 메뉴 ID
      * @throws Exception 파일 처리 오류 또는 DB 저장 오류
      */
-    @PostMapping("/menu/modify")
+    @PostMapping(value = "/menu/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "메뉴 수정",
-            description = "기존 매뉴를 수정하는 API입니다. 첨부파일 변경/추가도 가능합니다.",
+            description = "기존 매뉴를 수정하는 API입니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "메뉴 수정 정보",
                     required = true
@@ -148,14 +137,15 @@ public class MenuRestController {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.toMap(
-                            fieldError ->  fieldError.getField(),
-                            fieldError -> fieldError.getDefaultMessage()
+                            e -> e.getField(),
+                            e -> e.getDefaultMessage(),
+                            (a, b) -> a
                     ));
 
             return  ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(Map.of(
-                            "succes", false,
+                            "success", false,
                             "errors", errors
                     ));
         }
@@ -165,7 +155,7 @@ public class MenuRestController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of(
-                        "succes", true,
+                        "success", true,
                         "menuId", menuId
                 ));
     }
