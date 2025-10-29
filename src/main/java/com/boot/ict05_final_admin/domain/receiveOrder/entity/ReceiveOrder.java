@@ -9,7 +9,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 본사 수주 엔티티 (가맹점 발주 내역 기반)
+ * 본사 수주 엔티티 (Receive Order)
+ *
+ * <p>가맹점의 발주 내역을 기반으로 본사에서 생성되는 수주(Purchase Order) 정보를 저장한다.</p>
+ *
+ * <p>본 엔티티는 다음과 같은 정보를 포함한다:</p>
+ * <ul>
+ *     <li>가맹점 정보 ({@link Store})</li>
+ *     <li>수주 코드, 수주일, 배송 예정일, 실제 납기일</li>
+ *     <li>총 주문 금액, 총 수량, 상태, 우선순위</li>
+ *     <li>하위 상세 항목 리스트 ({@link ReceiveOrderDetail})</li>
+ * </ul>
+ *
+ * <p>DB 테이블명: <b>purchase_order</b></p>
+ *
+ * @author 최민진
+ * @since 2025.10
  */
 @Entity
 @Table(name = "purchase_order")
@@ -74,6 +89,7 @@ public class ReceiveOrder {
     @Column(name = "purchase_order_actual_delivery_date")
     private LocalDate actualDeliveryDate;
 
+    /** 수주 상세 목록 (1:N 관계) */
     @OneToMany(mappedBy = "receiveOrder")
     private List<ReceiveOrderDetail> details;
 

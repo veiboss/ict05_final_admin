@@ -11,10 +11,12 @@ import java.util.Optional;
 @Repository
 public interface MyPageRepository extends JpaRepository<Member, Long>{
 
-    // 이메일로 회원 조회 (로그인 후 마이페이지용)
+    /**
+     * 이메일로 회원 조회
+     *
+     * @param email 회원 이메일
+     * @return 회원 엔티티 Optional (존재하지 않을 수 있음)
+     */
     Optional<Member> findByEmail(String email);
 
-    // 활성 회원만 조회 (탈퇴 제외)
-    @Query("SELECT m FROM Member m WHERE m.status = 'ACTIVE'")
-    List<Member> findActiveMembers();
 }

@@ -25,6 +25,23 @@ import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * 수주(Receive Order) 서비스 클래스
+ *
+ * <p>본 클래스는 본사에서 관리하는 수주(가맹점 발주) 관련 주요 로직을 처리한다.
+ * 다음 기능들을 포함한다:</p>
+ *
+ * <ul>
+ *     <li>수주 목록 조회 (검색 및 페이징)</li>
+ *     <li>수주 상세 내역 조회 (하위 품목 포함)</li>
+ *     <li>배송 상태 단계별 변경</li>
+ *     <li>상단 대시보드 요약 정보 조회</li>
+ *     <li>수주 목록 엑셀 다운로드</li>
+ * </ul>
+ *
+ * <p>DB 접근은 {@link ReceiveOrderRepository}를 통해 수행된다.</p>
+ *
+ */
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -44,7 +61,16 @@ public class ReceiveOrderService {
         return receiveOrderRepository.listReceive(receiveOrderSearchDTO, pageable);
     }
 
-    /** 주문 상세 정보 조회 */
+    /**
+     * 특정 수주의 상세 정보를 조회한다.
+     *
+     * <p>상위 수주({@link ReceiveOrder}) 정보와 함께
+     * 하위 품목 목록({@link ReceiveOrderItemDTO})을 함께 반환한다.</p>
+     *
+     * @param id 수주 ID
+     * @return 수주 상세 DTO (품목 리스트 포함)
+     * @throws NoSuchElementException 수주가 존재하지 않을 경우
+     */
     public ReceiveOrderDetailDTO getReceiveOrderDetail(Long id) {
         ReceiveOrderDetailDTO dto = receiveOrderRepository.findDetailById(id)
                 .orElseThrow(() -> new NoSuchElementException("수주 내역이 존재하지 않습니다. id=" + id));
@@ -55,7 +81,16 @@ public class ReceiveOrderService {
         return dto;
     }
 
-    /** 배송 상태 변경 */
+    /**
+     * 수주의 배송 상태를 다음 단계로 변경한다.
+     *
+     * <p>상태 전환 순서:
+     * RECEIVED → PREPARING → SHIPPING → DELIVERED</p>
+     *
+     * @param id 수주 ID
+     * @throws IllegalStateException 이미 배송 완료된 주문일 경우
+     * @throws IllegalArgumentException 해당 ID의 수주가 없을 경우
+     */
     @Transactional
     public void advanceStatus(Long id) {
         ReceiveOrder order = receiveOrderRepository.findById(id)
@@ -75,15 +110,27 @@ public class ReceiveOrderService {
         receiveOrderRepository.save(order);
     }
 
-    /** 상단 카드 데이터 */
+    /**
+     * 수주 현황 요약 데이터를 조회한다.
+     *
+     * <p>상단 카드에 표시되는 주요 통계 정보를 반환한다.</p>
+     *
+     * @return 총 주문 수, 총 주문액, 배송 중 수량, 긴급 주문 수 포함 요약 DTO
+     */
     public ReceiveOrderSummaryDTO getSummary() {
         return receiveOrderRepository.getSummary();
     }
 
     /**
-     * 수주 목록을 엑셀 파일로 다운로드한다.
-     * @return
-     * @throws IOException
+     * 수주 목록을 Excel 파일로 생성하여 다운로드한다.
+     *
+     * <p>검색 조건 및 페이징 정보에 따라 데이터를 조회하고,
+     * Apache POI를 이용해 Excel 워크북을 생성한다.</p>
+     *
+     * @param receiveOrderSearchDTO 검색 조건 DTO
+     * @param pageable 페이지 정보
+     * @return 엑셀 파일 데이터 (byte[])
+     * @throws IOException Excel 파일 생성 중 오류 발생 시
      */
     public byte[] downloadExcel(ReceiveOrderSearchDTO receiveOrderSearchDTO, Pageable pageable)
             throws IOException {
