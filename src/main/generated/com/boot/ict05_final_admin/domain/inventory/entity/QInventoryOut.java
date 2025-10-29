@@ -30,9 +30,11 @@ public class QInventoryOut extends EntityPathBase<InventoryOut> {
 
     public final StringPath memo = createString("memo");
 
-    public final DatePath<java.time.LocalDate> outDate = createDate("outDate", java.time.LocalDate.class);
+    public final DateTimePath<java.time.LocalDateTime> outDate = createDateTime("outDate", java.time.LocalDateTime.class);
 
     public final NumberPath<java.math.BigDecimal> quantity = createNumber("quantity", java.math.BigDecimal.class);
+
+    public final NumberPath<java.math.BigDecimal> stockAfter = createNumber("stockAfter", java.math.BigDecimal.class);
 
     public final com.boot.ict05_final_admin.domain.store.entity.QStore store;
 

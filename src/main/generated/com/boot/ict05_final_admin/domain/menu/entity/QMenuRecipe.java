@@ -28,13 +28,15 @@ public class QMenuRecipe extends EntityPathBase<MenuRecipe> {
 
     public final NumberPath<Long> menuRecipeId = createNumber("menuRecipeId", Long.class);
 
+    public final StringPath recipeItemName = createString("recipeItemName");
+
     public final NumberPath<java.math.BigDecimal> recipeQty = createNumber("recipeQty", java.math.BigDecimal.class);
 
     public final EnumPath<MenuRecipe.RecipeRole> recipeRole = createEnum("recipeRole", MenuRecipe.RecipeRole.class);
 
     public final NumberPath<Integer> recipeSort = createNumber("recipeSort", Integer.class);
 
-    public final StringPath recipeUnit = createString("recipeUnit");
+    public final EnumPath<RecipeUnit> recipeUnit = createEnum("recipeUnit", RecipeUnit.class);
 
     public QMenuRecipe(String variable) {
         this(MenuRecipe.class, forVariable(variable), INITS);

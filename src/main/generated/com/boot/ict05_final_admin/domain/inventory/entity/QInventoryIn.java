@@ -26,7 +26,7 @@ public class QInventoryIn extends EntityPathBase<InventoryIn> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final DatePath<java.time.LocalDate> inDate = createDate("inDate", java.time.LocalDate.class);
+    public final DateTimePath<java.time.LocalDateTime> inDate = createDateTime("inDate", java.time.LocalDateTime.class);
 
     public final QMaterial material;
 
@@ -35,6 +35,8 @@ public class QInventoryIn extends EntityPathBase<InventoryIn> {
     public final NumberPath<java.math.BigDecimal> quantity = createNumber("quantity", java.math.BigDecimal.class);
 
     public final NumberPath<Long> sellingPrice = createNumber("sellingPrice", Long.class);
+
+    public final NumberPath<java.math.BigDecimal> stockAfter = createNumber("stockAfter", java.math.BigDecimal.class);
 
     public final com.boot.ict05_final_admin.domain.store.entity.QStore store;
 

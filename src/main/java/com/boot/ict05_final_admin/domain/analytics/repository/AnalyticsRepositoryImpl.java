@@ -349,13 +349,17 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
         List<Long> selected = analyticsSearchDto.getStoreIds();
         boolean isAll = (selected == null || selected.isEmpty());
+        boolean isMulti = (selected != null && selected.size() > 1);
 
         Map<Long, GlobalComp> perStoreComp = null;
         GlobalComp globalComp = null;
 
-        if (isAll) {
-            perStoreComp = computeCompByStore(pageSids);
+        if (isAll || isMulti) {
+            // 여러 점포 선택 시에도 매장별 Comp를 계산
+            Set<Long> targetSids = isAll ? pageSids : new HashSet<>(selected);
+            perStoreComp = computeCompByStore(targetSids);
         } else {
+            // 단일 점포 선택 시
             globalComp = computeGlobalComp(analyticsSearchDto);
         }
 
@@ -375,7 +379,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
             BigDecimal upt = divOrZero(units, trxBd, 6);
             BigDecimal aur = divOrZero(sales, units, 2);
 
-            GlobalComp compVal = isAll
+            GlobalComp compVal = (isAll || isMulti)
                     ? perStoreComp.getOrDefault(sid, new GlobalComp(BigDecimal.ZERO, BigDecimal.ZERO))
                     : globalComp;
 

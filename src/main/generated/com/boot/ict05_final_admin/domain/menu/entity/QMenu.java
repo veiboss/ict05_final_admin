@@ -38,7 +38,7 @@ public class QMenu extends EntityPathBase<Menu> {
 
     public final NumberPath<java.math.BigDecimal> menuPrice = createNumber("menuPrice", java.math.BigDecimal.class);
 
-    public final BooleanPath menuShow = createBoolean("menuShow");
+    public final EnumPath<MenuShow> menuShow = createEnum("menuShow", MenuShow.class);
 
     public final ListPath<MenuRecipe, QMenuRecipe> recipe = this.<MenuRecipe, QMenuRecipe>createList("recipe", MenuRecipe.class, QMenuRecipe.class, PathInits.DIRECT2);
 

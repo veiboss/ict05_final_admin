@@ -29,6 +29,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath phone = createString("phone");
 
+    public final EnumPath<MemberStatus> status = createEnum("status", MemberStatus.class);
+
     public QMember(String variable) {
         super(Member.class, forVariable(variable));
     }
