@@ -8,9 +8,7 @@ import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -137,7 +138,20 @@ public class ReceiveOrderService {
 
         Workbook workbook = new XSSFWorkbook();
 
-        Sheet sheet = workbook.createSheet("수주목록");
+        Sheet sheet = workbook.createSheet("수주 목록");
+
+        // 날짜 포맷 스타일 생성
+        CellStyle dateCellStyle = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        dateCellStyle.setDataFormat(
+                createHelper.createDataFormat().getFormat("yyyy-MM-dd")
+        );
+
+        // 금액 포맷 (천 단위 콤마)
+        CellStyle moneyCellStyle = workbook.createCellStyle();
+        moneyCellStyle.setDataFormat(
+                createHelper.createDataFormat().getFormat("#,##0")
+        );
 
         Row header = sheet.createRow(0);
         header.createCell(0).setCellValue("ID");
@@ -157,15 +171,47 @@ public class ReceiveOrderService {
         int i = 1;
         for (ReceiveOrderListDTO ro : list) {
             Row sheet1_row = sheet.createRow(i);
+
             sheet1_row.createCell(0).setCellValue(ro.getId());
             sheet1_row.createCell(1).setCellValue(ro.getStoreName());
-            sheet1_row.createCell(2).setCellValue(ro.getStoreLocation());
-            sheet1_row.createCell(3).setCellValue(String.valueOf(ro.getStatus()));
-            sheet1_row.createCell(4).setCellValue(String.valueOf(ro.getPriority()));
-            sheet1_row.createCell(5).setCellValue(ro.getTotalPrice() != null ? ro.getTotalPrice().doubleValue() : 0.0);
-            sheet1_row.createCell(6).setCellValue(ro.getTotalCount());
-            sheet1_row.createCell(7).setCellValue(ro.getDeliveryDate());
+            sheet1_row.createCell(2).setCellValue(ro.getOrderCode());
+            sheet1_row.createCell(3).setCellValue(ro.getStoreLocation());
+            sheet1_row.createCell(4).setCellValue(String.valueOf(ro.getStatus()));
+            sheet1_row.createCell(5).setCellValue(String.valueOf(ro.getPriority()));
+            Cell priceCell = sheet1_row.createCell(6);
+            priceCell.setCellValue(ro.getTotalPrice() != null ? ro.getTotalPrice().doubleValue() : 0.0);
+            priceCell.setCellStyle(moneyCellStyle);
+            sheet1_row.createCell(7).setCellValue(ro.getTotalCount());
+
+            if (ro.getDeliveryDate() != null) {
+                Cell dateCell = sheet1_row.createCell(8);
+                Date excelDate = Date.from(ro.getDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                dateCell.setCellValue(excelDate);
+                dateCell.setCellStyle(dateCellStyle);
+            } else {
+                sheet1_row.createCell(8).setCellValue("");
+            }
             i++;
+        }
+
+        // 모든 열을 내용 길이에 맞게 자동 조정
+        for (int col = 0; col <= 8; col++) {
+            int maxLength = 0;
+
+            // 헤더 포함 전체 행 탐색
+            for (int rowIdx = 0; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
+                Row row = sheet.getRow(rowIdx);
+                if (row != null) {
+                    Cell cell = row.getCell(col);
+                    if (cell != null) {
+                        int length = cell.toString().getBytes(StandardCharsets.UTF_8).length;
+                        if (length > maxLength) maxLength = length;
+                    }
+                }
+            }
+
+            // 글자 수 × 256 단위로 변환 (엑셀 단위), 여유 폭 +2글자
+            sheet.setColumnWidth(col, (maxLength + 2) * 256);
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -173,6 +219,166 @@ public class ReceiveOrderService {
         workbook.close();
 
         return outputStream.toByteArray();
+    }
+
+    /**
+     * 수주 상세 주문서를 Excel로 생성한다.
+     *
+     * <p>주문 기본 정보(주문번호, 주문일, 배송예정일, 상태, 우선순위),
+     * 가맹점 정보(가맹점명, 매장코드, 지역, 총 주문액, 주문 품목수),
+     * 그리고 주문 상품 목록(상품명, 카테고리, 수량, 단가, 총액, 재고상태)을
+     * 모두 포함한 상세 주문서를 생성한다.</p>
+     *
+     * @param orderId 수주 ID
+     * @return Excel 파일 바이트 배열
+     * @throws IOException Excel 생성 중 오류 시
+     */
+    @Transactional(readOnly = true)
+    public byte[] downloadDetailExcel(Long orderId) throws IOException {
+
+        ReceiveOrderDetailDTO order = getReceiveOrderDetail(orderId);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("주문상세");
+        CreationHelper helper = workbook.getCreationHelper();
+
+        // ====== 스타일 정의 ======
+        CellStyle leftAlign = workbook.createCellStyle();
+        leftAlign.setAlignment(HorizontalAlignment.LEFT);
+
+        // 날짜 스타일 (왼쪽 정렬)
+        CellStyle dateStyle = workbook.createCellStyle();
+        dateStyle.setDataFormat(helper.createDataFormat().getFormat("yyyy-MM-dd"));
+        dateStyle.setAlignment(HorizontalAlignment.LEFT);
+
+        // 금액(천단위 콤마, 왼쪽 정렬)
+        CellStyle moneyStyle = workbook.createCellStyle();
+        moneyStyle.setDataFormat(helper.createDataFormat().getFormat("#,##0"));
+        moneyStyle.setAlignment(HorizontalAlignment.LEFT);
+
+        int rowIdx = 0;
+
+        // ====== 제목 ======
+        Row title = sheet.createRow(rowIdx++);
+        Cell titleCell = title.createCell(0);
+        titleCell.setCellValue("수주 상세 주문서");
+        titleCell.setCellStyle(leftAlign);
+        rowIdx++;
+
+        // ====== 주문 정보 ======
+        Row header1 = sheet.createRow(rowIdx++);
+        header1.createCell(0).setCellValue("주문 정보");
+
+        Row orderInfo1 = sheet.createRow(rowIdx++);
+        orderInfo1.createCell(0).setCellValue("주문번호");
+        orderInfo1.createCell(1).setCellValue(order.getOrderCode());
+        orderInfo1.createCell(2).setCellValue("주문일");
+
+        Cell orderDateCell = orderInfo1.createCell(3);
+        if (order.getOrderDate() != null) {
+            orderDateCell.setCellValue(Date.from(order.getOrderDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            orderDateCell.setCellStyle(dateStyle);
+        }
+
+        Row orderInfo2 = sheet.createRow(rowIdx++);
+        orderInfo2.createCell(0).setCellValue("배송예정일");
+        Cell deliveryDateCell = orderInfo2.createCell(1);
+        if (order.getDeliveryDate() != null) {
+            deliveryDateCell.setCellValue(Date.from(order.getDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            deliveryDateCell.setCellStyle(dateStyle);
+        }
+        orderInfo2.createCell(2).setCellValue("상태");
+        orderInfo2.createCell(3).setCellValue(order.getStatusDescription());
+
+        Row orderInfo3 = sheet.createRow(rowIdx++);
+        orderInfo3.createCell(0).setCellValue("우선순위");
+        orderInfo3.createCell(1).setCellValue(order.getPriorityDescription());
+
+        rowIdx++;
+
+        // ====== 가맹점 정보 ======
+        Row header2 = sheet.createRow(rowIdx++);
+        header2.createCell(0).setCellValue("가맹점 정보");
+
+        Row storeInfo1 = sheet.createRow(rowIdx++);
+        storeInfo1.createCell(0).setCellValue("가맹점명");
+        storeInfo1.createCell(1).setCellValue(order.getStoreName());
+        storeInfo1.createCell(2).setCellValue("매장코드");
+        Cell storeIdCell = storeInfo1.createCell(3);
+        storeIdCell.setCellValue(order.getStoreId());
+        storeIdCell.setCellStyle(leftAlign);
+
+        Row storeInfo2 = sheet.createRow(rowIdx++);
+        storeInfo2.createCell(0).setCellValue("지역");
+        storeInfo2.createCell(1).setCellValue(order.getStoreLocation());
+        storeInfo2.createCell(2).setCellValue("총 주문액");
+        Cell totalPriceCell = storeInfo2.createCell(3);
+        totalPriceCell.setCellValue(order.getTotalPrice() != null ? order.getTotalPrice().doubleValue() : 0.0);
+        totalPriceCell.setCellStyle(moneyStyle);
+
+        Row storeInfo3 = sheet.createRow(rowIdx++);
+        storeInfo3.createCell(0).setCellValue("주문 품목");
+        Cell totalCountCell = storeInfo3.createCell(1);
+        totalCountCell.setCellValue(order.getTotalCount());
+        totalCountCell.setCellStyle(leftAlign);
+
+        rowIdx += 2;
+
+        // ====== 주문 상품 ======
+        Row header3 = sheet.createRow(rowIdx++);
+        header3.createCell(0).setCellValue("주문 상품");
+
+        Row tableHeader = sheet.createRow(rowIdx++);
+        String[] headers = {"상품명", "카테고리", "수량", "단가", "총액", "재고상태"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell headerCell = tableHeader.createCell(i);
+            headerCell.setCellValue(headers[i]);
+            headerCell.setCellStyle(leftAlign);
+        }
+
+        for (ReceiveOrderItemDTO item : order.getItems()) {
+            Row row = sheet.createRow(rowIdx++);
+            row.createCell(0).setCellValue(item.getName());
+            row.createCell(1).setCellValue(item.getMaterialCategoryDescription());
+
+            Cell countCell = row.createCell(2);
+            countCell.setCellValue(item.getDetailCount());
+            countCell.setCellStyle(leftAlign);
+
+            Cell unitPrice = row.createCell(3);
+            unitPrice.setCellValue(item.getDetailUnitPrice() != null ? item.getDetailUnitPrice().doubleValue() : 0.0);
+            unitPrice.setCellStyle(moneyStyle);
+
+            Cell totalPrice = row.createCell(4);
+            totalPrice.setCellValue(item.getDetailTotalPrice() != null ? item.getDetailTotalPrice().doubleValue() : 0.0);
+            totalPrice.setCellStyle(moneyStyle);
+
+            Cell statusCell = row.createCell(5);
+            statusCell.setCellValue(item.getInventoryStatusDescription());
+            statusCell.setCellStyle(leftAlign);
+        }
+
+        rowIdx += 2;
+
+        // ====== 특이사항 ======
+        Row remarkHeader = sheet.createRow(rowIdx++);
+        remarkHeader.createCell(0).setCellValue("특이사항");
+        Row remarkRow = sheet.createRow(rowIdx++);
+        remarkRow.createCell(0).setCellValue(order.getRemark() != null ? order.getRemark() : "-");
+
+        // ====== 자동열 폭 조정 ======
+        for (int col = 0; col <= 6; col++) {
+            sheet.autoSizeColumn(col); // 실제 데이터 기준 폭 조정
+            int width = sheet.getColumnWidth(col);
+            sheet.setColumnWidth(col, width + 900); // 여유 폭 확보 (붙는 현상 방지)
+        }
+
+        // ====== 엑셀 출력 ======
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
+        workbook.close();
+
+        return out.toByteArray();
     }
 
 }
