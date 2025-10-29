@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -48,6 +47,10 @@ public class InventoryIn {
             columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '입고 수량'")
     private BigDecimal quantity;
 
+    /** 입고 후 재고량 */
+    @Column(name = "inventory_in_stock_after", precision = 15, scale = 3)
+    private BigDecimal stockAfter;
+
     /** 입고 단가 (본사 매입가) */
     @Column(name = "inventory_in_unit_price", nullable = false,
             columnDefinition = "BIGINT COMMENT '입고 단가(본사 매입가)'")
@@ -61,7 +64,7 @@ public class InventoryIn {
     /** 입고일 */
     @Column(name = "inventory_in_date", nullable = false,
             columnDefinition = "DATE COMMENT '입고일'")
-    private LocalDate inDate;
+    private LocalDateTime inDate;
 
     /** 비고 */
     @Column(name = "inventory_in_memo", columnDefinition = "VARCHAR(255) COMMENT '비고'")

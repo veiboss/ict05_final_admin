@@ -12,6 +12,33 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * 수주 상세 조회용 DTO
+ *
+ * <p>수주(Receive Order)의 주요 정보를 포함하며,
+ * 수주 단건 상세 화면 또는 API 응답에 사용된다.</p>
+ *
+ * <p>주요 필드:</p>
+ * <ul>
+ *     <li><b>id</b> — 수주의 고유 식별자 (PK)</li>
+ *     <li><b>orderCode</b> — 수주 코드 번호</li>
+ *     <li><b>orderDate</b> — 발주일</li>
+ *     <li><b>deliveryDate</b> — 배송 예정일</li>
+ *     <li><b>status</b> — 수주 진행 상태 ({@link ReceiveOrderStatus})</li>
+ *     <li><b>priority</b> — 수주 우선순위 ({@link ReceiveOrderPriority})</li>
+ *     <li><b>storeName</b> — 가맹점명</li>
+ *     <li><b>storeId</b> — 가맹점 고유 ID</li>
+ *     <li><b>storeLocation</b> — 가맹점 지역명</li>
+ *     <li><b>totalPrice</b> — 수주 총액</li>
+ *     <li><b>totalCount</b> — 수주 총수량</li>
+ *     <li><b>remark</b> — 수주 비고 또는 특이사항</li>
+ *     <li><b>items</b> — 하위 주문 상품 목록 ({@link ReceiveOrderItemDTO})</li>
+ * </ul>
+ *
+ * <p>또한 {@link #getStatusDescription()}과 {@link #getPriorityDescription()}을 통해
+ * Enum 값을 한글 설명으로 변환하여 화면에 표시할 수 있다.</p>
+ *
+ */
 @Getter
 @Setter
 @AllArgsConstructor

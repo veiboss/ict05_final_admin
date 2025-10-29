@@ -1,11 +1,17 @@
 package com.boot.ict05_final_admin.domain.menu.controller;
 
 import com.boot.ict05_final_admin.config.ProjectAttribute;
+import com.boot.ict05_final_admin.domain.inventory.entity.Material;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
+import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
+import com.boot.ict05_final_admin.domain.menu.dto.MaterialSimpleDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
 import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
+import com.boot.ict05_final_admin.domain.menu.entity.RecipeUnit;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.service.MenuService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +23,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
@@ -37,8 +45,8 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;      // private final : 바꿀 수 없는 변수
-    private final ProjectAttribute projectAttribute;
     private final MenuCategoryRepository menuCategoryRepository;
+    private final MaterialRepository materialRepository;
 
     /**
      * 메뉴 목록을 페이징 처리하여 조회한다.
@@ -92,8 +100,6 @@ public class MenuController {
         return "menu/list";
     }
 
-
-
     // util
     private int resolveSize(String s, int fallback) {
         try {
@@ -114,12 +120,51 @@ public class MenuController {
     // Controller
     @GetMapping("/menu/write")
     public String writeForm(Model model) {
-        model.addAttribute("menuWriteFormDTO", new MenuWriteFormDTO());
+
+        MenuWriteFormDTO form = new MenuWriteFormDTO();
+        form.setMenuShow(MenuShow.SHOW);
+
+        model.addAttribute("menuWriteFormDTO", form);   // 템플릿의 th:object와 맞춤
+        model.addAttribute("menuShowValues", MenuShow.values()); // 라디오 반복용
+
+        // model.addAttribute("units", List.of("g", "ml", "개", "장"));
+        model.addAttribute("units", RecipeUnit.values());
 
         List<MenuCategory> categories = menuCategoryRepository.findSetAndLevel3Categories();
+        model.addAttribute("menuCategories", categories); // 셀렉트 옵션용
 
-        model.addAttribute("menuCategories", categories);
+        // 재료 옵션 (레포 수정 없이)
+        List<Material> mainEntities  = materialRepository.findByCategory(MaterialCategory.BASE);
+        List<Material> sauceEntities = materialRepository.findByCategory(MaterialCategory.SAUCE);
+
+        List<MaterialSimpleDTO> mainOptions = mainEntities.stream()
+                .map(m -> new MaterialSimpleDTO(m.getId(), m.getName()))
+                .toList();
+        List<MaterialSimpleDTO> sauceOptions = sauceEntities.stream()
+                .map(m -> new MaterialSimpleDTO(m.getId(), m.getName()))
+                .toList();
+
+        model.addAttribute("mainOptions", mainOptions);
+        model.addAttribute("sauceOptions", sauceOptions);
+
         return "menu/write";
+    }
+
+    @PostMapping("/menu/write")
+    public String submitMenuWrite(@Validated @ModelAttribute("menuWriteFormDTO") MenuWriteFormDTO dto,
+                                  BindingResult bindingResult,
+                                  RedirectAttributes ra) {
+        // 리스트 null 방지
+        if (dto.getMainMaterials() == null) dto.setMainMaterials(new ArrayList<>());
+        if (dto.getSauceMaterials() == null) dto.setSauceMaterials(new ArrayList<>());
+
+        if (bindingResult.hasErrors()) {
+            return "menu/write";
+        }
+
+        Long menuId = menuService.insertStoreMenu(dto);
+        ra.addFlashAttribute("message", "메뉴가 저장되었습니다.");
+        return "redirect:/menu/detail/" + menuId; // context-path가 /admin이면 실제 호출은 /admin/menu/detail/{id}
     }
 
 

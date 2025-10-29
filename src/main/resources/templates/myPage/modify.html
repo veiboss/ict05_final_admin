@@ -1,0 +1,175 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+<!--
+    <style>
+
+        label { display: block; margin: 16px 0 6px; color: #555; font-weight: 500; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+
+    </style>-->
+</head>
+<body>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis">마이페이지</h2>
+        </div>
+
+        <main id="content" class="box-wrap">
+                <div class="write-form">
+                    <form th:action="@{/mypage/modify}" method="post" th:object="${member}">
+
+                        <fieldset class="box-wrap pack-down">
+                            <input type="hidden" th:field="*{id}"/>
+                            <h3 class="section-title">프로필 정보</h3>
+                            <hr>
+
+                            <div class="field pack-down">
+                                <span class="label medium">이름</span>
+                                <div class="insert pack-down">
+                                    <input type="text" th:field="*{name}" class="input-text large" placeholder="이름 입력"/>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down">
+                                <span class="label medium">이메일</span>
+                                <div class="insert pack-down">
+                                    <input type="text" th:field="*{email}" class="input-text large" readonly/>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down">
+                                <span class="label medium">전화번호</span>
+                                <div class="insert pack-down">
+                                    <input type="text" th:field="*{phone}" class="input-text large" placeholder="전화번호 입력"/>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="box-wrap pack-down">
+                            <h3 class="section-title">비밀번호 변경 (선택)</h3>
+                            <hr>
+
+                            <div class="field pack-down">
+                                <label class="label medium" for="currentPassword">현재 비밀번호</label>
+                                <div class="insert pack-down">
+                                    <input type="password" class="input-text large" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호 입력"/>
+                                </div>
+
+                                <button type="button" id="checkBtn" class="btn medium bdr-color1" style="margin-top:10px;">비밀번호 확인</button>
+                                <p id="checkResult" style="color:#d9534f; margin-top:6px;"></p>
+                            </div>
+
+                            <div id="newPasswordSection" style="display:none; margin-top:20px;">
+                                <div class="pack-down gap-20">
+                                    <div class="field pack-down">
+                                        <label class="label medium" for="newPassword">새 비밀번호</label>
+                                        <div class="insert pack-down">
+                                            <input type="password" class="input-text large" id="newPassword" name="newPassword" placeholder="새 비밀번호 입력"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="field pack-down">
+                                        <label class="label medium" for="confirmPassword">새 비밀번호 확인</label>
+                                        <div class="insert pack-down">
+                                            <input type="password" class="input-text large" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인"/>
+                                            <p id="passwordMatchMsg" style="margin-top:5px;"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="row box-wrap">
+                            <div class="button-area pack-center">
+                                <button type="submit" class="btn large color1">저장</button>
+                                <a th:href="@{/mypage}" class="btn large color1">취소</a>
+                            </div>
+                           <div class="pack-right">
+                                <button type="button" onclick="withdrawMember()">회원 탈퇴</button>
+                           </div>
+                        </fieldset>
+                    </form>
+                </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
+<script>
+    $("#checkBtn").click(function() {
+        const currentPassword = $("#currentPassword").val();
+
+        if (!currentPassword) {
+            $("#checkResult").text("현재 비밀번호를 입력하세요.");
+            return;
+        }
+
+        $.post("/admin/mypage/check-password", { currentPassword })
+            .done(function(result) {
+                if (result === true) {
+                    $("#checkResult").css("color", "green").text("비밀번호가 확인되었습니다.");
+                    $("#newPasswordSection").slideDown(); // 새 비밀번호 입력칸 표시
+                } else {
+                    $("#checkResult").css("color", "red").text("현재 비밀번호가 일치하지 않습니다.");
+                    $("#newPasswordSection").slideUp();   // 숨기기
+                }
+            })
+            .fail(function() {
+                $("#checkResult").css("color", "red").text("서버 오류가 발생했습니다.");
+            });
+
+        // 새 비밀번호 일치 여부 실시간 확인
+        $("input[name='newPassword'], input[name='confirmPassword']").on("keyup", function() {
+            const newPass = $("input[name='newPassword']").val();
+            const confirmPass = $("input[name='confirmPassword']").val();
+
+            if (!newPass || !confirmPass) {
+                $("#passwordMatchMsg").text("");
+                return;
+            }
+
+            if (newPass === confirmPass) {
+                $("#passwordMatchMsg").css("color", "green").text("비밀번호가 일치합니다.");
+            } else {
+                $("#passwordMatchMsg").css("color", "red").text("비밀번호가 일치하지 않습니다.");
+            }
+        });
+
+        // 폼 제출 시 비밀번호 불일치 막기
+        $("form").on("submit", function(e) {
+            const newPass = $("input[name='newPassword']").val();
+            const confirmPass = $("input[name='confirmPassword']").val();
+
+            if (newPass && confirmPass && newPass !== confirmPass) {
+                e.preventDefault();
+                alert("새 비밀번호가 일치하지 않습니다.");
+            }
+        });
+    });
+
+    function withdrawMember() {
+        if (confirm("정말 탈퇴하시겠습니까? 탈퇴 후 복구할 수 없습니다.")) {
+            $.post("/admin/mypage/withdraw")
+                .done(() => window.location.href = "/")
+                .fail(() => alert("탈퇴 처리 중 오류가 발생했습니다."));
+        }
+    }
+</script>
+</body>
+</html>

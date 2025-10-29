@@ -37,6 +37,11 @@ public class Member  {
 
     @Column(name = "member_phone", length = 20)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "member_status", nullable = false, length = 20)
+    private MemberStatus status = MemberStatus.ACTIVE;
+
 //
 //    // DB에 컬럼이 없으므로 우선 Transient (필요하면 테이블에 role 컬럼 추가)
 //    @Transient
@@ -55,4 +60,29 @@ public class Member  {
 //    @Override public boolean isAccountNonLocked() { return true; }
 //    @Override public boolean isCredentialsNonExpired() { return true; }
 //    @Override public boolean isEnabled() { return true; }
+
+
+    /**
+     * 회원 정보 수정
+     * - 마이페이지에서 이름, 전화번호 변경 시 사용
+     */
+    public void updateProfile(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
+
+    /**
+     * 비밀번호 수정
+     * - 마이페이지에서 비밀번호 변경 시 사용
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * 탈퇴 처리
+     */
+    public void withdraw() {
+        this.status = MemberStatus.WITHDRAWN;
+    }
 }

@@ -10,7 +10,18 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
- * 본사 수주 상세 엔티티 (가맹점 발주 상세 내역 기반)
+ * 본사 수주 상세 엔티티 (Receive Order Detail)
+ *
+ * <p>가맹점 발주 상세 내역을 기반으로 본사에서 생성되는
+ * 개별 수주 품목 정보를 관리한다.</p>
+ *
+ * <p>각 {@link ReceiveOrder}와 연결되어 있으며,
+ * 실제 수주에 포함된 재료({@link Material})와 본사 재고({@link HqInventory})를 참조한다.</p>
+ *
+ * <p>DB 테이블명: <b>purchase_order_detail</b></p>
+ *
+ * @author 최민진
+ * @since 2025.10
  */
 @Entity
 @Table(name = "purchase_order_detail")

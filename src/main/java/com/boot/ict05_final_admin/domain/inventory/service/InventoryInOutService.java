@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 본사 재고 입/출고 관련 비즈니스 로직을 처리하는 서비스 클래스
@@ -51,38 +51,36 @@ public class InventoryInOutService {
      * @throws IllegalArgumentException 재료 또는 재고가 존재하지 않을 경우 발생
      */
     public Long insertInventoryIn(InventoryInWriteDTO dto) {
-        log.info("[입고등록] 요청 수신 - materialId={}, quantity={}, unitPrice={}",
-                dto.getMaterialId(), dto.getQuantity(), dto.getUnitPrice());
-
-        // 1. 재료 조회
         Material material = materialRepository.findById(dto.getMaterialId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
-
-        // 2. 본사 재고 조회
         HqInventory inventory = inventoryRepository.findByMaterial(material)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 없습니다."));
 
-        // 3. 입고 이력 엔티티 생성 및 저장
+        // 1. 재고 증가 및 즉시 반영
+        inventoryRepository.addQuantity(material.getId(), dto.getQuantity());
+        inventoryRepository.flush();
+
+        // 2. 재고량 재조회 (정확한 최신 수량)
+        BigDecimal updatedQty = inventoryRepository.findByMaterial(material)
+                .map(HqInventory::getQuantity)
+                .orElseThrow(() -> new IllegalStateException("재고 재조회 실패"));
+
+        // 3. 입고 로그 기록
         InventoryIn entity = InventoryIn.builder()
                 .material(material)
                 .store(null)
                 .quantity(dto.getQuantity())
                 .unitPrice(dto.getUnitPrice())
                 .sellingPrice(dto.getSellingPrice())
-                .inDate(dto.getInDate())
+                .inDate(dto.getInDate() != null ? dto.getInDate() : LocalDateTime.now())
                 .memo(dto.getMemo())
+                .stockAfter(updatedQty)
                 .build();
-
         inventoryInRepository.save(entity);
-        log.info("[입고등록] 입고 이력 저장 완료 - id={}", entity.getId());
 
-        // 4. 본사 재고 수량 증가
-        inventoryRepository.addQuantity(material.getId(), dto.getQuantity());
-        log.info("[입고등록] 본사 재고 수량 증가 완료 - materialId={}, 추가수량={}", material.getId(), dto.getQuantity());
-
-        // 5. 상태 갱신 (충분/부족/품절)
+        // 4. 상태 갱신
         inventory.updateStatus();
-        log.info("[입고등록] 재고 상태 갱신 완료 - materialId={}, status={}", material.getId(), inventory.getStatus());
+        log.info("[입고등록] materialId={}, 입고={}, 재고={}, 상태={}", material.getId(), dto.getQuantity(), updatedQty, inventory.getStatus());
 
         return entity.getId();
     }
@@ -101,47 +99,40 @@ public class InventoryInOutService {
      * @throws IllegalArgumentException 재료 또는 재고가 존재하지 않을 경우 발생
      */
     public Long insertInventoryOut(Long materialId, BigDecimal quantity, Long storeId, String memo) {
-        log.info("[출고등록] 요청 수신 - materialId={}, storeId={}, quantity={}", materialId, storeId, quantity);
-
-        // 1. 재료 조회
         Material material = materialRepository.findById(materialId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
-
-        // 2. 본사 재고 조회
         HqInventory inventory = inventoryRepository.findByMaterial(material)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 없습니다."));
 
-        // 3. 재고 수량 확인
         if (inventory.getQuantity().compareTo(quantity) < 0) {
             throw new IllegalArgumentException("출고 수량이 현재 재고보다 많습니다.");
         }
 
-        // ✅ 4. 가맹점 참조 (DB 조회 없이 프록시 생성)
-        Store store = null;
-        if (storeId != null) {
-            store = storeRepository.getReferenceById(storeId);
-        }
+        // 1. 재고 차감 및 즉시 반영
+        inventoryRepository.subtractQuantity(material.getId(), quantity);
+        inventoryRepository.flush();
 
-        // 5. 출고 이력 엔티티 생성 및 저장
+        // 2. 재고량 재조회
+        BigDecimal updatedQty = inventoryRepository.findByMaterial(material)
+                .map(HqInventory::getQuantity)
+                .orElseThrow(() -> new IllegalStateException("재고 재조회 실패"));
+
+        // 3. 출고 로그 기록
+        Store store = (storeId != null) ? storeRepository.getReferenceById(storeId) : null;
         InventoryOut entity = InventoryOut.builder()
                 .material(material)
                 .store(store)
                 .quantity(quantity)
-                .unitPrice(0L) // 출고 단가 정책 확정 시 수정
-                .outDate(LocalDate.now())
+                .unitPrice(0L)
+                .outDate(LocalDateTime.now())
                 .memo(memo)
+                .stockAfter(updatedQty)
                 .build();
-
         inventoryOutRepository.save(entity);
-        log.info("[출고등록] 출고 이력 저장 완료 - id={}", entity.getId());
 
-        // 6. 본사 재고 수량 차감
-        inventoryRepository.subtractQuantity(material.getId(), quantity);
-        log.info("[출고등록] 본사 재고 수량 차감 완료 - materialId={}, 차감수량={}", material.getId(), quantity);
-
-        // 7. 상태 갱신
+        // 4. 상태 갱신
         inventory.updateStatus();
-        log.info("[출고등록] 재고 상태 갱신 완료 - materialId={}, status={}", material.getId(), inventory.getStatus());
+        log.info("[출고등록] materialId={}, 출고={}, 재고={}, 상태={}", material.getId(), quantity, updatedQty, inventory.getStatus());
 
         return entity.getId();
     }

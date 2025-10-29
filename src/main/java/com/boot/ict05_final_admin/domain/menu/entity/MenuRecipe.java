@@ -19,6 +19,9 @@ public class MenuRecipe {
     @Column(name = "menu_recipe_id")
     private Long menuRecipeId;
 
+    @Column(name = "recipe_item_name", length = 100, nullable = false)
+    private String recipeItemName;   // 항목명
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "menu_id_fk", nullable = false)
     private Menu menu;
@@ -31,7 +34,8 @@ public class MenuRecipe {
     private BigDecimal recipeQty;
 
     @Column(name = "recipe_unit", length = 20, nullable = false)
-    private String recipeUnit;
+    @Enumerated(EnumType.STRING)
+    private RecipeUnit recipeUnit;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "recipe_role", nullable = false)
