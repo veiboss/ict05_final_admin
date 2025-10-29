@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>FranFriend Admin — 회원가입</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root{
+            --kpi-red:#ef4444; --kpi-green:#22c55e; --kpi-purple:#7c3aed;
+            --light-gray:#f5f7fb; --dark-gray:#6b7280;
+        }
+        .bg-kpi-red{background:var(--kpi-red)} .hover\:bg-kpi-red-600:hover{background:#dc2626}
+        .bg-kpi-purple{background:var(--kpi-purple)} .bg-light-gray{background:var(--light-gray)}
+        .text-dark-gray{color:var(--dark-gray)}
+    </style>
+</head>
+<body class="min-h-screen bg-light-gray flex items-center justify-center">
+<div class="w-full max-w-md px-6">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+        <!-- 헤더 -->
+        <div class="text-center mb-6">
+            <div class="w-14 h-14 bg-kpi-purple rounded-2xl mx-auto mb-3 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM3 22a9 9 0 1118 0H3z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">관리자 회원가입</h1>
+            <p class="text-sm text-dark-gray mt-1">FranFriend ERP 본사 콘솔</p>
+        </div>
+
+        <div id="msg" class="hidden mb-4 text-sm rounded-md px-3 py-2"></div>
+
+        <form id="joinForm" method="post" action="/admin/join" class="space-y-4">
+            <!-- 이름 -->
+            <label class="block text-sm font-medium text-gray-700">이름</label>
+            <input id="name" name="name" type="text" class="w-full h-10 input" />
+            <p id="err-name" class="mt-1 text-xs text-red-600"></p>
+
+            <!-- 연락처 -->
+            <label class="block text-sm font-medium text-gray-700">연락처</label>
+            <input id="phone" name="phone" type="text" placeholder="010-0000-0000" class="w-full h-10 input" />
+            <p id="err-phone" class="mt-1 text-xs text-red-600"></p>
+
+            <!-- 이메일 -->
+            <label class="block text-sm font-medium text-gray-700">이메일</label>
+            <input id="email" name="email" type="email" class="w-full h-10 input" />
+            <p id="err-email" class="mt-1 text-xs text-red-600"></p>
+
+            <!-- 비밀번호 -->
+            <label class="block text-sm font-medium text-gray-700">비밀번호</label>
+            <input id="password" name="password" type="password" class="w-full h-10 input" />
+            <p id="err-password" class="mt-1 text-xs text-red-600"></p>
+
+            <!-- 비밀번호 확인 -->
+            <label class="block text-sm font-medium text-gray-700">비밀번호 확인</label>
+            <input id="password2" type="password" class="w-full h-10 input" />
+            <p id="err-password2" class="mt-1 text-xs text-red-600"></p>
+
+            <!-- 가입 버튼: 기본 비활성화 -->
+            <button id="joinBtn" type="submit"
+                    class="w-full h-11 rounded-lg font-medium bg-gray-300 text-white cursor-not-allowed transition"
+                    disabled>
+                계정 생성
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    (function () {
+        const $ = (id) => document.getElementById(id);
+
+        const nameEl = $("name");
+        const phoneEl = $("phone");
+        const emailEl = $("email");
+        const pwEl = $("password");
+        const pw2El = $("password2");
+        const btn = $("joinBtn");
+        const form = $("joinForm");
+
+        const err = {
+            name: $("err-name"),
+            phone: $("err-phone"),
+            email: $("err-email"),
+            password: $("err-password"),
+            password2: $("err-password2"),
+        };
+
+        function validate() {
+            // 규칙
+            const nameOk = nameEl.value.trim().length >= 2;
+
+            // 010-xxxx-xxxx 혹은 숫자만 허용
+            const phoneVal = phoneEl.value.trim();
+            const phoneOk = /^01[016789]-?\d{3,4}-?\d{4}$/.test(phoneVal);
+
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
+
+            const pw = pwEl.value;
+            const pwOk = pw.length >= 6; // 최소 6자
+            const pw2Ok = pw2El.value === pw && pw2El.value.length > 0;
+
+            // 에러 메시지
+            err.name.textContent = nameOk ? "" : "이름은 두 글자 이상 입력하세요.";
+            err.phone.textContent = phoneOk ? "" : "올바른 연락처 형식이 아닙니다.";
+            err.email.textContent = emailOk ? "" : "올바른 이메일 형식이 아닙니다.";
+            err.password.textContent = pwOk ? "" : "비밀번호는 여섯 글자 이상이어야 합니다.";
+            err.password2.textContent = pw2Ok ? "" : "비밀번호가 일치하지 않습니다.";
+
+            const allOk = nameOk && phoneOk && emailOk && pwOk && pw2Ok;
+
+            // 버튼 토글
+            btn.disabled = !allOk;
+            if (allOk) {
+                btn.classList.remove("bg-gray-300", "cursor-not-allowed");
+                btn.classList.add("bg-kpi-green", "hover:bg-green-600");
+            } else {
+                btn.classList.add("bg-gray-300", "cursor-not-allowed");
+                btn.classList.remove("bg-kpi-green", "hover:bg-green-600");
+            }
+            return allOk;
+        }
+
+        // 입력 이벤트로 실시간 검증
+        [nameEl, phoneEl, emailEl, pwEl, pw2El].forEach((el) =>
+            el.addEventListener("input", validate)
+        );
+
+        // 초기 상태
+        validate();
+
+        // 제출 시 최종 검증
+        form.addEventListener("submit", function (e) {
+            if (!validate()) {
+                e.preventDefault();
+                // 첫 에러 필드로 포커스
+                if (err.name.textContent) return nameEl.focus();
+                if (err.phone.textContent) return phoneEl.focus();
+                if (err.email.textContent) return emailEl.focus();
+                if (err.password.textContent) return pwEl.focus();
+                if (err.password2.textContent) return pw2El.focus();
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
