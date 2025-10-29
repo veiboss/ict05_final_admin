@@ -39,6 +39,9 @@ public class KpiRowDto {
     /** 전년 대비 성장률(%) */
     private BigDecimal compYoY;
 
+    /** 기간 라벨(일별: yyyy-MM-dd, 월별: yyyy-MM) */
+    private String date;
+
     /** 방문 비율(%) */
     private BigDecimal ratioVisit;
 

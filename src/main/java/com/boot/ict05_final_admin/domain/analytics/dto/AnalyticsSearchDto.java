@@ -37,8 +37,6 @@ public class AnalyticsSearchDto {
     /** 출력 개수(테이블 상단 셀렉트와 연동) */
     private Integer limit = 50;
 
-    public enum ViewBy { DAY, MONTH }
-
     /**
      * 컨트롤러/REST에서 NPE 방지를 위해 기본값을 주입한다.
      */

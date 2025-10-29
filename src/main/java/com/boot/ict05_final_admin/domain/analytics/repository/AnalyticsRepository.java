@@ -1,6 +1,8 @@
 package com.boot.ict05_final_admin.domain.analytics.repository;
 
 import com.boot.ict05_final_admin.domain.analytics.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public interface AnalyticsRepository {
 
     // ===================== Summary Cards =================
 
-    List<KpiCardsDto> findKpiSummary();
+    KpiCardsDto findKpiSummary();
 
     List<OrdersCardsDto> findOrdersSummary();
 
@@ -38,7 +40,7 @@ public interface AnalyticsRepository {
      * @param cond 조회 조건 DTO (가맹점, 기간, 뷰 단위 등)
      * @return KPI 집계 행 목록
      */
-    List<KpiRowDto> findKpi(AnalyticsSearchDto cond);
+    Page<KpiRowDto> findKpi(AnalyticsSearchDto cond, Pageable pageable);
 
     /**
      * 주문 분석 목록 테이블 행들을 조회합니다.

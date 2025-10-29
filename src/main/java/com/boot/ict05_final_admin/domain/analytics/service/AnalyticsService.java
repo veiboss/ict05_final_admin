@@ -4,6 +4,8 @@ import com.boot.ict05_final_admin.domain.analytics.dto.*;
 import com.boot.ict05_final_admin.domain.analytics.repository.AnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,55 +27,52 @@ import java.util.*;
 public class AnalyticsService {
 
     private final AnalyticsRepository analyticsRepository;
-    // ======================== 상단 요약 카드 =======================
 
     /** KPI 상단 요약 카드 */
     @Transactional(readOnly = true)
-    public List<KpiCardsDto> getKpiCards() {
+    public KpiCardsDto selectKpiCards() {
         return analyticsRepository.findKpiSummary();
+    }
+
+    /** KPI 목록 */
+    @Transactional(readOnly = true)
+    public Page<KpiRowDto> selectKpis(AnalyticsSearchDto cond, Pageable pageable) {
+        return analyticsRepository.findKpi(cond, pageable);
     }
 
     /** 주문 상단 요약 카드 */
     @Transactional(readOnly = true)
-    public List<OrdersCardsDto> getOrdersCards() {
+    public List<OrdersCardsDto> selectOrdersCards() {
         return analyticsRepository.findOrdersSummary();
-    }
-
-    /** 재료 상단 요약 카드 */
-    @Transactional(readOnly = true)
-    public List<MaterialsCardsDto> getMaterialsCards() {
-        return analyticsRepository.findMaterialsSummary();
-    }
-
-    /** 시간 상단 요약 카드 */
-    @Transactional(readOnly = true)
-    public List<TimeCardsDto> getTimeCards() {
-        return analyticsRepository.findTimeSlicesSummary();
-    }
-
-    // ======================== 목록(테이블) ========================
-
-    /** KPI 목록 */
-    @Transactional(readOnly = true)
-    public List<KpiRowDto> getKpi(AnalyticsSearchDto cond) {
-        return analyticsRepository.findKpi(cond);
     }
 
     /** 주문 분석 목록 */
     @Transactional(readOnly = true)
-    public List<OrdersRowDto> getOrders(AnalyticsSearchDto cond) {
+    public List<OrdersRowDto> selectOrders(AnalyticsSearchDto cond) {
         return analyticsRepository.findOrders(cond);
+    }
+
+    /** 재료 상단 요약 카드 */
+    @Transactional(readOnly = true)
+    public List<MaterialsCardsDto> selectMaterialsCards() {
+        return analyticsRepository.findMaterialsSummary();
     }
 
     /** 재료 분석 목록 */
     @Transactional(readOnly = true)
-    public List<MaterialsRowDto> getMaterials(AnalyticsSearchDto cond) {
+    public List<MaterialsRowDto> selectMaterials(AnalyticsSearchDto cond) {
         return analyticsRepository.findMaterials(cond);
+    }
+
+    /** 시간 상단 요약 카드 */
+    @Transactional(readOnly = true)
+    public List<TimeCardsDto> selectTimeCards() {
+        return analyticsRepository.findTimeSlicesSummary();
     }
 
     /** 시간·요일 분석 목록 */
     @Transactional(readOnly = true)
-    public List<TimeRowDto> getTimeSlices(AnalyticsSearchDto cond) {
+    public List<TimeRowDto> selectTimeSlices(AnalyticsSearchDto cond) {
         return analyticsRepository.findTimeSlices(cond);
     }
 }
