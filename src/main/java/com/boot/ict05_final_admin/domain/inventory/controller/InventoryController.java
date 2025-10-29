@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.controller;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryInService;
+import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class InventoryController {
 
     private final InventoryService inventoryService;
-    private final InventoryInService inventoryInService;
+    private final InventoryInOutService inventoryInOutService;
 
     /**
      * 본사 재고 목록을 페이징 처리하여 조회한다.
@@ -91,7 +91,14 @@ public class InventoryController {
      */
     @PostMapping("/in/write")
     public String insertInventoryIn(@ModelAttribute InventoryInWriteDTO dto) {
-        inventoryInService.insertInventoryIn(dto);
+        inventoryInOutService.insertInventoryIn(dto);
         return "redirect:/inventory/list";
+    }
+
+
+    /** 출고 테스트 페이지 렌더링 - 삭제예정 */
+    @GetMapping("/out_test")
+    public String outTestPage() {
+        return "inventory/out_test"; // templates/inventory/out_test.html
     }
 }
