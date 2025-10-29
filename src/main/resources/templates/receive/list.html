@@ -227,7 +227,7 @@
                     <div th:text="${summary.shippingCount}">0</div>
                 </div>
                 <div class="col box-wrap">
-                    <div>긴급 주문</div>
+                    <div>우선 주문</div>
                     <div th:text="${summary.urgentCount}">0</div>
                 </div>
             </div>
@@ -466,7 +466,9 @@
 
             <!-- 버튼 영역 -->
             <div class="button-area pack-center" style="float: right;">
-                <button type="button" class="btn medium bdr-color1">
+                <button type="button"
+                        class="btn medium bdr-color1"
+                        th:onclick="|window.location.href='/admin/API/receive/download/' + ${order.id}|">
                     <span class="material-symbols-outlined">download</span>
                     주문서 다운로드
                 </button>

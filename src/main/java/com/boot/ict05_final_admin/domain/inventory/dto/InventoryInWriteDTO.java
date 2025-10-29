@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 입고 등록 DTO (본사/가맹점 공용)
@@ -24,7 +24,7 @@ public class InventoryInWriteDTO {
     private Long sellingPrice;
 
     /** 입고일 */
-    private LocalDate inDate;
+    private LocalDateTime inDate;
 
     /** 비고 */
     private String memo;

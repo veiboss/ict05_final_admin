@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -52,6 +51,10 @@ public class InventoryOut {
             columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '출고 수량'")
     private BigDecimal quantity;
 
+    /** 출고 후 재고량 */
+    @Column(name = "inventory_out_stock_after", precision = 15, scale = 3)
+    private BigDecimal stockAfter;
+
     /** 출고 단가 (가맹점 공급가 또는 판매가) */
     @Column(name = "inventory_out_unit_price", nullable = false,
             columnDefinition = "BIGINT COMMENT '출고 단가(가맹점 공급가 또는 판매가)'")
@@ -60,7 +63,7 @@ public class InventoryOut {
     /** 출고일 */
     @Column(name = "inventory_out_date", nullable = false,
             columnDefinition = "DATE COMMENT '출고일'")
-    private LocalDate outDate;
+    private LocalDateTime outDate;
 
     /** 비고 */
     @Column(name = "inventory_out_memo", columnDefinition = "VARCHAR(255) COMMENT '비고'")

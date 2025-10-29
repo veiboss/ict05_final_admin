@@ -1,0 +1,100 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
+</head>
+<body>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis max-900">본사 <span th:text="${material.name}">재료명</span> 재고 내역</h2>
+        </div>
+
+        <main id="content" class="max-900">
+            <div class="box-wrap">
+                <div class="row-4">
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">상태</span>
+                        <span>
+                            <span th:class="|badge rounded-pill ${inventory.status == 'SUFFICIENT' ? 'bg-success' : (inventory.status == 'LOW' ? 'bg-warning' : 'bg-danger') }|"
+                                  th:text="${inventory.status.description}">
+                            </span>
+                        </span>
+                    </div>
+                    <div class="pack-down col-2">
+                        <span class="fs-ss fc-999">현재 수량</span>
+                        <span class="pack-left">
+                            <span th:text="${inventory.quantity}">현재 수량</span>
+                            <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+                        </span>
+                    </div>
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">적정 수량</span>
+                        <span class="pack-left">
+                            <span th:text="${inventory.optimalQuantity}">적정 수량</span>
+                            <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+                        </span>
+                    </div>
+                </div>
+
+                <section class="pack-down">
+                    <p th:text="'로그 수: ' + ${#lists.size(logs.content)}" class="blind"></p>
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">날짜</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">수량</th>
+                            <th scope="col">재고</th>
+                            <th scope="col">가맹점</th>
+                            <th scope="col">단가</th>
+                            <th scope="col">비고</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(logs.content)}">
+                            <td colspan="7">입출고 내역이 없습니다.</td>
+                        </tr>
+                        <tr th:each="log : ${logs.content}">
+                            <td th:text="${#temporals.format(log.date, 'yyyy-MM-dd')}"></td>
+                            <td>
+                                <span th:text="${log.type == 'INCOME' ? '입고' : '출고'}"
+                                      th:classappend="${log.type == 'INCOME'} ? 'type-in' : 'type-out'"></span>
+                            </td>
+                            <td th:text="${log.quantity}"></td>
+                            <td th:text="${log.stockAfter}"></td>
+                            <td th:text="${log.storeId != null ? log.storeId : '-'}"></td>
+                            <td th:text="${log.unitPrice}"></td>
+                            <td th:text="${log.memo ?: '-'}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="text-align:center;">
+                        <div th:replace="~{fragments/pagination :: pagination (${logs})}"></div>
+                    </div>
+                </section>
+            </div><!--//.box-wrap-->
+            <div class="button-area pack-both">
+                <a href="/admin/inventory/list" class="btn medium color1">목록</a>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
+</body>
+</html>

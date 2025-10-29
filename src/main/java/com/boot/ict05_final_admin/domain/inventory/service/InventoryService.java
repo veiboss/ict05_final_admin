@@ -46,4 +46,18 @@ public class InventoryService {
     public List<HqInventory> findAllForSelect() {
         return inventoryRepository.findAll();
     }
+
+    /**
+     * 본사 재고 단건 조회
+     *
+     * <p>재고 ID를 기준으로 본사 재고 정보를 조회한다.</p>
+     *
+     * @param id 본사 재고 ID
+     * @return HqInventory 엔티티
+     */
+    @Transactional(readOnly = true)
+    public HqInventory findById(Long id) {
+        return inventoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 본사 재고가 존재하지 않습니다. ID=" + id));
+    }
 }
