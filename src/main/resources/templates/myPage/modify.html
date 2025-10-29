@@ -15,11 +15,13 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
-
+<!--
     <style>
+
         label { display: block; margin: 16px 0 6px; color: #555; font-weight: 500; }
         input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-    </style>
+
+    </style>-->
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -30,43 +32,81 @@
             <h2 class="page-title ellipsis">마이페이지</h2>
         </div>
 
-        <main id="content">
-            <div class="box-wrap">
-                <form th:action="@{/mypage/modify}" method="post" th:object="${member}">
-                    <input type="hidden" th:field="*{id}"/>
+        <main id="content" class="box-wrap">
+                <div class="write-form">
+                    <form th:action="@{/mypage/modify}" method="post" th:object="${member}">
 
-                    <label>이름</label>
-                    <input type="text" th:field="*{name}" placeholder="이름 입력"/>
+                        <fieldset class="box-wrap pack-down">
+                            <input type="hidden" th:field="*{id}"/>
+                            <h3 class="section-title">프로필 정보</h3>
+                            <hr>
 
-                    <label>이메일</label>
-                    <input type="text" th:field="*{email}" readonly/>
+                            <div class="field pack-down">
+                                <span class="label medium">이름</span>
+                                <div class="insert pack-down">
+                                    <input type="text" th:field="*{name}" class="input-text large" placeholder="이름 입력"/>
+                                </div>
+                            </div>
 
-                    <label>전화번호</label>
-                    <input type="text" th:field="*{phone}" placeholder="전화번호 입력"/>
+                            <div class="field pack-down">
+                                <span class="label medium">이메일</span>
+                                <div class="insert pack-down">
+                                    <input type="text" th:field="*{email}" class="input-text large" readonly/>
+                                </div>
+                            </div>
 
-                    <label>비밀번호 변경 (선택)</label>
-                    <label>현재 비밀번호</label>
-                    <input type="password" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호 입력"/>
+                            <div class="field pack-down">
+                                <span class="label medium">전화번호</span>
+                                <div class="insert pack-down">
+                                    <input type="text" th:field="*{phone}" class="input-text large" placeholder="전화번호 입력"/>
+                                </div>
+                            </div>
+                        </fieldset>
 
-                    <button type="button" id="checkBtn" class="btn medium bdr-color1" style="margin-top:10px;">비밀번호 확인</button>
-                    <p id="checkResult" style="color:#d9534f; margin-top:6px;"></p>
+                        <fieldset class="box-wrap pack-down">
+                            <h3 class="section-title">비밀번호 변경 (선택)</h3>
+                            <hr>
 
-                    <div id="newPasswordSection" style="display:none; margin-top:20px;">
-                        <label>새 비밀번호</label>
-                        <input type="password" name="newPassword" placeholder="새 비밀번호 입력"/>
+                            <div class="field pack-down">
+                                <label class="label medium" for="currentPassword">현재 비밀번호</label>
+                                <div class="insert pack-down">
+                                    <input type="password" class="input-text large" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호 입력"/>
+                                </div>
 
-                        <label>새 비밀번호 확인</label>
-                        <input type="password" name="confirmPassword" placeholder="새 비밀번호 확인"/>
-                        <p id="passwordMatchMsg" style="margin-top:5px;"></p>
-                    </div>
+                                <button type="button" id="checkBtn" class="btn medium bdr-color1" style="margin-top:10px;">비밀번호 확인</button>
+                                <p id="checkResult" style="color:#d9534f; margin-top:6px;"></p>
+                            </div>
 
-                    <div class="button-area pack-center">
-                        <button type="submit" class="btn large color1">저장</button>
-                        <a th:href="@{/mypage}" class="btn large color1">취소</a>
-                        <button type="button" class="btn large color2" style="background:#dc3545;" onclick="withdrawMember()">회원 탈퇴</button>
-                    </div>
-                </form>
-            </div>
+                            <div id="newPasswordSection" style="display:none; margin-top:20px;">
+                                <div class="pack-down gap-20">
+                                    <div class="field pack-down">
+                                        <label class="label medium" for="newPassword">새 비밀번호</label>
+                                        <div class="insert pack-down">
+                                            <input type="password" class="input-text large" id="newPassword" name="newPassword" placeholder="새 비밀번호 입력"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="field pack-down">
+                                        <label class="label medium" for="confirmPassword">새 비밀번호 확인</label>
+                                        <div class="insert pack-down">
+                                            <input type="password" class="input-text large" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인"/>
+                                            <p id="passwordMatchMsg" style="margin-top:5px;"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="row box-wrap">
+                            <div class="button-area pack-center">
+                                <button type="submit" class="btn large color1">저장</button>
+                                <a th:href="@{/mypage}" class="btn large color1">취소</a>
+                            </div>
+                           <div class="pack-right">
+                                <button type="button" onclick="withdrawMember()">회원 탈퇴</button>
+                           </div>
+                        </fieldset>
+                    </form>
+                </div>
         </main>
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->

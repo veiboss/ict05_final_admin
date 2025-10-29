@@ -41,8 +41,8 @@ public class Menu {
     private int menuKcal;
 
     /** 판매상태(0:비판매, 1:판매중) */
-    @Column(name = "menu_show")
     @Enumerated(EnumType.STRING)
+    @Column(name = "menu_show")
     private MenuShow menuShow;
 
     /** 가격 */

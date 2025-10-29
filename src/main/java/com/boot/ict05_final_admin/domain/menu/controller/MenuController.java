@@ -4,10 +4,7 @@ import com.boot.ict05_final_admin.config.ProjectAttribute;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
-import com.boot.ict05_final_admin.domain.menu.dto.MaterialSimpleDTO;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuListDTO;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuSearchDTO;
-import com.boot.ict05_final_admin.domain.menu.dto.MenuWriteFormDTO;
+import com.boot.ict05_final_admin.domain.menu.dto.*;
 import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
@@ -177,7 +174,7 @@ public class MenuController {
      */
     @GetMapping("/menu/detail/{menuId}")
     public String detailStoreMenu(@PathVariable Long menuId, Model model) {
-        Menu menu = menuService.detailMenu(menuId);
+        MenuDetailDTO menu = menuService.MenuDetail(menuId);
 
         model.addAttribute("menu", menu);
 
@@ -193,7 +190,7 @@ public class MenuController {
      */
     @GetMapping("/menu/modify/{menuId}")
     public String modifyStoreMenu(@PathVariable Long menuId, Model model) {
-        Menu menu = menuService.detailMenu(menuId);
+        MenuDetailDTO menu = menuService.MenuDetail(menuId);
 
         List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
 
