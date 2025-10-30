@@ -1,12 +1,13 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.*;
-import com.boot.ict05_final_admin.domain.inventory.entity.Material;
-import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
-import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
-import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
+import com.boot.ict05_final_admin.domain.inventory.repository.InventoryLogViewRepository;
+import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
-import com.boot.ict05_final_admin.domain.inventory.service.MaterialService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,16 +17,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
 /**
- * 관리자 재고 관리 컨트롤러
- * <p>
- * 재료 등록, 목록 조회, 상세 조회, 수정 화면을 제공한다.
+ * 본사 재고 관리 화면 컨트롤러
+ *
+ * <p>Thymeleaf 기반의 관리자 화면을 렌더링하며,
+ * 본사 재고 현황 조회 및 입고 등록 페이지를 제공한다.</p>
  */
 @Controller
 @RequiredArgsConstructor
@@ -33,39 +32,113 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class InventoryController {
 
     private final InventoryService inventoryService;
+    private final InventoryInOutService inventoryInOutService;
+    private final InventoryLogViewRepository inventoryLogViewRepository;
 
     /**
-     * 재료 목록을 페이징 처리하여 조회한다.
+     * 본사 재고 목록을 페이징 처리하여 조회한다.
      *
-     * @param inventorySearchDTO (선택) 작성자 이름으로 검색할 경우 전달되는 값
-     * @param pageable           페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
+     * <p>검색 조건과 페이징 정보를 기반으로
+     * 본사 재고 현황을 조회하고 목록 페이지를 렌더링한다.</p>
+     *
+     * @param inventorySearchDTO 검색 조건 DTO (재료명, 상태 등)
+     * @param pageable           페이징 정보 (페이지 번호, 크기, 정렬 기준)
      * @param model              뷰에 전달할 모델 객체
-     * @return 재료 목록 페이지 뷰 이름
+     * @param request            현재 요청 정보
+     * @return 재고 목록 페이지(view)
      */
     @GetMapping("/list")
     public String listInventory(InventorySearchDTO inventorySearchDTO,
                                 @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                 Model model,
                                 HttpServletRequest request) {
-        System.out.println("InventoryController - listInventory()");
 
-        boolean isFirstLoad = request.getParameter("status") == null
-                && request.getParameter("materialName") == null
-                && request.getParameter("page") == null;
-
-        PageRequest pageRequest = PageRequest.of(
-                pageable.getPageNumber() - 1,
-                pageable.getPageSize(),
-                Sort.by("id").descending()
-        );
-
-        Page<InventoryListDTO> inventories =
-                inventoryService.getInventoryList(inventorySearchDTO, pageRequest);
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
+        Page<InventoryListDTO> inventories = inventoryService.getInventoryList(inventorySearchDTO, pageRequest);
 
         model.addAttribute("inventories", inventories);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("inventorySearchDTO", inventorySearchDTO);
 
         return "inventory/list";
+    }
+
+    /**
+     * 본사 재고 입고 등록 페이지
+     *
+     * <p>입고 대상 재료를 선택하고, 입고 수량 및 단가를 입력할 수 있는
+     * 입고 등록 화면을 렌더링한다.</p>
+     *
+     * @param model 뷰에 전달할 모델 객체
+     * @return 입고 등록 페이지(view)
+     */
+    @GetMapping("/in/write")
+    public String showInventoryInForm(Model model) {
+        model.addAttribute("inventoryList", inventoryService.findAllForSelect());
+        return "inventory/inventory_in_write";
+    }
+
+    /**
+     * 본사 재고 입고 등록 처리
+     *
+     * <p>입고 등록 폼에서 제출된 데이터를 기반으로
+     * 해당 재료의 재고 수량을 증가시키고, 입고 이력을 저장한다.</p>
+     *
+     * @param dto 입고 등록 요청 데이터 DTO
+     * @return 재고 목록 페이지로 리다이렉트
+     */
+    @PostMapping("/in/write")
+    public String insertInventoryIn(@ModelAttribute InventoryInWriteDTO dto) {
+        inventoryInOutService.insertInventoryIn(dto);
+        return "redirect:/inventory/list";
+    }
+
+    /**
+     * 본사 재고 상세 내역 처리
+     *
+     * <p>선택된 본사 재고 ID를 기준으로 해당 재료의 입출고 내역을
+     * 날짜 기준 내림차순으로 페이징 처리하여 상세 페이지를 렌더링한다.</p>
+     *
+     * @param inventoryId 본사 재고 ID
+     * @param pageable    페이징 정보
+     * @param model       뷰에 전달할 모델 객체
+     * @return 본사 재고 상세(입출고 내역) 페이지(view)
+     */
+    @GetMapping("/log/{inventoryId}")
+    public String viewInventoryLog(@PathVariable Long inventoryId,
+                                   @PageableDefault(page = 1, size = 10, sort = "date", direction = Sort.Direction.DESC)
+                                   Pageable pageable,
+                                   HttpServletRequest request,
+                                   Model model) {
+
+        // 본사 재고 및 재료 정보 조회
+        HqInventory inventory = inventoryService.findById(inventoryId);
+        Long materialId = inventory.getMaterial().getId();
+
+        // 1-based → 0-based 보정
+        Pageable corrected = PageRequest.of(
+                pageable.getPageNumber() - 1,
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
+
+        // corrected 로 변경
+        Page<InventoryLogView> logs = inventoryLogViewRepository.findByMaterialId(materialId, corrected);
+
+        model.addAttribute("inventory", inventory);
+        model.addAttribute("material", inventory.getMaterial());
+        model.addAttribute("logs", logs);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
+
+        return "inventory/log";
+    }
+
+
+
+
+    /** 출고 테스트 페이지 렌더링 - 삭제예정 */
+    @GetMapping("/out_test")
+    public String outTestPage() {
+        return "inventory/out_test"; // templates/inventory/out_test.html
     }
 }

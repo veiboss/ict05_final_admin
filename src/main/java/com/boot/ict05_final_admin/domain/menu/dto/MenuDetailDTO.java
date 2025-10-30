@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
+import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +23,10 @@ public class MenuDetailDTO {
     private Long menuCategoryId;
 
     /** 메뉴 카테고리 */
-    private String menuCategoryName;
+    private MenuCategory menuCategory;
 
     /** 판매 상태 */
-    private Boolean menuShow;
+    private MenuShow menuShow;
 
     /** 메뉴코드 */
     private String menuCode;
@@ -37,6 +39,9 @@ public class MenuDetailDTO {
 
     /** 가격 */
     private BigDecimal menuPrice;
+
+    /** 칼로리 */
+    private Integer menuKcal;
 
     /** 설명 */
     private String menuInformation;

@@ -187,10 +187,9 @@ body:not(.opened-nav) #header .btn.toggle-nav	{
 #content		{gap: calc(var(--congap)/2);}
 .frame #content	{min-height: var(--vh100); margin-top: 1rem;}
 .frame .search.box-wrap + #content	{margin-top: var(--congap);}
-@media (min-width: 1024px) {
-	.frame #container > .title-bar	{position: sticky; top: 24px; width: 50%; z-index: 30;}
-	.opened-nav .frame #container > .title-bar	{z-index: -1; opacity: 0}
-}
+.frame #container > .title-bar	{position: sticky; top: 24px; width: 100%; z-index: 30;}
+.opened-nav .frame #container > .title-bar	{z-index: -1; opacity: 0}
+
 
 /*
 	popup

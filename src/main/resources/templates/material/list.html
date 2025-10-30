@@ -6,7 +6,6 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
     <!-- Bootstrap CSS CDN -->
@@ -21,8 +20,11 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="title-bar">
-            <h2 class="page-title ellipsis">재료 목록</h2>
+        <div class="pack-both">
+            <div class="title-bar">
+                <h2 class="page-title ellipsis">재료 목록</h2>
+            </div>
+            <a href="/admin/material/store/list" class="btn small bdr-color2">가맹점별 재료 목록</a>
         </div>
 
         <main id="content">
@@ -36,7 +38,10 @@
                                     <input type="hidden" name="type" th:value="${materialSearchDTO.type}" />
                                     <input type="hidden" name="size" th:value="${materialSearchDTO.size}" />
 
-                                    <input title="검색어" type="search" name="s" th:value="${materialSearchDTO.s}" class="input-text medium form-control" placeholder="재료명, 검색어, 카테고리 검색" />
+                                    <input title="검색어" type="search" name="s"
+                                           th:value="${materialSearchDTO.s}"
+                                           class="input-text medium form-control"
+                                           placeholder="재료명, 카테고리 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 

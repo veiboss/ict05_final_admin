@@ -1,10 +1,9 @@
 package com.boot.ict05_final_admin.domain.inventory.dto;
 
+import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,5 +45,18 @@ public class MaterialListDTO {
 
     public String getCategoryDescription() {
         return materialCategory != null ? materialCategory.getDescription() : "";
+    }
+
+    public MaterialListDTO(Material material) {
+        this.id = material.getId();
+        this.code = material.getCode();
+        this.name = material.getName();
+        this.materialCategory = material.getMaterialCategory();
+        this.baseUnit = material.getBaseUnit();
+        this.salesUnit = material.getSalesUnit();
+        this.conversionRate = material.getConversionRate();
+        this.supplier = material.getSupplier();
+        this.materialTemperature = material.getMaterialTemperature();
+        this.materialStatus = material.getMaterialStatus();
     }
 }

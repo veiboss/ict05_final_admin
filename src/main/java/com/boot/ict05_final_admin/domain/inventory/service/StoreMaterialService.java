@@ -5,8 +5,6 @@ import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.StoreMaterial;
 import com.boot.ict05_final_admin.domain.inventory.repository.StoreMaterialRepository;
 import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.entity.Store;
-import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
 import com.boot.ict05_final_admin.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

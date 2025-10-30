@@ -6,7 +6,6 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
     <!-- Bootstrap CSS CDN -->
@@ -21,17 +20,20 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="title-bar pack-left gap-8">
-            <select title="가맹점 선택" class="select large" style="width: 120px;"
-                    id="storeSelect" onchange="onStoreChange(this.value)">
-                <option value="">전가맹점</option>
-                <option th:each="store : ${stores}"
-                        th:value="${store.storeId}"
-                        th:text="${store.storeName}"
-                        th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
-                </option>
-            </select>
-            <h2 class="page-title ellipsis">재료 목록</h2>
+        <div class="pack-both">
+            <div class="title-bar pack-left gap-8">
+                <select title="가맹점 선택" class="select large" style="width: 120px;"
+                        id="storeSelect" onchange="onStoreChange(this.value)">
+                    <option value="">전가맹점</option>
+                    <option th:each="store : ${stores}"
+                            th:value="${store.storeId}"
+                            th:text="${store.storeName}"
+                            th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
+                    </option>
+                </select>
+                <h2 class="page-title ellipsis">재료 목록</h2>
+            </div>
+            <a href="/admin/material/store/list" class="btn small bdr-color2">본사 재료 목록</a>
         </div>
 
         <main id="content">
@@ -45,7 +47,10 @@
                                     <input type="hidden" name="type" th:value="${storeMaterialSearchDTO.type}" />
                                     <input type="hidden" name="size" th:value="${storeMaterialSearchDTO.size}" />
 
-                                    <input title="검색어" type="search" name="s" th:value="${storeMaterialSearchDTO.s}" class="input-text medium form-control" placeholder="재료명, 검색어, 카테고리 검색" />
+                                    <input title="검색어" type="search" name="s"
+                                           th:value="${storeMaterialSearchDTO.s}"
+                                           class="input-text medium form-control"
+                                           placeholder="재료명, 카테고리 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 
@@ -119,7 +124,7 @@
                                 <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
                             </td>
                             <td th:text="${material.baseUnit}">단위</td>
-                            <td th:text="${material.supplier}">공급업체</td>
+                            <td th:text="${material.hqMaterial ? '본사' : material.supplier}"></td>
                             <td>
                                 <span th:class="'badge rounded-pill ' + (${material.status.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.status.description}">상태</span>
                             </td>
@@ -139,12 +144,11 @@
 <script>
     function onStoreChange(storeId) {
         if (!storeId) {
-            window.location = "/admin/store-material/list";
+            window.location = "/admin/material/store/list";
             return;
         }
-        const params = new URLSearchParams(window.location.search);
-        params.set("storeId", storeId);
-        window.location = `/admin/store-material/list?${params.toString()}`;
+        // 기존 검색어나 상태 필터 초기화
+        window.location = `/admin/material/store/list?storeId=${storeId}`;
     }
 
     function setFilter(status) {
@@ -157,18 +161,16 @@
       }
 
       const query = params.toString();
-      window.location = `/admin/store-material/list?${query}`;
+      window.location = `/admin/material/store/list?${query}`;
     }
-
 
     function setPageSize(size) {
         const params = new URLSearchParams(window.location.search);
         params.set('size', size);
         params.set('page', 1);
-        window.location = `/admin/store-material/list?${params.toString()}`;
+        window.location = `/admin/material/store/list?${params.toString()}`;
     }
-</script>
-<script>
+
     function excelDownload() {
         const formData = new FormData(document.getElementById('frm'));
         const type = formData.get("type");

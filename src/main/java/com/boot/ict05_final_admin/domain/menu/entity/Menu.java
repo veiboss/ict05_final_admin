@@ -41,8 +41,9 @@ public class Menu {
     private int menuKcal;
 
     /** 판매상태(0:비판매, 1:판매중) */
+    @Enumerated(EnumType.STRING)
     @Column(name = "menu_show")
-    private boolean menuShow;
+    private MenuShow menuShow;
 
     /** 가격 */
     @Column(name = "menu_price")
@@ -66,7 +67,7 @@ public class Menu {
         if (dto.getMenuInformation() != null) this.menuInformation = dto.getMenuInformation();
         if (dto.getMenuNameEnglish() != null) this.menuNameEnglish = dto.getMenuNameEnglish();
         if (dto.getMenuKcal() != null) this.menuKcal = dto.getMenuKcal();
-        if (dto.getMenuShow() != null) this.menuShow = dto.getMenuShow(); // Boolean → boolean
+        if (dto.getMenuShow() != null) this.menuShow = dto.getMenuShow();
         if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
     }
 

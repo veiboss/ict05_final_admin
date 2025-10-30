@@ -1,12 +1,13 @@
 package com.boot.ict05_final_admin.domain.inventory.entity;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -65,8 +66,8 @@ public class Material {
     private String salesUnit;
 
     /** 변환비율(판매단위 → 기본단위) */
-    @Column(name = "material_conversion_rate", precision = 10, scale = 3, nullable = false,
-            columnDefinition = "INT COMMENT '변환비율(판매단위/기본단위)'")
+    @Column(name = "material_conversion_rate", nullable = false,
+            columnDefinition = "INT default 1000 COMMENT '변환비율(판매단위/기본단위)'")
     private Integer conversionRate;
 
     /** 공급업체명 */
@@ -87,16 +88,22 @@ public class Material {
     private MaterialStatus materialStatus;
 
     /** 등록일 */
-    @Schema(type="string", format="date-time")
+    @CreationTimestamp
     @Column(name = "material_reg_date",
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '등록일'")
     private LocalDateTime regDate;
 
     /** 수정일 */
-    @Schema(type="string", format="date-time")
+    @UpdateTimestamp
     @Column(name = "material_modify_date",
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'")
     private LocalDateTime modifyDate;
+
+    /** 본사 기준 적정 재고 수량 */
+    @Builder.Default
+    @Column(name = "material_optimal_quantity", precision = 15, scale = 3,
+            columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '본사 기준 적정 재고 수량'")
+    private BigDecimal optimalQuantity = BigDecimal.ZERO;
 
     /**
      * 재료 정보를 수정하는 메서드

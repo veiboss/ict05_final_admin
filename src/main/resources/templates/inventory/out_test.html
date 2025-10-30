@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>출고 테스트</title>
+</head>
+<body>
+<h2>본사 출고 테스트</h2>
+<form id="outForm">
+    <label>재료 ID: <input type="number" name="materialId" value="1"></label><br>
+    <label>수량: <input type="number" name="quantity" value="10"></label><br>
+    <label>가맹점 ID: <input type="number" name="storeId" value="3"></label><br>
+    <label>비고: <input type="text" name="memo" value="테스트 출고"></label><br>
+    <button type="submit">출고 등록</button>
+</form>
+
+<script>
+    document.getElementById("outForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      fetch("/admin/API/inventory/out/write", {
+        method: "POST",
+        body: formData
+      })
+      .then(async res => {
+        const text = await res.text();  // HTML인지 JSON인지 구분
+        try {
+          const data = JSON.parse(text);
+          alert("성공: " + JSON.stringify(data));
+        } catch {
+          alert("서버 응답이 JSON이 아닙니다:\n" + text);
+        }
+      })
+      .catch(err => alert("에러: " + err));
+    });
+</script>
+
+</body>
+</html>

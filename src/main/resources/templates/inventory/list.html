@@ -16,8 +16,12 @@
     <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="title-bar">
-            <h2 class="page-title ellipsis">본사 재고 목록</h2>
+        <div class="pack-both">
+            <div class="title-bar">
+                <h2 class="page-title ellipsis">본사 재고 현황</h2>
+            </div>
+
+            <a href="/admin/inventory/store/list" class="btn small bdr-color2">가맹점 재고 현황</a>
         </div>
 
         <main id="content">
@@ -31,7 +35,8 @@
                                 <div class="pack-left">
                                     <input title="검색어" type="search"
                                            name="s" th:value="${inventorySearchDTO.s}"
-                                           class="input-text medium form-control" placeholder="재료명, 카테고리 검색" />
+                                           class="input-text medium form-control"
+                                           placeholder="재료명, 카테고리 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 
@@ -43,6 +48,13 @@
                                             <input type="radio" name="status" value=""
                                                    th:checked="${inventorySearchDTO.status == null}"
                                                    onclick="setFilter('')">전체
+                                        </label>
+
+                                        <label class="btn medium"
+                                               th:classappend="${inventorySearchDTO.status?.name() == 'SUFFICIENT'} ? ' active' : ''">
+                                            <input type="radio" name="status" value="LOW"
+                                                   th:checked="${inventorySearchDTO.status?.name() == 'SUFFICIENT'}"
+                                                   onclick="setFilter('SUFFICIENT')">충분
                                         </label>
 
                                         <label class="btn medium"
@@ -94,6 +106,7 @@
                             <th scope="col">적정 수량</th>
                             <th scope="col">상태</th>
                             <th scope="col">마지막 수정일</th>
+                            <th scope="col">관리</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -105,10 +118,15 @@
                             <td>
                                 <span th:class="|badge rounded-pill ${inventory.status.name() == 'SUFFICIENT' ? 'bg-success' : (inventory.status.name() == 'LOW' ? 'bg-warning' : 'bg-danger') }|"
                                       th:text="${inventory.status.description}">
-
                                 </span>
                             </td>
                             <td th:text="${#temporals.format(inventory.updateDate, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
+                            <td>
+                                <a th:href="@{'/inventory/log/' + ${inventory.id}}"
+                                   class="btn small bdr-gray">
+                                    <span class="material-symbols-outlined md-18">visibility</span>
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

@@ -3,6 +3,7 @@ package com.boot.ict05_final_admin.domain.staffresources.repository;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffListDTO;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffSearchDTO;
 import com.boot.ict05_final_admin.domain.staffresources.entity.QStaffProfile;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,7 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import com.querydsl.core.types.dsl.Expressions;
+import static com.querydsl.core.types.dsl.Expressions.numberTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -68,7 +72,52 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom{
                 )
                 .fetchOne();
 
-        return 0;
+        return total;
+    }
+
+    @Override
+    public long countAll() {
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
+        Long count = queryFactory.select(staffProfile.count()).from(staffProfile).fetchOne();
+        return count == null ? 0 : count;
+    }
+
+    @Override
+    public long countActive() {
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
+        Long count = queryFactory.select(staffProfile.count())
+                .from(staffProfile)
+                .where(staffProfile.staffEndDate.isNull())   // 재직: 퇴사일 null
+                .fetchOne();
+        return count == null ? 0 : count;
+    }
+
+    @Override
+    public long countByDepartment(StaffDepartment dept) {
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
+        Long count = queryFactory.select(staffProfile.count())
+                .from(staffProfile)
+                .where(staffProfile.staffDepartment.eq(dept))
+                .fetchOne();
+        return count == null ? 0 : count;
+
+    }
+
+    @Override
+    public double avgTenureYears(LocalDateTime now) {
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
+
+        // TIMESTAMPDIFF(MONTH, start, COALESCE(end, :now))
+        var months = numberTemplate(Integer.class,
+                "TIMESTAMPDIFF(MONTH, {0}, COALESCE({1}, {2}))",
+                staffProfile.staffStartDate, staffProfile.staffEndDate, Expressions.constant(now));
+
+        Double avgMonths = queryFactory.select(months.avg())
+                .from(staffProfile)
+                .fetchOne();
+
+        if (avgMonths == null) return 0d;
+        return avgMonths / 12.0;
     }
 
     private BooleanExpression eqTitleOrBody(StaffSearchDTO staffSearchDTO, QStaffProfile staffProfile) {

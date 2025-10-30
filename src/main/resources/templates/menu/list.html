@@ -71,17 +71,17 @@
 
 
                                 <!-- 페이지 사이즈 -->
-                                    <div class="pack-left page-size">
-                                        <select title="뷰사이즈" th:field="${menuSearchDTO.size}" class="select medium"
-                                                onchange="setPageSize(this.value)">
-                                            <option value="10">10</option>
-                                            <option value="30">30</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                        <span class="fs-ss">개씩 보기</span>
-                                    </div>
+                                <div class="pack-left page-size">
+                                    <select title="뷰사이즈" th:field="${menuSearchDTO.size}" class="select medium"
+                                            onchange="setPageSize(this.value)">
+                                        <option value="10">10</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span class="fs-ss">개씩 보기</span>
                                 </div>
+                            </div>
                         </fieldset>
                     </form>
                 </div>
@@ -104,8 +104,8 @@
                             <th scope="col">메뉴명</th>
                             <th scope="col">카테고리</th>
                             <th scope="col">주재료</th>
-                            <th scope="col">금액</th>
-                            <th scope="col">칼로리</th>
+                            <th scope="col">금액(원)</th>
+                            <th scope="col">칼로리(kcal)</th>
                             <th scope="col">관리</th>
                         </tr>
                         </thead>
@@ -115,16 +115,24 @@
                                 <input type="checkbox" class="row-checkbox" th:value="${menu.menuId}">
                             </td>
                             <td>
-                                <span th:class="'badge rounded-pill ' + (${menu.menuShow} ? 'bg-success' : 'bg-secondary')"
-                                      th:text="${menu.menuShow} ? '판매중' : '중지'">판매상태</span>
+                                <span class="badge rounded-pill"
+                                    th:classappend="${menu.menuShow != null and menu.menuShow == T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).SHOW}
+                                                     ? ' bg-success text-white'
+                                                     : ' bg-danger text-white'"
+                                    th:text="${menu.menuShow != null and menu.menuShow == T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).SHOW}
+                                              ? '판매중' : '중지'">
+                                    판매상태
+                                </span>
                             </td>
+
+
                             <td th:text="${menu.menuCode}">상품코드</td>
                             <td>
                                 <span class="fc-333 fw-600" th:text="${menu.menuName}">메뉴명</span>
                             </td>
                             <td th:text="${menu.menuCategoryName}">카테고리</td>
                             <td th:text="${#strings.listJoin(menu.materialNames, ', ')}">주재료</td>
-                            <td th:text="${menu.menuPrice}">금액</td>
+                            <td th:text="${#numbers.formatInteger(menu.menuPrice, 0, 'COMMA')}">금액</td>
                             <td th:text="${menu.menuKcal != null ? menu.menuKcal : 0}">칼로리</td>
                             <td>
                                 <a th:href="@{/menu/detail/{menuId}(menuId=${menu.menuId})}" class="btn small bdr-gray">
@@ -187,7 +195,7 @@
     function setFilter(catId){
         const frm = document.getElementById('frm');
         const p = document.createElement('input');
-        p.type='hidden'; p.name='page'; p.value='0'; // 첫 페이지로
+        p.type='hidden'; p.name='page'; p.value='1'; // 첫 페이지로
         frm.appendChild(p);
         frm.submit();
     }

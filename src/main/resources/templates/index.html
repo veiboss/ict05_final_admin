@@ -56,16 +56,25 @@
 
             <div class="row-4">
                 <div class="col box-wrap">
-                    .row-4 &gt; .col
+                    <div class="title">이번달 매출</div>
+                    <div class="num" th:text="${#numbers.formatInteger(kpiRevenueThisMonth,0,'COMMA')} + ' 원'">0 원</div>
+                    <span class="badge" th:classappend="${kpiRevenueGrowthPct} >= 0 ? ' up' : ' down'"
+                          th:text="(${kpiRevenueGrowthPct} >= 0 ? '+' : '') + ${#numbers.formatDecimal(kpiRevenueGrowthPct,1,1)} + '%'">+0.0%</span>
                 </div>
                 <div class="col box-wrap">
-                    .row-4 &gt; .col
+                    <div class="title">활성 매장</div>
+                    <div class="num" th:text="${#numbers.formatInteger(kpiActiveStores,0,'COMMA')} + ' 개'">0 개</div>
+                    <span class="hint">운영 중</span>
                 </div>
                 <div class="col box-wrap">
-                    .row-4 &gt; .col
+                    <div class="title">주문 건수</div>
+                    <div class="num" th:text="${#numbers.formatInteger(kpiOrderCount,0,'COMMA')} + ' 건'">0 건</div>
+                    <span class="hint">월 누적</span>
                 </div>
                 <div class="col box-wrap">
-                    .row-4 &gt; .col
+                    <div class="title">신규 매장</div>
+                    <div class="num" th:text="${#numbers.formatInteger(kpiNewStores,0,'COMMA')} + ' 개'">0 개</div>
+                    <span class="hint">이번달</span>
                 </div>
             </div>
 

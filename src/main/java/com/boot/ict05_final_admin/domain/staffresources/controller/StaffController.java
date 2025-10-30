@@ -24,6 +24,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
+/**
+ * 직원 관리 화면 컨트롤러.
+ *
+ * 직원 목록 조회, 등록 화면, 상세 조회, 수정 화면, 삭제 등
+ * 화면 렌더링과 모델 구성 역할을 담당한다.
+ */
 @Controller
 @RequiredArgsConstructor
 public class StaffController {
@@ -41,19 +47,25 @@ public class StaffController {
      */
     @GetMapping("/staff/list")
     public String listOfficeStaff(StaffSearchDTO staffSearchDTO,
-                            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
+                            @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
                             Model model,
                             HttpServletRequest request) {
         PageRequest pageRequest = PageRequest.of(
-                pageable.getPageNumber(),
+                pageable.getPageNumber()-1,
                 pageable.getPageSize(),
                 Sort.by("id").descending());
 
-        Page<StaffListDTO> staffs = staffService.selectAllStaff(staffSearchDTO, pageable);
+        Page<StaffListDTO> staffs = staffService.selectAllStaff(staffSearchDTO, pageRequest);
 
         model.addAttribute("staffs", staffs);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("staffSearchDTO", staffSearchDTO);
+
+        var stats = staffService.listHeaderStats();
+        model.addAttribute("totalStaff",      stats.get("totalStaff"));
+        model.addAttribute("activeStaff",     stats.get("activeStaff"));
+        model.addAttribute("officeStaff",     stats.get("officeStaff"));
+        model.addAttribute("avgTenureYears",  stats.get("avgTenureYears"));
 
         return "staff/list";
     }

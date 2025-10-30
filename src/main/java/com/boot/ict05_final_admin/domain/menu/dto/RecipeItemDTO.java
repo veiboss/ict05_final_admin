@@ -1,43 +1,35 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import com.boot.ict05_final_admin.domain.menu.entity.RecipeUnit;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
+import java.math.BigDecimal;
+
 @AllArgsConstructor
+@Data
+@NoArgsConstructor
 @Builder
 public class RecipeItemDTO {
 
-    /** 수정 화면에서 필요 */
     private Long menuRecipeId;
 
-    /** 재료 식별자 (필수) */
-    @NotNull
     private Long materialId;
 
-    /** 표기용(선택) – 자동완성/미리보기용 */
-    private String materialName;
+    /** 레시피 항목명 — ‘체다치즈’, ‘소금’, ‘소스 베이스’ */
+    private String itemName;
 
-    /** 수량 (문자열로 받아서 빈값/정수/소수 모두 처리) */
-    @NotBlank
-    private String recipeQty;
+    /** 수량 */
+    @DecimalMin(value = "0.0", inclusive = false, message = "수량은 0보다 커야 합니다")
+    private BigDecimal recipeQty;
 
-    /** 단위 (g, ml, 개 등) */
-    @NotBlank
-    private String recipeUnit;
+    /** 단위 (g/ml/개/장) */
+    private RecipeUnit recipeUnit;
 
-    /** 표시 순서(1부터) */
-    @NotNull @Positive
+    /** 표시 순서 (자동 세팅) */
     private Integer recipeSortNo;
 
-    /** 역할: MAIN / SAUCE */
-    @NotBlank
-    private String recipeRole;
+    /** 삭제 체크박스용 필드 */
+    private Boolean deleteFlag;
 
-    /** 재료 기본단위(표시/기본값 도움용, 선택) */
-    private String materialBaseUnit;
 }
