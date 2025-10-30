@@ -56,7 +56,7 @@ public class MenuController {
     @GetMapping("/menu/list")
     public String listStoreMenu(
             MenuSearchDTO menuSearchDTO,
-            @PageableDefault(page = 0, size = 10, sort = "menuId", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(page = 1, size = 10, sort = "menuId", direction = Sort.Direction.DESC) Pageable pageable,
             Model model,
             HttpServletRequest request) {
 
@@ -65,7 +65,7 @@ public class MenuController {
                 ? pageable.getSort()
                 : Sort.by(Sort.Direction.DESC, "menuId");
 
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), size, sort);
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, size, sort);
 
         Page<MenuListDTO> menus = menuService.selectAllStoreMenu(menuSearchDTO, pageRequest);
 
@@ -190,12 +190,44 @@ public class MenuController {
      */
     @GetMapping("/menu/modify/{menuId}")
     public String modifyStoreMenu(@PathVariable Long menuId, Model model) {
+        // 1) 상세 조회
         MenuDetailDTO menu = menuService.MenuDetail(menuId);
 
-        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+        // 2) 상세 -> 폼 DTO
+        MenuModifyFormDTO form = MenuModifyFormDTO.builder()
+                .menuId(menu.getMenuId())
+                .menuCategoryId(menu.getMenuCategory().getMenuCategoryId())
+                .menuShow(menu.getMenuShow())
+                .menuCode(menu.getMenuCode())
+                .menuName(menu.getMenuName())
+                .menuNameEnglish(menu.getMenuNameEnglish())
+                .menuPrice(menu.getMenuPrice())
+                .menuInformation(menu.getMenuInformation())
+                .menuKcal(menu.getMenuKcal())
+                .mainMaterials(menu.getMainMaterials())
+                .sauceMaterials(menu.getSauceMaterials())
+                .build();
 
-        model.addAttribute("menu", menu);
+        if (form.getMenuShow() == null) {
+            form.setMenuShow(MenuShow.SHOW);
+        }
+
+        // 4️⃣ 셀렉트용 카테고리/재료 데이터 추가
+        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+        List<MaterialSimpleDTO> materials = new ArrayList<>();
+
+        materials.addAll(materialRepository.findByCategory(MaterialCategory.BASE)
+                .stream().map(m -> new MaterialSimpleDTO(m.getId(), m.getName())).toList());
+        materials.addAll(materialRepository.findByCategory(MaterialCategory.SAUCE)
+                .stream().map(m -> new MaterialSimpleDTO(m.getId(), m.getName())).toList());
+
+
+        // 4) 모델
+        model.addAttribute("menuModifyFormDTO", form);
         model.addAttribute("menuCategories", categories);
+        model.addAttribute("menuShowValues", MenuShow.values());
+        model.addAttribute("materials", materials);
+        model.addAttribute("units", RecipeUnit.values());
 
         return "menu/modify";
     }

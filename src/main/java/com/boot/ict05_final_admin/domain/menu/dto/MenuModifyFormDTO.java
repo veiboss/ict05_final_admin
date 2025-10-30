@@ -18,41 +18,34 @@ public class MenuModifyFormDTO {
     private Long menuCategoryId;
 
     /** 카테고리 */
-    @NotNull
-    private String menuCategoryName;
+    private String menuCategory;
 
     /** 판매 상태 */
-    @NotNull
     private MenuShow menuShow;
 
     /** 메뉴코드 */
-    @NotNull
     private String menuCode;
 
     /** 메뉴명 */
-    @NotBlank
     private String menuName;
 
     /** 영문명  */
     private String menuNameEnglish;
 
     /** 가격 */
-    @NotNull @DecimalMin("0.0")
+    @DecimalMin("0.0")
     private BigDecimal menuPrice;
 
     /** 설명 */
     private String menuInformation;
 
     /** 칼로리(kcal) */
-    @NotNull @Min(0)
     private Integer menuKcal;
 
     /** 재료구성 – 주재료 (menuRecipeId 포함됨) */
-    @NotNull
     private List<RecipeItemDTO> mainMaterials;
 
     /** 재료구성 – 소스 (menuRecipeId 포함됨) */
-    @NotNull
     private List<RecipeItemDTO> sauceMaterials;
 
 }
