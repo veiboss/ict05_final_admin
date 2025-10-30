@@ -54,8 +54,8 @@ public class AnalyticsService {
 
     /** 재료 상단 요약 카드 */
     @Transactional(readOnly = true)
-    public List<MaterialsCardsDto> selectMaterialsCards() {
-        return analyticsRepository.findMaterialsSummary();
+    public MaterialsCardsDto selectMaterialsCards(AnalyticsSearchDto cond) {
+        return analyticsRepository.findMaterialsSummary(cond); // 단일 DTO로 교체
     }
 
     /** 재료 분석 목록 */

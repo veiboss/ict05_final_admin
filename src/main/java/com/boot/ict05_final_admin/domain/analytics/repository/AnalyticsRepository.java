@@ -28,7 +28,7 @@ public interface AnalyticsRepository {
 
     OrdersCardsDto findOrdersSummary();
 
-    List<MaterialsCardsDto> findMaterialsSummary();
+    MaterialsCardsDto findMaterialsSummary(AnalyticsSearchDto cond);
 
     List<TimeCardsDto> findTimeSlicesSummary();
 

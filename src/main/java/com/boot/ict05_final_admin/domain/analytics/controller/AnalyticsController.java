@@ -93,8 +93,16 @@ public class AnalyticsController {
      * 재료 분석 화면
      */
     @GetMapping("/materials")
-    public String materials(AnalyticsSearchDto search, Model model) {
-        model.addAttribute("search", AnalyticsSearchDto.withDefaults(search));
+    public String materials(AnalyticsSearchDto analyticsSearchDto, Model model, HttpServletRequest request) {
+        AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
+
+        MaterialsCardsDto card = analyticsService.selectMaterialsCards(cond);   // 단일 DTO 권장
+        List<MaterialsRowDto> rows = analyticsService.selectMaterials(cond);    // 전체 행
+
+        model.addAttribute("analyticsSearchDto", cond);
+        model.addAttribute("materialCard", card);
+        model.addAttribute("materialRows", rows);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         return "analytics/materials";
     }
 
