@@ -72,7 +72,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom{
                 )
                 .fetchOne();
 
-        return 0;
+        return total;
     }
 
     @Override

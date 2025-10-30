@@ -14,9 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.awt.print.Pageable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -108,7 +111,7 @@ public class MenuRestController {
      * @return 수정 성공 여부 및 수정된 메뉴 ID
      * @throws Exception 파일 처리 오류 또는 DB 저장 오류
      */
-    @PostMapping(value = "/menu/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/menu/modify/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "메뉴 수정",
             description = "기존 매뉴를 수정하는 API입니다.",
@@ -130,34 +133,31 @@ public class MenuRestController {
                     )
             }
     )
-    public ResponseEntity<Map<String, Object>> boardModify(
-            @Validated @ModelAttribute MenuModifyFormDTO dto,
-            BindingResult bindingResult) throws Exception {
+    public ResponseEntity<Map<String,Object>> modifyMenu(@PathVariable Long menuId,
+                                                         @ModelAttribute MenuModifyFormDTO dto,
+                                                         BindingResult br) {
+        dto.setMenuId(menuId);
+        if (dto.getMainMaterials() == null) dto.setMainMaterials(new ArrayList<>());
+        if (dto.getSauceMaterials() == null) dto.setSauceMaterials(new ArrayList<>());
 
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = bindingResult.getFieldErrors().stream()
-                    .collect(Collectors.toMap(
-                            e -> e.getField(),
-                            e -> e.getDefaultMessage(),
-                            (a, b) -> a
-                    ));
-
-            return  ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of(
-                            "success", false,
-                            "errors", errors
-                    ));
+        try {
+            menuService.menuModify(dto);
+            return ResponseEntity.ok(Map.of("success", true, "id", menuId));
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            // 유니크 충돌 → 409 + 필드 에러
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("success", false,
+                            "field", "menuCode",
+                            "message", "이미 사용 중인 상품코드입니다."));
         }
+    }
 
-        long menuId = menuService.menuModify(dto).getMenuId();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(Map.of(
-                        "success", true,
-                        "menuId", menuId
-                ));
+    @PostMapping("/menu/modify/{menuId}")   // 여기엔 /API 다시 쓰지 않음
+    public Map<String,Object> modify(@PathVariable Long menuId,
+                                     @ModelAttribute MenuModifyFormDTO dto) {
+        dto.setMenuId(menuId);
+        menuService.menuModify(dto);
+        return Map.of("success", true, "id", menuId);
     }
 
 }

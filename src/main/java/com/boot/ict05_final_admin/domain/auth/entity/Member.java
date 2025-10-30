@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.auth.entity;
 
 //import com.boot.ict05_final_admin.domain.auth.UserRole;
+import com.boot.ict05_final_admin.domain.member.dto.MemberModifyFormDTO;
 import jakarta.persistence.*;
 import lombok.*;
 //import org.springframework.security.core.GrantedAuthority;
@@ -84,5 +85,12 @@ public class Member  {
      */
     public void withdraw() {
         this.status = MemberStatus.WITHDRAWN;
+    }
+
+    public void updateMember(MemberModifyFormDTO dto) {
+        this.name = dto.getMemberName();
+        this.email = dto.getMemberEmail();
+        this.phone = dto.getMemberPhone();
+        this.status = dto.getMemberStatus();
     }
 }

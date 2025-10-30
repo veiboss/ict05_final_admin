@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -108,33 +109,89 @@ public class MenuService {
      */
     @Transactional
     public Menu menuModify(MenuModifyFormDTO dto) {
-        // 수정 대상 메뉴 조회
-        Menu menu = findMenuById(dto.getMenuId());
-        if (menu == null) {
-            throw new IllegalArgumentException("메뉴가 존재하지 않습니다.");
+        if (dto == null || dto.getMenuId() == null) throw new IllegalArgumentException("메뉴 ID 없음");
+
+        // menu_code 유니크 충돌 방지: 빈문자 -> null
+        if (dto.getMenuCode() != null && dto.getMenuCode().trim().isEmpty()) {
+            dto.setMenuCode(null);
         }
 
-        // 엔티티 내부 update 메서드 호출 (DTO 내용으로 갱신)
+        Menu menu = findMenuById(dto.getMenuId());
+        if (menu == null) throw new IllegalArgumentException("메뉴 없음");
+
+        // 기본필드 갱신 (엔티티에 updateMenu(dto) 존재 가정)
         menu.updateMenu(dto);
 
-        // 3) 카테고리 변경이 필요하다면 갱신
-        if (dto.getMenuCategoryName() != null) {
-            MenuCategory category = menuCategoryRepository.findByMenuCategoryName(dto.getMenuCategoryName())
-                    .orElseThrow(() -> new IllegalArgumentException("카테고리 없음: " + dto.getMenuCategoryName()));
-            menu.setMenuCategory(category);
+        // 카테고리: ID만 처리(있을 때만)
+        if (dto.getMenuCategoryId() != null) {
+            menu.setMenuCategory(
+                    menuCategoryRepository.findById(dto.getMenuCategoryId())
+                            .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"))
+            );
         }
 
-        // 레시피 수정 (필요 시 기존 레시피 제거 후 재등록)
-        if (dto.getMainMaterials() != null || dto.getSauceMaterials() != null) {
-            menuRecipeRepository.deleteAllByMenu(menu); // 기존 레시피 삭제
+        // 레시피: 전량 삭제 후 재등록 (MAIN / SAUCE)
+        menuRecipeRepository.deleteAllByMenu(menu);
 
-            saveRecipes(menu, dto.getMainMaterials(),  MenuRecipe.RecipeRole.MAIN);
-            saveRecipes(menu, dto.getSauceMaterials(), MenuRecipe.RecipeRole.SAUCE);
+        if (dto.getMainMaterials() != null) {
+            int sort = 0;
+            for (RecipeItemDTO it : dto.getMainMaterials()) {
+                if (it == null || it.getMaterialId() == null || it.getRecipeQty() == null) continue;
+                if (it.getRecipeQty().doubleValue() <= 0) continue;
+                if (Boolean.TRUE.equals(it.getDeleteFlag())) continue;
 
+                Material mat = materialRepository.findById(it.getMaterialId())
+                        .orElseThrow(() -> new IllegalArgumentException("재료 없음"));
+
+                MenuRecipe r = new MenuRecipe();
+                r.setMenu(menu);
+                r.setMaterial(mat);
+                r.setRecipeRole(MenuRecipe.RecipeRole.MAIN);
+                r.setRecipeQty(it.getRecipeQty());
+                r.setRecipeUnit(it.getRecipeUnit());
+                r.setRecipeSort(sort++);
+
+                // ★ 여기 추가: 표기명 없으면 재료명으로 채움 (NOT NULL 대응)
+                String itemName = (it.getItemName() != null && StringUtils.hasText(it.getItemName()))
+                        ? it.getItemName()
+                        : mat.getName(); // 또는 mat.getMaterialName()
+                r.setRecipeItemName(itemName); // 엔티티 세터명에 맞게
+
+                menuRecipeRepository.save(r);
+            }
+        }
+
+        if (dto.getSauceMaterials() != null) {
+            int sort = 0;
+            for (RecipeItemDTO it : dto.getSauceMaterials()) {
+                if (it == null || it.getMaterialId() == null || it.getRecipeQty() == null) continue;
+                if (it.getRecipeQty().doubleValue() <= 0) continue;
+                if (Boolean.TRUE.equals(it.getDeleteFlag())) continue;
+
+                Material mat = materialRepository.findById(it.getMaterialId())
+                        .orElseThrow(() -> new IllegalArgumentException("재료 없음"));
+
+                MenuRecipe r = new MenuRecipe();
+                r.setMenu(menu);
+                r.setMaterial(mat);
+                r.setRecipeRole(MenuRecipe.RecipeRole.SAUCE);
+                r.setRecipeQty(it.getRecipeQty());
+                r.setRecipeUnit(it.getRecipeUnit());
+                r.setRecipeSort(sort++);
+
+                // ★ 동일 로직
+                String itemName = (it.getItemName() != null && StringUtils.hasText(it.getItemName()))
+                        ? it.getItemName()
+                        : mat.getName();
+                r.setRecipeItemName(itemName);
+
+                menuRecipeRepository.save(r);
+            }
         }
 
         return menu;
     }
+
 
     /**
      * 메뉴 상세 정보를 조회한다.

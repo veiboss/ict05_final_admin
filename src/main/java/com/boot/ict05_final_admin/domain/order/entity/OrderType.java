@@ -1,24 +1,19 @@
 package com.boot.ict05_final_admin.domain.order.entity;
 
-/** 주문 형태 (DB에는 영문 소문자 코드 저장: visit/takeout/delivery) */
+/** 주문 형태  */
 public enum OrderType {
-    VISIT("visit", "방문"),
-    TAKEOUT("takeout", "포장"),
-    DELIVERY("delivery", "배달");
+    VISIT("VISIT", "방문"),
+    TAKEOUT("TAKEOUT", "포장"),
+    DELIVERY("DELIVERY", "배달");
 
-    private final String code;   // DB 저장값
-    private final String label;  // 한글 라벨
+    private final String dbValue;
+    private final String label;
+    OrderType(String dbValue, String label) { this.dbValue = dbValue; this.label = label; }
+    public String getDbValue() { return dbValue; }
+    public String getLabel()   { return label; }
 
-    OrderType(String code, String label) {
-        this.code = code; this.label = label;
-    }
-    public String getCode() { return code; }
-    public String getLabel() { return label; }
-
-    public static OrderType fromCode(String code) {
-        for (OrderType v : values()) {
-            if (v.code.equals(code)) return v;
-        }
-        throw new IllegalArgumentException("Unknown OrderType code=" + code);
+    public static OrderType from(String dbValue) {
+        for (OrderType v : values()) if (v.dbValue.equals(dbValue)) return v;
+        throw new IllegalArgumentException("Unknown OrderType dbValue=" + dbValue);
     }
 }

@@ -8,7 +8,7 @@ public enum OrderStatus {
     COMPLETED("완료"),
     CANCELED("취소"),
     READY("픽업대기"),
-    REFUNDED("황불");
+    REFUNDED("환불");
 
     private final String dbValue;
 

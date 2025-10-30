@@ -97,17 +97,15 @@
                                     th:if="${menu.mainMaterials != null and !#lists.isEmpty(menu.mainMaterials)}">
                                     <li th:each="it : ${menu.mainMaterials}">
                                         <!-- 표기명: itemName 우선, 없으면 materialName -->
-                                        <span class="nm"
-                                              th:text="${#strings.isEmpty(it.itemName) ? it.materialName : it.itemName}">
-            항목명
-          </span>
+                                        <span class="nm" th:text="${#strings.isEmpty(it.itemName) ? it.materialName : it.itemName}">
+                                            항목명
+                                        </span>
                                         <span class="qty">
-            <span th:text="${it.recipeQty}">0</span>
-            <span th:text="${it.recipeUnit}">g</span>
-          </span>
-                                    </li>
+                                            <span th:text="${it.recipeQty != null ? #numbers.formatInteger(it.recipeQty.longValue(), 0, 'NONE') : 0}">0</span>
+                                            <span th:text="${it.recipeUnit}">g</span>
+                                        </span>
+                            </li>
                                 </ul>
-
                                 <div class="text-muted small"
                                      th:if="${menu.mainMaterials == null or #lists.isEmpty(menu.mainMaterials)}">
                                     주재료 정보가 없습니다.
@@ -121,14 +119,13 @@
                                 <ul class="list-ingredients"
                                     th:if="${menu.sauceMaterials != null and !#lists.isEmpty(menu.sauceMaterials)}">
                                     <li th:each="it : ${menu.sauceMaterials}">
-          <span class="nm"
-                th:text="${#strings.isEmpty(it.itemName) ? it.materialName : it.itemName}">
-            항목명
-          </span>
+                                        <span class="nm" th:text="${#strings.isEmpty(it.itemName) ? it.materialName : it.itemName}">
+                                            항목명
+                                        </span>
                                         <span class="qty">
-            <span th:text="${it.recipeQty}">0</span>
-            <span th:text="${it.recipeUnit}">g</span>
-          </span>
+                                            <span th:text="${it.recipeQty != null ? #numbers.formatInteger(it.recipeQty.longValue(), 0, 'NONE') : 0}">0</span>
+                                            <span th:text="${it.recipeUnit}">g</span>
+                                         </span>
                                     </li>
                                 </ul>
 
@@ -146,7 +143,7 @@
 
             <div class="button-area pack-both" style="display:flex; justify-content:space-between; gap:20px; margin-top:20px;">
                 <a href="/admin/menu/list" class="btn medium color1">목록</a>
-                <a th:href="@{/admin/menu/modify/{id}(id=${menu.menuId})}"
+                <a th:href="@{/menu/modify/{id}(id=${menu.menuId})}"
                    class="btn large color2">수정</a>
             </div>
         </main>
