@@ -8,6 +8,7 @@ import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.store.dto.*;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
+import com.querydsl.core.QueryFactory;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,11 +24,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Map;
-import com.querydsl.core.Tuple;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Repository
@@ -256,5 +252,18 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetchOne();
 
         return v == null ? 0L : v;
+    }
+
+    @Override
+    public FindMemberEmailtoIdDTO findMemberByEmail(String email) {
+        QMember m = QMember.member;
+        return queryFactory
+                .select(Projections.fields(FindMemberEmailtoIdDTO.class,
+                        m.email.as("email"),
+                        m.id.as("id")
+                ))
+                .from(m)
+                .where(m.email.eq(email))
+                .fetchOne();
     }
 }

@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
+import com.boot.ict05_final_admin.domain.member.repository.MemberRepository;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
 import com.boot.ict05_final_admin.domain.store.dto.*;
@@ -36,7 +37,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository; // 데이터 접근(기본 CRUD + 커스텀 쿼리) 의존성
     private final StaffRepository staffRepository;
-    private final MemberRep
+    private final MemberRepository memberRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -65,12 +66,23 @@ public class StoreService {
         String address = (address1 == null ? "" : address1) + "," + (address2 == null ? "" : address2);
         dto.setStoreLocation(address);
 
-        StaffProfile staffProfile = staffRepository.findById(dto.getHqWorkerStaffId());
 
-        Member member = mem staffProfile.getStaffEmail();
+        Member member = null;
+        if (dto.getHqWorkerStaffId() != null) {
+            StaffProfile hqWorker = staffRepository.findById(dto.getHqWorkerStaffId())
+                    .orElse(null);
+            if (hqWorker != null && hqWorker.getStaffEmail() != null) {
+                FindMemberEmailtoIdDTO mDto = storeRepository.findMemberByEmail(hqWorker.getStaffEmail());
+                if (mDto != null && mDto.getId() != null) {
+                    // 엔티티 참조(영속성 컨텍스트에 프록시로 붙임)
+                    member = em.getReference(Member.class, mDto.getId());
+                }
+            }
+        }
 
         Store store = Store.builder()
                 .name(dto.getStoreName())
+                .member(member)
                 .businessRegistrationNumber(dto.getBusinessRegistrationNumber())
                 .phone(dto.getStorePhone())
                 .status(dto.getStoreStatus())
@@ -85,6 +97,7 @@ public class StoreService {
                 .royalty(dto.getRoyalty())
                 .comment(dto.getComment())
                 .build();
+
 
         Store saved = storeRepository.save(store);
         return saved.getId();
