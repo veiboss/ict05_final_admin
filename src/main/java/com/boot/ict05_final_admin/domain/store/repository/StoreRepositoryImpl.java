@@ -69,7 +69,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .from(store)
                 .where(
                         eqSearchStore(storeSearchDTO, store),
-                        eqStatus(storeSearchDTO, store) // ✅ 목록과 동일 WHERE
+                        eqStatus(storeSearchDTO, store) // 목록과 동일 WHERE
                 )
                 .fetchOne();
 

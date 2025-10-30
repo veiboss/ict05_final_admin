@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 public abstract class Inventory {
 
     /** 현재 재고 수량 */
+    @Setter
     @Column(name = "inventory_quantity", precision = 15, scale = 3, nullable = false,
             columnDefinition = "DECIMAL(15,3) DEFAULT 0.000 COMMENT '현재 재고 수량'")
     protected BigDecimal quantity;

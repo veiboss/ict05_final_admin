@@ -21,10 +21,15 @@
 
     <div id="container" class="container">
         <div class="title-bar">
-            <h2 class="page-title ellipsis max-900">본사 <span th:text="${material.name}">재료명</span> 재고 내역</h2>
+            <h2 class="page-title ellipsis max-900">
+                <span th:text="${material.name}">재료명</span>
+                <span class="fw-400">본사 재고 내역</span>
+            </h2>
         </div>
 
         <main id="content" class="max-900">
+            <input type="hidden" id="inventoryId" th:value="${inventory.id}">
+            <input type="hidden" id="materialId" th:value="${material.id}">
             <div class="box-wrap">
                 <div class="row-4">
                     <div class="pack-down col">
@@ -37,9 +42,23 @@
                     </div>
                     <div class="pack-down col-2">
                         <span class="fs-ss fc-999">현재 수량</span>
-                        <span class="pack-left">
+                        <span class="pack-left mo-pack-down">
                             <span th:text="${inventory.quantity}">현재 수량</span>
                             <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+
+                            <!-- 수량 조정 -->
+                            <span id="adjustForm" style="display:none;">
+                                <span class="pack-left">
+                                    <input type="number" step="1" id="newQty"
+                                           class="input-text small fc-000" style="width: 50px;"
+                                           th:value="${inventory.quantity}">
+                                    <button type="button" class="btn small color1" id="confirmBtn">확인</button>
+                                    <button type="button" class="btn small bdr-color1" id="cancelBtn">취소</button>
+                                </span>
+                            </span>
+
+                            <!-- 수정 버튼 -->
+                            <button type="button" class="btn small bdr-color1" id="adjustBtn" style="margin-left:6px;">수정</button>
                         </span>
                     </div>
                     <div class="pack-down col">
@@ -72,8 +91,11 @@
                         <tr th:each="log : ${logs.content}">
                             <td th:text="${#temporals.format(log.date, 'yyyy-MM-dd')}"></td>
                             <td>
-                                <span th:text="${log.type == 'INCOME' ? '입고' : '출고'}"
-                                      th:classappend="${log.type == 'INCOME'} ? 'type-in' : 'type-out'"></span>
+                                <span th:switch="${log.type}">
+                                    <span th:case="'INCOME'" class="type-in">입고</span>
+                                    <span th:case="'OUTGO'" class="type-out">출고</span>
+                                    <span th:case="'ADJUST'" class="type-adj">조정</span>
+                                  </span>
                             </td>
                             <td th:text="${log.quantity}"></td>
                             <td th:text="${log.stockAfter}"></td>
@@ -96,5 +118,55 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+<script>
+    const btn = document.getElementById("adjustBtn");
+    const form = document.getElementById("adjustForm");
+    const cancel = document.getElementById("cancelBtn");
+    const confirm = document.getElementById("confirmBtn");
+    const qtyDisplay = document.getElementById("qtyDisplay");
+
+    btn.addEventListener("click", () => {
+        btn.style.display = "none";
+        form.style.display = "inline";
+    });
+
+    cancel.addEventListener("click", () => {
+        form.style.display = "none";
+        btn.style.display = "inline";
+    });
+
+    confirm.addEventListener("click", () => {
+        const newQty = Number(document.getElementById("newQty").value);
+        const memo = prompt("조정 사유를 입력하세요:", "");
+
+        const inventoryId = document.getElementById("inventoryId").value;
+        const materialId = document.getElementById("materialId").value;
+
+        fetch(`/admin/API/inventory/adjust`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                inventoryId: inventoryId,
+                materialId: materialId,
+                quantityAfter: Number(document.getElementById("newQty").value),
+                memo: memo,
+                reason: "MANUAL"
+            })
+        })
+        .then(async r => {
+            if (!r.ok) throw new Error(await r.text());
+            return r.json();
+        })
+        .then(data => {
+            if (data.success) location.reload();
+            else alert("조정 실패");
+        })
+        .catch(err => {
+            console.error("요청 실패:", err);
+            alert("요청 실패");
+        });
+    });
+
+</script>
 </body>
 </html>
