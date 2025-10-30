@@ -26,7 +26,7 @@ public interface AnalyticsRepository {
 
     KpiCardsDto findKpiSummary();
 
-    List<OrdersCardsDto> findOrdersSummary();
+    OrdersCardsDto findOrdersSummary();
 
     List<MaterialsCardsDto> findMaterialsSummary();
 
@@ -48,7 +48,7 @@ public interface AnalyticsRepository {
      * @param cond 조회 조건 DTO (가맹점, 기간, 뷰 단위 등)
      * @return 주문 집계/상세 행 목록
      */
-    List<OrdersRowDto> findOrders(AnalyticsSearchDto cond);
+    Page<OrdersRowDto> findOrders(AnalyticsSearchDto cond, Pageable pageable);
 
     /**
      * 재료 분석 목록 테이블 행들을 조회합니다.

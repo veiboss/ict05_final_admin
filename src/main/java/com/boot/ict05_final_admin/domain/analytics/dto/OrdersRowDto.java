@@ -13,16 +13,15 @@ import java.math.BigDecimal;
 @Builder
 public class OrdersRowDto {
 
+    /** 기간 라벨(일별: yyyy-MM-dd, 월별: yyyy-MM) */
+    private String date;
     private String storeName;
-    private Long countOrder;
-    private BigDecimal salesOrder;
-
     private String category;
     private String menu;
-
-    private Long countMenu;
-    private BigDecimal salesMenu;
-
+    private BigDecimal menuSales;
+    private Long menuCount;
+    private Long orderCount;
+    private BigDecimal orderSales;
     private String orderType;   // visit/takeout/delivery
     private String orderDate;   // 'yyyy-MM-dd' 또는 'yyyy-MM-01'
 }

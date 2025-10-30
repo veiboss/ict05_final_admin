@@ -1,9 +1,6 @@
 package com.boot.ict05_final_admin.domain.analytics.controller;
 
-import com.boot.ict05_final_admin.domain.analytics.dto.AnalyticsSearchDto;
-import com.boot.ict05_final_admin.domain.analytics.dto.KpiCardsDto;
-import com.boot.ict05_final_admin.domain.analytics.dto.KpiRowDto;
-import com.boot.ict05_final_admin.domain.analytics.dto.StoreOptionDto;
+import com.boot.ict05_final_admin.domain.analytics.dto.*;
 import com.boot.ict05_final_admin.domain.analytics.repository.AnalyticsRepository;
 import com.boot.ict05_final_admin.domain.analytics.service.AnalyticsService;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
@@ -64,7 +61,6 @@ public class AnalyticsController {
         model.addAttribute("kpirows", kpirows);
         model.addAttribute("kpiCard", card);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
-        System.out.println("그냥 컨트롤러 호출");
         return "analytics/kpi";
     }
 
@@ -72,8 +68,24 @@ public class AnalyticsController {
      * 주문 분석 화면
      */
     @GetMapping("/orders")
-    public String orders(AnalyticsSearchDto search, Model model) {
-        model.addAttribute("search", AnalyticsSearchDto.withDefaults(search));
+    public String orders(AnalyticsSearchDto analyticsSearchDto,
+                         @PageableDefault(page = 1, size = 50) Pageable pageable,
+                         Model model,
+                         HttpServletRequest request) {
+
+        PageRequest pageRequest = PageRequest.of(
+                Math.max(0, pageable.getPageNumber() - 1),
+                pageable.getPageSize()
+        );
+
+        AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
+        Page<OrdersRowDto> orderrows = analyticsService.selectOrders(cond, pageRequest);
+        OrdersCardsDto card = analyticsService.selectOrdersCards();
+
+        model.addAttribute("analyticsSearchDto", cond);
+        model.addAttribute("orderrows", orderrows);
+        model.addAttribute("orderCard", card);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         return "analytics/orders";
     }
 

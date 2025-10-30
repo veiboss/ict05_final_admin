@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.order.entity;
 
+import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -34,8 +35,9 @@ public class CustomerOrderDetail {
     private CustomerOrder order;
 
     /** 메뉴 시퀀스(FK) */
-    @Column(name = "menu_id_fk", nullable = false)
-    private Long menuIdFk;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "menu_id_fk", nullable = false)
+    private Menu menuIdFk;
 
     /** 주문 수량 */
     @Column(name = "customer_order_detail_quantity", nullable = false)

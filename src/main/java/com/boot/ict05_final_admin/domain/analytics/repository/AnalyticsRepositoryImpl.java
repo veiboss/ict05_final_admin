@@ -569,27 +569,242 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     }
 
 
+    // 주문 카드 요약 조회 (올해시작부터 전일까지 누적 집계) - orders.html card 데이터
     @Override
-    public List<OrdersCardsDto> findOrdersSummary() {
-        // 주문 카드 요약 조회 (올해시작부터 전일까지 누적 집계) - orders.html card 데이터
-        return List.of();
+    public OrdersCardsDto findOrdersSummary() {
+        final var today    = LocalDate.now(ZONE_SEOUL);
+        final var ytdStart = LocalDate.of(today.getYear(), 1, 1);
+        final var ytdEnd   = today.minusDays(1);
+
+        List<Tuple> rows = query
+                .select(
+                        co.id,                       // 0: 주문ID
+                        co.totalPrice,               // 1: 주문총액
+                        co.orderType,                // 2: 채널
+                        cod.quantity,                // 3: 라인 수량
+                        cod.lineTotal,               // 4: 라인 매출(=수량*단가)
+                        m.menuId,                    // 5: 메뉴ID
+                        m.menuName,                      // 6: 메뉴명   <-- 추가 (예: m.menuName)
+                        mc.menuCategoryId,           // 7: 카테고리ID
+                        mc.menuCategoryName                      // 8: 카테고리명 <-- 추가 (예: mc.menuCategoryName)
+                )
+                .from(cod)
+                .join(cod.order, co)
+                .join(co.storeIdFk, s)
+                .join(cod.menuIdFk, m)
+                .join(m.menuCategory, mc)
+                .where(
+                        co.status.eq(OrderStatus.COMPLETED),
+                        betweenDateClosedOpen(co.orderedAt, ytdStart, ytdEnd)
+                )
+                .fetch();
+
+        // 2) 누적용 구조
+        BigDecimal totalSales = BigDecimal.ZERO;
+        long trx = 0L;
+
+        Map<OrderType, BigDecimal> salesByChannel = new EnumMap<>(OrderType.class);
+
+        // 카테고리/메뉴 집계(+이름)
+        Map<Long, BigDecimal> catSales = new HashMap<>();
+        Map<Long, String>     catName  = new HashMap<>();
+
+        Map<Long, BigDecimal> menuSales = new HashMap<>();
+        Map<Long, Long>       menuQty   = new HashMap<>();
+        Map<Long, String>     menuName  = new HashMap<>();
+
+        Set<Long> seenOrders = new HashSet<>();
+        Set<Long> seenCats   = new HashSet<>();
+        Set<Long> seenMenus  = new HashSet<>();
+
+        for (Tuple t : rows) {
+            Long       orderId   = t.get(0, Long.class);
+            BigDecimal orderAmt  = Optional.ofNullable(t.get(1, BigDecimal.class)).orElse(BigDecimal.ZERO);
+            OrderType  ot        = t.get(2, OrderType.class);
+            Integer    qtyI      = Optional.ofNullable(t.get(3, Integer.class)).orElse(0);
+            BigDecimal lineSales = Optional.ofNullable(t.get(4, BigDecimal.class)).orElse(BigDecimal.ZERO);
+            Long       menuId    = t.get(5, Long.class);
+            String     menuNm    = t.get(6, String.class);
+            Long       catId     = t.get(7, Long.class);
+            String     catNm     = t.get(8, String.class);
+
+            // 주문단위 합산(중복 방지)
+            if (seenOrders.add(orderId)) {
+                trx++;
+                totalSales = totalSales.add(orderAmt);
+                if (ot != null) salesByChannel.merge(ot, orderAmt, BigDecimal::add);
+            }
+
+            // 카테고리 라인 합산
+            if (catId != null) {
+                seenCats.add(catId);
+                catSales.merge(catId, lineSales, BigDecimal::add);
+                if (catNm != null) catName.putIfAbsent(catId, catNm);
+            }
+
+            // 메뉴 라인 합산
+            if (menuId != null) {
+                seenMenus.add(menuId);
+                menuSales.merge(menuId, lineSales, BigDecimal::add);
+                menuQty.merge(menuId, qtyI.longValue(), Long::sum);
+                if (menuNm != null) menuName.putIfAbsent(menuId, menuNm);
+            }
+        }
+
+        // 3) 총 라인 매출
+        BigDecimal totalLineSales = catSales.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 4) 최상위 카테고리(이름/비중)
+        Long topCatId = catSales.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey).orElse(null);
+
+        String     topCategoryName = (topCatId == null) ? null : catName.get(topCatId);
+        BigDecimal topCategorySales= (topCatId == null) ? BigDecimal.ZERO : catSales.get(topCatId);
+        BigDecimal topCategoryRatio= divOrZero(topCategorySales.multiply(BigDecimal.valueOf(100)), totalLineSales, 1); // %
+
+        // 5) 메뉴 Top3 (메뉴ID 기준 매출 내림차순)
+        List<Map.Entry<Long, BigDecimal>> sortedMenus = new ArrayList<>(menuSales.entrySet());
+        sortedMenus.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        List<TopMenuItem> topMenus = new ArrayList<>();
+        BigDecimal top3Sum = BigDecimal.ZERO;
+
+        for (int i = 0; i < Math.min(3, sortedMenus.size()); i++) {
+            Long mid = sortedMenus.get(i).getKey();
+            BigDecimal msales = sortedMenus.get(i).getValue();
+            Long mqty = menuQty.getOrDefault(mid, 0L);
+            String mname = menuName.getOrDefault(mid, "N/A");
+
+            BigDecimal ratio = divOrZero(msales.multiply(BigDecimal.valueOf(100)), totalLineSales, 1); // %
+
+            topMenus.add(TopMenuItem.builder()
+                    .menuId(mid)
+                    .menuName(mname)
+                    .quantity(mqty)
+                    .sales(msales)
+                    .ratio(ratio)
+                    .build());
+
+            top3Sum = top3Sum.add(msales);
+        }
+        BigDecimal menuTop3Ratio = divOrZero(top3Sum.multiply(BigDecimal.valueOf(100)), totalLineSales, 1); // %
+
+        // 6) 채널 매출
+        BigDecimal visitSales    = salesByChannel.getOrDefault(OrderType.VISIT,    BigDecimal.ZERO);
+        BigDecimal takeoutSales  = salesByChannel.getOrDefault(OrderType.TAKEOUT,  BigDecimal.ZERO);
+        BigDecimal deliverySales = salesByChannel.getOrDefault(OrderType.DELIVERY, BigDecimal.ZERO);
+
+        // 7) DTO 빌드
+        return OrdersCardsDto.builder()
+                .transaction(trx)
+                .visitSales(visitSales)
+                .takeoutSales(takeoutSales)
+                .deliverySales(deliverySales)
+                .categoryCount((long) seenCats.size())
+                .categoryName(topCategoryName)
+                .categoryRatio(topCategoryRatio)
+                .menuCount((long) seenMenus.size())
+                .menuTop3Ratio(menuTop3Ratio)
+                .topMenus(topMenus)
+                .build();
     }
 
+    // 주문 분석 목록(카테고리/메뉴/주문형태 등) 조회 - orders.html 테이블 데이터
+    @Override
+    public Page<OrdersRowDto> findOrders(AnalyticsSearchDto cond, Pageable pageable) {
+        boolean byMonth = cond.getViewBy() == ViewBy.MONTH;
+        String  fmt     = byMonth ? "%Y-%m" : "%Y-%m-%d";
+        StringExpression labelExpr = dateFormat(co.orderedAt, fmt);
+
+        // 공통 필터: 완료 + 기간 + 매장
+        BooleanExpression filter = Expressions.asBoolean(true).isTrue()
+                .and(co.status.eq(OrderStatus.COMPLETED));
+        if (cond.getStartDate() != null || cond.getEndDate() != null) {
+            filter = filter.and(betweenDateClosedOpen(co.orderedAt, cond.getStartDate(), cond.getEndDate()));
+        }
+        if (cond.getStoreIds() != null && !cond.getStoreIds().isEmpty()) {
+            filter = filter.and(s.id.in(cond.getStoreIds()));
+        }
+
+        // 1회 쿼리: 화면 테이블의 "그룹 로우" 단위로 직접 묶는다
+        NumberExpression<Long>  orderCntExpr   = Expressions.numberTemplate(Long.class, "COUNT(DISTINCT {0})", co.id);
+        NumberExpression<BigDecimal> orderSalesExpr = Expressions.numberTemplate(BigDecimal.class, "SUM(DISTINCT {0})", co.totalPrice);
+
+        List<Tuple> grouped = query
+                .select(
+                        s.id, s.name,             // 0,1: 점포
+                        mc.menuCategoryId, mc.menuCategoryName,           // 2,3: 카테고리
+                        m.menuId, m.menuName,             // 4,5: 메뉴
+                        labelExpr,                // 6: 라벨(일/월)
+                        co.orderType,             // 7: 주문형태
+                        cod.quantity.sum(),       // 8: 메뉴수량 합
+                        cod.lineTotal.sum(),          // 9: 메뉴매출 합(라인 매출)
+                        orderCntExpr,             // 10: 주문건수(중복 제거)
+                        orderSalesExpr            // 11: 주문매출(주문총액 중복 제거 합)
+                )
+                .from(cod)
+                .join(cod.order, co)
+                .join(co.storeIdFk, s)
+                .join(cod.menuIdFk, m)
+                .join(m.menuCategory, mc)
+                .where(filter)
+                .groupBy(s.id, s.name, mc.menuCategoryId, mc.menuCategoryName, m.menuId, m.menuName, labelExpr, co.orderType)
+                .orderBy(
+                        labelExpr.desc(),
+                        cod.lineTotal.sum().coalesce(BigDecimal.ZERO).desc()
+                )
+                .fetch(); // ← 단 한 번의 DB 왕복
+
+        // 전체 로우 수 = 그룹 로우 수
+        long total = grouped.size();
+
+        // 자바에서 페이지 슬라이싱
+        int fromIdx = (int) Math.min(pageable.getOffset(), total);
+        int toIdx   = (int) Math.min(fromIdx + pageable.getPageSize(), total);
+        List<Tuple> pageSlice = grouped.subList(fromIdx, toIdx);
+
+        // DTO 매핑
+        List<OrdersRowDto> content = new ArrayList<>(pageSlice.size());
+        for (Tuple t : pageSlice) {
+            String    label      = t.get(6, String.class);
+            String    storeNm    = t.get(1, String.class);
+            String    catNm      = t.get(3, String.class);
+            String    menuNm     = t.get(5, String.class);
+            OrderType orderType  = t.get(7, OrderType.class);
+
+            Long      menuQtyL   = Optional.ofNullable(t.get(8, Integer.class)).map(Integer::longValue).orElse(0L);
+            BigDecimal menuSales = Optional.ofNullable(t.get(9, BigDecimal.class)).orElse(BigDecimal.ZERO);
+
+            Long      orderCnt   = Optional.ofNullable(t.get(10, Long.class)).orElse(0L);
+            BigDecimal orderSales= Optional.ofNullable(t.get(11, BigDecimal.class)).orElse(BigDecimal.ZERO);
+
+            content.add(OrdersRowDto.builder()
+                    .date(label)
+                    .storeName(storeNm)
+                    .category(catNm)
+                    .menu(menuNm)
+                    .menuCount(menuQtyL)
+                    .menuSales(menuSales)
+                    .orderCount(orderCnt)
+                    .orderSales(orderSales)
+                    .orderType(orderType != null ? orderType.name() : null)
+                    .orderDate(label)
+                    .build());
+        }
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    // 재료 카드 요약 조회 (올해시작부터 전일까지 누적 집계) - materials.html card 데이터
     @Override
     public List<MaterialsCardsDto> findMaterialsSummary() {
-        // 재료 카드 요약 조회 (올해시작부터 전일까지 누적 집계) - materials.html card 데이터
         return List.of();
     }
 
     @Override
     public List<TimeCardsDto> findTimeSlicesSummary() {
         // 시간대,요일 카드 요약 조회 (올해시작부터 전일까지 누적 집계) - kpi.html card 데이터
-        return List.of();
-    }
-
-    @Override
-    public List<OrdersRowDto> findOrders(AnalyticsSearchDto analyticsSearchDto) {
-        // 주문 분석 목록(카테고리/메뉴/주문형태 등) 조회 - orders.html 테이블 데이터
         return List.of();
     }
 

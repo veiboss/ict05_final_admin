@@ -42,14 +42,14 @@ public class AnalyticsService {
 
     /** 주문 상단 요약 카드 */
     @Transactional(readOnly = true)
-    public List<OrdersCardsDto> selectOrdersCards() {
+    public OrdersCardsDto selectOrdersCards() {
         return analyticsRepository.findOrdersSummary();
     }
 
     /** 주문 분석 목록 */
     @Transactional(readOnly = true)
-    public List<OrdersRowDto> selectOrders(AnalyticsSearchDto cond) {
-        return analyticsRepository.findOrders(cond);
+    public Page<OrdersRowDto> selectOrders(AnalyticsSearchDto cond, Pageable pageable) {
+        return analyticsRepository.findOrders(cond, pageable);
     }
 
     /** 재료 상단 요약 카드 */
