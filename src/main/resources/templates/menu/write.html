@@ -154,7 +154,7 @@
                         <template id="tpl-main-row">
                             <div class="row g-2 align-items-center mb-2" data-role="row">
                                 <div class="col-3">
-                                    <select class="form-select" name="mainMaterials[__INDEX__].materialId" required>
+                                    <select class="form-select" name="mainMaterials[__INDEX__].materialId" >
                                         <option value="" selected disabled>재료 선택</option>
                                         <th:block th:each="m : ${mainOptions}">
                                             <option th:value="${m.materialId}" th:text="${m.materialName}"></option>
@@ -163,10 +163,10 @@
                                 </div>
                                 <div class="col-2">
                                     <input type="number" step="0.1" min="0" class="form-control"
-                                           name="mainMaterials[__INDEX__].recipeQty" placeholder="수량" required>
+                                           name="mainMaterials[__INDEX__].recipeQty" placeholder="수량" >
                                 </div>
                                 <div class="col-3">
-                                    <select class="form-select" name="mainMaterials[__INDEX__].recipeUnit" required>
+                                    <select class="form-select" name="mainMaterials[__INDEX__].recipeUnit" >
                                         <option value="" selected disabled>단위</option>
                                         <option th:each="u : ${units}" th:value="${u}" th:text="${u}"></option>
                                     </select>
@@ -181,7 +181,7 @@
                         <template id="tpl-sauce-row">
                             <div class="row g-2 align-items-center mb-2" data-role="row">
                                 <div class="col-3">
-                                    <select class="form-select" name="sauceMaterials[__INDEX__].materialId" required>
+                                    <select class="form-select" name="sauceMaterials[__INDEX__].materialId" >
                                         <option value="" selected disabled>소스 선택</option>
                                         <th:block th:each="s : ${sauceOptions}">
                                             <option th:value="${s.materialId}" th:text="${s.materialName}"></option>
@@ -190,10 +190,10 @@
                                 </div>
                                 <div class="col-2">
                                     <input type="number" step="0.1" min="0" class="form-control"
-                                           name="sauceMaterials[__INDEX__].recipeQty" placeholder="수량" required>
+                                           name="sauceMaterials[__INDEX__].recipeQty" placeholder="수량" >
                                 </div>
                                 <div class="col-3">
-                                    <select class="form-select" name="sauceMaterials[__INDEX__].recipeUnit" required>
+                                    <select class="form-select" name="sauceMaterials[__INDEX__].recipeUnit" >
                                         <option value="" selected disabled>단위</option>
                                         <option th:each="u : ${units}" th:value="${u}" th:text="${u}"></option>
                                     </select>

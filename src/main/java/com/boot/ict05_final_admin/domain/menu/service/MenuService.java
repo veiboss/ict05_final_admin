@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 메뉴 관련 비즈니스 로직을 처리하는 서비스 클래스
@@ -140,32 +142,91 @@ public class MenuService {
      * @param menuId 공지사항 ID
      * @return 메뉴 엔티티, 존재하지 않으면 null
      */
-    public Menu detailMenu(Long menuId) {
-        return menuRepository.findById(menuId).orElse(null);
+    public MenuDetailDTO MenuDetail(Long menuId) {
+        Menu m = menuRepository.findById(menuId)
+                .orElseThrow(() -> new IllegalArgumentException("menu not found: " + menuId));
+
+        // 주재료
+        List<RecipeItemDTO> mains = m.getRecipe().stream()
+                .filter(r -> r.getRecipeRole() == MenuRecipe.RecipeRole.MAIN)
+                .sorted(Comparator.comparing(MenuRecipe::getRecipeSort))
+                .map(r -> {
+                    RecipeItemDTO d = new RecipeItemDTO();
+                    d.setMaterialId(r.getMaterial() != null ? r.getMaterial().getId() : null);
+                    d.setItemName(r.getRecipeItemName());           // null이면 템플릿에서 materialName 표시
+                    d.setRecipeQty(r.getRecipeQty());
+                    d.setRecipeUnit(r.getRecipeUnit());
+                    d.setRecipeSortNo(r.getRecipeSort());
+                    // (선택) 화면 편의용 materialName 필드가 필요하면 DTO에 추가해서 세팅
+                    return d;
+                }).toList();
+
+        // 소스
+        List<RecipeItemDTO> sauces = m.getRecipe().stream()
+                .filter(r -> r.getRecipeRole() == MenuRecipe.RecipeRole.SAUCE)
+                .sorted(Comparator.comparing(MenuRecipe::getRecipeSort))
+                .map(r -> {
+                    RecipeItemDTO d = new RecipeItemDTO();
+                    d.setMaterialId(r.getMaterial() != null ? r.getMaterial().getId() : null);
+                    d.setItemName(r.getRecipeItemName());
+                    d.setRecipeQty(r.getRecipeQty());
+                    d.setRecipeUnit(r.getRecipeUnit());
+                    d.setRecipeSortNo(r.getRecipeSort());
+                    return d;
+                }).toList();
+
+        return MenuDetailDTO.builder()
+                .menuId(m.getMenuId())
+                .menuCategoryId(m.getMenuCategory().getMenuCategoryId())
+                .menuCategory(m.getMenuCategory())
+                .menuShow(m.getMenuShow())
+                .menuCode(m.getMenuCode())
+                .menuName(m.getMenuName())
+                .menuNameEnglish(m.getMenuNameEnglish())
+                .menuPrice(m.getMenuPrice())
+                .menuInformation(m.getMenuInformation())
+                .menuKcal(m.getMenuKcal())
+                .mainMaterials(mains)
+                .sauceMaterials(sauces)
+                .build();
     }
+
 
     /**
      * 자유입력 레시피 저장 유틸 (옵션 A)
      * - material FK 사용 안 함
      * - recipeItemName / recipeQty / recipeUnit / recipeRole / recipeSort 만 저장
      */
-    private void saveRecipes(Menu menu, java.util.List<RecipeItemDTO> items, MenuRecipe.RecipeRole role) {
+    private void saveRecipes(Menu menu,
+                             List<RecipeItemDTO> items,
+                             MenuRecipe.RecipeRole role) {
+
         if (items == null || items.isEmpty()) return;
 
         int sort = 1;
         for (RecipeItemDTO it : items) {
             if (it == null) continue;
 
-            // materialId 없으면(행을 안 추가했거나 선택 안 함) 저장 스킵
-            if (it.getMaterialId() == null) continue;
+            // 수량/단위 필수 값 체크
+            if (it.getRecipeQty() == null || it.getRecipeQty().signum() <= 0) continue;
+            if (it.getRecipeUnit() == null) continue;
 
-            Material material = materialRepository.findById(it.getMaterialId())
-                    .orElseThrow(() -> new IllegalArgumentException("재료 없음: " + it.getMaterialId()));
+            Material material = null;
+            if (it.getMaterialId() != null) {
+                material = materialRepository.findById(it.getMaterialId())
+                        .orElse(null); // 못 찾으면 그냥 null 처리
+            }
+
+            // ✅ itemName 보정: 비어있으면 재료명 또는 "기타"
+            String itemName = it.getItemName();
+            if (itemName == null || itemName.isBlank()) {
+                itemName = (material != null ? material.getName() : "기타"); // DB가 NOT NULL이면 필수
+            }
 
             MenuRecipe recipe = MenuRecipe.builder()
                     .menu(menu)
-                    .material(material)                         // NOT NULL FK
-                    .recipeItemName(it.getItemName())           // 자유 입력
+                    .material(material)  // ✅ null 가능
+                    .recipeItemName(itemName)
                     .recipeQty(it.getRecipeQty())
                     .recipeUnit(it.getRecipeUnit())
                     .recipeSort(sort++)
@@ -175,6 +236,9 @@ public class MenuService {
             menuRecipeRepository.save(recipe);
         }
     }
+
+
+
     private BigDecimal nvl(BigDecimal v) { return v == null ? BigDecimal.ZERO : v; }
 
 }
