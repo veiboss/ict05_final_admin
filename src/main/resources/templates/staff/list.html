@@ -117,7 +117,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div th:replace="~{fragments/pagination :: pagination2(${staffs}, 'page')}"></div>
+                    <div style="text-align: center;">
+                        <div th:replace="~{fragments/pagination :: pagination (${staffs})}"></div>
+                    </div>
                 </section>
             </div>
         </main>
