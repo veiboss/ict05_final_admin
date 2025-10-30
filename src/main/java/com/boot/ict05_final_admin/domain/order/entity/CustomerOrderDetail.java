@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.order.entity;
 
+import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 /**
  * 주문 상세(CustomerOrderDetail) 엔티티
  *
- * <p>주문에 포함된 개별 메뉴/수량/금액 정보를 담는다.</p>
+ * <p>주문에 포함된 개별 메뉴/수량/단가/금액 정보를 담는다.</p>
  */
 @Entity
 @Getter
@@ -33,21 +34,29 @@ public class CustomerOrderDetail {
     @Setter
     private CustomerOrder order;
 
-    /** 메뉴 시퀀스(FK) - 아직 Menu 엔티티가 없으므로 Long 보관 */
-    @Column(name = "menu_id_fk", nullable = false)
-    private Long menuIdFk;
+    /** 메뉴 시퀀스(FK) */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "menu_id_fk", nullable = false)
+    private Menu menuIdFk;
 
     /** 주문 수량 */
     @Column(name = "customer_order_detail_quantity", nullable = false)
     private Integer quantity;
 
-    /** 주문 금액(해당 라인 총액) */
+    /** 단가 (당시 메뉴 가격 스냅샷) */
+    @Column(name = "customer_order_detail_unit_price", precision = 15, scale = 2, nullable = false)
+    private BigDecimal unitPrice;
+
+    /** 주문 금액(해당 라인 총액 = 단가 × 수량) */
     @Column(name = "customer_order_detail_total", precision = 15, scale = 2, nullable = false)
     private BigDecimal lineTotal;
 
+    /** 단가 × 수량 자동 계산 */
     @PrePersist
-    void prePersist() {
+    @PreUpdate
+    void calculateLineTotal() {
         if (quantity == null) quantity = 1;
-        if (lineTotal == null) lineTotal = BigDecimal.ZERO;
+        if (unitPrice == null) unitPrice = BigDecimal.ZERO;
+        this.lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 }
