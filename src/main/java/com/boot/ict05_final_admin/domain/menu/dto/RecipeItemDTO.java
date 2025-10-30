@@ -7,9 +7,12 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @AllArgsConstructor
-@Getter @Setter
+@Data
 @NoArgsConstructor
+@Builder
 public class RecipeItemDTO {
+
+    private Long menuRecipeId;
 
     private Long materialId;
 
@@ -25,5 +28,8 @@ public class RecipeItemDTO {
 
     /** 표시 순서 (자동 세팅) */
     private Integer recipeSortNo;
+
+    /** 삭제 체크박스용 필드 */
+    private Boolean deleteFlag;
 
 }
