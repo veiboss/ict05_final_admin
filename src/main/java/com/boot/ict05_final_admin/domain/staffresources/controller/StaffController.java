@@ -47,15 +47,15 @@ public class StaffController {
      */
     @GetMapping("/staff/list")
     public String listOfficeStaff(StaffSearchDTO staffSearchDTO,
-                            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
+                            @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
                             Model model,
                             HttpServletRequest request) {
         PageRequest pageRequest = PageRequest.of(
-                pageable.getPageNumber(),
+                pageable.getPageNumber()-1,
                 pageable.getPageSize(),
                 Sort.by("id").descending());
 
-        Page<StaffListDTO> staffs = staffService.selectAllStaff(staffSearchDTO, pageable);
+        Page<StaffListDTO> staffs = staffService.selectAllStaff(staffSearchDTO, pageRequest);
 
         model.addAttribute("staffs", staffs);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));

@@ -31,8 +31,8 @@ public class StaffService {
     /**
      * 검색어로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
      *
-     * @param staffSearchDTO   검색 (선택, null 가능)
-     * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
+     * @param staffSearchDTO 검색 (선택, null 가능)
+     * @param pageable       페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 직원 리스트 DTO
      */
     public Page<StaffListDTO> selectAllStaff(StaffSearchDTO staffSearchDTO, Pageable pageable) {
@@ -46,12 +46,14 @@ public class StaffService {
      * @return 사원 엔티티, 존재하지 않으면 null
      */
     @Transactional(readOnly = true)
-    public StaffProfile findById(Long id) { return staffRepository.findById(id).orElse(null);}
+    public StaffProfile findById(Long id) {
+        return staffRepository.findById(id).orElse(null);
+    }
 
     /**
      * 새로운 사원을 등록한다.
      *
-     * @param dto   사원 등록 정보
+     * @param dto 사원 등록 정보
      * @return 저장된 사원 ID
      */
     public long insertOfficeStaff(StaffWriteFormDTO dto) {
@@ -93,7 +95,9 @@ public class StaffService {
      * @param id 사원 ID
      * @return 사원 엔티티, 존재하지 않으면 null
      */
-    public StaffProfile detailStaff(Long id) { return staffRepository.findById(id).orElse(null); }
+    public StaffProfile detailStaff(Long id) {
+        return staffRepository.findById(id).orElse(null);
+    }
 
     /**
      * 기존 사원 정보를 수정한다.

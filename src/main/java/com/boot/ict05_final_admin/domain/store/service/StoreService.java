@@ -1,9 +1,9 @@
 package com.boot.ict05_final_admin.domain.store.service;
 
-import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreWriteFormDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
+import com.boot.ict05_final_admin.domain.auth.entity.Member;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
+import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
+import com.boot.ict05_final_admin.domain.store.dto.*;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 가맹점 관련 비즈니스 로직을 처리하는 서비스 클래스
@@ -32,12 +35,18 @@ import java.util.List;
 public class StoreService {
 
     private final StoreRepository storeRepository; // 데이터 접근(기본 CRUD + 커스텀 쿼리) 의존성
+    private final StaffRepository staffRepository;
+    private final MemberRep
+
+    @PersistenceContext
+    private EntityManager em;
+
 
     /**
      * 가맹점 이름으로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
      *
-     * @param storeSearchDTO   작성자 이름 (선택, null 가능)
-     * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
+     * @param storeSearchDTO 작성자 이름 (선택, null 가능)
+     * @param pageable       페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 공지사항 리스트 DTO
      */
     public Page<StoreListDTO> selectAllOfficeStore(StoreSearchDTO storeSearchDTO, Pageable pageable) {
@@ -50,13 +59,15 @@ public class StoreService {
      * @param dto 가맹점 등록 정보
      * @return 저장된 가맹점 ID
      */
-    public long insertOfficeStore(StoreWriteFormDTO dto) {
-
-        String address = "";
+    public Long insertOfficeStore(StoreWriteFormDTO dto) {
         String address1 = dto.getUserAddress1();
         String address2 = dto.getUserAddress2();
-        address = address1 + "," + address2;
+        String address = (address1 == null ? "" : address1) + "," + (address2 == null ? "" : address2);
         dto.setStoreLocation(address);
+
+        StaffProfile staffProfile = staffRepository.findById(dto.getHqWorkerStaffId());
+
+        Member member = mem staffProfile.getStaffEmail();
 
         Store store = Store.builder()
                 .name(dto.getStoreName())
@@ -64,6 +75,7 @@ public class StoreService {
                 .phone(dto.getStorePhone())
                 .status(dto.getStoreStatus())
                 .type(dto.getStoreType())
+                .totalEmployees(dto.getStoreTotalEmployees())
                 .location(dto.getStoreLocation())
                 .contractStartDate(dto.getStoreContractStartDate())
                 .contractAffiliateDate(dto.getStoreContractAffiliateDate())
@@ -75,10 +87,20 @@ public class StoreService {
                 .build();
 
         Store saved = storeRepository.save(store);
-        Long id = saved.getId();
-
-        return id;
+        return saved.getId();
     }
+
+
+    @Transactional(readOnly = true)
+    public List<StaffNameDTO> ownerOptions() {
+        return storeRepository.ownerStaffOptions();
+    }
+
+    @Transactional(readOnly = true)
+    public List<StaffNameDTO> hqWorkerOptions() {
+        return storeRepository.hqWorkerStaffOptions();
+    }
+
 
     /**
      * 가맹점의 이름(및 필요 시 식별자 등 최소 필드)을 DTO로 조회한다.
@@ -93,11 +115,48 @@ public class StoreService {
     /**
      * 가맹점 상세 정보를 조회한다.
      *
+     * @param id 재료 ID
+     * @return 가맹점 엔티티, 존재하지 않으면 null
+     */
+    public StoreDetailDTO detailOfficeStore(Long id) {
+        return storeRepository.findByStoreDetail(id);
+    }
+
+    /**
+     * ID를 기준으로 가맹점을 조회한다.
+     *
      * @param id 가맹점 ID
      * @return 가맹점 엔티티, 존재하지 않으면 null
      */
-    public Store detailOfficeStore(Long id) { return storeRepository.findById(id).orElse(null); }
+    @Transactional(readOnly = true)
+    public Store findById(Long id) {
+        return storeRepository.findById(id).orElse(null);
     }
+
+    /**
+     * 기존 가맹점 정보를 수정한다.
+     *
+     * @param dto 수정할 데이터
+     * @return 수정된 가맹점 엔티티
+     */
+    public Store storeModify(StoreModifyFormDTO dto) {
+
+        String address = "";
+        String address1 = dto.getUserAddress1();
+        String address2 = dto.getUserAddress2();
+        address = address1 + "," + address2;
+        dto.setStoreLocation(address);
+
+        Store store = findById(dto.getStoreId());
+        if (store == null) throw new IllegalArgumentException("해당 가맹점이 존재하지 않습니다.");
+
+        store.updateStore(dto);
+
+        return store;
+    }
+}
+
+
 
 
 
