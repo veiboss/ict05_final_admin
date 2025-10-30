@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.store.repository;
 
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.store.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,8 @@ public interface StoreRepositoryCustom {
     BigDecimal avgMonthlySales();
     // 총 직원수
     long totalEmployees();
+
+    FindMemberEmailtoIdDTO findMemberByEmail(String email);
 }
 
 

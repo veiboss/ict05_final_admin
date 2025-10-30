@@ -14,7 +14,7 @@
 
 
 /* 관리자 로그인 */
-#wrap.login {background-repeat: no-repeat; background-size: auto 80%; background-position: 50% 200%;
+#wrap.login {background-color: #E8DFD8;
 	display: flex;
 	justify-content: flex-end;
 	align-items: stretch;

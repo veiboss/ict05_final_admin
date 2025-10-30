@@ -1,14 +1,9 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryAdjustDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
-import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryIn;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryOut;
-import com.boot.ict05_final_admin.domain.inventory.entity.Material;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryInRepository;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutRepository;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
-import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
+import com.boot.ict05_final_admin.domain.inventory.entity.*;
+import com.boot.ict05_final_admin.domain.inventory.repository.*;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
@@ -35,10 +30,10 @@ public class InventoryInOutService {
 
     private final InventoryInRepository inventoryInRepository;
     private final InventoryOutRepository inventoryOutRepository;
+    private final InventoryAdjustmentRepository inventoryAdjustmentRepository;
     private final InventoryRepository inventoryRepository;
     private final MaterialRepository materialRepository;
     private final StoreRepository storeRepository;
-
 
     /**
      * 본사 입고 등록
@@ -79,7 +74,8 @@ public class InventoryInOutService {
         inventoryInRepository.save(entity);
 
         // 4. 상태 갱신
-        inventory.updateStatus();
+        inventory.setStatus(InventoryStatus.calculate(inventory.getQuantity(), material.getOptimalQuantity()));
+        inventoryRepository.save(inventory);
         log.info("[입고등록] materialId={}, 입고={}, 재고={}, 상태={}", material.getId(), dto.getQuantity(), updatedQty, inventory.getStatus());
 
         return entity.getId();
@@ -131,9 +127,49 @@ public class InventoryInOutService {
         inventoryOutRepository.save(entity);
 
         // 4. 상태 갱신
-        inventory.updateStatus();
+        inventory.setStatus(InventoryStatus.calculate(inventory.getQuantity(), material.getOptimalQuantity()));
+        inventoryRepository.save(inventory);
         log.info("[출고등록] materialId={}, 출고={}, 재고={}, 상태={}", material.getId(), quantity, updatedQty, inventory.getStatus());
+
 
         return entity.getId();
     }
+
+    /**
+     * 본사 재고 수량 조정
+     *
+     * <p>입출고 외의 사유(분실, 파손, 오입력 등)로 재고 수량을 수정할 때 사용.</p>
+     */
+    @Transactional
+    public void adjustInventory(InventoryAdjustDTO dto) {
+        HqInventory inventory = inventoryRepository.findById(dto.getInventoryId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 재고 정보를 찾을 수 없습니다."));
+
+        BigDecimal before = inventory.getQuantity();
+        BigDecimal after = dto.getQuantityAfter();
+        BigDecimal diff = after.subtract(before);
+
+        inventory.setQuantity(after);
+
+        InventoryAdjustment adjustment = InventoryAdjustment.builder()
+                .inventory(inventory)
+                .materialId(dto.getMaterialId())
+                .quantityBefore(before)
+                .quantityAfter(after)
+                .difference(diff)
+                .memo(dto.getMemo())
+                .reason(dto.getReason())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        inventoryAdjustmentRepository.save(adjustment);
+
+        // 상태 재계산 및 반영
+        inventory.setStatus(InventoryStatus.calculate(inventory.getQuantity(), inventory.getMaterial().getOptimalQuantity()));
+        inventoryRepository.save(inventory);
+
+        log.info("[HQ INVENTORY ADJUST] materialId={}, before={}, after={}, diff={}, reason={}, memo={}",
+                dto.getMaterialId(), before, after, diff, dto.getReason(), dto.getMemo());
+    }
+
 }

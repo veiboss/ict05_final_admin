@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -22,16 +23,19 @@ import java.time.LocalDateTime;
 public abstract class Inventory {
 
     /** 현재 재고 수량 */
+    @Setter
     @Column(name = "inventory_quantity", precision = 15, scale = 3, nullable = false,
             columnDefinition = "DECIMAL(15,3) DEFAULT 0.000 COMMENT '현재 재고 수량'")
     protected BigDecimal quantity;
 
     /** 적정 재고 수량 */
+    @Setter
     @Column(name = "inventory_optimal_quantity", precision = 15, scale = 3,
             columnDefinition = "DECIMAL(15,3) COMMENT '적정 재고 수량'")
     protected BigDecimal optimalQuantity;
 
     /** 재고 상태 */
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "inventory_status", nullable = false, length = 20)
     protected InventoryStatus status;

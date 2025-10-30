@@ -65,20 +65,6 @@
                                 </div>
                             </div>
 
-<!--                            &lt;!&ndash; 점주명 (필수) &ndash;&gt;-->
-<!--                            <div class="field pack-down col">-->
-<!--                                <label class="label medium required">점주명</label>-->
-<!--                                <div class="input-wrap" style="position:relative;">-->
-<!--                                    <input id="ownerSearch" class="input-text medium"-->
-<!--                                           placeholder="점주명 입력" list="ownerList" autocomplete="off">-->
-<!--                                    <input type="hidden" id="staffIdFk" th:field="*{staffIdFk}">-->
-<!--                                    <datalist id="ownerList">-->
-<!--                                        <option th:each="o : ${ownerOptions}"-->
-<!--                                                th:value="${o.staffName}"-->
-<!--                                                th:attr="data-id=${o.staffId}"></option>-->
-<!--                                    </datalist>-->
-<!--                                </div>-->
-<!--                            </div>-->
                         </div>
                         <div class="row-2">
                             <div class="field col">
@@ -241,7 +227,7 @@
 </div>
 
 <script>
-    // jQuery의 $를 덮어쓰면 다른 스크립트가 깨질 수 있음 -> 우리 헬퍼는 $id 사용
+    // ====== helpers ======
     const $id = (id) => document.getElementById(id);
 
     function setError(fieldId, msg) {
@@ -261,7 +247,7 @@
       document.querySelectorAll('[id$="Error"]').forEach(el => el.textContent = '');
     }
 
-    // datalist value -> hidden id 동기화
+    // datalist value -> hidden id 동기화 (본사 담당자만 사용)
     function wireDatalist(inputId, listId, hiddenId) {
       const input  = $id(inputId);
       const list   = $id(listId);
@@ -269,10 +255,9 @@
       if (!input || !list || !hidden) return;
 
       function sync() {
-        const val = (input.value || '').trim();
+        const val  = (input.value || '').trim();
         const opts = Array.from(list.options || []);
         let opt = opts.find(o => (o.value || '').trim() === val);
-
         if (!opt && val) {
           const cand = opts.filter(o => (o.value || '').toLowerCase().includes(val.toLowerCase()));
           if (cand.length === 1) opt = cand[0];
@@ -284,19 +269,18 @@
       input.addEventListener('input',  sync);
       input.addEventListener('change', sync);
       input.addEventListener('blur',   sync);
-      sync(); // 초기값 동기화
+      sync();
     }
 
-    // 클라이언트 검증 (StoreWriteFormDTO 기준)
+    // 클라이언트 검증 (점주명 관련 검사 제거)
     function clientValidate() {
       const errs = {};
       const intOk = (v) => /^\d+$/.test(v);
       const isNum = (v) => !isNaN(Number(v));
 
-      if (!$id('storeName')?.value.trim()) errs.storeName = '가맹점명을 입력해주세요';
-      if (!$id('staffIdFk')?.value)        errs.staffIdFk = '점주명을 목록에서 선택해주세요';
-      if (!$id('storeStatus')?.value)      errs.storeStatus = '운영 상태를 선택해주세요';
-      if (!$id('storeType')?.value)        errs.storeType = '매장 구분을 선택해주세요';
+      if (!$id('storeName')?.value.trim())  errs.storeName = '가맹점명을 입력해주세요';
+      if (!$id('storeStatus')?.value)       errs.storeStatus = '운영 상태를 선택해주세요';
+      if (!$id('storeType')?.value)         errs.storeType = '매장 구분을 선택해주세요';
 
       const totalEmp = $id('storeTotalEmployees')?.value.trim() || '';
       if (!totalEmp) errs.storeTotalEmployees = '총 직원 수를 입력해주세요';
@@ -347,11 +331,8 @@
     function findAddr() {
       if (!(window.daum && window.daum.Postcode)) {
         alert('주소 검색 도구를 불러오지 못했습니다. (네트워크/CSP 확인)\n임시 검색창을 띄웁니다.');
-        window.open(
-          'https://postcode.map.daum.net/search',
-          'postcode',
-          'width=530,height=600,scrollbars=yes,resizable=yes'
-        );
+        window.open('https://postcode.map.daum.net/search','postcode',
+                    'width=530,height=600,scrollbars=yes,resizable=yes');
         return;
       }
       new daum.Postcode({
@@ -365,13 +346,14 @@
         }
       }).open();
     }
+    window.findAddr = findAddr;
 
+    // ====== bootstrap ======
     document.addEventListener('DOMContentLoaded', function () {
-      // datalist 매핑
-      wireDatalist('ownerSearch', 'ownerList', 'staffIdFk');            // 점주(필수)
-      wireDatalist('hqWorkerSearch', 'hqWorkerList', 'hqWorkerStaffId'); // 본사(선택)
+      // 본사 담당자만 datalist 연동
+      wireDatalist('hqWorkerSearch', 'hqWorkerList', 'hqWorkerStaffId');
 
-      // 주소 검색 버튼 이벤트 연결
+      // 주소 검색 버튼
       const btn = $id('addressSearch');
       if (btn) {
         btn.addEventListener('click', function (e) {
@@ -379,10 +361,10 @@
           findAddr();
         });
       }
-      // 로딩 확인 로그(콘솔)
+      // 로딩 확인 로그
       console.log('[addr] daum?', !!window.daum, 'postcode?', !!(window.daum && window.daum.Postcode));
 
-      // 폼 이벤트
+      // 폼 제출
       const form = $id('inputform');
       if (!form) return;
 
@@ -404,9 +386,9 @@
           return;
         }
 
-        // 전송 데이터
         const fd = new FormData(form);
-        if (!fd.get('hqWorkerStaffId')) fd.delete('hqWorkerStaffId'); // 선택값 비었으면 제거
+        // 본사 담당자 선택 안 했으면 전달 안 함(선택 항목)
+        if (!fd.get('hqWorkerStaffId')) fd.delete('hqWorkerStaffId');
 
         const url = form.getAttribute('action') || '/API/store/write';
 
@@ -430,8 +412,7 @@
 
           if (data.success) {
             alert('저장 완료!');
-            // 성공 후 리스트로 이동
-            window.location.href = '/store/list';
+            window.location.href = '/admin/store/list';
           } else {
             alert('응답 형식이 올바르지 않습니다.');
           }
@@ -441,10 +422,9 @@
         }
       });
 
-      // 페이지 공통 초기화 (nav가 없으면 에러 방지)
       try { if (window.nav?.init) window.nav.init(); } catch(_) {}
     });
 </script>
 
-</body>
-</html>
+  </body>
+  </html>

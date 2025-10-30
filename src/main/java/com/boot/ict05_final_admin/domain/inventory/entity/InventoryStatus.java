@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.inventory.entity;
 
+import java.math.BigDecimal;
+
 /**
  * 재료의 재고상태 Enum
  *
@@ -41,5 +43,21 @@ public enum InventoryStatus {
      */
     public String getDescription() {
         return description;
+    }
+
+
+    /**
+     * 현재 수량과 적정 수량을 기준으로 재고 상태를 계산한다.
+     */
+    public static InventoryStatus calculate(BigDecimal quantity, BigDecimal optimalQuantity) {
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) == 0) {
+            return SHORTAGE;
+        }
+        if (optimalQuantity == null) {
+            return SUFFICIENT;
+        }
+
+        BigDecimal threshold = optimalQuantity.multiply(new BigDecimal("0.3"));
+        return quantity.compareTo(threshold) < 0 ? LOW : SUFFICIENT;
     }
 }
