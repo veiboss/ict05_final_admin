@@ -328,17 +328,6 @@
                     </table>
                     <div th:replace="~{fragments/pagination :: pagination2(${store}, 'page')}"></div>
                 </section>
-
-                <hr class="line">
-
-                <!-- 버튼 영역 -->
-                <div class="button-area pack-right">
-                    <button type="button" class="btn medium bdr-color1"
-                            onclick="location.href='[[@{/store/export}]]'">
-                        <span class="material-symbols-outlined">download</span>
-                        엑셀 다운로드
-                    </button>
-                </div>
             </div>
         </main>
         <div th:replace="~{fragments/footer :: footer}"></div>

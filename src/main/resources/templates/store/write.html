@@ -23,8 +23,7 @@
     <!-- JS -->
     <script th:src="@{/js/lib/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/js/toast.js}"></script>
-    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-</head>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
 <body class="scroll-up">
 <div id="wrap" class="frame">
     <div th:replace="~{fragments/header :: header}"></div>
@@ -38,7 +37,7 @@
             <div class="write-form box-wrap">
                 <form name="inputform" id="inputform"
                       th:object="${storeWriteFormDTO}"
-                      th:action="@{/admin/API/store/write}" method="post">
+                      th:action="@{/API/store/write}" method="post">
                     <fieldset>
                         <legend class="blind">기본 정보</legend>
 
@@ -51,32 +50,35 @@
                                            title="가맹점명" placeholder="서울 종로점">
                                 </div>
                             </div>
-                             <div class="field pack-down col">
-                                 <label class="label medium required">본사 담당자 (선택)</label>
-                                 <div class="input-wrap" style="position:relative;">
-                                     <input id="staffSearch" class="input-text medium"
-                                            placeholder="점주명 입력(선택)" list="staffList" autocomplete="off">
-                                     <input type="hidden" id="staffIdFk" th:field="*{staffIdFk}">
-                                     <datalist id="staffList">
-                                         <option th:each="s : ${staffs}"
-                                                 th:value="${s.staffName}"
-                                                 th:attr="data-id=${s.staffId}"></option>
-                                     </datalist>
-                                 </div>
-                             </div>
+                            <!-- 본사 담당자 (선택) -->
                             <div class="field pack-down col">
-                                <label class="label medium required">점주명 (선택)</label>
+                                <label class="label medium">본사 담당자 (선택)</label>
                                 <div class="input-wrap" style="position:relative;">
-                                    <input id="staffSearch" class="input-text medium"
-                                           placeholder="점주명 입력(선택)" list="staffList" autocomplete="off">
-                                    <input type="hidden" id="staffIdFk" th:field="*{staffIdFk}">
-                                    <datalist id="staffList">
-                                        <option th:each="s : ${staffs}"
-                                                th:value="${s.staffName}"
-                                                th:attr="data-id=${s.staffId}"></option>
+                                    <input id="hqWorkerSearch" class="input-text medium"
+                                           placeholder="본사 담당자 입력(선택)" list="hqWorkerList" autocomplete="off">
+                                    <input type="hidden" id="hqWorkerStaffId" th:field="*{hqWorkerStaffId}">
+                                    <datalist id="hqWorkerList">
+                                        <option th:each="w : ${hqWorkerOptions}"
+                                                th:value="${w.staffName}"
+                                                th:attr="data-id=${w.staffId}"></option>
                                     </datalist>
                                 </div>
                             </div>
+
+<!--                            &lt;!&ndash; 점주명 (필수) &ndash;&gt;-->
+<!--                            <div class="field pack-down col">-->
+<!--                                <label class="label medium required">점주명</label>-->
+<!--                                <div class="input-wrap" style="position:relative;">-->
+<!--                                    <input id="ownerSearch" class="input-text medium"-->
+<!--                                           placeholder="점주명 입력" list="ownerList" autocomplete="off">-->
+<!--                                    <input type="hidden" id="staffIdFk" th:field="*{staffIdFk}">-->
+<!--                                    <datalist id="ownerList">-->
+<!--                                        <option th:each="o : ${ownerOptions}"-->
+<!--                                                th:value="${o.staffName}"-->
+<!--                                                th:attr="data-id=${o.staffId}"></option>-->
+<!--                                    </datalist>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                         <div class="row-2">
                             <div class="field col">
@@ -134,14 +136,14 @@
                             <div class="field col">
                                 <label class="label medium required" for="userAddress1">주소</label>
                                 <input type="button" class="btn small color1" id="addressSearch"
-                                       style="margin-left:10px" value="주소 검색" onclick="findAddr()">
+                                       style="margin-left:10px" value="주소 검색">
                                 <div class="insert">
                                     <input th:field="*{userAddress1}" id="userAddress1" type="text"
                                            class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly>
                                 </div>
                                 <div class="insert">
                                     <input th:field="*{userAddress2}" type="text" class="input-text medium" size="50"
-                                           placeholder="나머지 주소 작성" required>
+                                           placeholder="나머지 주소 작성">
                                 </div>
                             </div>
                         </div>
@@ -238,75 +240,210 @@
     </div>
 </div>
 
-
 <script>
-    nav.init();
+    // jQuery의 $를 덮어쓰면 다른 스크립트가 깨질 수 있음 -> 우리 헬퍼는 $id 사용
+    const $id = (id) => document.getElementById(id);
 
-    document.getElementById("inputform").addEventListener("submit", function(e) {
+    function setError(fieldId, msg) {
+      const input = $id(fieldId);
+      const box   = $id(fieldId + 'Error');
+      if (input) input.classList.add('is-error');
+      if (box)   box.textContent = msg || '';
+    }
+    function clearFieldError(fieldId) {
+      const input = $id(fieldId);
+      const box   = $id(fieldId + 'Error');
+      if (input) input.classList.remove('is-error');
+      if (box)   box.textContent = '';
+    }
+    function clearAllErrors() {
+      document.querySelectorAll('.is-error').forEach(el => el.classList.remove('is-error'));
+      document.querySelectorAll('[id$="Error"]').forEach(el => el.textContent = '');
+    }
+
+    // datalist value -> hidden id 동기화
+    function wireDatalist(inputId, listId, hiddenId) {
+      const input  = $id(inputId);
+      const list   = $id(listId);
+      const hidden = $id(hiddenId);
+      if (!input || !list || !hidden) return;
+
+      function sync() {
+        const val = (input.value || '').trim();
+        const opts = Array.from(list.options || []);
+        let opt = opts.find(o => (o.value || '').trim() === val);
+
+        if (!opt && val) {
+          const cand = opts.filter(o => (o.value || '').toLowerCase().includes(val.toLowerCase()));
+          if (cand.length === 1) opt = cand[0];
+        }
+        hidden.value = opt ? (opt.getAttribute('data-id') || '') : '';
+        if (hidden.value) clearFieldError(hiddenId);
+      }
+
+      input.addEventListener('input',  sync);
+      input.addEventListener('change', sync);
+      input.addEventListener('blur',   sync);
+      sync(); // 초기값 동기화
+    }
+
+    // 클라이언트 검증 (StoreWriteFormDTO 기준)
+    function clientValidate() {
+      const errs = {};
+      const intOk = (v) => /^\d+$/.test(v);
+      const isNum = (v) => !isNaN(Number(v));
+
+      if (!$id('storeName')?.value.trim()) errs.storeName = '가맹점명을 입력해주세요';
+      if (!$id('staffIdFk')?.value)        errs.staffIdFk = '점주명을 목록에서 선택해주세요';
+      if (!$id('storeStatus')?.value)      errs.storeStatus = '운영 상태를 선택해주세요';
+      if (!$id('storeType')?.value)        errs.storeType = '매장 구분을 선택해주세요';
+
+      const totalEmp = $id('storeTotalEmployees')?.value.trim() || '';
+      if (!totalEmp) errs.storeTotalEmployees = '총 직원 수를 입력해주세요';
+      else if (!intOk(totalEmp) || parseInt(totalEmp,10) < 1)
+        errs.storeTotalEmployees = '총 직원 수는 1 이상의 정수여야 합니다';
+
+      const phone = $id('storePhone')?.value.trim() || '';
+      if (!phone) errs.storePhone = '매장 연락처를 입력해주세요';
+      else if (!/^[0-9\-]{9,13}$/.test(phone))
+        errs.storePhone = '전화번호는 숫자와 하이픈만, 9~13자리로 입력해주세요';
+
+      const brn = $id('businessRegistrationNumber')?.value.trim() || '';
+      if (!brn) errs.businessRegistrationNumber = '사업자등록번호를 입력해주세요';
+      else if (!/^[0-9\-]{9,13}$/.test(brn))
+        errs.businessRegistrationNumber = '사업자등록번호는 숫자와 하이픈만, 9~13자리로 입력해주세요';
+
+      if (!$id('userAddress1')?.value.trim())
+        errs.userAddress1 = '주소를 검색해 주세요';
+      if (!$id('userAddress2')?.value.trim())
+        errs.userAddress2 = '상세 주소를 입력해 주세요';
+
+      const start = $id('storeContractStartDate')?.value;
+      const aff   = $id('storeContractAffiliateDate')?.value;
+      if (!start) errs.storeContractStartDate = '계약일을 선택해주세요';
+      if (!aff)   errs.storeContractAffiliateDate = '가맹일을 선택해주세요';
+
+      const term = $id('storeContractTerm')?.value.trim() || '';
+      if (!term) errs.storeContractTerm = '계약기간을 입력해주세요';
+      else if (!intOk(term) || parseInt(term,10) < 1)
+        errs.storeContractTerm = '계약기간은 1 이상의 정수여야 합니다';
+
+      const affPrice = $id('storeAffiliatePrice')?.value.trim() || '';
+      if (!affPrice) errs.storeAffiliatePrice = '가맹비를 입력해주세요';
+      else if (!isNum(affPrice)) errs.storeAffiliatePrice = '가맹비는 숫자여야 합니다';
+
+      const royalty = $id('royalty')?.value.trim() || '';
+      if (!royalty) errs.royalty = '월 로열티(%)를 입력해주세요';
+      else if (!isNum(royalty)) errs.royalty = '월 로열티(%)는 숫자여야 합니다';
+
+      const monthly = $id('storeMonthlySales')?.value.trim() || '';
+      if (monthly && !isNum(monthly))
+        errs.storeMonthlySales = '월 매출은 숫자여야 합니다';
+
+      return errs;
+    }
+
+    // 다음 우편번호
+    function findAddr() {
+      if (!(window.daum && window.daum.Postcode)) {
+        alert('주소 검색 도구를 불러오지 못했습니다. (네트워크/CSP 확인)\n임시 검색창을 띄웁니다.');
+        window.open(
+          'https://postcode.map.daum.net/search',
+          'postcode',
+          'width=530,height=600,scrollbars=yes,resizable=yes'
+        );
+        return;
+      }
+      new daum.Postcode({
+        oncomplete: function(data) {
+          let addr = (data.roadAddress || data.jibunAddress || '').trim();
+          if (data.buildingName) addr += (addr ? ' ' : '') + data.buildingName;
+          const ua1 = $id('userAddress1');
+          if (ua1) ua1.value = addr;
+          clearFieldError('userAddress1');
+          $id('userAddress2')?.focus();
+        }
+      }).open();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // datalist 매핑
+      wireDatalist('ownerSearch', 'ownerList', 'staffIdFk');            // 점주(필수)
+      wireDatalist('hqWorkerSearch', 'hqWorkerList', 'hqWorkerStaffId'); // 본사(선택)
+
+      // 주소 검색 버튼 이벤트 연결
+      const btn = $id('addressSearch');
+      if (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          findAddr();
+        });
+      }
+      // 로딩 확인 로그(콘솔)
+      console.log('[addr] daum?', !!window.daum, 'postcode?', !!(window.daum && window.daum.Postcode));
+
+      // 폼 이벤트
+      const form = $id('inputform');
+      if (!form) return;
+
+      form.addEventListener('input',  (e) => { if (e.target?.id) clearFieldError(e.target.id); });
+      form.addEventListener('change', (e) => { if (e.target?.id) clearFieldError(e.target.id); });
+
+      form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        clearAllErrors();
 
-        const formData = new FormData(this); // 폼의 모든 input 포함
+        const cErrs = clientValidate();
+        if (Object.keys(cErrs).length) {
+          let first;
+          for (const [k,v] of Object.entries(cErrs)) {
+            setError(k, v);
+            if (!first) first = k;
+          }
+          if (first && $id(first)) $id(first).focus();
+          return;
+        }
 
-        if (!formData.get('storeIdFk')) formData.delete('storeIdFk');
+        // 전송 데이터
+        const fd = new FormData(form);
+        if (!fd.get('hqWorkerStaffId')) fd.delete('hqWorkerStaffId'); // 선택값 비었으면 제거
 
-        fetch("/admin/API/store/write", {
-            method: "POST",
-            body: formData
-        })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) {
-                    if (response.status === 400 && data.errors) {
-                        Object.keys(data.errors).forEach(field => {
-                            const errorMsg = data.errors[field];
-                            const errorElement = document.getElementById(field + 'Error');
-                            if (errorElement) errorElement.textContent = errorMsg;
+        const url = form.getAttribute('action') || '/API/store/write';
 
-                        });
-                    }
-                    console.log('status:', response.status, data)
-                    throw new Error("서버 검증 오류");
-                } else {
-                    if (data.success) {
-                        alert('저장 완료!');
-                        window.location.href = '/admin/store/list';
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("에러 발생:", error);
-            });
+        try {
+          const resp = await fetch(url, { method: 'POST', body: fd });
+          const data = await resp.json().catch(() => ({}));
+
+          if (!resp.ok) {
+            if (resp.status === 400 && data.errors) {
+              let first;
+              for (const [k,v] of Object.entries(data.errors)) {
+                setError(k, v);
+                if (!first) first = k;
+              }
+              if (first && $id(first)) $id(first).focus();
+            } else {
+              alert('요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.');
+            }
+            return;
+          }
+
+          if (data.success) {
+            alert('저장 완료!');
+            // 성공 후 리스트로 이동
+            window.location.href = '/store/list';
+          } else {
+            alert('응답 형식이 올바르지 않습니다.');
+          }
+        } catch (err) {
+          console.error('에러 발생:', err);
+          alert('네트워크 오류가 발생했습니다.');
+        }
+      });
+
+      // 페이지 공통 초기화 (nav가 없으면 에러 방지)
+      try { if (window.nav?.init) window.nav.init(); } catch(_) {}
     });
-
-(function(){
-  const input  = document.getElementById('storeSearch');
-  const hidden = document.getElementById('storeIdFk');
-  const list   = document.getElementById('storeList');
-  const hint   = document.getElementById('storeHint');
-
-  const opts = () => Array.from(list.options || []);
-
-  function sync(){
-    const val = (input.value || '').trim();
-    const exact = opts().find(o => o.value === val);
-    hidden.value = exact ? (exact.getAttribute('data-id') || '') : '';
-    // 필수 아님: 입력이 있지만 매칭이 없을 때만 힌트 표시, 제출은 막지 않음
-    hint.style.display = (val && !hidden.value) ? 'inline' : 'none';
-  }
-
-  input.addEventListener('input',  sync);
-  input.addEventListener('change', sync);
-  input.addEventListener('blur',   sync);
-
-  const form = input.closest('form');
-  if (form) {
-    form.addEventListener('submit', () => {
-      // null 허용 → 막지 않음
-      // 필요하면 여기서 hidden.value==='' && input.value!=='' 인 경우 confirm 띄우기 정도만.
-    });
-  }
-})();
-
 </script>
 
 </body>

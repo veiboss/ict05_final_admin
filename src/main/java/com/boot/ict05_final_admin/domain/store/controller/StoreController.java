@@ -23,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -80,12 +81,11 @@ public class StoreController {
     @GetMapping("/store/write")
     public String addOfficeStore(Model model) {
 
-        List<FindStoreDTO> stores = storeService.findStoreName();
-
         model.addAttribute("storeWriteFormDTO", new StoreWriteFormDTO());
         model.addAttribute("StoreStatus", StoreStatus.values());
         model.addAttribute("StoreType", StoreType.values());
-        model.addAttribute("stores", stores);
+        model.addAttribute("ownerOptions", storeService.ownerOptions());
+        model.addAttribute("hqWorkerOptions", storeService.hqWorkerOptions());
 
         return "store/write";
     }

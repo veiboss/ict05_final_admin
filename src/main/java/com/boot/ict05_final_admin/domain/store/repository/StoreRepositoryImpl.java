@@ -2,15 +2,16 @@ package com.boot.ict05_final_admin.domain.store.repository;
 
 import com.boot.ict05_final_admin.domain.auth.entity.QMember;
 import com.boot.ict05_final_admin.domain.staffresources.entity.QStaffProfile;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
-import com.boot.ict05_final_admin.domain.store.dto.FindStoreDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreDetailDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreListDTO;
-import com.boot.ict05_final_admin.domain.store.dto.StoreSearchDTO;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
+import com.boot.ict05_final_admin.domain.store.dto.*;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
+import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,126 +19,103 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
-/**
- *  StoreRepositoryCustom 구현체(Querydsl 기반).
- *
- *  StoreRepositoryCustom의 “커스텀(사용자 정의) 쿼리”를 Querydsl로 구현한 클래스.
- * 즉, 기본 JpaRepository가 해주지 않는 동적 검색 + DTO 프로젝션 + 페이징/카운트를 처리하는 클래스.
- */
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
+import com.querydsl.core.Tuple;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Repository
 @RequiredArgsConstructor
-public class StoreRepositoryImpl implements StoreRepositoryCustom{
+public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    /**
-     * 검색 조건 + 페이징으로 가맹점 목록을 조회한다.
-     *
-     * @param storeSearchDTO 검색 조건(키워드, 유형 등)
-     * @param pageable       페이지/사이즈/정렬 정보(offset/limit에 사용)
-     * @return Page<StoreListDTO> 페이징 결과
-     */
-
+    @Override
     public Page<StoreListDTO> listStore(StoreSearchDTO storeSearchDTO, Pageable pageable) {
         QStore store = QStore.store;
         QStaffProfile staffProfile = QStaffProfile.staffProfile;
 
-        // 1) 데이터 목록 조회 (DTO 프로젝션)
         List<StoreListDTO> content = queryFactory
                 .select(Projections.fields(StoreListDTO.class,
-                       store.id.as("storeId"),
+                        store.id.as("storeId"),
                         store.name.as("storeName"),
                         store.status.as("storeStatus"),
                         ExpressionUtils.as(
-                            JPAExpressions.select(staffProfile.staffName)
-                                .from(staffProfile)
-                                .where(
-                                        staffProfile.store.id.eq(store.id),
-                                        staffProfile.staffEmploymentType.eq(StaffEmploymentType.OWNER)
-                                )
-                                .limit(1),
-                            "staffName"),
+                                JPAExpressions.select(staffProfile.staffName)
+                                        .from(staffProfile)
+                                        .where(
+                                                staffProfile.store.id.eq(store.id),
+                                                staffProfile.staffEmploymentType.eq(StaffEmploymentType.OWNER)
+                                        )
+                                        .limit(1),
+                                "staffName"),
                         store.phone.as("storePhone"),
                         store.monthlySales.as("storeMonthlySales")
-                        //store.storeTotalEmployees
-                )) // member.name 매핑
+                ))
                 .from(store)
                 .where(
                         eqSearchStore(storeSearchDTO, store),
-                        eqStatus(storeSearchDTO, store) // ✅ 상태 필터 추가
+                        eqStatus(storeSearchDTO, store)
                 )
                 .orderBy(store.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-
-        // 2) 전체 카운트 조회 (동일 WHERE 적용)
-        long total = queryFactory
+        Long total = queryFactory
                 .select(store.count())
                 .from(store)
                 .where(
                         eqSearchStore(storeSearchDTO, store),
-                        eqStatus(storeSearchDTO, store) // ✅ 상태 필터 추가
+                        eqStatus(storeSearchDTO, store) // ✅ 목록과 동일 WHERE
                 )
                 .fetchOne();
 
-
-        // 3) Page 구현체로 반환
-        return new PageImpl<>(content, pageable, total);
+        return new PageImpl<>(content, pageable, total == null ? 0L : total);
     }
 
-    /**
-     * 단일 조건(매장명 like) 생성.
-     * <p>검색어가 없으면 null을 반환하여 WHERE에서 무시되게 한다.</p>
-     */
-    private BooleanExpression eqSearchStore(StoreSearchDTO storeSearchDTO, QStore store) {
-        if (storeSearchDTO.getKeyword() == null) {
-            return null; // 조건 없음
-        }
-
-        String keyword = storeSearchDTO.getKeyword();
-
-       return store.id.stringValue().containsIgnoreCase(keyword)
-               .or(store.name.stringValue().containsIgnoreCase(keyword));
+    /** 키워드: id or name 부분일치(대소문자 무시), 공백/널 방지 */
+    private BooleanExpression eqSearchStore(StoreSearchDTO dto, QStore store) {
+        String keyword = dto.getKeyword();
+        if (keyword == null || keyword.isBlank()) return null;
+        keyword = keyword.trim();
+        return store.id.stringValue().containsIgnoreCase(keyword)
+                .or(store.name.containsIgnoreCase(keyword));
     }
 
-    // ✅ 상태 필터
+    /** 상태 필터 */
     private BooleanExpression eqStatus(StoreSearchDTO dto, QStore store) {
         return dto.getStatus() != null ? store.status.eq(dto.getStatus()) : null;
     }
 
-    /**
-     * 전체 카운트만 별도로 조회.
-     * <p>페이징 total 계산 등에서 직접 호출할 때 사용.</p>
-     */
     @Override
     public long countStore(StoreSearchDTO storeSearchDTO) {
         QStore store = QStore.store;
-
-        long total = queryFactory
+        Long total = queryFactory
                 .select(store.count())
                 .from(store)
                 .where(
-                        eqSearchStore(storeSearchDTO, store)
+                        eqSearchStore(storeSearchDTO, store),
+                        eqStatus(storeSearchDTO, store) // ✅ 동일 WHERE 적용
                 )
                 .fetchOne();
-
-        return total;
+        return total == null ? 0L : total;
     }
 
     @Override
     public List<FindStoreDTO> findStoreName() {
         QStore store = QStore.store;
-
         return queryFactory
                 .select(Projections.fields(FindStoreDTO.class,
-                    store.id.as("storeId"),
-                    store.name.as("storeName")
-                        )) // member.name 매핑
+                        store.id.as("storeId"),
+                        store.name.as("storeName")
+                ))
                 .from(store)
                 .orderBy(store.id.desc())
                 .fetch();
@@ -166,22 +144,22 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                         store.royalty.as("royalty"),
                         store.comment.as("comment"),
 
-                        // ★ 명시적 LEFT JOIN으로 가져온 member 컬럼
                         member.name.as("memberName"),
                         member.email.as("memberEmail"),
 
-                        // 점주명(OWNER 1명 가정) – 서브쿼리 유지
                         ExpressionUtils.as(
                                 JPAExpressions.select(staffProfile.staffName)
                                         .from(staffProfile)
                                         .where(
                                                 staffProfile.store.id.eq(store.id),
                                                 staffProfile.staffEmploymentType.eq(StaffEmploymentType.OWNER)
-                                        ),
+                                        )
+                                        .orderBy(staffProfile.id.desc()) // 최근 1명
+                                        .limit(1),
                                 "staffName"
                         ),
 
-                        // 총 직원수 – 카운트 서브쿼리 (limit 불필요)
+
                         ExpressionUtils.as(
                                 JPAExpressions.select(staffProfile.id.count())
                                         .from(staffProfile)
@@ -193,10 +171,90 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                         )
                 ))
                 .from(store)
-                // ★ 명시적 LEFT JOIN — member가 없더라도 null로 안전히 들어옴
                 .leftJoin(store.member, member)
                 .where(store.id.eq(id))
                 .fetchOne();
     }
+    @Override
+    public List<StaffNameDTO> ownerStaffOptions() {
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
 
+        return queryFactory
+                .select(Projections.fields(StaffNameDTO.class,
+                        staffProfile.id.as("staffId"),
+                        staffProfile.staffName.as("staffName")
+                ))
+                .from(staffProfile)
+                .where(staffProfile.staffEmploymentType.eq(StaffEmploymentType.OWNER))
+                .orderBy(staffProfile.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<StaffNameDTO> hqWorkerStaffOptions() {
+        QStaffProfile staffProfile = QStaffProfile.staffProfile;
+
+        return queryFactory
+                .select(Projections.fields(StaffNameDTO.class,
+                        staffProfile.id.as("staffId"),
+                        staffProfile.staffName.as("staffName")
+                ))
+                .from(staffProfile)
+                .where(staffProfile.staffEmploymentType.eq(StaffEmploymentType.WORKER)
+                        , staffProfile.staffDepartment.eq(StaffDepartment.OFFICE))
+                .orderBy(staffProfile.id.desc())
+                .fetch();
+    }
+
+    // =========================
+    // 요약 카드용 집계 4종
+    // =========================
+
+    @Override
+    public long countStoreAll() {
+        QStore store = QStore.store;
+        Long v = queryFactory
+                .select(store.count())
+                .from(store)
+                .fetchOne();
+        return v == null ? 0L : v;
+    }
+
+    @Override
+    public long countActiveStore() {
+        QStore store = QStore.store;
+        Long v = queryFactory
+                .select(store.count())
+                .from(store)
+                .where(store.status.eq(StoreStatus.OPERATING))
+                .fetchOne();
+        return v == null ? 0L : v;
+    }
+
+    @Override
+    public BigDecimal avgMonthlySales() {
+        QStore store = QStore.store;
+        BigDecimal v = queryFactory
+                .select(Expressions.numberTemplate(
+                        BigDecimal.class,
+                        "coalesce(avg({0}), 0)", store.monthlySales))
+                .from(store)
+                .fetchOne();
+        if (v == null) return BigDecimal.ZERO;
+        // 소수 없이 반올림 (원하면 scale 조절)
+        return v.setScale(0, RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public long totalEmployees() {
+        QStaffProfile sp = QStaffProfile.staffProfile;
+
+        Long v = queryFactory
+                .select(sp.id.count())
+                .from(sp)
+                .where(sp.staffEndDate.isNull())   // 재직자만
+                .fetchOne();
+
+        return v == null ? 0L : v;
+    }
 }
