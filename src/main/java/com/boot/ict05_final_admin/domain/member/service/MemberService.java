@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.member.service;
 
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.member.dto.MemberListDTO;
+import com.boot.ict05_final_admin.domain.member.dto.MemberModifyFormDTO;
 import com.boot.ict05_final_admin.domain.member.dto.MemberSearchDTO;
 import com.boot.ict05_final_admin.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,4 +25,19 @@ public class MemberService {
     }
 
     public Member detailMember(Long id) { return memberRepository.findById(id).orElse(null);}
+
+    @Transactional(readOnly = true)
+    public Member findById(Long id) { return memberRepository.findById(id).orElse(null);}
+
+    public Member memberModify(MemberModifyFormDTO dto) {
+
+        Member member = findById(dto.getId());
+        if (member == null) throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+
+        member.updateMember(dto);
+
+        return member;
+    }
+
+
 }
