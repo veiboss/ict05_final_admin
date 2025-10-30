@@ -1,10 +1,7 @@
 package com.boot.ict05_final_admin.domain.inventory.dto;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +31,7 @@ public class InventoryListDTO {
     private BigDecimal optimalQuantity;
 
     /** 재고 상태 */
+    @Setter
     private InventoryStatus status;
 
     /** 마지막 수정일 */

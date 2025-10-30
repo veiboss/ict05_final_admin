@@ -2,11 +2,14 @@ package com.boot.ict05_final_admin.domain.inventory.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
 import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -36,8 +40,8 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         material.name.as("materialName"),
                         material.materialCategory.stringValue().as("categoryName"),
                         inv.quantity,
-                        inv.optimalQuantity,
-                        inv.status,
+                        material.optimalQuantity.as("optimalQuantity"),
+                        inv.status,  // DB 상태 그대로 가져오기
                         inv.updateDate))
                 .from(inv)
                 .join(inv.material, material)
@@ -46,6 +50,13 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+        // 상태 재계산: Java 레벨에서 InventoryStatus.calculate() 호출
+        for (InventoryListDTO dto : content) {
+            dto.setStatus(
+                    InventoryStatus.calculate(dto.getQuantity(), dto.getOptimalQuantity())
+            );
+        }
 
         long total = countInventory(searchDTO);
         return new PageImpl<>(content, pageable, total);

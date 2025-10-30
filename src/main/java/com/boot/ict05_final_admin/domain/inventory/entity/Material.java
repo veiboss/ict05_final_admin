@@ -125,6 +125,7 @@ public class Material {
         this.supplier               = dto.getSupplier();
         this.materialTemperature    = dto.getMaterialTemperature();
         this.materialStatus         = dto.getMaterialStatus();
+        this.optimalQuantity        = dto.getOptimalQuantity();
         this.modifyDate             = LocalDateTime.now();
     }
 }

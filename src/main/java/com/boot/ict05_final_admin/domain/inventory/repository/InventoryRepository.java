@@ -17,11 +17,6 @@ import java.util.Optional;
  */
 public interface InventoryRepository
         extends JpaRepository<HqInventory, Long>, InventoryRepositoryCustom {
-
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE HqInventory i SET i.optimalQuantity = :optimalQty WHERE i.material.id = :materialId")
-    void updateOptimalQuantityByMaterialId(@Param("materialId") Long materialId,
-                                           @Param("optimalQty") BigDecimal optimalQty);
     /**
      * 재료 ID로 재고 조회
      */
@@ -32,6 +27,14 @@ public interface InventoryRepository
      * 재료 엔티티로 재고 조회
      */
     Optional<HqInventory> findByMaterial(Material material);
+
+    /**
+     * 재고 수량 갱신
+     */
+    @Modifying(clearAutomatically = true)
+    @Query("update HqInventory i set i.optimalQuantity = :quantity where i.material.id = :materialId")
+    void updateOptimalQuantityByMaterialId(@Param("materialId") Long materialId,
+                                           @Param("quantity") BigDecimal quantity);
 
     /**
      * 입고 시 수량 증가

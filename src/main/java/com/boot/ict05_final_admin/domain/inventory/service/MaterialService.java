@@ -109,6 +109,9 @@ public class MaterialService {
 
         material.updateMaterial(dto);
 
+        // HQ 재고의 적정 수량도 동일하게 반영
+        inventoryRepository.updateOptimalQuantityByMaterialId(dto.getId(), dto.getOptimalQuantity());
+
         return material;
     }
 

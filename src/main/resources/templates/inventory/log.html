@@ -30,12 +30,18 @@
         <main id="content" class="max-900">
             <input type="hidden" id="inventoryId" th:value="${inventory.id}">
             <input type="hidden" id="materialId" th:value="${material.id}">
+            <!-- 사용중지 경고 -->
+            <div th:if="${material.materialStatus.name() == 'STOP'}"
+                 class="alert alert-warning mb-3">
+                본사에서 <strong>사용중지된 재료</strong>입니다.
+            </div>
             <div class="box-wrap">
+
                 <div class="row-4">
                     <div class="pack-down col">
                         <span class="fs-ss fc-999">상태</span>
                         <span>
-                            <span th:class="|badge rounded-pill ${inventory.status == 'SUFFICIENT' ? 'bg-success' : (inventory.status == 'LOW' ? 'bg-warning' : 'bg-danger') }|"
+                            <span th:class="|badge rounded-pill ${inventory.status.name() == 'SUFFICIENT' ? 'bg-success' : (inventory.status.name() == 'LOW' ? 'bg-warning' : 'bg-danger') }|"
                                   th:text="${inventory.status.description}">
                             </span>
                         </span>

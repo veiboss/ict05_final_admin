@@ -3,6 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.service;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -57,7 +59,16 @@ public class InventoryService {
      */
     @Transactional(readOnly = true)
     public HqInventory findById(Long id) {
-        return inventoryRepository.findById(id)
+        HqInventory inventory = inventoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 본사 재고가 존재하지 않습니다. ID=" + id));
+
+        // === 상태 재계산 (단순화) ===
+        if (inventory.getMaterial() != null) {
+            inventory.setStatus(
+                    InventoryStatus.calculate(inventory.getQuantity(), inventory.getMaterial().getOptimalQuantity())
+            );
+        }
+
+        return inventory;
     }
 }

@@ -74,7 +74,8 @@ public class InventoryInOutService {
         inventoryInRepository.save(entity);
 
         // 4. 상태 갱신
-        inventory.updateStatus();
+        inventory.setStatus(InventoryStatus.calculate(inventory.getQuantity(), material.getOptimalQuantity()));
+        inventoryRepository.save(inventory);
         log.info("[입고등록] materialId={}, 입고={}, 재고={}, 상태={}", material.getId(), dto.getQuantity(), updatedQty, inventory.getStatus());
 
         return entity.getId();
@@ -126,8 +127,10 @@ public class InventoryInOutService {
         inventoryOutRepository.save(entity);
 
         // 4. 상태 갱신
-        inventory.updateStatus();
+        inventory.setStatus(InventoryStatus.calculate(inventory.getQuantity(), material.getOptimalQuantity()));
+        inventoryRepository.save(inventory);
         log.info("[출고등록] materialId={}, 출고={}, 재고={}, 상태={}", material.getId(), quantity, updatedQty, inventory.getStatus());
+
 
         return entity.getId();
     }
@@ -139,7 +142,6 @@ public class InventoryInOutService {
      */
     @Transactional
     public void adjustInventory(InventoryAdjustDTO dto) {
-        // HqInventoryRepository → InventoryRepository 로 교체
         HqInventory inventory = inventoryRepository.findById(dto.getInventoryId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 재고 정보를 찾을 수 없습니다."));
 
@@ -161,6 +163,10 @@ public class InventoryInOutService {
                 .build();
 
         inventoryAdjustmentRepository.save(adjustment);
+
+        // 상태 재계산 및 반영
+        inventory.setStatus(InventoryStatus.calculate(inventory.getQuantity(), inventory.getMaterial().getOptimalQuantity()));
+        inventoryRepository.save(inventory);
 
         log.info("[HQ INVENTORY ADJUST] materialId={}, before={}, after={}, diff={}, reason={}, memo={}",
                 dto.getMaterialId(), before, after, diff, dto.getReason(), dto.getMemo());

@@ -29,11 +29,13 @@ public abstract class Inventory {
     protected BigDecimal quantity;
 
     /** 적정 재고 수량 */
+    @Setter
     @Column(name = "inventory_optimal_quantity", precision = 15, scale = 3,
             columnDefinition = "DECIMAL(15,3) COMMENT '적정 재고 수량'")
     protected BigDecimal optimalQuantity;
 
     /** 재고 상태 */
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "inventory_status", nullable = false, length = 20)
     protected InventoryStatus status;
