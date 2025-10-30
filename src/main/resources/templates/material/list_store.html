@@ -20,20 +20,23 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="pack-both">
-            <div class="title-bar pack-left gap-8">
-                <select title="가맹점 선택" class="select large" style="width: 120px;"
-                        id="storeSelect" onchange="onStoreChange(this.value)">
-                    <option value="">전가맹점</option>
-                    <option th:each="store : ${stores}"
-                            th:value="${store.storeId}"
-                            th:text="${store.storeName}"
-                            th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
-                    </option>
-                </select>
-                <h2 class="page-title ellipsis">재료 목록</h2>
+        <div class="title-bar">
+            <div class="pack-both">
+                <div class="pack-left gap-8">
+                    <select title="가맹점 선택" class="select large" style="width: 120px;"
+                            id="storeSelect" onchange="onStoreChange(this.value)">
+                        <option value="">전가맹점</option>
+                        <option th:each="store : ${stores}"
+                                th:value="${store.storeId}"
+                                th:text="${store.storeName}"
+                                th:selected="${storeMaterialSearchDTO.storeId == store.storeId}">
+                        </option>
+                    </select>
+                    <h2 class="page-title ellipsis">재료 목록</h2>
+                </div>
+
+                <a href="/admin/material/list" class="btn medium color2">본사 재료 목록</a>
             </div>
-            <a href="/admin/material/store/list" class="btn small bdr-color2">본사 재료 목록</a>
         </div>
 
         <main id="content">
