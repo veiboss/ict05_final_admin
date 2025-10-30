@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.member.controller;
 
+import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.member.dto.MemberListDTO;
 import com.boot.ict05_final_admin.domain.member.dto.MemberSearchDTO;
 import com.boot.ict05_final_admin.domain.member.service.MemberService;
@@ -13,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
@@ -38,5 +40,14 @@ public class MemberController {
         model.addAttribute("memberSearchDTO", memberSearchDTO);
 
         return "member/list";
+    }
+
+    @GetMapping("member/detail/{id}")
+    public String detailOfficeMember(@PathVariable Long id, Model model) {
+        Member member = memberService.detailMember(id);
+
+        model.addAttribute("member", member);
+
+        return "member/detail";
     }
 }

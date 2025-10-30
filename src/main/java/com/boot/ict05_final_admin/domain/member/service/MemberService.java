@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.member.service;
 
+import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.member.dto.MemberListDTO;
 import com.boot.ict05_final_admin.domain.member.dto.MemberSearchDTO;
 import com.boot.ict05_final_admin.domain.member.repository.MemberRepository;
@@ -21,4 +22,6 @@ public class MemberService {
     public Page<MemberListDTO> selectAllMember(MemberSearchDTO memberSearchDTO, Pageable pageable) {
         return memberRepository.listMember(memberSearchDTO, pageable);
     }
+
+    public Member detailMember(Long id) { return memberRepository.findById(id).orElse(null);}
 }
