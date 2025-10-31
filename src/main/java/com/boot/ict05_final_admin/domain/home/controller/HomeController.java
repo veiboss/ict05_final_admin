@@ -31,7 +31,7 @@ public class HomeController {
      * @param model 뷰에 전달할 모델 객체
      * @return 대시보드 뷰 이름("index")
      */
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(Model model) {
 
         DashboardViewDTO viewDTO = homeService.buildDashboard();

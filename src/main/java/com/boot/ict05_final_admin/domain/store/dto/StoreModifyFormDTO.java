@@ -1,11 +1,13 @@
 package com.boot.ict05_final_admin.domain.store.dto;
 
 import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
+import com.boot.ict05_final_admin.domain.store.entity.StoreType;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -50,22 +52,35 @@ public class StoreModifyFormDTO {
 
     /** 매장 구분 (직영점/가맹점)*/
     @NotNull(message = "매장을 선택해주세요")
+    private StoreType storeType;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress1;
+
+    @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
+    private String userAddress2;
 
     /** 사업장 주소 */
     @Size(max = 255, message = "주소는 255자 이내로 입력해주세요")
     private String storeLocation;
 
+    /** 총 직원 수 */
+    @NotNull(message="총 직원수를 입력해주세요")
+    @Min(value=1, message="총 직원수는 1 이상이어야 합니다")
+    private Integer storeTotalEmployees;
+
     /** 계약일 */
-    @NotNull(message = "계약일을 입력해주세요")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate storeContractStartDate;
 
     /** 가맹일 */
-    @NotNull(message = "가맹일을 입력해주세요")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate storeContractAffiliateDate;
 
     /** 매장계약기간 */
+    @NotNull(message = "계약기간을 입력해주세요")
     @Min(value = 1, message = "계약기간은 1 이상이어야 합니다")
-    private int storeContractTerm;
+    private Integer storeContractTerm;
 
     /** 가맹비 */
     @NotNull(message = "가맹비를 입력해주세요")

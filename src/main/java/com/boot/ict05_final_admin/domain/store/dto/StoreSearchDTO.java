@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.store.dto;
 
+import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
 import lombok.Data;
 
 /** 매장 목록 검색 조건 DTO.
@@ -19,4 +20,7 @@ public class StoreSearchDTO {
     private String keyword;        // 검색어(매장명, 점주명 등).
     private String type;           // 검색 유형 키.
     private String size = "10";    // 페이지 크기(문자열).
+
+    /** 가맹점 상태 필터 (USE / STOP) */
+    private StoreStatus status;
 }

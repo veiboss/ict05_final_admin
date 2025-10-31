@@ -23,10 +23,10 @@ input.btn,
 button.btn					{overflow: visible; margin: 0;}
 
 /* button size */
-.btn.xsmall					{height: var(--xsmall); padding: 0 4px; font-size: .75rem; line-height: var(--xsmall); border-radius: 2px;}
-.btn.small:not(.transparent)		{height: var(--small); padding: 0 8px; font-size: .875rem; line-height: var(--small); border-radius: 2px;}
+.btn.xsmall					{height: var(--xsmall); padding: 0 4px; font-size: .875rem; line-height: var(--xsmall); border-radius: 2px;}
+.btn.small:not(.transparent)		{height: var(--small); padding: 0 8px; font-size: .9rem; line-height: var(--small); border-radius: 2px;}
 .btn.medium					{height: var(--medium); padding: 0 16px; font-size: 1rem; line-height: var(--medium); border-radius: 4px;}
-.btn.large					{height: var(--large); padding: 0 20px; font-size: 1.125rem; line-height: var(--large); border-radius: 8px;}
+.btn.large					{height: var(--large); padding: 0 20px; font-size: 1.1rem; line-height: var(--large); border-radius: 8px;}
 
 
 /* button color */
@@ -34,8 +34,10 @@ button.btn					{overflow: visible; margin: 0;}
 .btn.color0:hover			{}
 .btn.color1					{background: var(--color1); color: #fff;}
 .btn.color1:hover			{}
-.btn.color2					{background: var(--color2-dark); color: #fff;}
+.btn.color2					{background: var(--color2); color: #fff;}
 .btn.color2:hover			{}
+.btn.color3					{background: var(--color3); color: #fff;}
+.btn.color3:hover			{}
 .btn[class*="bg-"]			{color: #fff;}
 .btn.bdr-color0,
 .btn.bdr-color1,
@@ -46,17 +48,20 @@ button.btn					{overflow: visible; margin: 0;}
 .btn.bdr-color1:hover		{}
 .btn.bdr-color2				{border: 1px solid var(--color2);}
 .btn.bdr-color2:hover		{}
+.btn.bdr-color3				{border: 1px solid var(--color3);}
+.btn.bdr-color3:hover		{}
 .btn.bdr-gray				{border: 1px solid var(--bdr-color);}
 .btn.bdr-gray:hover			{}
+.btn.bdr-gray .material-symbols-outlined{color: var(--color2);}
 
 /* button etc */
 .btn.medium.btn-group		{display: inline-flex; padding: 0; gap: 0;}
-.btn-group .btn 			{padding: 0 .75rem;}
+.btn-group .btn 			{padding: 0 .75rem; border-radius: 0;}
 .btn-group .btn input 		{position: absolute; height: 1px; width: 1px; border: 0; overflow: hidden; z-index: -1; overflow: hidden; background: var(--light-gray);}
 .btn-group .btn.active		{background: var(--color1); color: #fff;}
 
 /* btn disabled */
-.btn[disabled]				{filter: grayscale(100%); opacity: .85;}
+.btn[disabled]				{filter: grayscale(100%); opacity: .65;}
 
 /* btn inner */
 

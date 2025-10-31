@@ -60,7 +60,7 @@ public class InventoryOut {
             columnDefinition = "BIGINT COMMENT '출고 단가(가맹점 공급가 또는 판매가)'")
     private Long unitPrice;
 
-    /** 출고일 */
+    /** 출고일시 */
     @Column(name = "inventory_out_date", nullable = false,
             columnDefinition = "DATE COMMENT '출고일'")
     private LocalDateTime outDate;

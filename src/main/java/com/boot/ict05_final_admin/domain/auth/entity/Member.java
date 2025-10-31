@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.auth.entity;
 
 //import com.boot.ict05_final_admin.domain.auth.UserRole;
+import com.boot.ict05_final_admin.domain.member.dto.MemberModifyFormDTO;
 import jakarta.persistence.*;
 import lombok.*;
 //import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +42,14 @@ public class Member  {
     @Enumerated(EnumType.STRING)
     @Column(name = "member_status", nullable = false, length = 20)
     private MemberStatus status = MemberStatus.ACTIVE;
+
+    @PrePersist
+    void prePersist() {
+        if (status == null) status = MemberStatus.ACTIVE;
+    }
+    
+    @Column(name = "member_image_path")
+    private String memberImagePath;
 
 //
 //    // DB에 컬럼이 없으므로 우선 Transient (필요하면 테이블에 role 컬럼 추가)
@@ -84,5 +93,12 @@ public class Member  {
      */
     public void withdraw() {
         this.status = MemberStatus.WITHDRAWN;
+    }
+
+    public void updateMember(MemberModifyFormDTO dto) {
+        this.name = dto.getMemberName();
+        this.email = dto.getMemberEmail();
+        this.phone = dto.getMemberPhone();
+        this.status = dto.getMemberStatus();
     }
 }

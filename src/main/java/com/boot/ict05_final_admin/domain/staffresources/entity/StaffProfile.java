@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.staffresources.entity;
 
+import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.staffresources.dto.StaffModifyFormDTO;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +24,16 @@ public class StaffProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "member_id_fk",
+            referencedColumnName = "member_id",
+            foreignKey = @ForeignKey(name = "fk_staff_profile__member"),
+            nullable = true,
+            unique = true
+    )
+    private Member member;
 
     /** 직원 근무지 */
     @ManyToOne(fetch = FetchType.LAZY)

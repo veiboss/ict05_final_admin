@@ -2,10 +2,12 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
 import jakarta.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -100,6 +102,7 @@ public class Material {
     private LocalDateTime modifyDate;
 
     /** 본사 기준 적정 재고 수량 */
+    @Setter
     @Builder.Default
     @Column(name = "material_optimal_quantity", precision = 15, scale = 3,
             columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '본사 기준 적정 재고 수량'")
@@ -122,6 +125,7 @@ public class Material {
         this.supplier               = dto.getSupplier();
         this.materialTemperature    = dto.getMaterialTemperature();
         this.materialStatus         = dto.getMaterialStatus();
+        this.optimalQuantity        = dto.getOptimalQuantity();
         this.modifyDate             = LocalDateTime.now();
     }
 }
