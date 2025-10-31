@@ -11,11 +11,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final MemberUserDetailsService memberUserDetailsService;
 
@@ -39,7 +41,7 @@ public class SecurityConfig {
                 // Thymeleaf 폼에 CSRF 히든 필드 있다면 활성 유지
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/assets/**", "/api/auth/**").permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**", "/api/auth/**", "/uploads/**").permitAll()
                         // 필요시 .requestMatchers("/admin/**").hasRole("HQ")
                         .anyRequest().authenticated()
                 )
@@ -61,4 +63,11 @@ public class SecurityConfig {
 
         return http.build();
     }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // ✅ 로컬 테스트용 업로드 폴더 매핑
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///D:/ict05_uploads/");
+    }
+
 }

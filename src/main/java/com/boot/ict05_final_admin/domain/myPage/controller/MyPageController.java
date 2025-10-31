@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +33,7 @@ import java.util.UUID;
 public class MyPageController {
 
     private final MyPageService myPageService;
-
+    private Member member;
     /**
      * 마이페이지 조회
      * - 로그인 전에는 임시 memberId로 테스트
@@ -42,10 +44,10 @@ public class MyPageController {
     public String myPage(Model model) {
 
         // ===== 로그인 연동 이후 버전 =====
-        //Long memberId = getLoginMemberId();
+        Long memberId = getLoginMemberId();;
 
         // ===== 로그인 전 임시 버전 =====
-        Long memberId = 52L;
+        //Long memberId = 52L;
 
         // 마이페이지 조회
         MyPageDTO dto = myPageService.getMyPage(memberId);
@@ -54,38 +56,44 @@ public class MyPageController {
     }
 
     /**
-     * SecurityContextHolder에서 로그인된 회원 ID 가져오기
-     * - 로그인 기능 연동되면 자동 활성화
+     * 현재 로그인한 사용자의 회원 ID를 반환한다.
+     *
+     * <p>Spring Security의 {@link SecurityContextHolder}에서 인증(Authentication) 정보를 가져와
+     * 로그인된 사용자의 principal 객체를 확인한다. principal은 보통 {@link org.springframework.security.core.userdetails.UserDetails}
+     * 구현체이거나 {@link com.boot.ict05_final_admin.domain.auth.entity.Member} 엔티티일 수 있다.</p>
+     *
+     * <ul>
+     *   <li>principal이 {@code Member} 타입이면 해당 엔티티의 ID를 바로 반환한다.</li>
+     *   <li>principal이 {@code UserDetails} 타입이면 username(email)을 이용해 DB에서 회원을 조회한 후 ID를 반환한다.</li>
+     * </ul>
+     *
+     * @return 로그인된 회원의 ID
+     * @throws IllegalStateException 로그인되지 않았거나 인증 정보를 가져올 수 없는 경우
      */
-//    TODO : 로그인 활성화 되면
-//    private Long getLoginMemberId() {
-//        try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//            // 인증되지 않은 경우 null 리턴
-//            if (authentication == null || !authentication.isAuthenticated()) {
-//                return null;
-//            }
-//
-//            Object principal = authentication.getPrincipal();
-//
-//            // principal이 Member 타입일 경우 (UserDetails 직접 반환한 구조)
-//            if (principal instanceof Member member) {
-//                return member.getId();
-//            }
-//
-//            // principal이 UserDetails 구현체일 경우 (username = email)
-//            if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-//                // 이메일(username)로 Member 조회
-//                Member member = myPageService.findByEmail(userDetails.getUsername());
-//                return member.getId();
-//            }
-//
-//            return null;
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
+    private Long getLoginMemberId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("로그인되지 않은 사용자입니다.");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        // principal 이 커스텀 Member 객체라면
+        if (principal instanceof com.boot.ict05_final_admin.domain.auth.entity.Member member) {
+            return member.getId();
+        }
+
+        // principal 이 UserDetails 타입이라면
+        if (principal instanceof UserDetails userDetails) {
+            // email(username)로 회원 조회
+            com.boot.ict05_final_admin.domain.auth.entity.Member memberEntity =
+                    myPageService.findByEmail(userDetails.getUsername());
+            return memberEntity.getId();
+        }
+
+        throw new IllegalStateException("사용자 정보를 가져올 수 없습니다.");
+    }
 
     /**
      * 회원 수정 폼 페이지
@@ -109,7 +117,7 @@ public class MyPageController {
      * 회원 정보 수정 처리
      *
      * @param dto            수정할 회원 정보 DTO
-     * @param profileImage   업로드할 새 프로필 이미지
+     * @param memberImage   업로드할 새 프로필 이미지
      * @param currentPassword 현재 비밀번호
      * @param newPassword     새 비밀번호
      * @param confirmPassword 새 비밀번호 확인
