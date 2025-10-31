@@ -34,12 +34,12 @@ public class StoreController {
 
 
     /**
-     * 공지사항 목록을 페이징 처리하여 조회한다.
+     * 가맹점 목록을 페이징 처리하여 조회한다.
      *
-     * @param storeSearchDTO (선택) 작성자 이름으로 검색할 경우 전달되는 값
+     * @param storeSearchDTO (선택) 가맹점 이름으로 검색할 경우 전달되는 값
      * @param pageable       페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
      * @param model          뷰에 전달할 모델 객체
-     * @return 공지사항 목록 페이지 뷰 이름
+     * @return 가맹점 목록 페이지 뷰 이름
      */
     @GetMapping("/store/list")
     public String listOfficeStore(StoreSearchDTO storeSearchDTO,
@@ -68,6 +68,13 @@ public class StoreController {
         model.addAttribute("store", store);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("storeSearchDTO", storeSearchDTO);
+
+        var stats = storeService.listHeaderStats();
+        model.addAllAttributes(stats);
+       /* model.addAttribute("totalStore",      stats.get("totalStore"));
+        model.addAttribute("activeStore",     stats.get("activeStore"));
+        model.addAttribute("avgTenureYears",  stats.get("avgMonthlySales")); // 임시 별칭
+        model.addAttribute("totalStaff",      stats.get("totalStaff"));*/
 
         return "store/list";
     }
