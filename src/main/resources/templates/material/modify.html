@@ -21,7 +21,9 @@
 
     <div id="container" class="container">
         <div class="title-bar">
-            <h2 class="page-title ellipsis">재료 수정(<span th:text="${material.name}">재료명</span>)</h2>
+            <h2 class="page-title ellipsis max-900">
+                <span th:text="${material.name}">재료명</span> 수정
+            </h2>
         </div>
 
         <main id="content" class="max-900">
@@ -89,7 +91,7 @@
                             <div class="row col-3">
                                 <div class="pack-down col">
                                     <label class="fs-ss fc-999" for="materialOptimalQuantity">적정 수량</label>
-                                    <input type="text" name="materialOptimalQuantity" id="materialOptimalQuantity" class="input-text medium"
+                                    <input type="text" name="optimalQuantity" id="materialOptimalQuantity" class="input-text medium"
                                            th:value="${material.optimalQuantity}"
                                            title="적정 수량" placeholder="적정 수량 입력" />
                                 </div>

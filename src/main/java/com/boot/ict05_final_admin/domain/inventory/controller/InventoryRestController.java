@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryAdjustDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
@@ -23,11 +24,13 @@ import java.util.stream.Collectors;
 /**
  * 본사 재고 REST API 컨트롤러.
  *
- * <p>본사 재고 조회 및 입고 등록 관련 API를 통합 관리한다.</p>
+ * <p>본사 재고 조회 및 입고, 출고, 수량 조정 관련 API를 통합 관리한다.</p>
  *
  * <ul>
  *     <li>본사 재고 목록 조회 (GET)</li>
  *     <li>본사 재고 입고 등록 (POST)</li>
+ *     <li>본사 재고 출고 등록 (POST)</li>
+ *     <li>본사 재고 수량 조정 (POST)</li>
  * </ul>
  *
  * <p>화면 컨트롤러(Thymeleaf)와 분리되어 있으며 JSON 기반으로 동작한다.</p>
@@ -109,5 +112,24 @@ public class InventoryRestController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of("success", true, "id", id));
+    }
+
+    /**
+     * 본사 재고 수량 조정
+     *
+     * <p>입출고 외의 사유(분실, 파손, 오입력 등)로
+     * 본사 재고 수량을 직접 수정할 때 사용한다.</p>
+     *
+     * <p>입력받은 재고 ID(inventoryId)와 수정 수량(quantityAfter)을 기반으로
+     * 실제 재고를 갱신하고, 조정 내역(inventory_adjustment)을 로그로 남긴다.</p>
+     *
+     * @param dto 조정 정보 DTO (재고 ID, 재료 ID, 수정 수량, 사유, 메모)
+     * @return 조정 결과 JSON (성공 여부)
+     */
+    @PostMapping("/adjust")
+    @Operation(summary = "본사 재고 수량 조정", description = "입출고 외의 사유(분실, 파손, 오입력 등)로 재고 수량을 직접 수정한다.")
+    public ResponseEntity<Map<String, Object>> adjustInventory(@RequestBody InventoryAdjustDTO dto) {
+        inventoryInOutService.adjustInventory(dto);
+        return ResponseEntity.ok(Map.of("success", true));
     }
 }

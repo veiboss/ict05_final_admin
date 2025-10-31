@@ -16,12 +16,12 @@
     <div th:replace="~{fragments/header :: header}"></div>
 
     <div id="container" class="container">
-        <div class="pack-both">
-            <div class="title-bar">
+        <div class="title-bar">
+            <div class="pack-both">
                 <h2 class="page-title ellipsis">본사 재고 현황</h2>
-            </div>
 
-            <a href="/admin/inventory/store/list" class="btn small bdr-color2">가맹점 재고 현황</a>
+                <a href="/admin/inventory/store/list" class="btn medium color2">가맹점 재고 현황</a>
+            </div>
         </div>
 
         <main id="content">
@@ -92,9 +92,8 @@
                 <!-- 목록 테이블 -->
                 <section class="pack-down">
                     <div class="list-header pack-both">
-                        <div class="pack-left">
-                            <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
-                        </div>
+                        <a href="/admin/inventory/in/write" class="btn medium color2">입고등록</a>
+                        <button type="button" class="btn medium bdr-color2" onclick="excelDownload()">엑셀다운로드</button>
                     </div>
 
                     <table class="data-table">

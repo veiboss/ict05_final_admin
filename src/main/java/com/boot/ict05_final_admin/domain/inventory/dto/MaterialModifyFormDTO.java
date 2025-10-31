@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 @Data
 public class MaterialModifyFormDTO {
 
+    /** 작성자(회원) FK */
+    private Long memberIdFk;
+
     /** 수정할 재료의 고유 ID */
     private Long id;
 
@@ -49,4 +52,8 @@ public class MaterialModifyFormDTO {
     /** 재료 상태 */
     @NotNull(message = "상태를 선택해주세요")
     private MaterialStatus materialStatus;
+
+    /** 본사 기준 적정 재고 수량 */
+    @NotNull(message = "적정 수량을 입력해주세요")
+    private BigDecimal optimalQuantity;
 }
