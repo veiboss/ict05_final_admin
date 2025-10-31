@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class AnalyticsController {
      * KPI 분석 화면
      */
     @GetMapping("/kpi")
-    public String kpi(AnalyticsSearchDto analyticsSearchDto,
+    public String viewKpiAnalysis(AnalyticsSearchDto analyticsSearchDto,
                       @PageableDefault(page = 1, size = 50) Pageable pageable,
                       Model model,
                       HttpServletRequest request) {
@@ -52,6 +53,13 @@ public class AnalyticsController {
                 Math.max(0, pageable.getPageNumber() - 1),
                 pageable.getPageSize()
         );
+
+        if (analyticsSearchDto.getStartDate() == null || analyticsSearchDto.getEndDate() == null) {
+            LocalDate end = LocalDate.now().minusDays(1);
+            LocalDate start = end.minusDays(6);
+            analyticsSearchDto.setStartDate(start);
+            analyticsSearchDto.setEndDate(end);
+        }
 
         AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
         Page<KpiRowDto> kpirows = analyticsService.selectKpis(cond, pageRequest);
@@ -68,7 +76,7 @@ public class AnalyticsController {
      * 주문 분석 화면
      */
     @GetMapping("/orders")
-    public String orders(AnalyticsSearchDto analyticsSearchDto,
+    public String viewOrdersAnalysis(AnalyticsSearchDto analyticsSearchDto,
                          @PageableDefault(page = 1, size = 50) Pageable pageable,
                          Model model,
                          HttpServletRequest request) {
@@ -78,8 +86,15 @@ public class AnalyticsController {
                 pageable.getPageSize()
         );
 
+        if (analyticsSearchDto.getStartDate() == null || analyticsSearchDto.getEndDate() == null) {
+            LocalDate end = LocalDate.now().minusDays(1);
+            LocalDate start = end.minusDays(6);
+            analyticsSearchDto.setStartDate(start);
+            analyticsSearchDto.setEndDate(end);
+        }
+
         AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
-        Page<OrdersRowDto> orderrows = analyticsService.selectOrders(cond, pageRequest);
+        Page<OrdersRowDto> orderrows = analyticsService.selectOrders(analyticsSearchDto, pageRequest);
         OrdersCardsDto card = analyticsService.selectOrdersCards();
 
         model.addAttribute("analyticsSearchDto", cond);
@@ -93,7 +108,7 @@ public class AnalyticsController {
      * 재료 분석 화면
      */
     @GetMapping("/materials")
-    public String materials(AnalyticsSearchDto analyticsSearchDto, Model model, HttpServletRequest request) {
+    public String viewMaterialsAnalysis(AnalyticsSearchDto analyticsSearchDto, Model model, HttpServletRequest request) {
         AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
 
         MaterialsCardsDto card = analyticsService.selectMaterialsCards(cond);   // 단일 DTO 권장
@@ -110,7 +125,7 @@ public class AnalyticsController {
      * 시간·요일 분석 화면
      */
     @GetMapping("/time")
-    public String time(AnalyticsSearchDto search, Model model) {
+    public String viewTimeAndDayAnalysis(AnalyticsSearchDto search, Model model) {
         model.addAttribute("search", AnalyticsSearchDto.withDefaults(search));
         return "analytics/time";
     }

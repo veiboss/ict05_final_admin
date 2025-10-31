@@ -22,6 +22,8 @@ public class OrdersRowDto {
     private Long menuCount;
     private Long orderCount;
     private BigDecimal orderSales;
-    private String orderType;   // visit/takeout/delivery
-    private String orderDate;   // 'yyyy-MM-dd' 또는 'yyyy-MM-01'
+    private String orderType;  // VISIT/TAKEOUT/DELIVERY
+    private String orderDate;  // 'yyyy-MM-dd' 또는 'yyyy-MM-01'
+    private Long orderId;  // 대표 주문ID (그룹 내 MIN)
+    private Long storeId;  // 내부 매핑용(버킷 합치기 키), 화면 출력 없음
 }

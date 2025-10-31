@@ -271,15 +271,16 @@
             <thead>
             <tr>
               <th>Date</th>
+              <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">OrderDate</th>
               <th>Store</th>
-              <th>Category</th>
-              <th>Menu</th>
+              <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">OrderId</th>
+              <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">Category</th>
+              <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">Menu</th>
               <th>MenuCount</th>
               <th>MenuSales</th>
               <th>OrderCount</th>
               <th>OrderSales</th>
               <th>OrderType</th>
-              <th>OrderDate</th>
             </tr>
             </thead>
             <tbody>
@@ -288,9 +289,11 @@
             </tr>
             <tr th:each="r, stat : ${orderrows.content}">
               <td th:text="${r.date}">2025-01-01</td>
+              <td th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}" th:text="${r.orderDate}">2025-01-01</td>
               <td th:text="${r.storeName}">Store A</td>
-              <td th:text="${r.category}">Toast</td>
-              <td th:text="${r.menu}">Bacon Egg</td>
+              <td th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}" th:text="${r.orderId}">123</td>
+              <td th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}" th:text="${r.category}">Toast</td>
+              <td th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}" th:text="${r.menu}">Bacon Egg</td>
 
               <td class="ta-r"
                   th:text="${#numbers.formatDecimal(r.menuCount == null ? 0 : r.menuCount, 0, 'COMMA', 0, 'POINT')}">0</td>
@@ -303,7 +306,6 @@
                   th:text="${#numbers.formatDecimal(r.orderSales == null ? 0 : r.orderSales, 0, 'COMMA', 0, 'POINT')}">0</td>
 
               <td th:text="${r.orderType}">VISIT</td>
-              <td th:text="${r.orderDate}">2025-01-01</td>
             </tr>
             </tbody>
           </table>
