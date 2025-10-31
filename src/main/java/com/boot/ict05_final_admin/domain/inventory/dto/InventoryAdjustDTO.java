@@ -25,7 +25,7 @@ public class InventoryAdjustDTO {
     /** 재료 ID */
     @NotNull
     @Comment("재료 ID")
-    private Long materialId;
+    private Long material;
 
     /** 조정 후 수량 */
     @NotNull(message = "조정 후 수량을 입력해주세요")

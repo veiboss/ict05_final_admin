@@ -55,7 +55,8 @@
                             <!-- 수량 조정 -->
                             <span id="adjustForm" style="display:none;">
                                 <span class="pack-left">
-                                    <input type="number" step="1" id="newQty"
+                                    <input type="number" step="1"
+                                           id="newQty" name="quantityAfter"
                                            class="input-text small fc-000" style="width: 50px;"
                                            th:value="${inventory.quantity}">
                                     <button type="button" class="btn small color1" id="confirmBtn">확인</button>
@@ -129,7 +130,6 @@
     const form = document.getElementById("adjustForm");
     const cancel = document.getElementById("cancelBtn");
     const confirm = document.getElementById("confirmBtn");
-    const qtyDisplay = document.getElementById("qtyDisplay");
 
     btn.addEventListener("click", () => {
         btn.style.display = "none";
@@ -144,35 +144,33 @@
     confirm.addEventListener("click", () => {
         const newQty = Number(document.getElementById("newQty").value);
         const memo = prompt("조정 사유를 입력하세요:", "");
+        if (memo === null) return; // 취소 시 중단
 
         const inventoryId = document.getElementById("inventoryId").value;
-        const materialId = document.getElementById("materialId").value;
 
         fetch(`/admin/API/inventory/adjust`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                inventoryId: inventoryId,
-                materialId: materialId,
-                quantityAfter: Number(document.getElementById("newQty").value),
-                memo: memo,
-                reason: "MANUAL"
+                inventoryId: inventoryId,      // ✅ DTO 필드와 동일
+                quantityAfter: newQty,         // ✅ DTO 필드와 동일
+                memo: memo || "",              // 비고 입력
+                reason: "MANUAL"               // 기본값
             })
         })
-        .then(async r => {
-            if (!r.ok) throw new Error(await r.text());
-            return r.json();
-        })
-        .then(data => {
-            if (data.success) location.reload();
-            else alert("조정 실패");
-        })
-        .catch(err => {
-            console.error("요청 실패:", err);
-            alert("요청 실패");
-        });
+            .then(async r => {
+                if (!r.ok) throw new Error(await r.text());
+                return r.json();
+            })
+            .then(data => {
+                if (data.success) location.reload();
+                else alert("조정 실패");
+            })
+            .catch(err => {
+                console.error("요청 실패:", err);
+                alert("요청 실패");
+            });
     });
-
 </script>
 </body>
 </html>
