@@ -50,7 +50,15 @@ strong,
 .fc-000 {color: #000;}
 
 /* bg color */
-.bg-000{background-color: #000; color: #fff;}
+.bg-000     {background-color: #000; color: #fff;}
+.bg-000     {background-color: #000; color: #fff;}
+.bg-color1  {background-color: var(--color1); color: #fff;}
+.bg-color2  {background-color: var(--color2); color: #fff;}
+.bg-color3  {background-color: var(--color3); color: #fff;}
+.bg-gray    {background-color: var(--gray); color: #fff;}
+.bg-green   {background-color: rgba(var(--bs-success-rgb),1); color: #fff;}
+.bg-blue    {background-color: rgba(var(--bs-primary-rgb),1); color: #fff;}
+.bg-yellow  {background-color: rgba(var(--bs-warning-rgb),1); color: #fff;}
 
 /* text deco */
 .underline	{text-decoration: underline;}
@@ -128,6 +136,7 @@ strong,
 }
 
 hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-style: solid;}
+.line[class*="bg-"]{border: 0; height: 1px;}
 
 /* badge */
 .badge			{display: inline-block;}
@@ -466,8 +475,11 @@ table p + p						{margin-top: 1rem;}
 #content .write-form fieldset.box-wrap			{padding: clamp(16px, 4vw, 40px);}
 #content > .box-wrap.write-form fieldset.pack-down > hr.line{margin: 0 -1.4rem;}
 .box-wrap > .section-title + table	{margin-top: .5rem}
+/*
 .box-wrap > hr.line,
 .box-wrap > .tabs.box-header		{margin-right: -.75rem; margin-left: -.75rem; gap: 1.5rem;}
+*/
+
 .box-wrap > .tabs.box-header		{padding: 0 .75rem; font-size: calc(var(--page-title)*.75)}
 
 #content > .search fieldset		{gap: 1.5rem;

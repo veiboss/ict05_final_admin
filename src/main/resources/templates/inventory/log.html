@@ -36,7 +36,6 @@
                 본사에서 <strong>사용중지된 재료</strong>입니다.
             </div>
             <div class="box-wrap">
-
                 <div class="row-4">
                     <div class="pack-down col">
                         <span class="fs-ss fc-999">상태</span>
@@ -55,7 +54,8 @@
                             <!-- 수량 조정 -->
                             <span id="adjustForm" style="display:none;">
                                 <span class="pack-left">
-                                    <input type="number" step="1" id="newQty"
+                                    <input type="number" step="1"
+                                           id="newQty" name="quantityAfter"
                                            class="input-text small fc-000" style="width: 50px;"
                                            th:value="${inventory.quantity}">
                                     <button type="button" class="btn small color1" id="confirmBtn">확인</button>
@@ -76,8 +76,67 @@
                     </div>
                 </div>
 
+                <hr class="line bg-000">
+
                 <section class="pack-down">
-                    <p th:text="'로그 수: ' + ${#lists.size(logs.content)}" class="blind"></p>
+                    <!-- 검색 영역 -->
+                    <div id="search" class="search">
+                        <form id="filterForm" method="get">
+                            <fieldset>
+                                <legend class="blind">검색</legend>
+                                <div class="pack-both">
+                                    <!-- 입출고 타입 선택 -->
+                                    <div class="select-options r4">
+                                        <label>
+                                            <input type="radio" name="type" value=""
+                                                   th:checked="${selectedType == null or selectedType == ''}">
+                                            <span class="btn medium r4">전체</span>
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" name="type" value="INCOME"
+                                                   th:checked="${selectedType == 'INCOME'}">
+                                            <span class="btn medium r4">입고</span>
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" name="type" value="OUTGO"
+                                                   th:checked="${selectedType == 'OUTGO'}">
+                                            <span class="btn medium r4">출고</span>
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" name="type" value="ADJUST"
+                                                   th:checked="${selectedType == 'ADJUST'}">
+                                            <span class="btn medium r4">조정</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="pack-left">
+                                        <!-- 기간 필터 -->
+                                        <div class="pack-left">
+                                            <input type="date" name="start"
+                                                   title="시작일" class="input-text medium"
+                                                   style="width: 112px;"
+                                                   th:value="${startDate}">
+                                            <span>~</span>
+                                            <input type="date" name="end"
+                                                   title="종료일"
+                                                   class="input-text medium"
+                                                   style="width: 112px;"
+                                                   th:value="${endDate}">
+                                        </div>
+
+                                        <!-- 검색 버튼 -->
+                                        <div class="pack-left">
+                                            <button type="submit" class="btn medium color1">검색</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
                     <table class="data-table">
                         <thead>
                         <tr>
@@ -125,11 +184,23 @@
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
 <script>
+    // 라디오 선택 시 자동 검색
+    document.querySelectorAll("input[name='type']").forEach(radio => {
+      radio.addEventListener("change", () => {
+        document.getElementById("filterForm").submit();
+      });
+    });
+
+    // 초기화 버튼 클릭 시 전체로 이동
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      const baseUrl = window.location.pathname; // /admin/inventory/log/{id}
+      window.location.href = baseUrl; // 파라미터 제거
+    });
+
     const btn = document.getElementById("adjustBtn");
     const form = document.getElementById("adjustForm");
     const cancel = document.getElementById("cancelBtn");
     const confirm = document.getElementById("confirmBtn");
-    const qtyDisplay = document.getElementById("qtyDisplay");
 
     btn.addEventListener("click", () => {
         btn.style.display = "none";
@@ -144,24 +215,23 @@
     confirm.addEventListener("click", () => {
         const newQty = Number(document.getElementById("newQty").value);
         const memo = prompt("조정 사유를 입력하세요:", "");
+        if (memo === null) return; // 취소 시 중단
 
         const inventoryId = document.getElementById("inventoryId").value;
-        const materialId = document.getElementById("materialId").value;
 
         fetch(`/admin/API/inventory/adjust`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 inventoryId: inventoryId,
-                materialId: materialId,
-                quantityAfter: Number(document.getElementById("newQty").value),
-                memo: memo,
-                reason: "MANUAL"
+                quantityAfter: newQty,
+                memo: memo || "",              // 비고 입력
+                reason: "MANUAL"               // 기본값
             })
         })
         .then(async r => {
-            if (!r.ok) throw new Error(await r.text());
-            return r.json();
+                if (!r.ok) throw new Error(await r.text());
+                return r.json();
         })
         .then(data => {
             if (data.success) location.reload();
@@ -172,7 +242,6 @@
             alert("요청 실패");
         });
     });
-
 </script>
 </body>
 </html>

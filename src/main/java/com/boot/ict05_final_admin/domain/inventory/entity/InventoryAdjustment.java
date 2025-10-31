@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -69,6 +70,7 @@ public class InventoryAdjustment {
     private String memo;
 
     /** 조정일시 */
+    @CreationTimestamp
     @Column(name = "inventory_adjustment_created_at", nullable = false, updatable = false)
     @Comment("조정일시")
     private LocalDateTime createdAt;

@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.store.service;
 
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.member.repository.MemberRepository;
+import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
 import com.boot.ict05_final_admin.domain.store.dto.*;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -167,6 +170,22 @@ public class StoreService {
 
         return store;
     }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> listHeaderStats() {
+        long total       = storeRepository.countStoreAll();     // ✅ 인스턴스 호출
+        long active      = storeRepository.countActiveStore();  // ✅
+        BigDecimal avg   = storeRepository.avgMonthlySales();   // ✅ BigDecimal
+        long totalStaff  = storeRepository.totalEmployees();    // ✅ long
+
+        return Map.of(
+                "totalStore",       total,
+                "activeStore",      active,
+                "avgMonthlySales",  avg,        // 키도 의미 맞게
+                "totalStaff",       totalStaff
+        );
+    }
+
 }
 
 
