@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -181,7 +182,7 @@ public class MaterialRestController {
         byte[] excelBytes = materialService.downloadExcel(searchDTO, pageable);
 
         String filename = "재료목록.xlsx";
-        String encodeFilename = java.net.URLEncoder.encode(filename, StandardCharsets.UTF_8)
+        String encodeFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
                 .replaceAll("\\+", "%20");
 
         HttpHeaders headers = new HttpHeaders();
