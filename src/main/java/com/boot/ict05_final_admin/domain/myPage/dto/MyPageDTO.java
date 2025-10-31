@@ -20,6 +20,7 @@ import lombok.*;
  *     <li><b>name</b> — 회원 이름</li>
  *     <li><b>email</b> — 회원 이메일 주소 (로그인 ID로 사용)</li>
  *     <li><b>phone</b> — 회원 전화번호</li>
+ *     <li><b>memberImagePath</b> - 회원 프로필 이미지 경로</li>
  * </ul>
  *
  * <p>또한 {@link #fromEntity(Member)} 정적 메서드를 통해
@@ -45,6 +46,9 @@ public class MyPageDTO {
     /** 회원 전화번호 */
     private String phone;
 
+    /** 회원 프로필 이미지 경로 */
+    private String memberImagePath;
+
     /**
      * Entity → DTO 변환 메서드
      */
@@ -54,6 +58,7 @@ public class MyPageDTO {
                 .name(member.getName())
                 .email(member.getEmail())
                 .phone(member.getPhone())
+                .memberImagePath(member.getMemberImagePath())
                 .build();
     }
 }
