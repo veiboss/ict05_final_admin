@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.auth.service;
 import com.boot.ict05_final_admin.domain.auth.dto.JoinRequest;
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.auth.entity.MemberStatus;
-import com.boot.ict05_final_admin.domain.auth.repository.MemberRepository;
+import com.boot.ict05_final_admin.domain.auth.repository.JoinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
-    private final MemberRepository memberRepository;
+    private final JoinRepository joinRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long join(JoinRequest req){
-        if (memberRepository.existsByEmail(req.getEmail())) {
+        if (joinRepository.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
         }
         Member m = Member.builder()
@@ -30,17 +30,17 @@ public class AuthService implements UserDetailsService {
                 .password(passwordEncoder.encode(req.getPassword()))
                 .status(MemberStatus.ACTIVE)
                 .build();
-        return memberRepository.save(m).getId();
+        return joinRepository.save(m).getId();
     }
 
     @Transactional(readOnly = true)
     public boolean emailExists(String email){
-        return memberRepository.existsByEmail(email);
+        return joinRepository.existsByEmail(email);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member m = memberRepository.findByEmail(email)
+        Member m = joinRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email));
 
         return org.springframework.security.core.userdetails.User

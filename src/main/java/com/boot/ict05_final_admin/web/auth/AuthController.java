@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.web.auth;
 
-import com.boot.ict05_final_admin.domain.auth.service.MemberService;
+import com.boot.ict05_final_admin.domain.auth.service.JoinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
 
 
-    private final MemberService memberService;
+    private final JoinService joinService;
 
 
     @GetMapping("/login")
@@ -42,7 +42,7 @@ public class AuthController {
                              @RequestParam(required = false) String phone,
                              RedirectAttributes ra) {
         try {
-            memberService.register(email, password, name, phone);
+            joinService.register(email, password, name, phone);
             ra.addFlashAttribute("msg", "회원가입이 완료되었습니다. 로그인해 주세요.");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {

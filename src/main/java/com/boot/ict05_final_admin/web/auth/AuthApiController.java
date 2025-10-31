@@ -2,7 +2,7 @@ package com.boot.ict05_final_admin.web.auth;
 
 import com.boot.ict05_final_admin.domain.auth.dto.JoinRequest;
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
-import com.boot.ict05_final_admin.domain.auth.repository.MemberRepository;
+import com.boot.ict05_final_admin.domain.auth.repository.JoinRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthApiController {
 
-    private final MemberRepository memberRepository;
+    private final JoinRepository joinRepository;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/exist", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Boolean> exist(@RequestParam String email) {
-        boolean exists = memberRepository.existsByEmail(email);
+        boolean exists = joinRepository.existsByEmail(email);
         return Map.of("exists", exists);
     }
 
@@ -32,7 +32,7 @@ public class AuthApiController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> register(@Valid @RequestBody JoinRequest req) {
-        if (memberRepository.existsByEmail(req.getEmail())) {
+        if (joinRepository.existsByEmail(req.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL_IN_USE");
         }
         Member m = Member.builder()
@@ -41,7 +41,7 @@ public class AuthApiController {
                 .phone(req.getPhone())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .build();
-        memberRepository.save(m);
+        joinRepository.save(m);
 
         // ⚠ 여기 게터는 프로젝트에 맞게: getMemberId() 또는 getId()
         long id = m.getId(); // 또는 m.getId()
