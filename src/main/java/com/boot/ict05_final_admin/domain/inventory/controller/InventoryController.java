@@ -15,10 +15,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.time.LocalDate;
 
 /**
  * 본사 재고 관리 화면 컨트롤러
@@ -105,34 +108,51 @@ public class InventoryController {
      * @return 본사 재고 상세(입출고 내역) 페이지(view)
      */
     @GetMapping("/log/{inventoryId}")
-    public String viewInventoryLog(@PathVariable Long inventoryId,
-                                   @PageableDefault(page = 1, size = 10, sort = "date", direction = Sort.Direction.DESC)
-                                   Pageable pageable,
-                                   HttpServletRequest request,
-                                   Model model) {
+    public String viewInventoryLog(
+            @PathVariable Long inventoryId,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+            @PageableDefault(page = 1, size = 10, sort = "log_date", direction = Sort.Direction.DESC)
+            Pageable pageable,
+            HttpServletRequest request,
+            Model model) {
 
-        // 본사 재고 및 재료 정보 조회
         HqInventory inventory = inventoryService.findById(inventoryId);
         Long materialId = inventory.getMaterial().getId();
 
-        // 1-based → 0-based 보정
         Pageable corrected = PageRequest.of(
-                pageable.getPageNumber() - 1,
+                Math.max(pageable.getPageNumber() - 1, 0),
                 pageable.getPageSize(),
-                pageable.getSort()
+                pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(Sort.Direction.DESC, "log_date")
         );
 
-        // corrected 로 변경
-        Page<InventoryLogView> logs = inventoryLogViewRepository.findByMaterialId(materialId, corrected);
+        // end 포함(+1일)
+        LocalDate endPlusOne = (end != null) ? end.plusDays(1) : null;
+
+        Page<InventoryLogView> logs = inventoryLogViewRepository.findLogsByFilter(
+                materialId,
+                normalizeType(type),
+                start,
+                endPlusOne,
+                corrected
+        );
 
         model.addAttribute("inventory", inventory);
         model.addAttribute("material", inventory.getMaterial());
         model.addAttribute("logs", logs);
+        model.addAttribute("selectedType", type);
+        model.addAttribute("startDate", start);
+        model.addAttribute("endDate", end);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
 
         return "inventory/log";
     }
 
+
+    private String normalizeType(String type) {
+        return (type == null || type.isBlank() || "전체".equals(type)) ? null : type;
+    }
 
 
 
