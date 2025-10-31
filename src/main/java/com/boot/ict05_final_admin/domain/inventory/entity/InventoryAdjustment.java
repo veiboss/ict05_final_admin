@@ -32,52 +32,50 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class InventoryAdjustment {
 
-    /** 수량 조정 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "adjustment_id")
-    @Comment("조정 시퀀스")
+    @Column(name = "adjustment_id", columnDefinition = "BIGINT UNSIGNED COMMENT '조정 시퀀스'")
     private Long id;
 
     /** 본사 재고 FK */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inventory_id", nullable = false)
+    @JoinColumn(name = "inventory_id_fk", nullable = false)
     @Comment("본사 재고 FK")
     private HqInventory inventory;
 
-    /** 재료 ID */
-    @Column(name = "material_id", nullable = false)
-    @Comment("재료 ID")
-    private Long materialId;
-
     /** 조정 전 수량 */
-    @Column(name = "quantity_before", precision = 15, scale = 3, nullable = false)
+    @Column(name = "inventory_adjustment_quantity_before", precision = 15, scale = 3, nullable = false)
     @Comment("조정 전 수량")
     private BigDecimal quantityBefore;
 
     /** 조정 후 수량 */
-    @Column(name = "quantity_after", precision = 15, scale = 3, nullable = false)
+    @Column(name = "inventory_adjustment_quantity_after", precision = 15, scale = 3, nullable = false)
     @Comment("조정 후 수량")
     private BigDecimal quantityAfter;
 
     /** 증감 수량 (후 - 전) */
-    @Column(name = "difference", precision = 15, scale = 3, nullable = false)
+    @Column(name = "inventory_adjustment_difference", precision = 15, scale = 3, nullable = false)
     @Comment("증감 수량")
     private BigDecimal difference;
 
+    /** 조정 단가 */
+    @Column(name = "inventory_adjustment_unit_price", columnDefinition = "BIGINT")
+    @Comment("조정 단가")
+    private Long unitPrice;
+
     /** 비고 / 조정 사유 */
-    @Column(name = "memo")
+    @Column(name = "inventory_adjustment_memo", columnDefinition = "VARCHAR(255)")
     @Comment("비고 / 조정 사유")
     private String memo;
 
     /** 조정일시 */
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "inventory_adjustment_created_at", nullable = false, updatable = false)
     @Comment("조정일시")
     private LocalDateTime createdAt;
 
     /** 조정 사유 분류 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "reason", length = 20)
+    @Column(name = "inventory_adjustment_reason", length = 20)
     @Comment("조정 사유 (MANUAL, DAMAGE, LOSS 등)")
     private AdjustmentReason reason;
 
