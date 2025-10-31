@@ -163,7 +163,6 @@ public class InventoryInOutService {
     public void adjustInventory(InventoryAdjustDTO dto) {
         HqInventory inventory = inventoryRepository.findById(dto.getInventoryId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 재고 정보를 찾을 수 없습니다."));
-        Material material = getMaterialOrThrow(dto.getMaterial());
 
         BigDecimal before = inventory.getQuantity();
         BigDecimal after = dto.getQuantityAfter();
@@ -185,10 +184,11 @@ public class InventoryInOutService {
         inventoryAdjustmentRepository.save(adjustment);
 
         // 3. 상태 갱신
-        updateInventoryStatus(inventory, material);
+        updateInventoryStatus(inventory, inventory.getMaterial());
 
+        // 4. 로그 출력
         log.info("[INVENTORY ADJUST] materialId={}, before={}, after={}, diff={}, reason={}, memo={}",
-                material.getId(), before, after, diff, dto.getReason(), dto.getMemo());
+                inventory.getMaterial().getId(), before, after, diff, dto.getReason(), dto.getMemo());
     }
 
 }

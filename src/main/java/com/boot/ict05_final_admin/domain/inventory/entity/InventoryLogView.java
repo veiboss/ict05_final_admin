@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.Subselect;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,10 +19,10 @@ import java.time.LocalDateTime;
  * @since 2025.10
  */
 @Entity
-@Table(name = "v_inventory_log")
 @Getter
 @NoArgsConstructor
-@Immutable // 읽기 전용
+@Immutable
+@Subselect("SELECT * FROM v_inventory_log")
 public class InventoryLogView {
 
     /** 통합 로그 ID (입고 or 출고 시퀀스) */
