@@ -1,23 +1,64 @@
 package com.boot.ict05_final_admin.config.securtiy;
 
+import com.boot.ict05_final_admin.domain.auth.service.MemberUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final MemberUserDetailsService memberUserDetailsService;
+
     @Bean
-    SecurityFilterChain filter(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable());
-        http.formLogin(f -> f.disable());
-        http.logout(l -> l.disable());
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login","/register","/assets/**","/css/**","/js/**","/images/**").permitAll()
-                .anyRequest().authenticated()
-        );
+    public PasswordEncoder passwordEncoder() {
+        // DB는 $2a$... 해시만 (접두어 {bcrypt} 금지)
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthProvider() {
+        DaoAuthenticationProvider p = new DaoAuthenticationProvider();
+        p.setUserDetailsService(memberUserDetailsService);
+        p.setPasswordEncoder(passwordEncoder());
+        return p;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // Thymeleaf 폼에 CSRF 히든 필드 있다면 활성 유지
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/assets/**", "/api/auth/**").permitAll()
+                        // 필요시 .requestMatchers("/admin/**").hasRole("HQ")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")                 // GET
+                        .loginProcessingUrl("/login")        // POST: 시큐리티가 처리
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/login?error")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                )
+                .authenticationProvider(daoAuthProvider());
+
         return http.build();
     }
 }

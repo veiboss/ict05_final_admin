@@ -1,11 +1,14 @@
 package com.boot.ict05_final_admin.domain.auth.dto;
 
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter
 public class JoinRequest {
-    private String email;
-    private String password;
-    private String name;
-    private String phone;
+    @NotBlank private String name;
+    @NotBlank private String phone;
+    @Email @NotBlank private String email;
+    @NotBlank private String password;
 }

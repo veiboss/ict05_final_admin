@@ -43,6 +43,10 @@ public class Member  {
     @Column(name = "member_status", nullable = false, length = 20)
     private MemberStatus status = MemberStatus.ACTIVE;
 
+    @PrePersist
+    void prePersist() {
+        if (status == null) status = MemberStatus.ACTIVE;
+    }
 //
 //    // DB에 컬럼이 없으므로 우선 Transient (필요하면 테이블에 role 컬럼 추가)
 //    @Transient

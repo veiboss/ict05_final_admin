@@ -10,9 +10,22 @@
             --kpi-red:#ef4444; --kpi-green:#22c55e; --kpi-purple:#7c3aed;
             --light-gray:#f5f7fb; --dark-gray:#6b7280;
         }
-        .bg-kpi-red{background:var(--kpi-red)} .hover\:bg-kpi-red-600:hover{background:#dc2626}
-        .bg-kpi-purple{background:var(--kpi-purple)} .bg-light-gray{background:var(--light-gray)}
-        .text-dark-gray{color:var(--dark-gray)}
+        .bg-kpi-green{ background: var(--kpi-green); }
+        .bg-kpi-purple{ background: var(--kpi-purple); }
+        .bg-light-gray{ background: var(--light-gray); }
+        .text-dark-gray{ color: var(--dark-gray); }
+
+        /* 간단 입력/버튼 스타일 (Tailwind 유틸과 함께 사용) */
+        .input{
+            border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0 0.75rem; outline: none;
+            width: 100%; height: 2.5rem;
+        }
+        .input:focus{ border-color:#6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+        .btn{
+            border-radius: 0.5rem; color:#fff; font-weight:600;
+            height: 2.75rem; line-height: 2.75rem;
+        }
+        .help{ min-height: 18px; } /* 도움말 영역 높이 확보해서 줄바꿈/겹침 방지 */
     </style>
 </head>
 <body class="min-h-screen bg-light-gray flex items-center justify-center">
@@ -29,122 +42,210 @@
             <p class="text-sm text-dark-gray mt-1">FranFriend ERP 본사 콘솔</p>
         </div>
 
+        <!-- 상단 메시지 -->
         <div id="msg" class="hidden mb-4 text-sm rounded-md px-3 py-2"></div>
 
-        <form id="joinForm" method="post" action="/admin/join" class="space-y-4">
-            <!-- 이름 -->
-            <label class="block text-sm font-medium text-gray-700">이름</label>
-            <input id="name" name="name" type="text" class="w-full h-10 input" />
-            <p id="err-name" class="mt-1 text-xs text-red-600"></p>
-
-            <!-- 연락처 -->
-            <label class="block text-sm font-medium text-gray-700">연락처</label>
-            <input id="phone" name="phone" type="text" placeholder="010-0000-0000" class="w-full h-10 input" />
-            <p id="err-phone" class="mt-1 text-xs text-red-600"></p>
-
+        <!-- 폼 -->
+        <form id="joinForm" class="space-y-4">
             <!-- 이메일 -->
-            <label class="block text-sm font-medium text-gray-700">이메일</label>
-            <input id="email" name="email" type="email" class="w-full h-10 input" />
-            <p id="err-email" class="mt-1 text-xs text-red-600"></p>
+            <label for="email" class="block text-sm font-medium text-gray-700">이메일</label>
+            <input id="email" name="email" type="email" class="input" autocomplete="email" />
+            <small id="emailHelp" class="help block mt-1 mb-3 text-xs text-gray-500"></small>
 
             <!-- 비밀번호 -->
-            <label class="block text-sm font-medium text-gray-700">비밀번호</label>
-            <input id="password" name="password" type="password" class="w-full h-10 input" />
-            <p id="err-password" class="mt-1 text-xs text-red-600"></p>
+            <label for="password" class="block text-sm font-medium text-gray-700">비밀번호</label>
+            <input id="password" name="password" type="password" class="input" autocomplete="new-password" />
+            <small id="passwordHelp" class="help block mt-1 mb-3 text-xs text-gray-500"></small>
 
             <!-- 비밀번호 확인 -->
-            <label class="block text-sm font-medium text-gray-700">비밀번호 확인</label>
-            <input id="password2" type="password" class="w-full h-10 input" />
-            <p id="err-password2" class="mt-1 text-xs text-red-600"></p>
+            <label for="password2" class="block text-sm font-medium text-gray-700">비밀번호 확인</label>
+            <input id="password2" name="password2" type="password" class="input" autocomplete="new-password" />
+            <small id="password2Help" class="help block mt-1 mb-3 text-xs text-gray-500"></small>
 
-            <!-- 가입 버튼: 기본 비활성화 -->
-            <button id="joinBtn" type="submit"
-                    class="w-full h-11 rounded-lg font-medium bg-gray-300 text-white cursor-not-allowed transition"
-                    disabled>
+            <!-- 이름 -->
+            <label for="name" class="block text-sm font-medium text-gray-700">이름</label>
+            <input id="name" name="name" type="text" class="input" autocomplete="name" />
+
+            <!-- 연락처 -->
+            <label for="phone" class="block text-sm font-medium text-gray-700">연락처</label>
+            <input id="phone" name="phone" type="tel" class="input" autocomplete="tel" />
+
+            <button id="btnSubmit" type="submit" class="btn w-full bg-gray-300 cursor-not-allowed" disabled>
                 계정 생성
             </button>
         </form>
-
     </div>
 </div>
 
 <script>
-    (function () {
-        const $ = (id) => document.getElementById(id);
+    document.addEventListener('DOMContentLoaded', () => {
+        // 요소
+        const $form = document.getElementById('joinForm');
+        const $msg  = document.getElementById('msg');
 
-        const nameEl = $("name");
-        const phoneEl = $("phone");
-        const emailEl = $("email");
-        const pwEl = $("password");
-        const pw2El = $("password2");
-        const btn = $("joinBtn");
-        const form = $("joinForm");
+        const $email = document.getElementById('email');
+        const $emailHelp = document.getElementById('emailHelp');
 
-        const err = {
-            name: $("err-name"),
-            phone: $("err-phone"),
-            email: $("err-email"),
-            password: $("err-password"),
-            password2: $("err-password2"),
-        };
+        const $pw = document.getElementById('password');
+        const $pwHelp = document.getElementById('passwordHelp');
 
-        function validate() {
-            // 규칙
-            const nameOk = nameEl.value.trim().length >= 2;
+        const $pw2 = document.getElementById('password2');
+        const $pw2Help = document.getElementById('password2Help');
 
-            // 010-xxxx-xxxx 혹은 숫자만 허용
-            const phoneVal = phoneEl.value.trim();
-            const phoneOk = /^01[016789]-?\d{3,4}-?\d{4}$/.test(phoneVal);
+        const $name = document.getElementById('name');
+        const $phone = document.getElementById('phone');
+        const $btn = document.getElementById('btnSubmit');
 
-            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
+        // 상태 플래그
+        let emailOk = false, pwOk = false, pw2Ok = false;
 
-            const pw = pwEl.value;
-            const pwOk = pw.length >= 6; // 최소 6자
-            const pw2Ok = pw2El.value === pw && pw2El.value.length > 0;
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            // 에러 메시지
-            err.name.textContent = nameOk ? "" : "이름은 두 글자 이상 입력하세요.";
-            err.phone.textContent = phoneOk ? "" : "올바른 연락처 형식이 아닙니다.";
-            err.email.textContent = emailOk ? "" : "올바른 이메일 형식이 아닙니다.";
-            err.password.textContent = pwOk ? "" : "비밀번호는 여섯 글자 이상이어야 합니다.";
-            err.password2.textContent = pw2Ok ? "" : "비밀번호가 일치하지 않습니다.";
-
-            const allOk = nameOk && phoneOk && emailOk && pwOk && pw2Ok;
-
-            // 버튼 토글
-            btn.disabled = !allOk;
-            if (allOk) {
-                btn.classList.remove("bg-gray-300", "cursor-not-allowed");
-                btn.classList.add("bg-kpi-green", "hover:bg-green-600");
-            } else {
-                btn.classList.add("bg-gray-300", "cursor-not-allowed");
-                btn.classList.remove("bg-kpi-green", "hover:bg-green-600");
-            }
-            return allOk;
+        function setMsg(text, ok){
+            if (!text) { $msg.className = 'hidden'; $msg.textContent = ''; return; }
+            $msg.textContent = text;
+            $msg.className = ok
+                ? 'mb-4 text-sm rounded-md px-3 py-2 bg-green-50 text-green-700 border border-green-200'
+                : 'mb-4 text-sm rounded-md px-3 py-2 bg-red-50 text-red-700 border border-red-200';
         }
 
-        // 입력 이벤트로 실시간 검증
-        [nameEl, phoneEl, emailEl, pwEl, pw2El].forEach((el) =>
-            el.addEventListener("input", validate)
-        );
+        function updateBtn() {
+            const nameOk = !!$name.value.trim();
+            const phoneOk = !!$phone.value.trim();
+            const allOk = emailOk && pwOk && pw2Ok && nameOk && phoneOk;
+            $btn.disabled = !allOk;
+            if (allOk) {
+                $btn.classList.remove('bg-gray-300','cursor-not-allowed');
+                $btn.classList.add('bg-kpi-green');
+            } else {
+                $btn.classList.add('bg-gray-300','cursor-not-allowed');
+                $btn.classList.remove('bg-kpi-green');
+            }
+        }
 
-        // 초기 상태
-        validate();
+        // 이메일 중복 체크: blur 에서만 서버 호출
+        async function checkEmailDup() {
+            const v = $email.value.trim();
 
-        // 제출 시 최종 검증
-        form.addEventListener("submit", function (e) {
-            if (!validate()) {
-                e.preventDefault();
-                // 첫 에러 필드로 포커스
-                if (err.name.textContent) return nameEl.focus();
-                if (err.phone.textContent) return phoneEl.focus();
-                if (err.email.textContent) return emailEl.focus();
-                if (err.password.textContent) return pwEl.focus();
-                if (err.password2.textContent) return pw2El.focus();
+            if (!emailRe.test(v)) {
+                $emailHelp.textContent = '이메일 형식을 확인하세요.';
+                $emailHelp.className = 'help block mt-1 mb-3 text-xs text-red-600';
+                emailOk = false; updateBtn(); return;
+            }
+
+            try {
+                const res = await fetch(`/admin/api/auth/exist?email=${encodeURIComponent(v)}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'same-origin'
+                });
+                if (!res.ok) throw new Error('exist http ' + res.status);
+                const data = await res.json(); // {exists: boolean}
+                if (data.exists) {
+                    $emailHelp.textContent = '이미 사용 중인 이메일입니다.';
+                    $emailHelp.className = 'help block mt-1 mb-3 text-xs text-red-600';
+                    emailOk = false;
+                } else {
+                    $emailHelp.textContent = '사용 가능한 이메일입니다.';
+                    $emailHelp.className = 'help block mt-1 mb-3 text-xs text-green-600';
+                    emailOk = true;
+                }
+            } catch (e) {
+                console.error(e);
+                $emailHelp.textContent = '중복 확인 실패';
+                $emailHelp.className = 'help block mt-1 mb-3 text-xs text-red-600';
+                emailOk = false;
+            } finally { updateBtn(); }
+        }
+
+        // 비밀번호 길이 체크
+        function checkPw() {
+            const v = $pw.value;
+            if (v.length < 6) {
+                $pwHelp.textContent = '비밀번호는 6자 이상이어야 합니다.';
+                $pwHelp.className = 'help block mt-1 mb-3 text-xs text-red-600';
+                pwOk = false;
+            } else {
+                $pwHelp.textContent = '';
+                $pwHelp.className = 'help block mt-1 mb-3 text-xs text-gray-500';
+                pwOk = true;
+            }
+            checkPw2(); // 확인값 동시 갱신
+        }
+
+        // 비밀번호 일치 체크
+        function checkPw2() {
+            if ($pw2.value && $pw.value !== $pw2.value) {
+                $pw2Help.textContent = '비밀번호가 일치하지 않습니다.';
+                $pw2Help.className = 'help block mt-1 mb-3 text-xs text-red-600';
+                pw2Ok = false;
+            } else if ($pw2.value) {
+                $pw2Help.textContent = '일치합니다.';
+                $pw2Help.className = 'help block mt-1 mb-3 text-xs text-green-600';
+                pw2Ok = true;
+            } else {
+                $pw2Help.textContent = '';
+                $pw2Help.className = 'help block mt-1 mb-3 text-xs text-gray-500';
+                pw2Ok = false;
+            }
+            updateBtn();
+        }
+
+        // 이벤트 바인딩
+        $email.addEventListener('input', () => { emailOk = false; $emailHelp.textContent = ''; updateBtn(); });
+        $email.addEventListener('blur', checkEmailDup);
+
+        $pw.addEventListener('input', checkPw);
+        $pw2.addEventListener('input', checkPw2);
+
+        $name.addEventListener('input', updateBtn);
+        $phone.addEventListener('input', updateBtn);
+
+        // 제출
+        $form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setMsg('', true);
+
+            // 최종 가드
+            if ($btn.disabled) { setMsg('입력 값을 확인해주세요.', false); return; }
+
+            const payload = {
+                email: $email.value.trim(),
+                password: $pw.value,
+                name: $name.value.trim(),
+                phone: $phone.value.trim()
+            };
+
+            try {
+                const res = await fetch('/admin/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.status === 201) {
+                    setMsg('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.', true);
+                    setTimeout(() => { window.location.href = '/admin/login'; }, 600);
+                    return;
+                }
+
+                // 에러 처리
+                const text = await res.text();
+                if (res.status === 409 || text.includes('EMAIL_IN_USE')) {
+                    setMsg('이미 사용 중인 이메일입니다.', false);
+                } else {
+                    setMsg('회원가입 중 오류가 발생했습니다.', false);
+                }
+            } catch (err) {
+                console.error(err);
+                setMsg('네트워크 오류가 발생했습니다.', false);
             }
         });
-    })();
-</script>
 
+        // 초기 버튼 상태
+        updateBtn();
+    });
+</script>
 </body>
 </html>

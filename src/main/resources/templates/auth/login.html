@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -40,26 +40,33 @@
 
         <!-- 알림 -->
         <div id="msg" class="hidden mb-4 text-sm rounded-md px-3 py-2"></div>
+        <!-- 서버 리다이렉트 시에도 바로 보이게(기존 JS와 병행) -->
+        <div th:if="${param.error}"  class="mb-4 text-sm rounded-md px-3 py-2 bg-red-50  text-red-700  border border-red-200">이메일 또는 비밀번호가 올바르지 않습니다.</div>
+        <div th:if="${param.logout}" class="mb-4 text-sm rounded-md px-3 py-2 bg-green-50 text-green-700 border border-green-200">로그아웃 되었습니다.</div>
 
         <!-- 폼 -->
-        <form id="loginForm" class="space-y-4">
+        <form id="loginForm" class="space-y-4" th:action="@{/login}" method="post">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                <input id="email" type="email" required placeholder="admin@franfriend.com"
+                <input id="email" name="email" type="email" required placeholder="admin@franfriend.com" autocomplete="username"
                        class="w-full h-11 rounded-lg border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
-                <input id="password" type="password" required placeholder="비밀번호"
+                <input id="password" name="password" type="password" required placeholder="비밀번호" autocomplete="current-password"
                        class="w-full h-11 rounded-lg border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
             </div>
+
+            <!-- CSRF 토큰 -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <button type="submit"
                     class="w-full h-11 rounded-lg font-medium text-white bg-kpi-red hover:bg-kpi-red-600">
                 로그인
             </button>
         </form>
+
         <p class="text-center text-sm text-dark-gray mt-2">
             아직 계정이 없나요?
             <a href="/admin/register" class="text-kpi-red underline">회원가입</a>
@@ -83,41 +90,10 @@
             : "bg-red-50 text-red-700 border border-red-200");
         msg.classList.remove("hidden");
     }
-
-    // /admin/api/login 으로 JSON POST → 200이면 대시보드로 이동
-    $("#loginForm").addEventListener("submit", async (e)=>{
-        e.preventDefault();
-        msg.classList.add("hidden");
-
-        const email = $("#email").value.trim();
-        const password = $("#password").value;
-
-        try{
-            const res = await fetch("/admin/api/login", {
-                method: "POST",
-                headers: {"Content-Type":"application/json"},
-                body: JSON.stringify({ email, password })
-            });
-
-            if(res.ok){
-                showMsg("로그인 성공. 이동합니다...", true);
-                // 서버에서 쿠키 세팅 후, 대시보드로
-                window.location.href = "/admin/";
-            }else if(res.status === 401){
-                showMsg("이메일 또는 비밀번호가 올바르지 않습니다.");
-            }else{
-                const t = await res.text();
-                showMsg("로그인 실패: " + t);
-            }
-        }catch(err){
-            console.error(err);
-            showMsg("네트워크 오류가 발생했습니다.");
-        }
-    });
-
     // 쿼리 파라미터로 에러 전달받은 경우 표시 (?error=1)
     const p = new URLSearchParams(window.location.search);
-    if(p.get("error")) showMsg("세션이 만료되었거나 권한이 없습니다.");
+    if(p.get("error"))  showMsg("세션이 만료되었거나 권한이 없습니다.");
+    if(p.get("logout")) showMsg("로그아웃 되었습니다.", true);
 </script>
 </body>
 </html>
