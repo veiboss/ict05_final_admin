@@ -47,6 +47,12 @@
 
         <main id="content">
             <div class="box-wrap">
+                <div class="profile-box">
+                    <img th:src="${member.memberImagePath != null ? member.memberImagePath : '/images/admin/default-profile.png'}"
+                         alt="프로필 이미지"
+                         style="width:120px;height:120px;border-radius:50%;object-fit:cover;"/>
+                </div>
+
                 <div class="info-item">
                     <div class="label">회원번호</div>
                     <div class="value" th:text="${member.id}">1</div>

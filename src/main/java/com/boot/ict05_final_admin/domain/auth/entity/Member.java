@@ -43,6 +43,9 @@ public class Member  {
     @Column(name = "member_status", nullable = false, length = 20)
     private MemberStatus status = MemberStatus.ACTIVE;
 
+    @Column(name = "member_image_path")
+    private String memberImagePath;
+
 //
 //    // DB에 컬럼이 없으므로 우선 Transient (필요하면 테이블에 role 컬럼 추가)
 //    @Transient
