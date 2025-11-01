@@ -59,14 +59,14 @@ public class AnalyticsService {
 
     /** 재료 상단 요약 카드 */
     @Transactional(readOnly = true)
-    public MaterialsCardsDto selectMaterialsCards(AnalyticsSearchDto cond) {
-        return analyticsRepository.findMaterialsSummary(cond); // 단일 DTO로 교체
+    public MaterialsCardsDto selectMaterialsCards() {
+        return analyticsRepository.findMaterialsSummary(); // 단일 DTO로 교체
     }
 
     /** 재료 분석 목록 */
     @Transactional(readOnly = true)
-    public List<MaterialsRowDto> selectMaterials(AnalyticsSearchDto cond) {
-        return analyticsRepository.findMaterials(cond);
+    public Page<MaterialsRowDto> selectMaterials(AnalyticsSearchDto cond, Pageable pageable) {
+        return analyticsRepository.findMaterials(cond, pageable);
     }
 
     /** 시간 상단 요약 카드 */
@@ -77,7 +77,8 @@ public class AnalyticsService {
 
     /** 시간·요일 분석 목록 */
     @Transactional(readOnly = true)
-    public List<TimeRowDto> selectTimeSlices(AnalyticsSearchDto cond) {
-        return analyticsRepository.findTimeSlices(cond);
+    public Page<TimeRowDto> selectTimeSlices(AnalyticsSearchDto cond, Pageable pageable) {
+        return analyticsRepository.findTimeSlices(cond, pageable);
     }
+
 }

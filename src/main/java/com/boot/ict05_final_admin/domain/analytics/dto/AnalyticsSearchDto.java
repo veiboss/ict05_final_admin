@@ -37,9 +37,10 @@ public class AnalyticsSearchDto {
     /** 출력 개수(테이블 상단 셀렉트와 연동) */
     private Integer limit = 50;
 
-    /**
-     * 컨트롤러/REST에서 NPE 방지를 위해 기본값을 주입한다.
-     */
+    /** 표에 Total 행을 표시할지 여부 (기본값 true) */
+    private Boolean showTotal = true;
+
+    /** NPE 방지용 기본값 주입 */
     public static AnalyticsSearchDto withDefaults(AnalyticsSearchDto in) {
         AnalyticsSearchDto s = (in == null) ? new AnalyticsSearchDto() : in;
         LocalDate today = LocalDate.now();
@@ -48,6 +49,7 @@ public class AnalyticsSearchDto {
         if (s.getEndDate() == null)   s.setEndDate(today);
         if (s.getViewBy() == null)    s.setViewBy(ViewBy.DAY);
         if (s.getLimit() == null)     s.setLimit(40);
+        if (s.getShowTotal() == null) s.setShowTotal(true);
 
         return s;
     }

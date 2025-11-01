@@ -14,18 +14,27 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class MaterialsRowDto {
-    private String  orderDate;            // YYYY-MM-DD (집계 라벨)
-    private String  store;                // Store (이름)
-    private String  material;             // Material (이름)
+    private String  orderDate;             // YYYY-MM-DD or YYYY-MM (라벨)
+    private String  store;                 // 가맹점명
+    private String  material;              // 재료명
 
-    private Long    storeInventoryQty;    // 현재 점포 재고수량
-    private BigDecimal orderAmount;       // 발주 금액(원) - Σ(rod.quantity * rod.unit_price)
-    private BigDecimal turnoverRate;      // Used / AvgInventory
-    private BigDecimal profit;            // Sales − Cost
-    private BigDecimal margin;            // Profit / Sales * 100 (%)
-    private BigDecimal avgDailyUsage;     // Used / dayCount  (수량/일)
+    private Long    storeInventoryQty;     // 현재 점포 재고수량 (on-hand)
 
-    // 내부 식별용(프론트에 노출X) - 필요시
+    // ✅ 일별(DAY) 전용 노출 컬럼
+    private Long    purchaseOrderId;       // 발주(입고) ID (ro.id 추정: 필드명 다르면 맞춰주세요)
+    private String  purchaseOrderDate;     // 발주(입고) 일자(YYYY-MM-DD)
+    private Long    purchaseOrderQty;      // 발주 수량(= rod.detailCount 합)
+
+    // (혼동 방지를 위해 테이블에선 미사용)
+    private BigDecimal orderAmount;        // 금액(rod.detailCount*unit_price) — 필요 시만 사용
+
+    // 계산값(Phase A는 0)
+    private BigDecimal turnoverRate;       // Used / AvgInventory
+    private BigDecimal profit;             // Sales − Cost
+    private BigDecimal margin;             // Profit / Sales * 100
+    private BigDecimal avgDailyUsage;      // (임시) 발주수량/일수
+
+    // 내부키
     private Long    storeId;
     private Long    materialId;
 }

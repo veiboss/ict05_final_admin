@@ -8,14 +8,15 @@ import java.util.List;
 @AllArgsConstructor @NoArgsConstructor
 public class OrdersCardsDto {
 
-    private Long transaction;    // YTD 주문건수
-    private BigDecimal deliverySales;    // YTD 배달 매출
-    private BigDecimal takeoutSales;    // YTD 포장 매출
-    private BigDecimal visitSales;    // YTD 방문 매출
-    private Long categoryCount;  // YTD 판매된 카테고리 수(DISTINCT)
-    private String categoryName;           // YTD 최상위 카테고리명
-    private BigDecimal categoryRatio;    // YTD 카테고리별 비중
-    private Long menuCount;      // YTD 판매된 메뉴 수(DISTINCT)
-    private BigDecimal menuTop3Ratio;    // YTD Top3 메뉴 비중
-    private List<TopMenuItem> topMenus;    // YTD Top3 메뉴 이름
+    private Long transaction;                 // YTD 주문건수
+    private BigDecimal deliverySales;         // YTD 배달 매출
+    private BigDecimal takeoutSales;          // YTD 포장 매출
+    private BigDecimal visitSales;            // YTD 방문 매출
+
+    private java.util.List<CategoryStat> categoriesByCount;  // 수량 기준 내림차순 정렬
+    private java.util.List<CategoryStat> categoriesBySales;  // 매출 기준 내림차순 정렬
+
+    private Long menuCount;                   // YTD '판매수량 합계' (SUM(quantity))
+    private java.util.List<TopMenuItem> topMenus;
+
 }

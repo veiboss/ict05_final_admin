@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/analytics/kpi.html -->
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -18,22 +17,22 @@
   <script src="/admin/js/toast.js"></script>
   <style>
     .wrap{padding:20px}
-	.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-	.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-	.card{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:18px}
-	.num{font-size:28px;font-weight:700}
-	.hint{color:#777;font-size:12px}
-	.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
-	.up{background:#e6f4ea;color:#137333}
-	.down{background:#fce8e6;color:#a50e0e}
-	.title{font-size:14px;color:#666;margin-bottom:6px}
-	.panel{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:16px}
-	.row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f3f5}
-	.iconBubble{width:48px;height:48px;border-radius:999px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center}
-	.grad1{background:linear-gradient(135deg,#5b8cff,#5b8cffcc);color:#fff}
-	.grad2{background:linear-gradient(135deg,#34c759,#34c759cc);color:#fff}
-	.grad3{background:linear-gradient(135deg,#ff8a34,#ff8a34cc);color:#fff}
-	.grad4{background:linear-gradient(135deg,#8a5bff,#8a5bffcc);color:#fff}
+    .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .card{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:18px}
+    .num{font-size:28px;font-weight:700}
+    .hint{color:#777;font-size:12px}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
+    .up{background:#e6f4ea;color:#137333}
+    .down{background:#fce8e6;color:#a50e0e}
+    .title{font-size:14px;color:#666;margin-bottom:6px}
+    .panel{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:16px}
+    .row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f3f5}
+    .iconBubble{width:48px;height:48px;border-radius:999px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center}
+    .grad1{background:linear-gradient(135deg,#5b8cff,#5b8cffcc);color:#fff}
+    .grad2{background:linear-gradient(135deg,#34c759,#34c759cc);color:#fff}
+    .grad3{background:linear-gradient(135deg,#ff8a34,#ff8a34cc);color:#fff}
+    .grad4{background:linear-gradient(135deg,#8a5bff,#8a5bffcc);color:#fff}
 
     /* 드롭다운 위치, 레이아웃 수정 */
     #storeFilter {position: relative;}
@@ -47,40 +46,15 @@
       margin-bottom: 6px;padding-bottom: 8px;}
     #storeFilterBtn {display: flex;align-items: center;justify-content: space-between;gap: 6px;min-width: 100px;}
     #storeFilter .caret {font-size: 11px;color: #555;}
-    /* --- 체크된 매장 강조 표시 --- */
     #storeFilter .filter-list label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 6px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.15s ease;
-      position: relative;
+      display: flex;align-items: center;gap: 8px;padding: 4px 6px;border-radius: 6px;cursor: pointer;transition: background 0.15s ease;position: relative;
     }
-    #storeFilter .filter-list label:hover {
-      background: #f8f9fa;
-    }
+    #storeFilter .filter-list label:hover { background: #f8f9fa; }
+    #storeFilter .filter-list input[type="checkbox"]:checked + span { font-weight: 600;color: #0d6efd; }
+    #storeFilter .filter-list input[type="checkbox"]:checked + span::before { content: "✔";color: #0d6efd;font-size: 12px;margin-right: 6px; }
+    #storeFilter .filter-all input[type="checkbox"]:checked + span { font-weight: 600;color: #0d6efd; }
 
-    /* 체크된 상태 강조 */
-    #storeFilter .filter-list input[type="checkbox"]:checked + span {
-      font-weight: 600;
-      color: #0d6efd; /* 블루톤 */
-    }
-
-    /* 체크된 라벨 배경 */
-    #storeFilter .filter-list input[type="checkbox"]:checked + span::before {
-      content: "✔";
-      color: #0d6efd;
-      font-size: 12px;
-      margin-right: 6px;
-    }
-
-    /* 전체 항목 강조 */
-    #storeFilter .filter-all input[type="checkbox"]:checked + span {
-      font-weight: 600;
-      color: #0d6efd;
-    }
+    .total-row { background:#fff8e1; font-weight:700; }
   </style>
 </head>
 <body>
@@ -98,26 +72,22 @@
         <div class="row-4">
           <div class="col box-wrap">
             <div class="title">Sales</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.sales, 0, 'COMMA', 0, 'POINT')} 원|">0 원</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.sales, 0, 'COMMA', 0, 'POINT')} 원|">0 원</div>
             <span class="hint">올해 누적</span>
           </div>
           <div class="col box-wrap">
             <div class="title">Transaction</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.transaction, 0, 'COMMA', 0, 'POINT')} 건|">0 건</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.transaction, 0, 'COMMA', 0, 'POINT')} 건|">0 건</div>
             <span class="hint">올해 누적</span>
           </div>
           <div class="col box-wrap">
             <div class="title">UPT</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.upt, 1, 'COMMA', 2, 'POINT')} 개/건|">0.00 개/건</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.upt, 1, 'COMMA', 2, 'POINT')} 개/건|">0.00 개/건</div>
             <span class="hint">올해 누적</span>
           </div>
           <div class="col box-wrap">
             <div class="title">ADS</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.ads, 0, 'COMMA', 0, 'POINT')} 원/건|">0 원/건</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.ads, 0, 'COMMA', 0, 'POINT')} 원/건|">0 원/건</div>
             <span class="hint">올해 누적</span>
           </div>
         </div>
@@ -125,30 +95,24 @@
         <div class="row-4">
           <div class="col box-wrap">
             <div class="title">AUR</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.aur, 0, 'COMMA', 0, 'POINT')} 원/개|">0 원/개</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.aur, 0, 'COMMA', 0, 'POINT')} 원/개|">0 원/개</div>
             <span class="hint">올해 누적</span>
           </div>
           <div class="col box-wrap">
             <div class="title">Comp.(MoM)</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.compMoM, 1, 'COMMA', 1, 'POINT')} %|">0.0 %</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.compMoM, 1, 'COMMA', 1, 'POINT')} %|">0.0 %</div>
             <span class="hint">올해 누적</span>
           </div>
           <div class="col box-wrap">
             <div class="title">Comp.(YoY)</div>
-            <div class="num"
-                 th:text="|${#numbers.formatDecimal(kpiCard.compYoY, 1, 'COMMA', 1, 'POINT')} %|">0.0 %</div>
+            <div class="num" th:text="|${#numbers.formatDecimal(kpiCard.compYoY, 1, 'COMMA', 1, 'POINT')} %|">0.0 %</div>
             <span class="hint">올해 누적</span>
           </div>
           <div class="col box-wrap">
             <div class="title">Order Type Ratio</div>
-            <div class="num" style="font-size:14px;"
-                 th:text="|방문 ${#numbers.formatDecimal(kpiCard.visitRatio,1,'COMMA',1,'POINT')}%|">0%</div>
-            <div class="num" style="font-size:14px;"
-                 th:text="|포장 ${#numbers.formatDecimal(kpiCard.takeoutRatio,1,'COMMA',1,'POINT')}%|">0%</div>
-            <div class="num" style="font-size:14px;"
-                 th:text="|배달 ${#numbers.formatDecimal(kpiCard.deliveryRatio,1,'COMMA',1,'POINT')}%|">0%</div>
+            <div class="num" style="font-size:14px;" th:text="|방문 ${#numbers.formatDecimal(kpiCard.visitRatio,1,'COMMA',1,'POINT')}%|">0%</div>
+            <div class="num" style="font-size:14px;" th:text="|포장 ${#numbers.formatDecimal(kpiCard.takeoutRatio,1,'COMMA',1,'POINT')}%|">0%</div>
+            <div class="num" style="font-size:14px;" th:text="|배달 ${#numbers.formatDecimal(kpiCard.deliveryRatio,1,'COMMA',1,'POINT')}%|">0%</div>
             <span class="hint">올해 누적</span>
           </div>
         </div>
@@ -180,8 +144,7 @@
               </div>
 
               <div class="pack-both-down">
-
-                <!-- 가맹점 선택 (기존 드롭다운 유지) -->
+                <!-- 가맹점 선택 -->
                 <div class="pack-left">
                   <span class="fs-ss">가맹점 선택</span>
                   <div class="pack-left" id="storeFilter" style="position:relative;">
@@ -215,38 +178,43 @@
                 </div>
 
                 <div class="pack-right">
-                    <div class="pack-right">
-                      <!-- 일/월 + 페이지 사이즈 -->
-                      <div class="pack-left">
-                        <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
-                          <label class="btn medium"
-                                 th:classappend="${analyticsSearchDto.viewBy?.name() == 'DAY'} ? ' active' : ''">
-                            <input type="radio" name="viewBy" value="DAY"
-                                   th:checked="${analyticsSearchDto.viewBy?.name() == 'DAY'}">일별
-                          </label>
-                          <label class="btn medium"
-                                 th:classappend="${analyticsSearchDto.viewBy?.name() == 'MONTH'} ? ' active' : ''">
-                            <input type="radio" name="viewBy" value="MONTH"
-                                   th:checked="${analyticsSearchDto.viewBy?.name() == 'MONTH'}">월별
-                          </label>
-                        </div>
-
-                        <div class="pack-left page-size">
-                          <!-- ✅ Pageable 표준 파라미터명: size -->
-                          <select title="출력개수" name="size" class="select medium"
-                                  onchange="setPageSize(this.value)">
-                            <option th:value="50"  th:selected="${kpirows.size == 50}">50</option>
-                            <option th:value="100" th:selected="${kpirows.size == 100}">100</option>
-                            <option th:value="150" th:selected="${kpirows.size == 150}">150</option>
-                            <option th:value="200" th:selected="${kpirows.size == 200}">200</option>
-                            <option th:value="250" th:selected="${kpirows.size == 250}">250</option>
-                            <option th:value="300" th:selected="${kpirows.size == 300}">300</option>
-                          </select>
-                          <span class="fs-ss">개씩 보기</span>
-                        </div>
+                  <div class="pack-right">
+                    <!-- 일/월 + 페이지 사이즈 -->
+                    <div class="pack-left">
+                      <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+                        <label class="btn medium" th:classappend="${analyticsSearchDto.viewBy?.name() == 'DAY'} ? ' active' : ''">
+                          <input type="radio" name="viewBy" value="DAY" th:checked="${analyticsSearchDto.viewBy?.name() == 'DAY'}">일별
+                        </label>
+                        <label class="btn medium" th:classappend="${analyticsSearchDto.viewBy?.name() == 'MONTH'} ? ' active' : ''">
+                          <input type="radio" name="viewBy" value="MONTH" th:checked="${analyticsSearchDto.viewBy?.name() == 'MONTH'}">월별
+                        </label>
                       </div>
-                      <!-- 조회 버튼: 폼 submit -->
-                      <input type="submit" class="btn medium color1" value="조회"/>
+
+                      <div class="pack-left page-size">
+                        <!-- ✅ Pageable 표준 파라미터명: size -->
+                        <select title="출력개수" name="size" class="select medium" id="pageSizeSelect">
+                          <option th:value="50"  th:selected="${kpirows.size == 50}">50</option>
+                          <option th:value="100" th:selected="${kpirows.size == 100}">100</option>
+                          <option th:value="150" th:selected="${kpirows.size == 150}">150</option>
+                          <option th:value="200" th:selected="${kpirows.size == 200}">200</option>
+                          <option th:value="250" th:selected="${kpirows.size == 250}">250</option>
+                          <option th:value="300" th:selected="${kpirows.size == 300}">300</option>
+                        </select>
+                        <span class="fs-ss">개씩 보기</span>
+                      </div>
+                    </div>
+                    <!-- ✅ Total 토글 -->
+                    <span class="fs-ss">요약(합계)</span>
+                    <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons" role="group" style="margin-left:8px;">
+                      <label class="btn medium" th:classappend="${analyticsSearchDto.showTotal} ? ' active' : ''">
+                        <input type="radio" name="showTotal" value="true" th:checked="${analyticsSearchDto.showTotal}"> 보이기
+                      </label>
+                      <label class="btn medium" th:classappend="${!analyticsSearchDto.showTotal} ? ' active' : ''">
+                        <input type="radio" name="showTotal" value="false" th:checked="${!analyticsSearchDto.showTotal}"> 숨기기
+                      </label>
+                    </div>
+                    <!-- 조회 버튼: 폼 submit -->
+                    <input type="submit" class="btn medium color1" value="조회"/>
                   </div>
                 </div>
               </div>
@@ -254,10 +222,8 @@
           </form>
         </div>
 
-
         <!-- 목록 테이블 -->
         <section class="pack-down">
-
           <div class="list-header pack-both">
             <div class="pack-left">
               <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
@@ -286,20 +252,13 @@
             <tr th:each="r, stat : ${kpirows.content}">
               <td th:text="${r.date}">2025-01-01</td>
               <td th:text="${r.storeName}">Store A</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.sales == null ? 0 : r.sales, 0, 'COMMA', 0, 'POINT')}">0</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.transaction == null ? 0 : r.transaction, 0, 'COMMA', 0, 'POINT')}">0</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.upt == null ? 0 : r.upt, 1, 'COMMA', 2, 'POINT')}">0.00</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.ads == null ? 0 : r.ads, 0, 'COMMA', 0, 'POINT')}">0</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.aur == null ? 0 : r.aur, 0, 'COMMA', 0, 'POINT')}">0</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.compMoM == null ? 0 : r.compMoM, 1, 'COMMA', 1, 'POINT')}">0.0</td>
-              <td class="ta-r"
-                  th:text="${#numbers.formatDecimal(r.compYoY == null ? 0 : r.compYoY, 1, 'COMMA', 1, 'POINT')}">0.0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.sales == null ? 0 : r.sales, 0, 'COMMA', 0, 'POINT')}">0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.transaction == null ? 0 : r.transaction, 0, 'COMMA', 0, 'POINT')}">0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.upt == null ? 0 : r.upt, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.ads == null ? 0 : r.ads, 0, 'COMMA', 0, 'POINT')}">0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.aur == null ? 0 : r.aur, 0, 'COMMA', 0, 'POINT')}">0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.compMoM == null ? 0 : r.compMoM, 1, 'COMMA', 1, 'POINT')}">0.0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.compYoY == null ? 0 : r.compYoY, 1, 'COMMA', 1, 'POINT')}">0.0</td>
             </tr>
             </tbody>
           </table>
@@ -314,24 +273,29 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
   </div>
 </div>
-
-
 <script>
-  // 페이지 사이즈 변경 시 GET 재요청
-  function setPageSize(size) {
-    const params = new URLSearchParams(window.location.search);
-    params.set('size', size);
-    params.set('page', 1);
-    window.location = `/admin/analytics/kpi?` + params.toString();
-  }
-
+  // ✅ 모든 라디오 토글 그룹(active 스타일)을 동일하게 적용
+  (function () {
+	const groups = document.querySelectorAll('[data-bs-toggle="buttons"]');
+	groups.forEach(group => {
+	  const labels = group.querySelectorAll('label');
+	  const inputs = group.querySelectorAll('input[type="radio"]');
+	  inputs.forEach(input => {
+		input.addEventListener('change', (e) => {
+		  labels.forEach(lb => lb.classList.remove('active'));
+		  e.target.closest('label').classList.add('active');
+		});
+	  });
+	});
+  })();
+</script>
+<script>
   // 일별/월별 필터링 색상
   (function () {
     const group = document.querySelector('[data-bs-toggle="buttons"]');
     if (!group) return;
     const labels = group.querySelectorAll('label');
     const inputs = group.querySelectorAll('input[name="viewBy"]');
-
     inputs.forEach(input => {
       input.addEventListener('change', (e) => {
         labels.forEach(lb => lb.classList.remove('active'));
@@ -339,8 +303,7 @@
       });
     });
   })();
-</script>
-<script>
+
   // === 가맹점 필터 ===
   const sfRoot = document.getElementById('storeFilter');
   const sfBtn  = document.getElementById('storeFilterBtn');
@@ -352,15 +315,11 @@
 
   // 열기/닫기
   sfBtn.addEventListener('click', () => sfRoot.classList.toggle('open'));
-  document.addEventListener('click', (e) => {
-    if (!sfRoot.contains(e.target)) sfRoot.classList.remove('open');
-  });
+  document.addEventListener('click', (e) => { if (!sfRoot.contains(e.target)) sfRoot.classList.remove('open'); });
 
   // '전체' 토글
   sfAll.addEventListener('change', () => {
-    if (sfAll.checked) {
-      sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.checked = false);
-    }
+    if (sfAll.checked) { sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.checked = false); }
     updateStoreLabel();
   });
 
@@ -414,8 +373,16 @@
     const any = sfList && [...sfList.querySelectorAll('input[name="storeIds"]')].some(c => c.checked);
     document.getElementById('storeAll').checked = !any;
     updateStoreLabel();
+
+    // ✅ 페이지 사이즈 변경 시 자동 조회 금지, page=1만 리셋
+    const sizeSel = document.getElementById('pageSizeSelect');
+    if (sizeSel) {
+      sizeSel.addEventListener('change', () => {
+        const pageHidden = document.querySelector('#frm input[name="page"]');
+        if (pageHidden) pageHidden.value = 1;
+      });
+    }
   });
 </script>
-
 </body>
 </html>

@@ -108,15 +108,31 @@ public class AnalyticsController {
      * 재료 분석 화면
      */
     @GetMapping("/materials")
-    public String viewMaterialsAnalysis(AnalyticsSearchDto analyticsSearchDto, Model model, HttpServletRequest request) {
+    public String materials(AnalyticsSearchDto analyticsSearchDto,
+                            @PageableDefault(page = 1, size = 50) Pageable pageable,
+                            Model model,
+                            HttpServletRequest request) {
+
+        PageRequest pageRequest = PageRequest.of(
+                Math.max(0, pageable.getPageNumber() - 1),
+                pageable.getPageSize()
+        );
+
+        if (analyticsSearchDto.getStartDate() == null || analyticsSearchDto.getEndDate() == null) {
+            LocalDate end = LocalDate.now().minusDays(1);
+            LocalDate start = end.minusDays(6);
+            analyticsSearchDto.setStartDate(start);
+            analyticsSearchDto.setEndDate(end);
+        }
+
         AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
 
-        MaterialsCardsDto card = analyticsService.selectMaterialsCards(cond);   // 단일 DTO 권장
-        List<MaterialsRowDto> rows = analyticsService.selectMaterials(cond);    // 전체 행
+        Page<MaterialsRowDto> page = analyticsService.selectMaterials(cond, pageRequest);
+        MaterialsCardsDto card = analyticsService.selectMaterialsCards();
 
         model.addAttribute("analyticsSearchDto", cond);
+        model.addAttribute("materialrows", page);
         model.addAttribute("materialCard", card);
-        model.addAttribute("materialRows", rows);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         return "analytics/materials";
     }
