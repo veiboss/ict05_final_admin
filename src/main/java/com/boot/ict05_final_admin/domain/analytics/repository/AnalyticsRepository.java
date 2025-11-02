@@ -65,4 +65,5 @@ public interface AnalyticsRepository {
      * @return 시간 기반 분석 행 목록
      */
     Page<TimeRowDto> findTimeSlices(AnalyticsSearchDto cond, Pageable pageable);
+
 }

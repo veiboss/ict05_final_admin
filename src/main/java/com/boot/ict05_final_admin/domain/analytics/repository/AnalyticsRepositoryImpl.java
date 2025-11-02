@@ -14,10 +14,7 @@ import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderDetail;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -484,11 +481,11 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     @Transactional(readOnly = true)
     public Page<OrdersRowDto> findOrders(AnalyticsSearchDto cond, Pageable pageable) {
 
-        boolean byMonth = (cond.getViewBy() == ViewBy.MONTH);
-        String fmt = byMonth ? "%Y-%m" : "%Y-%m-%d";
-        StringExpression labelExpr = dateFormat(co.orderedAt, fmt);
+        final boolean byMonth = (cond.getViewBy() == ViewBy.MONTH);
+        final String fmt = byMonth ? "%Y-%m" : "%Y-%m-%d";
+        final StringExpression labelExpr = dateFormat(co.orderedAt, fmt); // 라벨(월/일)
 
-        // 공통 필터
+        // 공통 WHERE
         BooleanExpression filter = co.status.eq(OrderStatus.COMPLETED);
         if (cond.getStartDate() != null || cond.getEndDate() != null) {
             filter = filter.and(betweenDateClosedOpen(co.orderedAt, cond.getStartDate(), cond.getEndDate()));
@@ -497,15 +494,19 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
             filter = filter.and(s.id.in(cond.getStoreIds()));
         }
 
-        // total count (per-store 기준)
+        /* -------------------- ① total count -------------------- */
         Long total = Optional.ofNullable(
                 readHints(
-                        query.select(
-                                        Expressions.numberTemplate(Long.class,
-                                                "COUNT(DISTINCT {0}, {1}, {2}, DATE({3}), {4})",
-                                                s.id, mc.menuCategoryId, m.menuId, co.orderedAt, co.orderType
-                                        )
-                                )
+                        byMonth
+                                // 월별: (월, 점포) 개수
+                                ? query.select(Expressions.numberTemplate(Long.class,
+                                        "COUNT(DISTINCT CONCAT_WS('|',{0},{1}))", s.id, labelExpr))
+                                .from(co).join(co.storeIdFk, s)
+                                .where(filter)
+                                // 일별: (점포, 카테고리, 메뉴, 일, 주문형태)
+                                : query.select(Expressions.numberTemplate(Long.class,
+                                        "COUNT(DISTINCT {0}, {1}, {2}, DATE({3}), {4})",
+                                        s.id, mc.menuCategoryId, m.menuId, co.orderedAt, co.orderType))
                                 .from(co)
                                 .join(cod).on(cod.order.eq(co))
                                 .join(co.storeIdFk, s)
@@ -514,143 +515,208 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                 .where(filter)
                 ).fetchOne()
         ).orElse(0L);
+        if (total == 0L) return new PageImpl<>(Collections.emptyList(), pageable, 0L);
 
-        if (total == 0L) {
-            return new PageImpl<>(Collections.emptyList(), pageable, 0L);
+        /* -------------------- ② 본문 rows -------------------- */
+        List<OrdersRowDto> rows;
+        if (byMonth) {
+            // ✅ 월별: (월, 점포)로만 그룹 → 메뉴/카테고리/채널은 전부 합산 (필요한 컬럼만 매핑)
+            rows = readHints(
+                    query.select(Projections.bean(OrdersRowDto.class,
+                                    ExpressionUtils.as(labelExpr, "date"),
+                                    ExpressionUtils.as(labelExpr, "orderDate"),   // 화면에서 숨기더라도 값은 맞춰 둠
+                                    ExpressionUtils.as(s.name, "storeName"),
+                                    ExpressionUtils.as(
+                                            Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", cod.quantity),
+                                            "menuCount"
+                                    ),
+                                    ExpressionUtils.as(
+                                            Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0}),0)", cod.lineTotal),
+                                            "menuSales"
+                                    ),
+                                    ExpressionUtils.as(s.id, "storeId")
+                            ))
+                            .from(cod)
+                            .join(cod.order, co)
+                            .join(co.storeIdFk, s)
+                            .where(filter)
+                            .groupBy(s.id, s.name, labelExpr)
+                            .orderBy(
+                                    labelExpr.desc(),
+                                    Expressions.numberTemplate(BigDecimal.class, "SUM({0})", cod.lineTotal).desc(),
+                                    s.id.asc()
+                            )
+                            .offset(pageable.getOffset())
+                            .limit(pageable.getPageSize())
+            ).fetch();
+        } else {
+            // ✅ 일별: 기존 그대로 (점포×카테고리×메뉴×일×채널)
+            rows = readHints(
+                    query.select(Projections.bean(OrdersRowDto.class,
+                                    labelExpr.as("date"),
+                                    s.name.as("storeName"),
+                                    mc.menuCategoryName.as("category"),
+                                    m.menuName.as("menu"),
+                                    Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0}),0)", cod.lineTotal).as("menuSales"),
+                                    Expressions.numberTemplate(Long.class,     "COALESCE(SUM({0}),0)", cod.quantity).as("menuCount"),
+                                    co.orderType.stringValue().as("orderType"),
+                                    labelExpr.as("orderDate"),
+                                    co.id.min().as("orderId"),
+                                    s.id.as("storeId")
+                            ))
+                            .from(cod)
+                            .join(cod.order, co)
+                            .join(co.storeIdFk, s)
+                            .join(cod.menuIdFk, m)
+                            .join(m.menuCategory, mc)
+                            .where(filter)
+                            .groupBy(
+                                    s.id, s.name,
+                                    mc.menuCategoryName, m.menuName,
+                                    Expressions.stringTemplate("DATE({0})", co.orderedAt),
+                                    co.orderType
+                            )
+                            .orderBy(
+                                    co.orderedAt.desc(),
+                                    Expressions.numberTemplate(BigDecimal.class, "SUM({0})", cod.lineTotal).desc(),
+                                    s.id.asc(),
+                                    m.menuName.asc()
+                            )
+                            .offset(pageable.getOffset())
+                            .limit(pageable.getPageSize())
+            ).fetch();
         }
-
-        // per-store 본문
-        List<OrdersRowDto> rows = readHints(
-                query.select(Projections.bean(OrdersRowDto.class,
-                                labelExpr.as("date"),               // 화면 라벨
-                                s.name.as("storeName"),
-                                mc.menuCategoryName.as("category"),
-                                m.menuName.as("menu"),
-                                Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0}),0)", cod.lineTotal).as("menuSales"),
-                                Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", cod.quantity).as("menuCount"),
-                                co.orderType.stringValue().as("orderType"),
-                                labelExpr.as("orderDate"),
-                                co.id.min().as("orderId"),
-                                s.id.as("storeId")
-                        ))
-                        .from(cod)
-                        .join(cod.order, co)
-                        .join(co.storeIdFk, s)
-                        .join(cod.menuIdFk, m)
-                        .join(m.menuCategory, mc)
-                        .where(filter)
-                        .groupBy(s.id, s.name, mc.menuCategoryName, m.menuName,
-                                Expressions.stringTemplate("DATE({0})", co.orderedAt), co.orderType)
-                        .orderBy(
-                                co.orderedAt.desc(),
-                                Expressions.numberTemplate(BigDecimal.class, "SUM({0})", cod.lineTotal).desc(),
-                                s.id.asc(),
-                                m.menuName.asc()
-                        )
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
-        ).fetch();
-
         if (rows.isEmpty()) return new PageImpl<>(Collections.emptyList(), pageable, total);
 
-        // 버킷 집계(co 기반: 주문건수/주문총액) — 한방
-        StringExpression labelKey = dateFormat(co.orderedAt, fmt);
-
+        /* -------------------- ③ orderCount/orderSales merge -------------------- */
+        final StringExpression labelKey = dateFormat(co.orderedAt, fmt);
         Set<Long> sids = new HashSet<>();
-        Set<OrderType> types = new HashSet<>();
-        for (OrdersRowDto r : rows) {
-            sids.add(r.getStoreId());
-            if (r.getOrderType() != null) {
-                types.add(OrderType.valueOf(r.getOrderType()));
-            }
-        }
+        for (OrdersRowDto r : rows) sids.add(r.getStoreId());
 
-        List<Tuple> bucketAgg = readHints(
-                query.select(
-                                s.id,
-                                labelKey,
-                                co.orderType,
-                                co.id.countDistinct(),
-                                co.totalPrice.sum()
-                        )
-                        .from(co)
-                        .join(co.storeIdFk, s)
-                        .where(
-                                co.status.eq(OrderStatus.COMPLETED),
-                                (cond.getStartDate()!=null || cond.getEndDate()!=null)
-                                        ? betweenDateClosedOpen(co.orderedAt, cond.getStartDate(), cond.getEndDate())
-                                        : null,
-                                (cond.getStoreIds()!=null && !cond.getStoreIds().isEmpty())
-                                        ? s.id.in(cond.getStoreIds())
-                                        : null,
-                                s.id.in(sids),
-                                !types.isEmpty() ? co.orderType.in(new ArrayList<>(types)) : null
-                        )
-                        .groupBy(s.id, labelKey, co.orderType)
-        ).fetch();
+        if (byMonth) {
+            // 월별: (월, 점포) 버킷
+            List<Tuple> bucketAgg = readHints(
+                    query.select(
+                                    s.id, labelKey,
+                                    co.id.countDistinct(),     // orderCount
+                                    co.totalPrice.sum()        // orderSales
+                            )
+                            .from(co).join(co.storeIdFk, s)
+                            .where(filter, s.id.in(sids))
+                            .groupBy(s.id, labelKey)
+            ).fetch();
 
-        record BKey(Long sid, String label, OrderType type) {}
-        Map<BKey, Tuple> bucketMap = new HashMap<>();
-        for (Tuple t : bucketAgg) {
-            bucketMap.put(new BKey(t.get(0, Long.class), t.get(1, String.class), t.get(2, OrderType.class)), t);
-        }
+            record MBKey(Long sid, String label) {}
+            Map<MBKey, Tuple> map = new HashMap<>();
+            for (Tuple t : bucketAgg) map.put(new MBKey(t.get(0, Long.class), t.get(1, String.class)), t);
 
-        // per-store DTO에 주문건수/주문매출 merge
-        for (OrdersRowDto r : rows) {
-            OrderType ot = (r.getOrderType() == null) ? null : OrderType.valueOf(r.getOrderType());
-            Tuple b = (ot == null) ? null : bucketMap.get(new BKey(r.getStoreId(), r.getDate(), ot));
-            if (b != null) {
-                r.setOrderCount(Optional.ofNullable(b.get(3, Long.class)).orElse(0L));
-                r.setOrderSales(Optional.ofNullable(b.get(4, BigDecimal.class)).orElse(BigDecimal.ZERO));
-            }
-        }
-
-        // ✅ showTotal=true면 (date, category, menu, orderType) 그룹별로 Total 행 삽입
-        if (Boolean.TRUE.equals(cond.getShowTotal())) {
-            record GKey(String date, String category, String menu, String orderType) {}
-            Map<GKey, List<OrdersRowDto>> groups = new LinkedHashMap<>();
-            // 원래 정렬 유지
             for (OrdersRowDto r : rows) {
-                GKey k = new GKey(r.getDate(), r.getCategory(), r.getMenu(), r.getOrderType());
-                groups.computeIfAbsent(k, kk -> new ArrayList<>()).add(r);
+                Tuple b = map.get(new MBKey(r.getStoreId(), r.getDate()));
+                if (b != null) {
+                    r.setOrderCount(Optional.ofNullable(b.get(2, Long.class)).orElse(0L));
+                    r.setOrderSales(Optional.ofNullable(b.get(3, BigDecimal.class)).orElse(BigDecimal.ZERO));
+                }
             }
+        } else {
+            // 일별: (일, 점포, 채널) 버킷
+            Set<OrderType> types = new HashSet<>();
+            for (OrdersRowDto r : rows) if (r.getOrderType()!=null) types.add(OrderType.valueOf(r.getOrderType()));
 
-            List<OrdersRowDto> out = new ArrayList<>(rows.size());
-            for (Map.Entry<GKey, List<OrdersRowDto>> e : groups.entrySet()) {
-                List<OrdersRowDto> g = e.getValue();
+            List<Tuple> bucketAgg = readHints(
+                    query.select(
+                                    s.id, labelKey, co.orderType,
+                                    co.id.countDistinct(), co.totalPrice.sum()
+                            )
+                            .from(co).join(co.storeIdFk, s)
+                            .where(
+                                    filter,
+                                    s.id.in(sids),
+                                    !types.isEmpty() ? co.orderType.in(new ArrayList<>(types)) : null
+                            )
+                            .groupBy(s.id, labelKey, co.orderType)
+            ).fetch();
 
-                BigDecimal menuSales = g.stream().map(x -> x.getMenuSales()==null?BigDecimal.ZERO:x.getMenuSales())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                long menuCount = g.stream().mapToLong(x -> x.getMenuCount()==null?0L:x.getMenuCount()).sum();
-                BigDecimal orderSales = g.stream().map(x -> x.getOrderSales()==null?BigDecimal.ZERO:x.getOrderSales())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                long orderCount = g.stream().mapToLong(x -> x.getOrderCount()==null?0L:x.getOrderCount()).sum();
+            record DBKey(Long sid, String label, OrderType type) {}
+            Map<DBKey, Tuple> map = new HashMap<>();
+            for (Tuple t : bucketAgg) map.put(new DBKey(t.get(0, Long.class), t.get(1, String.class), t.get(2, OrderType.class)), t);
+
+            for (OrdersRowDto r : rows) {
+                OrderType ot = (r.getOrderType()==null) ? null : OrderType.valueOf(r.getOrderType());
+                Tuple b = (ot==null)? null : map.get(new DBKey(r.getStoreId(), r.getDate(), ot));
+                if (b != null) {
+                    r.setOrderCount(Optional.ofNullable(b.get(3, Long.class)).orElse(0L));
+                    r.setOrderSales(Optional.ofNullable(b.get(4, BigDecimal.class)).orElse(BigDecimal.ZERO));
+                }
+            }
+        }
+
+        /* -------------------- ④ Total 행 (날짜/월 전체) -------------------- */
+        if (Boolean.TRUE.equals(cond.getShowTotal())) {
+            // 날짜/월별로 묶기
+            Map<String, List<OrdersRowDto>> byLabel = new LinkedHashMap<>();
+            for (OrdersRowDto r : rows) byLabel.computeIfAbsent(r.getDate(), k -> new ArrayList<>()).add(r);
+
+            // (A) 메뉴 합계 (cod)
+            Map<String, Tuple> detailTotalsByLabel = new HashMap<>();
+            for (Tuple t : readHints(
+                    query.select(labelExpr, cod.quantity.sum(), cod.lineTotal.sum())
+                            .from(cod)
+                            .join(cod.order, co)
+                            .join(co.storeIdFk, s)
+                            .where(filter)
+                            .groupBy(labelExpr)
+                            .orderBy(orderByNull())
+            ).fetch()) detailTotalsByLabel.put(t.get(0, String.class), t);
+
+            // (B) 주문 합계 (co)
+            Map<String, Tuple> orderTotalsByLabel = new HashMap<>();
+            for (Tuple t : readHints(
+                    query.select(labelExpr, co.id.countDistinct(), co.totalPrice.sum())
+                            .from(co).join(co.storeIdFk, s)
+                            .where(filter)
+                            .groupBy(labelExpr)
+                            .orderBy(orderByNull())
+            ).fetch()) orderTotalsByLabel.put(t.get(0, String.class), t);
+
+            // 출력
+            List<OrdersRowDto> out = new ArrayList<>(rows.size() + byLabel.size());
+            for (Map.Entry<String, List<OrdersRowDto>> e : byLabel.entrySet()) {
+                String label = e.getKey();
+                Tuple d = detailTotalsByLabel.get(label);
+                Tuple o = orderTotalsByLabel.get(label);
+
+                long       menuCount  = d==null ? 0L : Optional.ofNullable(d.get(1, Integer.class)).map(Integer::longValue).orElse(0L);
+                BigDecimal menuSales  = d==null ? BigDecimal.ZERO : Optional.ofNullable(d.get(2, BigDecimal.class)).orElse(BigDecimal.ZERO);
+                long       orderCount = o==null ? 0L : Optional.ofNullable(o.get(1, Long.class)).orElse(0L);
+                BigDecimal orderSales = o==null ? BigDecimal.ZERO : Optional.ofNullable(o.get(2, BigDecimal.class)).orElse(BigDecimal.ZERO);
 
                 OrdersRowDto totalRow = OrdersRowDto.builder()
-                        .date(e.getKey().date)
+                        .date(label)
+                        .orderDate(byMonth ? "-" : label) // 월별은 숨기거나 "-" 권장
                         .storeName("Total")
-                        .category(e.getKey().category)
-                        .menu(e.getKey().menu)
-                        .menuSales(menuSales)
+                        .orderId(null)
+                        .category("-")
+                        .menu("-")
                         .menuCount(menuCount)
+                        .menuSales(menuSales)
                         .orderCount(orderCount)
                         .orderSales(orderSales)
-                        .orderType(e.getKey().orderType)
-                        .orderDate(e.getKey().date)
-                        .orderId(null)
+                        .orderType("-")
                         .storeId(0L)
                         .build();
 
-                // Total 먼저, 그 다음 원래 매장들(가독성 위해 storeName ASC)
                 out.add(totalRow);
-                g.sort(Comparator.comparing(OrdersRowDto::getStoreName, Comparator.nullsLast(String::compareTo)));
-                out.addAll(g);
+                List<OrdersRowDto> list = e.getValue();
+                list.sort(Comparator.comparing(OrdersRowDto::getStoreName, Comparator.nullsLast(String::compareTo)));
+                out.addAll(list);
             }
-            return new PageImpl<>(out, pageable, total); // total은 per-store 기준 유지
+            return new PageImpl<>(out, pageable, total);
         }
 
         return new PageImpl<>(rows, pageable, total);
     }
+
+
 
 
     private OrdersRowDto buildOrdersGrandTotal(AnalyticsSearchDto cond) {
@@ -742,18 +808,21 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     @Transactional(readOnly = true)
     public Page<MaterialsRowDto> findMaterials(AnalyticsSearchDto cond, Pageable pageable) {
 
-        boolean byMonth = cond.getViewBy()==ViewBy.MONTH;
-        String fmt = byMonth ? "%Y-%m" : "%Y-%m-%d";
-        StringExpression labelExpr = dateFormat(ro.actualDeliveryDate, fmt);
+        final boolean byMonth = cond.getViewBy()==ViewBy.MONTH;
+        final String fmt = byMonth ? "%Y-%m" : "%Y-%m-%d";
+        final StringExpression labelExpr = dateFormat(ro.actualDeliveryDate, fmt);
 
         BooleanExpression storeFilter = (cond.getStoreIds()!=null && !cond.getStoreIds().isEmpty())
                 ? s.id.in(cond.getStoreIds()) : null;
         BooleanExpression period = betweenDateClosedOpen(ro.actualDeliveryDate, cond.getStartDate(), cond.getEndDate());
 
-        // 총 행수 (per-store 기준)
-        StringExpression key = Expressions.stringTemplate("CONCAT_WS('|',{0},{1},{2})", labelExpr, s.id, mat.id);
+        // ----- count (그룹 키) -----
+        StringExpression cntKey = byMonth
+                ? Expressions.stringTemplate("CONCAT_WS('|',{0},{1},{2})", labelExpr, s.id, mat.id)
+                : Expressions.stringTemplate("CONCAT_WS('|',{0},{1},{2},{3})", labelExpr, s.id, mat.id, ro.id);
+
         Long total = Optional.ofNullable(
-                readHints(query.select(Expressions.numberTemplate(Long.class, "COUNT(DISTINCT {0})", key))
+                readHints(query.select(Expressions.numberTemplate(Long.class, "COUNT(DISTINCT {0})", cntKey))
                         .from(rod)
                         .join(rod.receiveOrder, ro)
                         .join(ro.store, s)
@@ -763,29 +832,43 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         ).orElse(0L);
         if (total==0L) return new PageImpl<>(Collections.emptyList(), pageable, 0L);
 
-        // 본문 (per-store)
-        NumberExpression<BigDecimal> orderAmountExpr =
-                Expressions.numberTemplate(BigDecimal.class, "SUM({0} * {1})", rod.detailCount, rod.detailUnitPrice);
+        // ----- 본문 (기존 그대로) -----
+        StringExpression poDateExpr = dateFormat(ro.actualDeliveryDate, "%Y-%m-%d");
+        NumberExpression<Long> qtySum = Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.detailCount);
+
+        JPAQuery<Tuple> baseQ = query.select(
+                        labelExpr,               // 0
+                        s.id, s.name,            // 1,2
+                        mat.id, mat.name,        // 3,4
+                        byMonth ? Expressions.nullExpression() : ro.id,          // 5
+                        byMonth ? Expressions.nullExpression() : poDateExpr,      // 6
+                        byMonth ? Expressions.nullExpression() : qtySum,          // 7
+                        byMonth ? qtySum : Expressions.nullExpression()           // 8
+                )
+                .from(rod)
+                .join(rod.receiveOrder, ro)
+                .join(ro.store, s)
+                .join(rod.material, mat)
+                .where(storeFilter, period);
+
+        if (byMonth) {
+            baseQ.groupBy(labelExpr, s.id, s.name, mat.id, mat.name)
+                    .orderBy(labelExpr.desc(), qtySum.desc());
+        } else {
+            baseQ.groupBy(labelExpr, s.id, s.name, mat.id, mat.name, ro.id, poDateExpr)
+                    .orderBy(labelExpr.desc(), poDateExpr.desc(), ro.id.desc());
+        }
 
         List<Tuple> base = readHints(
-                query.select(labelExpr, s.id, s.name, mat.id, mat.name,
-                                rod.detailCount.sum(), orderAmountExpr)
-                        .from(rod)
-                        .join(rod.receiveOrder, ro)
-                        .join(ro.store, s)
-                        .join(rod.material, mat)
-                        .where(storeFilter, period)
-                        .groupBy(labelExpr, s.id, s.name, mat.id, mat.name)
-                        .orderBy(labelExpr.desc(), orderAmountExpr.desc())
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
+                baseQ.offset(pageable.getOffset()).limit(pageable.getPageSize())
         ).fetch();
 
         if (base.isEmpty()) return new PageImpl<>(Collections.emptyList(), pageable, total);
 
-        // 현재고 (페이지에 나온 (sid, mid)만)
+        // ----- 현재고 (페이지에 나온 (sid, mid)만) -----
         Set<Long> sids = new HashSet<>(), mids = new HashSet<>();
         for (Tuple t: base) { sids.add(t.get(1, Long.class)); mids.add(t.get(3, Long.class)); }
+
         Map<String, Long> onhand = new HashMap<>();
         if (!sids.isEmpty()) {
             List<Tuple> inv = readHints(
@@ -794,8 +877,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             .join(si.store, s)
                             .join(si.storeMaterial, sm)
                             .join(sm.material, mat)
-                            .where(s.id.in(sids), mat.id.in(mids),
-                                    storeFilter) // 동일 필터
+                            .where(s.id.in(sids), mat.id.in(mids), storeFilter)
                             .groupBy(s.id, mat.id)
             ).fetch();
             for (Tuple t: inv) {
@@ -805,50 +887,129 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         }
 
         long dayCount = (cond.getStartDate()!=null && cond.getEndDate()!=null)
-                ? Math.max(0, java.time.temporal.ChronoUnit.DAYS.between(cond.getStartDate(), cond.getEndDate())+1) : 1;
+                ? Math.max(0, java.time.temporal.ChronoUnit.DAYS.between(cond.getStartDate(), cond.getEndDate())+1) : 0;
 
         List<MaterialsRowDto> rows = new ArrayList<>(base.size());
         for (Tuple t: base) {
-            String label = t.get(0, String.class);
-            Long sid = t.get(1, Long.class);
-            String sname = t.get(2, String.class);
-            Long mid = t.get(3, Long.class);
-            String mname = t.get(4, String.class);
-            long qtySum = Optional.ofNullable(t.get(5, Integer.class)).map(Integer::longValue).orElse(0L);
-            BigDecimal amtSum = Optional.ofNullable(t.get(6, BigDecimal.class)).orElse(BigDecimal.ZERO);
+            String label   = t.get(0, String.class);
+            Long   sid     = t.get(1, Long.class);
+            String sname   = t.get(2, String.class);
+            Long   mid     = t.get(3, Long.class);
+            String mname   = t.get(4, String.class);
+
+            Long    poId     = byMonth ? null : t.get(5, Long.class);
+            String  poDate   = byMonth ? null : t.get(6, String.class);
+            Long    poQty    = byMonth ? null : Optional.ofNullable(t.get(7, Long.class)).orElse(0L);
+            Long    monthQty = byMonth ? Optional.ofNullable(t.get(8, Long.class)).orElse(0L) : null;
+
             long onhandQty = onhand.getOrDefault(sid+":"+mid, 0L);
 
+            BigDecimal avgUsage = byMonth
+                    ? (dayCount>0 ? new BigDecimal(monthQty).divide(new BigDecimal(dayCount), 2, RoundingMode.HALF_UP) : BigDecimal.ZERO)
+                    : new BigDecimal(Optional.ofNullable(poQty).orElse(0L));
+
             rows.add(MaterialsRowDto.builder()
-                    .orderDate(label).store(sname).material(mname)
-                    .storeInventoryQty(onhandQty).orderAmount(amtSum)
-                    .avgDailyUsage(dayCount>0 ? new BigDecimal(qtySum).divide(new BigDecimal(dayCount),2, RoundingMode.HALF_UP) : BigDecimal.ZERO)
-                    .turnoverRate(BigDecimal.ZERO).profit(BigDecimal.ZERO).margin(BigDecimal.ZERO)
-                    .storeId(sid).materialId(mid)
+                    .orderDate(label)
+                    .store(sname)
+                    .material(mname)
+                    .storeInventoryQty(onhandQty)
+                    .purchaseOrderId(poId)
+                    .purchaseOrderDate(poDate)
+                    .purchaseOrderQty(byMonth ? monthQty : poQty)   // 테이블 헤더가 Amount로 되어 있어도 Qty 합계 사용
+                    .turnoverRate(null)          // per-row는 계산 복잡 → 표시는 '-' 처리 권장
+                    .profit(null)                // per-row는 표시는 '-' 처리 권장
+                    .margin(null)                // per-row는 표시는 '-' 처리 권장
+                    .avgUsage(avgUsage)
+                    .storeId(sid)
+                    .materialId(mid)
                     .build());
         }
 
-        if (Boolean.TRUE.equals(cond.getShowTotal())) {
-            record G(String label, String material) {}
-            Map<G, List<MaterialsRowDto>> groups = new LinkedHashMap<>();
-            for (MaterialsRowDto r: rows) groups.computeIfAbsent(new G(r.getOrderDate(), r.getMaterial()), k->new ArrayList<>()).add(r);
+        /* ===== 여기서부터 “Total” 행 추가 (라벨별 전 매장 합계) ===== */
 
-            List<MaterialsRowDto> out = new ArrayList<>();
-            for (var e: groups.entrySet()) {
-                var g = e.getValue();
-                BigDecimal orderAmt = g.stream().map(x->Optional.ofNullable(x.getOrderAmount()).orElse(BigDecimal.ZERO))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                long onhandSum = g.stream().mapToLong(x->Optional.ofNullable(x.getStoreInventoryQty()).orElse(0L)).sum();
-                BigDecimal avgDailyUsage = g.stream().map(x->Optional.ofNullable(x.getAvgDailyUsage()).orElse(BigDecimal.ZERO))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (Boolean.TRUE.equals(cond.getShowTotal())) {
+            // 1) 라벨별 그룹
+            Map<String, List<MaterialsRowDto>> byLabel = new LinkedHashMap<>();
+            for (MaterialsRowDto r : rows) {
+                byLabel.computeIfAbsent(r.getOrderDate(), k -> new ArrayList<>()).add(r);
+            }
+
+            // 2) 라벨별 집계 (Qty / Cost / Selling)
+            NumberExpression<BigDecimal> costExpr = Expressions.numberTemplate(
+                    BigDecimal.class, "SUM({0} * {1})", rod.detailCount, rod.detailUnitPrice);
+            NumberExpression<BigDecimal> sellExpr = Expressions.numberTemplate(
+                    BigDecimal.class, "SUM({0} * COALESCE({1},0))", rod.detailCount, sm.sellingPrice);
+
+            // (A) 발주 수량 합계 (qty)
+            Map<String, Long> qtyByLabel = new HashMap<>();
+            for (Tuple t : readHints(
+                    query.select(labelExpr, rod.detailCount.sum())
+                            .from(rod)
+                            .join(rod.receiveOrder, ro)
+                            .join(ro.store, s)
+                            .where(storeFilter, period)
+                            .groupBy(labelExpr)
+                            .orderBy(orderByNull())
+            ).fetch()) {
+                String label = t.get(0, String.class);
+                Long qty = Optional.ofNullable(t.get(1, Integer.class)).map(Integer::longValue).orElse(0L);
+                qtyByLabel.put(label, qty);
+            }
+
+            // (B) 원가/판매가/이익/마진
+            Map<String, Tuple> moneyByLabel = new HashMap<>();
+            for (Tuple t : readHints(
+                    query.select(labelExpr, costExpr, sellExpr)
+                            .from(rod)
+                            .join(rod.receiveOrder, ro)
+                            .join(ro.store, s)
+                            .join(rod.material, mat)
+                            .leftJoin(sm).on(sm.store.eq(s).and(sm.material.eq(mat)))
+                            .where(storeFilter, period)
+                            .groupBy(labelExpr)
+                            .orderBy(orderByNull())
+            ).fetch()) {
+                moneyByLabel.put(t.get(0, String.class), t);
+            }
+
+            // 3) 출력: Total 먼저, 그 다음 매장행(가독성 위해 Store ASC)
+            List<MaterialsRowDto> out = new ArrayList<>(rows.size() + byLabel.size());
+            for (Map.Entry<String, List<MaterialsRowDto>> e : byLabel.entrySet()) {
+                String label = e.getKey();
+
+                long qty = qtyByLabel.getOrDefault(label, 0L);
+                Tuple mny = moneyByLabel.get(label);
+                BigDecimal cost  = (mny==null || mny.get(1, BigDecimal.class)==null) ? BigDecimal.ZERO : mny.get(1, BigDecimal.class);
+                BigDecimal sales = (mny==null || mny.get(2, BigDecimal.class)==null) ? BigDecimal.ZERO : mny.get(2, BigDecimal.class);
+                BigDecimal profit = sales.subtract(cost);
+                Long profitLong = (profit == null) ? null : profit.setScale(0, RoundingMode.HALF_UP).longValue();
+                BigDecimal margin = (sales.signum()==0) ? null
+                        : profit.multiply(BigDecimal.valueOf(100)).divide(sales, 2, RoundingMode.HALF_UP);
+
+                BigDecimal avgUsage = byMonth
+                        ? (dayCount>0 ? new BigDecimal(qty).divide(new BigDecimal(dayCount), 2, RoundingMode.HALF_UP) : BigDecimal.ZERO)
+                        : new BigDecimal(qty);
 
                 MaterialsRowDto totalRow = MaterialsRowDto.builder()
-                        .orderDate(e.getKey().label).store("Total").material(e.getKey().material)
-                        .storeInventoryQty(onhandSum).orderAmount(orderAmt)
-                        .avgDailyUsage(avgDailyUsage)
-                        .turnoverRate(BigDecimal.ZERO).profit(BigDecimal.ZERO).margin(BigDecimal.ZERO)
-                        .storeId(0L).build();
+                        .orderDate(label)
+                        .store("Total")
+                        .material("-")
+                        .storeInventoryQty(null)      // ⚠️ 재고는 시점 값이어서 날짜 Total에 넣지 않음(오해 방지)
+                        .purchaseOrderId(null)
+                        .purchaseOrderDate(null)
+                        .purchaseOrderQty(qty)        // 테이블의 PurchaseOrderAmount 자리에 바인딩
+                        .turnoverRate(null)           // 날짜 단위 계산 어려움 → '-' 표시 권장
+                        .profit(profitLong)
+                        .margin(margin)
+                        .avgUsage(avgUsage)
+                        .storeId(0L)
+                        .materialId(null)
+                        .build();
+
                 out.add(totalRow);
-                g.sort(Comparator.comparing(MaterialsRowDto::getStore));
+
+                List<MaterialsRowDto> g = e.getValue();
+                g.sort(Comparator.comparing(MaterialsRowDto::getStore, Comparator.nullsLast(String::compareTo)));
                 out.addAll(g);
             }
             return new PageImpl<>(out, pageable, total);
@@ -856,46 +1017,6 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
         return new PageImpl<>(rows, pageable, total);
     }
-
-
-    private MaterialsRowDto buildMaterialsGrandTotal(AnalyticsSearchDto cond) {
-        BooleanExpression storeF = (cond.getStoreIds()!=null && !cond.getStoreIds().isEmpty()) ? s.id.in(cond.getStoreIds()) : null;
-        BooleanExpression period = betweenDateClosedOpen(ro.actualDeliveryDate, cond.getStartDate(), cond.getEndDate());
-
-        // 발주 금액/수량 (rod * unitPrice)
-        Tuple o = readHints(
-                query.select(rod.detailCount.sum(), Expressions.numberTemplate(BigDecimal.class,"SUM({0} * {1})", rod.detailCount, rod.detailUnitPrice))
-                        .from(rod).join(rod.receiveOrder, ro).join(ro.store, s)
-                        .where(storeF, period)
-                        .orderBy(orderByNull())
-        ).fetchOne();
-        long qty = Optional.ofNullable(o==null ? null : o.get(0, Integer.class)).map(Integer::longValue).orElse(0L);
-        BigDecimal orderAmt = (o==null || o.get(1, BigDecimal.class)==null) ? BigDecimal.ZERO : o.get(1, BigDecimal.class);
-
-        // 현재고(점포 합계)
-        BigDecimal onhandBd = Optional.ofNullable(
-                readHints(query.select(si.quantity.sum()).from(si).join(si.store, s).where(storeF).orderBy(orderByNull()))
-                        .fetchOne()
-        ).orElse(BigDecimal.ZERO);
-        long onhand = onhandBd.longValue();
-
-        long dayCount = (cond.getStartDate()!=null && cond.getEndDate()!=null)
-                ? Math.max(0, java.time.temporal.ChronoUnit.DAYS.between(cond.getStartDate(), cond.getEndDate()) + 1)
-                : 1;
-
-        return MaterialsRowDto.builder()
-                .orderDate(rangeLabel(cond.getStartDate(), cond.getEndDate()))
-                .store("Total")
-                .material("") // 전체 기준
-                .storeInventoryQty(onhand)
-                .orderAmount(orderAmt)
-                .turnoverRate(BigDecimal.ZERO)
-                .profit(BigDecimal.ZERO)
-                .margin(BigDecimal.ZERO)
-                .avgDailyUsage(dayCount>0 ? new BigDecimal(qty).divide(new BigDecimal(dayCount), 2, RoundingMode.HALF_UP) : BigDecimal.ZERO)
-                .build();
-    }
-
 
     /* =========================================================
        (향후) 시간대/요일 슬라이스 (Phase A: 스텁)

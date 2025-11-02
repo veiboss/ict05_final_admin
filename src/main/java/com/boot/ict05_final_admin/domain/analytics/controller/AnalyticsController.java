@@ -97,6 +97,7 @@ public class AnalyticsController {
         Page<OrdersRowDto> orderrows = analyticsService.selectOrders(analyticsSearchDto, pageRequest);
         OrdersCardsDto card = analyticsService.selectOrdersCards();
 
+
         model.addAttribute("analyticsSearchDto", cond);
         model.addAttribute("orderrows", orderrows);
         model.addAttribute("orderCard", card);
@@ -126,7 +127,6 @@ public class AnalyticsController {
         }
 
         AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
-
         Page<MaterialsRowDto> page = analyticsService.selectMaterials(cond, pageRequest);
         MaterialsCardsDto card = analyticsService.selectMaterialsCards();
 

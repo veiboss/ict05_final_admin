@@ -242,7 +242,7 @@
               <button type="button" class="btn medium bdr-color1" onclick="pdfDownload()">PDF다운로드</button>
             </div>
           </div>
-
+          <!-- ✅ 기존 <table class="data-table"> ... </table> 통째로 교체 -->
           <table class="data-table">
             <thead>
             <tr>
@@ -256,12 +256,15 @@
               <th>MenuSales</th>
               <th>OrderCount</th>
               <th>OrderSales</th>
-              <th>OrderType</th>
+              <!-- ✅ OrderType은 일별만 -->
+              <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">OrderType</th>
             </tr>
             </thead>
             <tbody>
+
+            <!-- 본문 -->
             <tr th:if="${#lists.isEmpty(orderrows.content)}">
-              <td colspan="10" class="ta-c">조회 결과가 없습니다.</td>
+              <td colspan="11" class="ta-c">조회 결과가 없습니다.</td>
             </tr>
             <tr th:each="r, stat : ${orderrows.content}">
               <td th:text="${r.date}">2025-01-01</td>
@@ -275,9 +278,10 @@
               <td class="ta-r" th:text="${#numbers.formatDecimal(r.menuSales == null ? 0 : r.menuSales, 0, 'COMMA', 0, 'POINT')}">0</td>
 
               <td class="ta-r" th:text="${#numbers.formatDecimal(r.orderCount == null ? 0 : r.orderCount, 0, 'COMMA', 0, 'POINT')}">0</td>
-              <td class="ta-r" th:text="${#numbers.formatDecimal(r.orderSales == null ? 0 : r.orderSales, 0, 'COMMA', 0, 'POINT')}">0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.orderSales == null ? 0 : r.orderSales, 0, 'COMMA', 0, 'POINT')}"></td>
 
-              <td th:text="${r.orderType}">VISIT</td>
+              <!-- ✅ OrderType은 일별만 -->
+              <td th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}" th:text="${r.orderType}">VISIT</td>
             </tr>
             </tbody>
           </table>

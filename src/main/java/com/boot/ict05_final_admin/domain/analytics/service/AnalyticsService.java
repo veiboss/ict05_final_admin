@@ -58,18 +58,21 @@ public class AnalyticsService {
     }
 
     /** 재료 상단 요약 카드 */
+    @LogExecutionTime
     @Transactional(readOnly = true)
     public MaterialsCardsDto selectMaterialsCards() {
         return analyticsRepository.findMaterialsSummary(); // 단일 DTO로 교체
     }
 
     /** 재료 분석 목록 */
+    @LogExecutionTime
     @Transactional(readOnly = true)
     public Page<MaterialsRowDto> selectMaterials(AnalyticsSearchDto cond, Pageable pageable) {
         return analyticsRepository.findMaterials(cond, pageable);
     }
 
     /** 시간 상단 요약 카드 */
+    @LogExecutionTime
     @Transactional(readOnly = true)
     public List<TimeCardsDto> selectTimeCards() {
         return analyticsRepository.findTimeSlicesSummary();
