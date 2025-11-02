@@ -389,10 +389,10 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         final var ytdStart = LocalDate.of(today.getYear(), 1, 1);
         final var ytdEnd   = today.minusDays(1);
 
+        // ✅ 1) 트랜잭션 + 채널별 매출 (co 단일 스캔)
         final BooleanExpression ytd = co.status.eq(OrderStatus.COMPLETED)
                 .and(betweenDateClosedOpen(co.orderedAt, ytdStart, ytdEnd));
 
-        // (A) 채널/트랜잭션: customer_order 단일 스캔
         OrdersCardsDto dto = readHints(
                 query.select(Projections.bean(OrdersCardsDto.class,
                                 countIf(ytd).as("transaction"),
@@ -402,17 +402,34 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                         ))
                         .from(co)
                         .where(ytd)
-                        .orderBy(orderByNull())
+                        .orderBy(orderByNull()) // ✅ filesort 제거
         ).fetchOne();
         if (dto == null) dto = new OrdersCardsDto();
 
-        // (B) 메뉴 Top3 (이름+수량+매출)
+    /* =========================================================
+       2) 메뉴 Top3 (co → cod → menu)
+       - 드라이빙 테이블을 co로 변경 (EXISTS 제거)
+       - cod 커버링 인덱스 사용: (order_id_fk, menu_id_fk, total, qty)
+       ========================================================= */
         List<Tuple> topMenusT = readHints(
-                query.select(m.menuId, m.menuName, cod.quantity.sum(), cod.lineTotal.sum())
+                query.select(
+                                m.menuId,
+                                m.menuName,
+                                // ✅ 수량 합계 (Integer 타입 일치)
+                                cod.quantity.sum()
+                                        .coalesce(Expressions.constant(0)), // Integer 상수
+                                // ✅ 매출 합계 (BigDecimal 타입 일치)
+                                cod.lineTotal.sum()
+                                        .coalesce(Expressions.constant(BigDecimal.ZERO)),
+                                co.id.min() // Hibernate EXISTS 방지용 더미
+                        )
                         .from(co)
                         .join(cod).on(cod.order.eq(co))
                         .join(cod.menuIdFk, m)
-                        .where(ytd)
+                        .where(
+                                co.status.eq(OrderStatus.COMPLETED),
+                                betweenDateClosedOpen(co.orderedAt, ytdStart, ytdEnd)
+                        )
                         .groupBy(m.menuId, m.menuName)
                         .orderBy(cod.lineTotal.sum().desc())
                         .limit(3)
@@ -420,28 +437,43 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
         List<TopMenuItem> topMenus = new ArrayList<>(topMenusT.size());
         for (Tuple r : topMenusT) {
+            Integer qtyI = Optional.ofNullable(r.get(2, Integer.class)).orElse(0);
+            BigDecimal sales = Optional.ofNullable(r.get(3, BigDecimal.class)).orElse(BigDecimal.ZERO);
+
             topMenus.add(TopMenuItem.builder()
                     .menuId(r.get(0, Long.class))
                     .menuName(r.get(1, String.class))
-                    .quantity(Optional.ofNullable(r.get(2, Integer.class)).map(Integer::longValue).orElse(0L))
-                    .sales(nz(r.get(3, BigDecimal.class)))
+                    .quantity(qtyI.longValue()) // ✅ Integer → Long 변환
+                    .sales(sales)
                     .build());
         }
         dto.setTopMenus(topMenus);
 
-        // (C) 카테고리 전체 집계(한 번 스캔) → 자바에서 2가지 정렬 리스트 생성 + 총합 파생
+    /* =========================================================
+       3) 카테고리 집계 (co → cod → menu → menu_category)
+       - EXISTS 제거
+       - co를 드라이빙 테이블로 두고 기간 range scan
+       - 커버링 인덱스, filesort 제거
+       ========================================================= */
         List<Tuple> catAgg = readHints(
-                query.select(
+                query
+                        .select(
                                 mc.menuCategoryId,
                                 mc.menuCategoryName,
-                                cod.quantity.sum(),   // units
-                                cod.lineTotal.sum()   // sales
+                                cod.quantity.sum().coalesce(Expressions.constant(0)),
+                                cod.lineTotal.sum().coalesce(Expressions.constant(BigDecimal.ZERO)),
+                                co.id.min()
                         )
+                        // ✅ FROM절에 직접 STRAIGHT_JOIN 삽입 (EntityPath를 템플릿으로 감싸기)
                         .from(co)
+                        .setHint("jakarta.persistence.query.hint", "/*+ STRAIGHT_JOIN */")
                         .join(cod).on(cod.order.eq(co))
                         .join(cod.menuIdFk, m)
                         .join(m.menuCategory, mc)
-                        .where(ytd)
+                        .where(
+                                co.status.eq(OrderStatus.COMPLETED),
+                                betweenDateClosedOpen(co.orderedAt, ytdStart, ytdEnd)
+                        )
                         .groupBy(mc.menuCategoryId, mc.menuCategoryName)
                         .orderBy(orderByNull())
         ).fetch();
@@ -449,15 +481,16 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         List<CategoryStat> cats = new ArrayList<>(catAgg.size());
         long totalUnits = 0L;
         for (Tuple t : catAgg) {
-            long units = Optional.ofNullable(t.get(2, Integer.class)).map(Integer::longValue).orElse(0L);
-            BigDecimal sales = nz(t.get(3, BigDecimal.class));
+            Integer unitsI = Optional.ofNullable(t.get(2, Integer.class)).orElse(0);
+            BigDecimal sales = Optional.ofNullable(t.get(3, BigDecimal.class)).orElse(BigDecimal.ZERO);
+
             cats.add(CategoryStat.builder()
                     .categoryId(t.get(0, Long.class))
                     .categoryName(t.get(1, String.class))
-                    .units(units)
+                    .units(unitsI.longValue()) // ✅ 동일하게 Integer → Long
                     .sales(sales)
                     .build());
-            totalUnits += units;
+            totalUnits += unitsI;
         }
 
         List<CategoryStat> categoriesByCount = new ArrayList<>(cats);
@@ -468,11 +501,13 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
         dto.setCategoriesByCount(categoriesByCount);
         dto.setCategoriesBySales(categoriesBySales);
-
         dto.setMenuCount(totalUnits);
 
         return dto;
     }
+
+
+
 
     /* =========================================================
        주문 목록 (카테고리/메뉴/주문형태 등)
@@ -482,8 +517,15 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     public Page<OrdersRowDto> findOrders(AnalyticsSearchDto cond, Pageable pageable) {
 
         final boolean byMonth = (cond.getViewBy() == ViewBy.MONTH);
-        final String fmt = byMonth ? "%Y-%m" : "%Y-%m-%d";
-        final StringExpression labelExpr = dateFormat(co.orderedAt, fmt); // 라벨(월/일)
+
+        // ✅ 표시(라벨)용 포맷만 남기고, GROUP BY/ORDER BY는 원본 DATE 컬럼 사용
+        // - 일별:   label = DATE_FORMAT(customer_order_date, '%Y-%m-%d')
+        // - 월별:   label = CONCAT(YEAR(customer_order_date), '-', LPAD(MONTH(customer_order_date),2,'0'))
+        StringExpression dayLabel  = Expressions.stringTemplate("DATE_FORMAT({0}, '%Y-%m-%d')", co.orderedAt);
+        StringExpression monthLabel= Expressions.stringTemplate("CONCAT(YEAR({0}), '-', LPAD(MONTH({0}),2,'0'))", co.orderedAt);
+
+        NumberExpression<Integer> yExpr = Expressions.numberTemplate(Integer.class, "YEAR({0})",  co.orderedAt);
+        NumberExpression<Integer> mExpr = Expressions.numberTemplate(Integer.class, "MONTH({0})", co.orderedAt);
 
         // 공통 WHERE
         BooleanExpression filter = co.status.eq(OrderStatus.COMPLETED);
@@ -498,14 +540,14 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         Long total = Optional.ofNullable(
                 readHints(
                         byMonth
-                                // 월별: (월, 점포) 개수
+                                // 월별: (연,월,점포) 개수
                                 ? query.select(Expressions.numberTemplate(Long.class,
-                                        "COUNT(DISTINCT CONCAT_WS('|',{0},{1}))", s.id, labelExpr))
+                                        "COUNT(DISTINCT CONCAT_WS('|', {0}, {1}, {2}))", s.id, yExpr, mExpr))
                                 .from(co).join(co.storeIdFk, s)
                                 .where(filter)
-                                // 일별: (점포, 카테고리, 메뉴, 일, 주문형태)
+                                // 일별: (점포, 카테고리, 메뉴, '원본 DATE', 주문형태)
                                 : query.select(Expressions.numberTemplate(Long.class,
-                                        "COUNT(DISTINCT {0}, {1}, {2}, DATE({3}), {4})",
+                                        "COUNT(DISTINCT {0}, {1}, {2}, {3}, {4})",
                                         s.id, mc.menuCategoryId, m.menuId, co.orderedAt, co.orderType))
                                 .from(co)
                                 .join(cod).on(cod.order.eq(co))
@@ -520,12 +562,13 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         /* -------------------- ② 본문 rows -------------------- */
         List<OrdersRowDto> rows;
         if (byMonth) {
-            // ✅ 월별: (월, 점포)로만 그룹 → 메뉴/카테고리/채널은 전부 합산 (필요한 컬럼만 매핑)
+            // ✅ 월별: (연,월,점포) 그룹 / 표시는 monthLabel
             rows = readHints(
                     query.select(Projections.bean(OrdersRowDto.class,
-                                    ExpressionUtils.as(labelExpr, "date"),
-                                    ExpressionUtils.as(labelExpr, "orderDate"),   // 화면에서 숨기더라도 값은 맞춰 둠
+                                    ExpressionUtils.as(monthLabel, "date"),
+                                    ExpressionUtils.as(monthLabel, "orderDate"),
                                     ExpressionUtils.as(s.name, "storeName"),
+                                    // 메뉴 수량/매출 (detail 기준 합계)
                                     ExpressionUtils.as(
                                             Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", cod.quantity),
                                             "menuCount"
@@ -540,27 +583,25 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             .join(cod.order, co)
                             .join(co.storeIdFk, s)
                             .where(filter)
-                            .groupBy(s.id, s.name, labelExpr)
-                            .orderBy(
-                                    labelExpr.desc(),
+                            .groupBy(s.id, s.name, yExpr, mExpr) // ⬅️ 원본 DATE 파생 컬럼(정수)로 그룹핑
+                            .orderBy(yExpr.desc(), mExpr.desc(),  // ⬅️ 정렬도 인덱스 친화적으로
                                     Expressions.numberTemplate(BigDecimal.class, "SUM({0})", cod.lineTotal).desc(),
-                                    s.id.asc()
-                            )
+                                    s.id.asc())
                             .offset(pageable.getOffset())
                             .limit(pageable.getPageSize())
             ).fetch();
         } else {
-            // ✅ 일별: 기존 그대로 (점포×카테고리×메뉴×일×채널)
+            // ✅ 일별: (점포×카테고리×메뉴×'원본 DATE'×채널)
             rows = readHints(
                     query.select(Projections.bean(OrdersRowDto.class,
-                                    labelExpr.as("date"),
+                                    dayLabel.as("date"),                       // 표시는 포맷
                                     s.name.as("storeName"),
                                     mc.menuCategoryName.as("category"),
                                     m.menuName.as("menu"),
                                     Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0}),0)", cod.lineTotal).as("menuSales"),
                                     Expressions.numberTemplate(Long.class,     "COALESCE(SUM({0}),0)", cod.quantity).as("menuCount"),
                                     co.orderType.stringValue().as("orderType"),
-                                    labelExpr.as("orderDate"),
+                                    dayLabel.as("orderDate"),
                                     co.id.min().as("orderId"),
                                     s.id.as("storeId")
                             ))
@@ -573,11 +614,11 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             .groupBy(
                                     s.id, s.name,
                                     mc.menuCategoryName, m.menuName,
-                                    Expressions.stringTemplate("DATE({0})", co.orderedAt),
+                                    co.orderedAt,      // ⬅️ 함수 대신 원본 DATE 컬럼
                                     co.orderType
                             )
                             .orderBy(
-                                    co.orderedAt.desc(),
+                                    co.orderedAt.desc(),  // ⬅️ 원본 DATE desc
                                     Expressions.numberTemplate(BigDecimal.class, "SUM({0})", cod.lineTotal).desc(),
                                     s.id.asc(),
                                     m.menuName.asc()
@@ -589,12 +630,14 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         if (rows.isEmpty()) return new PageImpl<>(Collections.emptyList(), pageable, total);
 
         /* -------------------- ③ orderCount/orderSales merge -------------------- */
-        final StringExpression labelKey = dateFormat(co.orderedAt, fmt);
+        // 버킷 키도 원본 DATE/연월 기반으로 맞춤
+        StringExpression labelKey = byMonth ? monthLabel : dayLabel;
+
         Set<Long> sids = new HashSet<>();
         for (OrdersRowDto r : rows) sids.add(r.getStoreId());
 
         if (byMonth) {
-            // 월별: (월, 점포) 버킷
+            // 월별: (연,월,점포) 버킷
             List<Tuple> bucketAgg = readHints(
                     query.select(
                                     s.id, labelKey,
@@ -603,7 +646,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             )
                             .from(co).join(co.storeIdFk, s)
                             .where(filter, s.id.in(sids))
-                            .groupBy(s.id, labelKey)
+                            .groupBy(s.id, yExpr, mExpr)
             ).fetch();
 
             record MBKey(Long sid, String label) {}
@@ -618,7 +661,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                 }
             }
         } else {
-            // 일별: (일, 점포, 채널) 버킷
+            // 일별: (원본 DATE, 점포, 채널) 버킷
             Set<OrderType> types = new HashSet<>();
             for (OrdersRowDto r : rows) if (r.getOrderType()!=null) types.add(OrderType.valueOf(r.getOrderType()));
 
@@ -633,7 +676,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                     s.id.in(sids),
                                     !types.isEmpty() ? co.orderType.in(new ArrayList<>(types)) : null
                             )
-                            .groupBy(s.id, labelKey, co.orderType)
+                            .groupBy(s.id, co.orderedAt, co.orderType) // ⬅️ 원본 DATE
             ).fetch();
 
             record DBKey(Long sid, String label, OrderType type) {}
@@ -652,33 +695,35 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
         /* -------------------- ④ Total 행 (날짜/월 전체) -------------------- */
         if (Boolean.TRUE.equals(cond.getShowTotal())) {
-            // 날짜/월별로 묶기
             Map<String, List<OrdersRowDto>> byLabel = new LinkedHashMap<>();
             for (OrdersRowDto r : rows) byLabel.computeIfAbsent(r.getDate(), k -> new ArrayList<>()).add(r);
 
-            // (A) 메뉴 합계 (cod)
+            // (A) 메뉴 합계
             Map<String, Tuple> detailTotalsByLabel = new HashMap<>();
             for (Tuple t : readHints(
-                    query.select(labelExpr, cod.quantity.sum(), cod.lineTotal.sum())
+                    query.select(labelKey, cod.quantity.sum(), cod.lineTotal.sum())
                             .from(cod)
                             .join(cod.order, co)
                             .join(co.storeIdFk, s)
                             .where(filter)
-                            .groupBy(labelExpr)
+                            .groupBy(byMonth ? new Expression<?>[]{ yExpr, mExpr } : new Expression<?>[]{ co.orderedAt })
                             .orderBy(orderByNull())
-            ).fetch()) detailTotalsByLabel.put(t.get(0, String.class), t);
+            ).fetch()) {
+                detailTotalsByLabel.put(t.get(0, String.class), t);
+            }
 
-            // (B) 주문 합계 (co)
+            // (B) 주문 합계
             Map<String, Tuple> orderTotalsByLabel = new HashMap<>();
             for (Tuple t : readHints(
-                    query.select(labelExpr, co.id.countDistinct(), co.totalPrice.sum())
+                    query.select(labelKey, co.id.countDistinct(), co.totalPrice.sum())
                             .from(co).join(co.storeIdFk, s)
                             .where(filter)
-                            .groupBy(labelExpr)
+                            .groupBy(byMonth ? new Expression<?>[]{ yExpr, mExpr } : new Expression<?>[]{ co.orderedAt })
                             .orderBy(orderByNull())
-            ).fetch()) orderTotalsByLabel.put(t.get(0, String.class), t);
+            ).fetch()) {
+                orderTotalsByLabel.put(t.get(0, String.class), t);
+            }
 
-            // 출력
             List<OrdersRowDto> out = new ArrayList<>(rows.size() + byLabel.size());
             for (Map.Entry<String, List<OrdersRowDto>> e : byLabel.entrySet()) {
                 String label = e.getKey();
@@ -692,7 +737,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
                 OrdersRowDto totalRow = OrdersRowDto.builder()
                         .date(label)
-                        .orderDate(byMonth ? "-" : label) // 월별은 숨기거나 "-" 권장
+                        .orderDate(byMonth ? "-" : label)
                         .storeName("Total")
                         .orderId(null)
                         .category("-")
