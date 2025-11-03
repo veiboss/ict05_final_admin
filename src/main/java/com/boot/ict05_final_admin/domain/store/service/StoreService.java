@@ -2,7 +2,6 @@ package com.boot.ict05_final_admin.domain.store.service;
 
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
 import com.boot.ict05_final_admin.domain.member.repository.MemberRepository;
-import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.repository.StaffRepository;
 import com.boot.ict05_final_admin.domain.store.dto.*;
@@ -18,7 +17,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -64,25 +62,33 @@ public class StoreService {
      * @return 저장된 가맹점 ID
      */
     public Long insertOfficeStore(StoreWriteFormDTO dto) {
+        // ✅ 1. 주소 결합
         String address1 = dto.getUserAddress1();
         String address2 = dto.getUserAddress2();
         String address = (address1 == null ? "" : address1) + "," + (address2 == null ? "" : address2);
         dto.setStoreLocation(address);
 
-
-        Member member = null;
-        if (dto.getHqWorkerStaffId() != null) {
-            StaffProfile hqWorker = staffRepository.findById(dto.getHqWorkerStaffId())
-                    .orElse(null);
-            if (hqWorker != null && hqWorker.getStaffEmail() != null) {
-                FindMemberEmailtoIdDTO mDto = storeRepository.findMemberByEmail(hqWorker.getStaffEmail());
-                if (mDto != null && mDto.getId() != null) {
-                    // 엔티티 참조(영속성 컨텍스트에 프록시로 붙임)
-                    member = em.getReference(Member.class, mDto.getId());
-                }
-            }
+        // ✅ 2. 본사 담당자 필수 검증
+        if (dto.getHqWorkerStaffId() == null) {
+            throw new IllegalArgumentException("본사 담당자는 반드시 선택해야 합니다.");
         }
 
+        // ✅ 3. 본사 담당자 → Member 매핑
+        StaffProfile hqWorker = staffRepository.findById(dto.getHqWorkerStaffId())
+                .orElseThrow(() -> new IllegalArgumentException("선택한 본사 담당자 정보를 찾을 수 없습니다."));
+
+        if (hqWorker.getStaffEmail() == null || hqWorker.getStaffEmail().isBlank()) {
+            throw new IllegalArgumentException("본사 담당자의 이메일 정보가 존재하지 않습니다.");
+        }
+
+        FindMemberEmailtoIdDTO mDto = storeRepository.findMemberByEmail(hqWorker.getStaffEmail());
+        if (mDto == null || mDto.getId() == null) {
+            throw new IllegalArgumentException("본사 담당자 이메일에 해당하는 Member 계정을 찾을 수 없습니다.");
+        }
+
+        Member member = em.getReference(Member.class, mDto.getId());
+
+        // ✅ 4. Store 엔티티 생성
         Store store = Store.builder()
                 .name(dto.getStoreName())
                 .member(member)
@@ -101,11 +107,11 @@ public class StoreService {
                 .comment(dto.getComment())
                 .build();
 
-
+        // ✅ 5. 저장
         Store saved = storeRepository.save(store);
+
         return saved.getId();
     }
-
 
     @Transactional(readOnly = true)
     public List<StaffNameDTO> ownerOptions() {

@@ -22,7 +22,7 @@ public class HqInventory extends Inventory {
     /** 재고 시퀀스 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_id", columnDefinition = "BIGINT UNSIGNED COMMENT '재고 시퀀스'")
+    @Column(name = "inventory_id", columnDefinition = "BIGINT COMMENT '재고 시퀀스'")
     private Long id;
 
     /** 본사 재료 (FK: material.material_id) */

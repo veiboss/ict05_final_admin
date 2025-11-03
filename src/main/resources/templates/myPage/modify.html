@@ -34,7 +34,10 @@
 
         <main id="content" class="box-wrap">
                 <div class="write-form">
-                    <form th:action="@{/mypage/modify}" method="post" th:object="${member}">
+                    <form th:action="@{/mypage/modify}"
+                          method="post"
+                          th:object="${member}"
+                          enctype="multipart/form-data">
 
                         <fieldset class="box-wrap pack-down">
                             <input type="hidden" th:field="*{id}"/>
@@ -44,11 +47,22 @@
                             <div class="field pack-down">
                                 <span class="label medium">프로필 이미지</span>
                                 <div class="insert pack-down">
-                                    <img id="preview"
-                                         th:src="${member.memberImagePath != null ? member.memberImagePath : '/images/admin/default-profile.png'}"
+                                    <!-- 미리보기 대상은 항상 하나만 -->
+                                    <img id="previewUser"
+                                         th:if="${member != null and member.memberImagePath != null}"
+                                         th:src="@{${member.memberImagePath}}"
                                          alt="프로필 미리보기"
                                          style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
-                                    <input type="file" name="memberImage" id="memberImage" accept="image/*"/>
+
+                                    <img id="previewDefault"
+                                         th:unless="${member != null and member.memberImagePath != null}"
+                                         th:src="@{/images/admin/default-profile.png}"
+                                         alt="프로필 미리보기"
+                                         style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
+
+                                    <input type="file" name="memberImage" id="memberImage" class="input-text medium" accept="image/*">
+                                    <input type="hidden" name="resetImage" id="resetImage" value="false">
+                                    <button type="button" id="resetProfileBtn" class="btn medium bdr-color1">기본 프로필</button>
                                 </div>
                             </div>
 
@@ -124,15 +138,31 @@
 </div><!--#wrap.frame-->
 <script>
     // 프로필 이미지 미리보기
-    $("#memberImage").on("change", function(e) {
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("memberImage");
+      const preview = document.getElementById("previewUser") || document.getElementById("previewDefault");
+      const resetBtn = document.getElementById("resetProfileBtn");
+      const resetHidden = document.getElementById("resetImage");
+      if (!input || !preview) return;
+
+      // 파일 선택 시 미리보기 변경
+      input.addEventListener("change", e => {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                $("#preview").attr("src", evt.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = ev => (preview.src = ev.target.result);
+        reader.readAsDataURL(file);
+
+        resetHidden.value = "false";
+      });
+
+      // 기본 프로필로 초기화
+      resetBtn.addEventListener("click", () => {
+        input.value = "";
+        preview.src = "/admin/images/admin/default-profile.png";
+        resetHidden.value = "true";
+      });
     });
 
     //비밀번호 확인 버튼

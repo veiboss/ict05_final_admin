@@ -49,6 +49,7 @@ public class StoreListDTO  {
     private BigDecimal storeMonthlySales;
 
     /** 매장 총 직원수 */
-    private int storeTotalEmployees;
+    private Integer storeTotalEmployees;
+
 
 }

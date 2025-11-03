@@ -35,7 +35,7 @@ public class InventoryAdjustment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "adjustment_id", columnDefinition = "BIGINT UNSIGNED COMMENT '조정 시퀀스'")
+    @Column(name = "adjustment_id", columnDefinition = "BIGINT COMMENT '조정 시퀀스'")
     private Long id;
 
     /** 본사 재고 FK */

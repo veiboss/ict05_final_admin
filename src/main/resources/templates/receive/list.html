@@ -239,14 +239,8 @@
                         <fieldset>
                             <legend class="blind">검색</legend>
                             <div class="pack-both">
-                                <div class="pack-left">
-                                    <select title="검색옵션" name="type" class="select medium">
-                                        <option value="" th:selected="${receiveOrderSearchDTO.type == null or receiveOrderSearchDTO.type == ''}">선택</option>
-                                        <option value="title" th:selected="${receiveOrderSearchDTO.type == 'storeName'}">가맹점명</option>
-                                        <option value="content" th:selected="${receiveOrderSearchDTO.type == 'orderCode'}">주문번호</option>
-                                        <option value="all" th:selected="${receiveOrderSearchDTO.type == 'storeLocation'}">지역</option>
-                                    </select>
-                                    <input title="검색어" type="text" name="s" th:value="${receiveOrderSearchDTO.s}" class="form-control" placeholder="검색어를 입력해 주세요" />
+                                <div class="pack-left" style="width:30%" >
+                                    <input title="검색어" type="search" name="s" th:value="${receiveOrderSearchDTO.s}" class="input-text medium form-control" placeholder="가맹점명, 주문번호, 지역 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 

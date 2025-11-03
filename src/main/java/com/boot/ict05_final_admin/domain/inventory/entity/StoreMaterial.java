@@ -40,7 +40,7 @@ public class StoreMaterial {
     /** 가맹점 재료 고유 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_material_id", columnDefinition = "BIGINT UNSIGNED COMMENT '가맹점 재료 시퀀스'")
+    @Column(name = "store_material_id", columnDefinition = "BIGINT COMMENT '가맹점 재료 시퀀스'")
     private Long id;
 
     /** 가맹점 (FK: store.store_id) */
@@ -49,7 +49,7 @@ public class StoreMaterial {
             name = "store_id_fk",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_sm_store"),
-            columnDefinition = "BIGINT UNSIGNED COMMENT '매장 시퀀스 (FK)'"
+            columnDefinition = "BIGINT COMMENT '매장 시퀀스 (FK)'"
     )
     private Store store;
 
@@ -58,7 +58,7 @@ public class StoreMaterial {
     @JoinColumn(
             name = "material_id_fk",
             foreignKey = @ForeignKey(name = "fk_sm_material"),
-            columnDefinition = "BIGINT UNSIGNED COMMENT '본사 재료 (FK)'"
+            columnDefinition = "BIGINT COMMENT '본사 재료 (FK)'"
     )
     private Material material;
 

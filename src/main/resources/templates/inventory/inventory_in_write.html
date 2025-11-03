@@ -33,12 +33,10 @@
                                 <div class="insert pack-down">
                                     <select id="categorySelect" class="select medium" required onchange="onCategoryChange(this.value)">
                                         <option value="">카테고리 선택</option>
-                                        <option value="BASE">주재료</option>
-                                        <option value="SAUCE">소스</option>
-                                        <option value="TOPPING">토핑</option>
-                                        <option value="BEVERAGE">음료</option>
-                                        <option value="PACKAGE">패키지</option>
-                                        <option value="ETC">기타</option>
+                                        <option th:each="c : ${categories}"
+                                                th:value="${c.name()}"
+                                                th:text="${c.description != null ? c.description : c.name()}">
+                                        </option>
                                     </select>
                                     <p id="categoryError" class="warning"></p>
                                 </div>
