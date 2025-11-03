@@ -191,12 +191,6 @@
       });
     });
 
-    // 초기화 버튼 클릭 시 전체로 이동
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      const baseUrl = window.location.pathname; // /admin/inventory/log/{id}
-      window.location.href = baseUrl; // 파라미터 제거
-    });
-
     const btn = document.getElementById("adjustBtn");
     const form = document.getElementById("adjustForm");
     const cancel = document.getElementById("cancelBtn");
