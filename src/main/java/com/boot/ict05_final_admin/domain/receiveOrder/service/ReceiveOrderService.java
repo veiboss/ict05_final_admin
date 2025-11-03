@@ -370,7 +370,7 @@ public class ReceiveOrderService {
         for (int col = 0; col <= 6; col++) {
             sheet.autoSizeColumn(col); // 실제 데이터 기준 폭 조정
             int width = sheet.getColumnWidth(col);
-            sheet.setColumnWidth(col, width + 900); // 여유 폭 확보 (붙는 현상 방지)
+            sheet.setColumnWidth(col, width + 1500); // 여유 폭 확보 (붙는 현상 방지)
         }
 
         // ====== 엑셀 출력 ======

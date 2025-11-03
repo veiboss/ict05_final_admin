@@ -48,19 +48,21 @@
                                 <span class="label medium">프로필 이미지</span>
                                 <div class="insert pack-down">
                                     <!-- 미리보기 대상은 항상 하나만 -->
-                                    <img id="preview"
+                                    <img id="previewUser"
                                          th:if="${member != null and member.memberImagePath != null}"
                                          th:src="@{${member.memberImagePath}}"
                                          alt="프로필 미리보기"
                                          style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
 
-                                    <img id="preview"
+                                    <img id="previewDefault"
                                          th:unless="${member != null and member.memberImagePath != null}"
                                          th:src="@{/images/admin/default-profile.png}"
                                          alt="프로필 미리보기"
                                          style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
 
-                                    <input type="file" name="memberImage" id="memberImage" accept="image/*">
+                                    <input type="file" name="memberImage" id="memberImage" class="input-text medium" accept="image/*">
+                                    <input type="hidden" name="resetImage" id="resetImage" value="false">
+                                    <button type="button" id="resetProfileBtn" class="btn medium bdr-color1">기본 프로필</button>
                                 </div>
                             </div>
 
@@ -138,16 +140,28 @@
     // 프로필 이미지 미리보기
     document.addEventListener("DOMContentLoaded", () => {
       const input = document.getElementById("memberImage");
-      const preview = document.getElementById("preview");
+      const preview = document.getElementById("previewUser") || document.getElementById("previewDefault");
+      const resetBtn = document.getElementById("resetProfileBtn");
+      const resetHidden = document.getElementById("resetImage");
       if (!input || !preview) return;
 
+      // 파일 선택 시 미리보기 변경
       input.addEventListener("change", e => {
         const file = e.target.files[0];
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = ev => preview.src = ev.target.result;
+        reader.onload = ev => (preview.src = ev.target.result);
         reader.readAsDataURL(file);
+
+        resetHidden.value = "false";
+      });
+
+      // 기본 프로필로 초기화
+      resetBtn.addEventListener("click", () => {
+        input.value = "";
+        preview.src = "/admin/images/admin/default-profile.png";
+        resetHidden.value = "true";
       });
     });
 

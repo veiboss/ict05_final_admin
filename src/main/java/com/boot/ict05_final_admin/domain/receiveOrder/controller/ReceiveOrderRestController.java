@@ -105,7 +105,7 @@ public class ReceiveOrderRestController {
 
         byte[] excelBytes = receiveOrderService.downloadExcel(searchDTO, pageable);
 
-        String filename = "재료목록.xlsx";
+        String filename = "수주 목록.xlsx";
         String encodeFilename = java.net.URLEncoder.encode(filename, StandardCharsets.UTF_8)
                 .replaceAll("\\+", "%20");
 
@@ -152,7 +152,7 @@ public class ReceiveOrderRestController {
         // Excel 생성
         byte[] excelBytes = receiveOrderService.downloadDetailExcel(id);
 
-        String filename = "주문서_" + id + ".xlsx";
+        String filename = "수주 상세 주문서_No." + id + ".xlsx";
         String encodeFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
                 .replaceAll("\\+", "%20");
 

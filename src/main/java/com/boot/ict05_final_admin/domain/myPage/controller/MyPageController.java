@@ -128,12 +128,19 @@ public class MyPageController {
                                @RequestParam(value = "memberImage", required = false) MultipartFile memberImage,
                                @RequestParam(required = false) String currentPassword,
                                @RequestParam(required = false) String newPassword,
-                               @RequestParam(required = false) String confirmPassword) throws IOException {
+                               @RequestParam(required = false) String confirmPassword,
+                               @RequestParam(value = "resetImage", required = false) String resetImage
+                               ) throws IOException{
 
         Long memberId = getLoginMemberId();
         member.setId(memberId);
 
-        // 1. 프로필 이미지 업로드
+        // 기본 이미지 복원 요청 확인
+        if ("true".equals(resetImage)) {
+            member.setMemberImagePath("/images/admin/default-profile.png");
+        }
+
+        // 프로필 이미지 업로드
         if (memberImage != null && !memberImage.isEmpty()) {
             // 실제 서버 저장 경로
             String uploadDir = "D:/ict05_uploads/profile/"; // 로컬 테스트용 절대경로
@@ -147,10 +154,10 @@ public class MyPageController {
             member.setMemberImagePath("/uploads/profile/" + fileName);
         }
 
-        // 2. 이름, 전화번호, 이미지 경로 수정
+        // 이름, 전화번호, 이미지 경로 수정
         myPageService.updateMember(memberId, member);
 
-        // 3. 비밀번호 입력이 있는 경우만 처리
+        // 비밀번호 입력이 있는 경우만 처리
         if (currentPassword != null && !currentPassword.isBlank()) {
             if (!newPassword.equals(confirmPassword)) {
                 throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
