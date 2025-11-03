@@ -77,6 +77,7 @@ public class InventoryController {
      */
     @GetMapping("/in/write")
     public String showInventoryInForm(Model model) {
+        model.addAttribute("categories", com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory.values());
         model.addAttribute("inventoryList", inventoryService.findAllForSelect());
         return "inventory/inventory_in_write";
     }

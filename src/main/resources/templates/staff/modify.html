@@ -87,7 +87,7 @@
                                         <option th:each="c : ${StaffEmploymentType}"
                                                 th:value="${c.name()}"
                                                 th:text="${c.description}"
-                                                th:selected="${c == staff.StaffEmploymentType}">
+                                                th:selected="${c == staff.staffEmploymentType}">
                                             일반
                                         </option>
                                     </select>
@@ -114,17 +114,17 @@
                                 </div>
                             </div>
 
-                            <div class="row col-3">
+                            <div class="row col">
                                 <div class="field pack-down col">
                                     <label class="fs-ss fc-999" for="userAddress1">주소 (선택)</label>
                                     <input type="button" class="btn small color1" id="addressSearch" style="margin-left:10px" value="주소 검색" onclick="findAddr()">
-                                    <div th:with="addr=${staff.staffAddress != null ? #strings.arraySplit(staff.staffAddress, ',') : null}">
-<!--                                    </div>-->
-                                    <div class="insert pack-left">
-                                    <input name="userAddress1" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly th:value="${addr != null and addr.length > 0 ? addr[0] : ''}">
-                                    </div>
-                                    <div class="insert pack-left">
-                                        <input name="userAddress2" id="userAddress2" type="text" class="input-text medium" size="50" placeholder="나머지 주소 작성" th:value="${addr != null and addr.length > 1 ? #strings.trim(addr[1]) : ''}">
+                                    <div th:with="addr=${staff.staffAddress != null ? #strings.arraySplit(staff.staffAddress, ',') : null}" >
+                                        <div class="insert pack-left">
+                                            <input name="userAddress1" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly th:value="${addr != null and addr.length > 0 ? addr[0] : ''}">
+                                        </div>
+                                        <div class="insert pack-left">
+                                            <input name="userAddress2" id="userAddress2" type="text" class="input-text medium" size="50" placeholder="나머지 주소 작성" th:value="${addr != null and addr.length > 1 ? #strings.trim(addr[1]) : ''}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
                                     <div class="input-wrap" style="position:relative;">
                                         <input id="storeSearch" class="input-text large"
                                                placeholder="매장명 입력(선택)" list="storeList" autocomplete="off"
-                                               th:value="${staff?.store != null ? staff.store.storeName : ''}">
+                                               th:value="${staff?.store != null ? staff.store.name : ''}">
                                         <input type="hidden" id="storeIdFk" name="storeIdFk">
                                         <datalist id="storeList">
                                             <option th:each="s : ${stores}"

@@ -20,7 +20,6 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class StoreMaterialService {
 
     private final StoreMaterialRepository storeMaterialRepository;
@@ -33,6 +32,7 @@ public class StoreMaterialService {
      * @param pageable 페이지 정보 (페이지 번호, 크기, 정렬)
      * @return 페이징 처리된 공지사항 리스트 DTO
      */
+    @Transactional(readOnly = true)
     public Page<StoreMaterialListDTO> listStoreMaterials(StoreMaterialSearchDTO searchDTO, Pageable pageable) {
         return storeMaterialRepository.listStoreMaterial(searchDTO, pageable);
     }
@@ -40,6 +40,7 @@ public class StoreMaterialService {
     /**
      * 가맹점 재료 단건 조회
      */
+    @Transactional(readOnly = true)
     public StoreMaterial getStoreMaterial(Long id) {
         return storeMaterialRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 재료가 존재하지 않습니다. id=" + id));
@@ -67,6 +68,7 @@ public class StoreMaterialService {
     /**
      * 검색 결과 총 개수
      */
+    @Transactional(readOnly = true)
     public long countStoreMaterials(StoreMaterialSearchDTO searchDTO) {
         return storeMaterialRepository.countStoreMaterial(searchDTO);
     }
@@ -74,6 +76,7 @@ public class StoreMaterialService {
     /**
      * 가맹점 목록 가져오기 (이름순 정렬)
      */
+    @Transactional(readOnly = true)
     public List<FindStoreDTO> getSortedStores() {
         return storeService.findStoreName().stream()
                 .sorted(Comparator.comparing(FindStoreDTO::getStoreName))

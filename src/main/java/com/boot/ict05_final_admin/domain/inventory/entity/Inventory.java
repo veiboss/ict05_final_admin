@@ -41,6 +41,7 @@ public abstract class Inventory {
     protected InventoryStatus status;
 
     /** 마지막 업데이트 일시 */
+    @Setter
     @Column(name = "inventory_update_date", nullable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '재고 수정일'")
     protected LocalDateTime updateDate;

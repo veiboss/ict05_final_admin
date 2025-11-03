@@ -30,7 +30,6 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class InventoryService {
 
@@ -53,6 +52,7 @@ public class InventoryService {
      * 본사 입고 등록용 - 재고 선택 목록 조회
      * (재고 + 재료명 출력용)
      */
+    @Transactional(readOnly = true)
     public List<HqInventory> findAllForSelect() {
         return inventoryRepository.findAll();
     }
@@ -85,6 +85,7 @@ public class InventoryService {
      * @return
      * @throws IOException
      */
+    @Transactional(readOnly = true)
     public byte[] downloadExcel(InventorySearchDTO inventorySearchDTO, Pageable pageable)
             throws IOException {
 
