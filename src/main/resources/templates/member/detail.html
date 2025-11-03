@@ -36,7 +36,7 @@
         <main id="content" class="max-900">
             <div class="box-wrap">
                 <div class="pack-down gap-20">
-                    <h3 class="fs-2xl fw-600 fc-333" th:text="${member.name}">사원명</h3>
+                    <h3 class="fs-2xl fw-600 fc-333" th:text="${member.name}">회원명</h3>
 
                     <div class="row col-2">
                         <div class="pack-down col">
@@ -63,7 +63,7 @@
                 </div><!--pack-down.gap-12-->
 
                 <div class="button-area pack-both">
-                    <a th:href="@{/member/delete/{id}(id=${member.id})}" class="btn medium bdr-color1">삭제</a>
+                    <a th:href="@{/member/withdraw/{id}(id=${member.id})}" class="btn medium bdr-color1">탈퇴</a>
                     <a th:href="@{/member/modify/{id}(id=${member.id})}" class="btn medium color1">수정</a>
                 </div>
             </div><!--//.box-wrap-->

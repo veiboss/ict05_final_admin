@@ -1,9 +1,11 @@
 package com.boot.ict05_final_admin.domain.member.controller;
 
 import com.boot.ict05_final_admin.domain.auth.entity.Member;
+import com.boot.ict05_final_admin.domain.auth.entity.MemberStatus;
 import com.boot.ict05_final_admin.domain.member.dto.MemberListDTO;
 import com.boot.ict05_final_admin.domain.member.dto.MemberSearchDTO;
 import com.boot.ict05_final_admin.domain.member.service.MemberService;
+import com.boot.ict05_final_admin.domain.myPage.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MyPageService myPageService;
 
     @GetMapping("/member/list")
     public String ListOfficeMember(MemberSearchDTO memberSearchDTO,
@@ -42,12 +45,29 @@ public class MemberController {
         return "member/list";
     }
 
-    @GetMapping("member/detail/{id}")
+    @GetMapping("/member/detail/{id}")
     public String detailOfficeMember(@PathVariable Long id, Model model) {
         Member member = memberService.detailMember(id);
 
         model.addAttribute("member", member);
 
         return "member/detail";
+    }
+
+    @GetMapping("/member/modify/{id}")
+    public String modifyOfficeMember(@PathVariable Long id, Model model) {
+
+        Member member = memberService.detailMember(id);
+
+        model.addAttribute("member", member);
+        model.addAttribute("MemberStatus", MemberStatus.values());
+
+        return "member/modify";
+    }
+
+    @GetMapping("/member/withdraw/{id}")
+    public String withdrawOfficeMember(@PathVariable Long id, Model model) {
+        myPageService.withdrawMember(id);
+        return "redirect:/member/list";
     }
 }

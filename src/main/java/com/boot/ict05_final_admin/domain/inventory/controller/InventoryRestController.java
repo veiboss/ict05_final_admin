@@ -1,33 +1,38 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.*;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * 본사 재고 REST API 컨트롤러.
  *
- * <p>본사 재고 조회 및 입고 등록 관련 API를 통합 관리한다.</p>
+ * <p>본사 재고 조회 및 입고, 출고, 수량 조정 관련 API를 통합 관리한다.</p>
  *
  * <ul>
  *     <li>본사 재고 목록 조회 (GET)</li>
  *     <li>본사 재고 입고 등록 (POST)</li>
+ *     <li>본사 재고 출고 등록 (POST)</li>
+ *     <li>본사 재고 수량 조정 (POST)</li>
  * </ul>
  *
  * <p>화면 컨트롤러(Thymeleaf)와 분리되어 있으며 JSON 기반으로 동작한다.</p>
@@ -109,5 +114,50 @@ public class InventoryRestController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Map.of("success", true, "id", id));
+    }
+
+    /**
+     * 본사 재고 수량 조정
+     *
+     * <p>입출고 외의 사유(분실, 파손, 오입력 등)로
+     * 본사 재고 수량을 직접 수정할 때 사용한다.</p>
+     *
+     * <p>입력받은 재고 ID(inventoryId)와 수정 수량(quantityAfter)을 기반으로
+     * 실제 재고를 갱신하고, 조정 내역(inventory_adjustment)을 로그로 남긴다.</p>
+     *
+     * @param dto 조정 정보 DTO (재고 ID, 재료 ID, 수정 수량, 사유, 메모)
+     * @return 조정 결과 JSON (성공 여부)
+     */
+    @PostMapping("/adjust")
+    @Operation(summary = "본사 재고 수량 조정", description = "입출고 외의 사유(분실, 파손, 오입력 등)로 재고 수량을 직접 수정한다.")
+    public ResponseEntity<Map<String, Object>> adjustInventory(@RequestBody InventoryAdjustDTO dto) {
+        inventoryInOutService.adjustInventory(dto);
+        return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    /**
+     * 본사 재고 엑셀 다운로드 API
+     *
+     * @param searchDTO 검색 조건 DTO (재료명, 상태 등)
+     * @param pageable 페이징 정보
+     * @return Excel 파일 바이트 배열
+     * @throws IOException 파일 생성 실패 시
+     */
+    @GetMapping("/download")
+    @Operation(summary = "본사 재고 목록 엑셀 다운로드", description = "본사 재고 목록을 Excel 파일로 다운로드합니다.")
+    public ResponseEntity<?> downloadInventory(InventorySearchDTO searchDTO, Pageable pageable)
+            throws IOException {
+
+        byte[] excelBytes = inventoryService.downloadExcel(searchDTO, pageable);
+
+        String filename = "본사재고목록.xlsx";
+        String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=" + encodedFilename);
+        headers.add("Cache-Control", "no-cache");
+
+        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
 }

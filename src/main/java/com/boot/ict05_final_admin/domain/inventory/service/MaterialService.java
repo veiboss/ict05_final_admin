@@ -7,6 +7,7 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialWriteFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
+import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 public class MaterialService {
 
     private final MaterialRepository materialRepository;
+    private final InventoryRepository inventoryRepository;
 
     /**
      * 새로운 재료를 등록한다.
@@ -101,11 +103,14 @@ public class MaterialService {
      * @param dto 수정할 데이터
      * @return 수정된 재료 엔티티
      */
+    @Transactional
     public Material materialModify(MaterialModifyFormDTO dto) {
         Material material = findById(dto.getId());
         if (material == null) throw new IllegalArgumentException("해당 재료가 존재하지 않습니다.");
 
         material.updateMaterial(dto);
+        materialRepository.save(material);
+        inventoryRepository.updateOptimalQuantityByMaterialId(dto.getId(), dto.getOptimalQuantity());   // 본사재고의 적정 수량 반영
 
         return material;
     }

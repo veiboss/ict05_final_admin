@@ -1,14 +1,9 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryAdjustDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
-import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryIn;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryOut;
-import com.boot.ict05_final_admin.domain.inventory.entity.Material;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryInRepository;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutRepository;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
-import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
+import com.boot.ict05_final_admin.domain.inventory.entity.*;
+import com.boot.ict05_final_admin.domain.inventory.repository.*;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
@@ -20,9 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 본사 재고 입/출고 관련 비즈니스 로직을 처리하는 서비스 클래스
+ * 본사 재고 입/출고 및 수량 조정 처리 서비스 클래스
  *
- * <p>입고 등록 / 출고 시 본사 재고 수량 갱신을 담당한다.</p>
+ * <p>입출고 시 본사 재고 수량을 자동 갱신하고, 조정 시 상태를 반영한다.</p>
  *
  * @author ICT
  * @since 2025.10
@@ -35,10 +30,30 @@ public class InventoryInOutService {
 
     private final InventoryInRepository inventoryInRepository;
     private final InventoryOutRepository inventoryOutRepository;
+    private final InventoryAdjustmentRepository inventoryAdjustmentRepository;
     private final InventoryRepository inventoryRepository;
     private final MaterialRepository materialRepository;
     private final StoreRepository storeRepository;
 
+    private static final long DEFAULT_UNIT_PRICE = 0L;
+    
+    // 공통 헬퍼
+    private Material getMaterialOrThrow(Long materialId) {
+        return materialRepository.findById(materialId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
+    }
+
+    private HqInventory getInventoryOrThrow(Material material) {
+        return inventoryRepository.findByMaterial(material)
+                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 없습니다."));
+    }
+
+    private void updateInventoryStatus(HqInventory inventory, Material material) {
+        inventory.setStatus(
+                InventoryStatus.calculate(inventory.getQuantity(), material.getOptimalQuantity())
+        );
+        inventoryRepository.save(inventory);
+    }
 
     /**
      * 본사 입고 등록
@@ -51,21 +66,19 @@ public class InventoryInOutService {
      * @throws IllegalArgumentException 재료 또는 재고가 존재하지 않을 경우 발생
      */
     public Long insertInventoryIn(InventoryInWriteDTO dto) {
-        Material material = materialRepository.findById(dto.getMaterialId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
-        HqInventory inventory = inventoryRepository.findByMaterial(material)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 없습니다."));
+        Material material = getMaterialOrThrow(dto.getMaterialId());
+        HqInventory inventory = getInventoryOrThrow(material);
 
-        // 1. 재고 증가 및 즉시 반영
+        // 1. 수량 증가
         inventoryRepository.addQuantity(material.getId(), dto.getQuantity());
         inventoryRepository.flush();
 
-        // 2. 재고량 재조회 (정확한 최신 수량)
+        // 2. 재조회
         BigDecimal updatedQty = inventoryRepository.findByMaterial(material)
                 .map(HqInventory::getQuantity)
                 .orElseThrow(() -> new IllegalStateException("재고 재조회 실패"));
 
-        // 3. 입고 로그 기록
+        // 3. 로그 저장
         InventoryIn entity = InventoryIn.builder()
                 .material(material)
                 .store(null)
@@ -79,8 +92,10 @@ public class InventoryInOutService {
         inventoryInRepository.save(entity);
 
         // 4. 상태 갱신
-        inventory.updateStatus();
-        log.info("[입고등록] materialId={}, 입고={}, 재고={}, 상태={}", material.getId(), dto.getQuantity(), updatedQty, inventory.getStatus());
+        updateInventoryStatus(inventory, material);
+
+        log.info("[INVENTORY IN] materialId={}, qty={}, afterQty={}, status={}",
+                material.getId(), dto.getQuantity(), updatedQty, inventory.getStatus());
 
         return entity.getId();
     }
@@ -99,31 +114,29 @@ public class InventoryInOutService {
      * @throws IllegalArgumentException 재료 또는 재고가 존재하지 않을 경우 발생
      */
     public Long insertInventoryOut(Long materialId, BigDecimal quantity, Long storeId, String memo) {
-        Material material = materialRepository.findById(materialId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
-        HqInventory inventory = inventoryRepository.findByMaterial(material)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재료의 본사 재고 정보가 없습니다."));
+        Material material = getMaterialOrThrow(materialId);
+        HqInventory inventory = getInventoryOrThrow(material);
 
         if (inventory.getQuantity().compareTo(quantity) < 0) {
             throw new IllegalArgumentException("출고 수량이 현재 재고보다 많습니다.");
         }
 
-        // 1. 재고 차감 및 즉시 반영
+        // 1. 수량 차감
         inventoryRepository.subtractQuantity(material.getId(), quantity);
         inventoryRepository.flush();
 
-        // 2. 재고량 재조회
+        // 2. 재조회
         BigDecimal updatedQty = inventoryRepository.findByMaterial(material)
                 .map(HqInventory::getQuantity)
                 .orElseThrow(() -> new IllegalStateException("재고 재조회 실패"));
 
-        // 3. 출고 로그 기록
+        // 3. 로그 저장
         Store store = (storeId != null) ? storeRepository.getReferenceById(storeId) : null;
         InventoryOut entity = InventoryOut.builder()
                 .material(material)
                 .store(store)
                 .quantity(quantity)
-                .unitPrice(0L)
+                .unitPrice(DEFAULT_UNIT_PRICE)
                 .outDate(LocalDateTime.now())
                 .memo(memo)
                 .stockAfter(updatedQty)
@@ -131,9 +144,51 @@ public class InventoryInOutService {
         inventoryOutRepository.save(entity);
 
         // 4. 상태 갱신
-        inventory.updateStatus();
-        log.info("[출고등록] materialId={}, 출고={}, 재고={}, 상태={}", material.getId(), quantity, updatedQty, inventory.getStatus());
+        updateInventoryStatus(inventory, material);
+
+        log.info("[INVENTORY OUT] materialId={}, qty={}, afterQty={}, status={}",
+                material.getId(), quantity, updatedQty, inventory.getStatus());
 
         return entity.getId();
     }
+
+    /**
+     * 본사 재고 수량 조정
+     *
+     * <p>입출고 외의 사유(분실, 파손, 오입력 등)로 재고 수량을 수정할 때 사용.</p>
+     *
+     * @param dto 조정 요청 정보 (본사 재고 ID, 재료 ID, 조정 후 수량, 비고, 사유)
+     * @throws IllegalArgumentException 재고 또는 재료를 찾을 수 없을 경우 발생
+     */
+    public void adjustInventory(InventoryAdjustDTO dto) {
+        HqInventory inventory = inventoryRepository.findById(dto.getInventoryId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 재고 정보를 찾을 수 없습니다."));
+
+        BigDecimal before = inventory.getQuantity();
+        BigDecimal after = dto.getQuantityAfter();
+        BigDecimal diff = after.subtract(before);
+
+        // 1. 수량 업데이트
+        inventory.setQuantity(after);
+
+        // 2. 로그 기록
+        InventoryAdjustment adjustment = InventoryAdjustment.builder()
+                .inventory(inventory)
+                .quantityBefore(before)
+                .quantityAfter(after)
+                .difference(diff)
+                .unitPrice(DEFAULT_UNIT_PRICE)
+                .memo(dto.getMemo())
+                .reason(dto.getReason())
+                .build();
+        inventoryAdjustmentRepository.save(adjustment);
+
+        // 3. 상태 갱신
+        updateInventoryStatus(inventory, inventory.getMaterial());
+
+        // 4. 로그 출력
+        log.info("[INVENTORY ADJUST] materialId={}, before={}, after={}, diff={}, reason={}, memo={}",
+                inventory.getMaterial().getId(), before, after, diff, dto.getReason(), dto.getMemo());
+    }
+
 }

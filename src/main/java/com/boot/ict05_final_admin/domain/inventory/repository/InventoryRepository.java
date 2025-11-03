@@ -13,10 +13,10 @@ import java.util.Optional;
 /**
  * 본사 재고(HqInventory) Repository
  *
- * <p>재료별 재고 조회, 수량 증감, 상태 관리 기능 제공.</p>
+ * <p>본사 재고의 수량 및 적정 수량 관리 기능을 담당한다.</p>
  */
-public interface InventoryRepository extends JpaRepository<HqInventory, Long>, InventoryRepositoryCustom {
-
+public interface InventoryRepository
+        extends JpaRepository<HqInventory, Long>, InventoryRepositoryCustom {
     /**
      * 재료 ID로 재고 조회
      */
@@ -27,6 +27,14 @@ public interface InventoryRepository extends JpaRepository<HqInventory, Long>, I
      * 재료 엔티티로 재고 조회
      */
     Optional<HqInventory> findByMaterial(Material material);
+
+    /**
+     * 재고 수량 갱신
+     */
+    @Modifying
+    @Query("update HqInventory i set i.optimalQuantity = :quantity where i.material.id = :materialId")
+    void updateOptimalQuantityByMaterialId(@Param("materialId") Long materialId,
+                                           @Param("quantity") BigDecimal quantity);
 
     /**
      * 입고 시 수량 증가

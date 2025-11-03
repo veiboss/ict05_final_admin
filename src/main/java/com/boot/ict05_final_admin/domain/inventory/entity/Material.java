@@ -2,11 +2,15 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
 import jakarta.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -27,6 +31,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "material")
+@DynamicUpdate
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -77,14 +82,14 @@ public class Material {
 
     /** 재료 보관온도 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "material_temperature",
-            columnDefinition = "ENUM('TEMPERATURE','REFRIGERATE','FREEZE') COMMENT '재료 보관온도'")
+    @Column(name = "material_temperature")
+    @Comment("재료 보관온도")
     private MaterialTemperature materialTemperature;
 
     /** 재료 상태 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "material_status", nullable = false,
-            columnDefinition = "ENUM('USE', 'STOP') DEFAULT 'USE' COMMENT '재료 상태'")
+    @Column(name = "material_status", nullable = false)
+    @Comment("재료 상태(USE/STOP)")
     private MaterialStatus materialStatus;
 
     /** 등록일 */
@@ -100,6 +105,7 @@ public class Material {
     private LocalDateTime modifyDate;
 
     /** 본사 기준 적정 재고 수량 */
+    @Setter
     @Builder.Default
     @Column(name = "material_optimal_quantity", precision = 15, scale = 3,
             columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '본사 기준 적정 재고 수량'")
@@ -122,6 +128,7 @@ public class Material {
         this.supplier               = dto.getSupplier();
         this.materialTemperature    = dto.getMaterialTemperature();
         this.materialStatus         = dto.getMaterialStatus();
+        this.optimalQuantity        = dto.getOptimalQuantity();
         this.modifyDate             = LocalDateTime.now();
     }
 }

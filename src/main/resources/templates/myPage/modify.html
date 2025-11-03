@@ -34,12 +34,35 @@
 
         <main id="content" class="box-wrap">
                 <div class="write-form">
-                    <form th:action="@{/mypage/modify}" method="post" th:object="${member}">
+                    <form th:action="@{/mypage/modify}"
+                          method="post"
+                          th:object="${member}"
+                          enctype="multipart/form-data">
 
                         <fieldset class="box-wrap pack-down">
                             <input type="hidden" th:field="*{id}"/>
                             <h3 class="section-title">프로필 정보</h3>
                             <hr>
+
+                            <div class="field pack-down">
+                                <span class="label medium">프로필 이미지</span>
+                                <div class="insert pack-down">
+                                    <!-- 미리보기 대상은 항상 하나만 -->
+                                    <img id="preview"
+                                         th:if="${member != null and member.memberImagePath != null}"
+                                         th:src="@{${member.memberImagePath}}"
+                                         alt="프로필 미리보기"
+                                         style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
+
+                                    <img id="preview"
+                                         th:unless="${member != null and member.memberImagePath != null}"
+                                         th:src="@{/images/admin/default-profile.png}"
+                                         alt="프로필 미리보기"
+                                         style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
+
+                                    <input type="file" name="memberImage" id="memberImage" accept="image/*">
+                                </div>
+                            </div>
 
                             <div class="field pack-down">
                                 <span class="label medium">이름</span>
@@ -112,6 +135,23 @@
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
 <script>
+    // 프로필 이미지 미리보기
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("memberImage");
+      const preview = document.getElementById("preview");
+      if (!input || !preview) return;
+
+      input.addEventListener("change", e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = ev => preview.src = ev.target.result;
+        reader.readAsDataURL(file);
+      });
+    });
+
+    //비밀번호 확인 버튼
     $("#checkBtn").click(function() {
         const currentPassword = $("#currentPassword").val();
 
@@ -133,36 +173,39 @@
             .fail(function() {
                 $("#checkResult").css("color", "red").text("서버 오류가 발생했습니다.");
             });
-
-        // 새 비밀번호 일치 여부 실시간 확인
-        $("input[name='newPassword'], input[name='confirmPassword']").on("keyup", function() {
-            const newPass = $("input[name='newPassword']").val();
-            const confirmPass = $("input[name='confirmPassword']").val();
-
-            if (!newPass || !confirmPass) {
-                $("#passwordMatchMsg").text("");
-                return;
-            }
-
-            if (newPass === confirmPass) {
-                $("#passwordMatchMsg").css("color", "green").text("비밀번호가 일치합니다.");
-            } else {
-                $("#passwordMatchMsg").css("color", "red").text("비밀번호가 일치하지 않습니다.");
-            }
-        });
-
-        // 폼 제출 시 비밀번호 불일치 막기
-        $("form").on("submit", function(e) {
-            const newPass = $("input[name='newPassword']").val();
-            const confirmPass = $("input[name='confirmPassword']").val();
-
-            if (newPass && confirmPass && newPass !== confirmPass) {
-                e.preventDefault();
-                alert("새 비밀번호가 일치하지 않습니다.");
-            }
-        });
     });
 
+    // 새 비밀번호 일치 여부 실시간 확인
+    $("input[name='newPassword'], input[name='confirmPassword']").on("keyup", function() {
+        const newPass = $("input[name='newPassword']").val();
+        const confirmPass = $("input[name='confirmPassword']").val();
+
+        if (!newPass || !confirmPass) {
+            $("#passwordMatchMsg").text("");
+            return;
+        }
+
+        if (newPass === confirmPass) {
+            $("#passwordMatchMsg").css("color", "green").text("비밀번호가 일치합니다.");
+        } else {
+            $("#passwordMatchMsg").css("color", "red").text("비밀번호가 일치하지 않습니다.");
+        }
+    });
+
+    // 폼 제출 시 검증 및 성공 알림
+    $("form").on("submit", function(e) {
+        const newPass = $("input[name='newPassword']").val();
+        const confirmPass = $("input[name='confirmPassword']").val();
+
+        if (newPass && confirmPass && newPass !== confirmPass) {
+            e.preventDefault();
+            alert("새 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+        alert("변경되었습니다.");
+    });
+
+    // 회원 탈퇴
     function withdrawMember() {
         if (confirm("정말 탈퇴하시겠습니까? 탈퇴 후 복구할 수 없습니다.")) {
             $.post("/admin/mypage/withdraw")

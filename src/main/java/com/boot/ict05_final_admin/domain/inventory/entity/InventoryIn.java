@@ -61,7 +61,7 @@ public class InventoryIn {
             columnDefinition = "BIGINT COMMENT '출고 단가(가맹점 공급가)'")
     private Long sellingPrice;
 
-    /** 입고일 */
+    /** 입고일시 */
     @Column(name = "inventory_in_date", nullable = false,
             columnDefinition = "DATE COMMENT '입고일'")
     private LocalDateTime inDate;

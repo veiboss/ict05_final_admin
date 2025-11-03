@@ -14,6 +14,7 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -74,25 +75,54 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
 
     @Override
     public KpiSummary kpiSummary(LocalDateTime from, LocalDateTime to, @Nullable Set<Long> storeIds) {
-        // 현재 기간
-        NumberExpression<java.math.BigDecimal> curSumExpr = customerOrder.totalPrice.sum();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime thisMonthStart = YearMonth.from(now).atDay(1).atStartOfDay();
+        LocalDateTime prevMonthStart = thisMonthStart.minusMonths(1);
+
+        // 이번달 MTD
+        LocalDateTime curFrom = thisMonthStart;
+        LocalDateTime curTo   = now;
+
+        // 전월 동기간 MTD
+        Duration elapsed = Duration.between(curFrom, curTo);
+
+        // 전월 끝 경계(배타) = 이번달 1일 00:00
+        LocalDateTime prevEndExclusive = thisMonthStart;
+
+        LocalDateTime prevTo = prevMonthStart.plus(elapsed);
+        if (prevTo.isAfter(prevEndExclusive)) {
+            prevTo = prevEndExclusive; // 31 vs 30 vs 28/29 모두 여기서 자동 보정
+        }
+
+        // 이제 KPI는 아래 구간으로 합계/건수/매장수 계산
+        // 현재:  [curFrom,  curTo)
+        // 전월:  [prevMonthStart, prevTo)
+
+        // 현재기간(이번달 MTD)
+        var curSum = QueryFactory
+                .select(customerOrder.totalPrice.sum())
+                .from(customerOrder)
+                .where(
+                        range(customerOrder.orderedAt, from, to),
+                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                ).fetchOne();
+
+        // 전월 동기간(MTD)
+        var prevSum = QueryFactory
+                .select(customerOrder.totalPrice.sum())
+                .from(customerOrder)
+                .where(
+                        range(customerOrder.orderedAt, prevMonthStart, prevTo),
+                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                ).fetchOne();
+
         Long curOrderCnt = QueryFactory
                 .select(customerOrder.id.count())
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id) // Store FK의 id 경로
-                )
-                .fetchOne();
-
-        java.math.BigDecimal curSum = QueryFactory
-                .select(curSumExpr)
-                .from(customerOrder)
-                .where(
-                        range(customerOrder.orderedAt, from, to),
                         storeFilter(storeIds, customerOrder.storeIdFk.id)
-                )
-                .fetchOne();
+                ).fetchOne();
 
         Long activeStores = QueryFactory
                 .select(customerOrder.storeIdFk.id.countDistinct())
@@ -100,41 +130,28 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                 .where(
                         range(customerOrder.orderedAt, from, to),
                         storeFilter(storeIds, customerOrder.storeIdFk.id)
-                )
-                .fetchOne();
+                ).fetchOne();
 
-        // 이전 기간(동일 길이)
-        LocalDateTime prevFrom = from.minusSeconds(java.time.Duration.between(from, to).getSeconds());
-        LocalDateTime prevTo   = from;
-
-        java.math.BigDecimal prevSum = QueryFactory
-                .select(customerOrder.totalPrice.sum())
-                .from(customerOrder)
-                .where(
-                        range(customerOrder.orderedAt, prevFrom, prevTo),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
-                )
-                .fetchOne();
-
-        long curRevenue = curSum == null ? 0L : curSum.longValue();
+        long curRevenue  = curSum  == null ? 0L : curSum.longValue();
         long prevRevenue = prevSum == null ? 0L : prevSum.longValue();
 
         double growthPct;
         if (prevRevenue > 0) {
             growthPct = ((curRevenue - prevRevenue) * 100.0 / prevRevenue);
         } else {
-            // 전기간 0 → 이번기간이 있으면 100%, 없으면 0%
-            growthPct = (curRevenue > 0) ? 100.0 : 0.0;
+            // 0 대비는 0%로 표시(원하면 100% 처리로 바꿔도 됨)
+            growthPct = 0.0;
         }
 
         return new KpiSummary(
                 curRevenue,
                 activeStores == null ? 0 : activeStores.intValue(),
                 curOrderCnt == null ? 0L : curOrderCnt,
-                0,                 // 신규 매장 수(스토어 오픈일이 있으면 거기에 맞춰 계산)
+                0,              // 신규 매장 수는 별도 로직 있으면 채워
                 growthPct
         );
     }
+
 
     @Override
     public List<Point<Long>> salesByMonth(LocalDateTime from, LocalDateTime to, @Nullable Set<Long> storeIds) {

@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Header</title>
+    <script th:src="@{/js/csrf-attach.js}" defer></script>
+
 </head>
 <body>
     <th:block th:fragment="header">
@@ -13,7 +15,7 @@
             <nav id="nav" class="aside-nav">
                 <ul>
                     <li>
-                        <a href="/admin/">
+                        <a href="/admin/home">
                             <span class="material-symbols-outlined">dashboard</span>
                             <span>대시보드</span>
                         </a>
@@ -28,7 +30,7 @@
                                 <a href="/admin/store/list"><span>가맹점 현황</span></a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"><span>가맹점 등록</span></a>
+                                <a href="/admin/store/write"><span>가맹점 등록</span></a>
                             </li>
                             <li>
                                 <a href="javascript:void(0);"><span>가맹점 평가</span></a>
@@ -151,15 +153,29 @@
                     <ul>
                         <li>
                             <button type="button" class="btn btn-toggle">
-                                <img src="https://img.imbc.com/adams/Program/20237/133342330004430266.jpg" alt="{user name}" class="img profile">
+                                <img th:if="${loginMember != null and loginMember.memberImagePath != null}"
+                                     th:src="@{${loginMember.memberImagePath}}"
+                                     alt="프로필 이미지"
+                                     class="img profile">
+                                <img th:unless="${loginMember != null and loginMember.memberImagePath != null}"
+                                     th:src="@{/images/admin/default-profile.png}"
+                                     alt="프로필 미리보기"
+                                     class="img profile">
                             </button>
                             <div class="toggle-cont">
                                 <ul>
                                     <li>
                                         <div class="item pack-left">
-                                            <img src="https://img.imbc.com/adams/Program/20237/133342330004430266.jpg" alt="{user name}" class="img profile">
+                                            <img th:if="${loginMember != null and loginMember.memberImagePath != null}"
+                                                 th:src="@{${loginMember.memberImagePath}}"
+                                                 alt="프로필 이미지"
+                                                 class="img profile">
+                                            <img th:unless="${loginMember != null and loginMember.memberImagePath != null}"
+                                                 th:src="@{/images/admin/default-profile.png}"
+                                                 alt="프로필 미리보기"
+                                                 class="img profile">
                                             <div>
-                                                <p>Hong Gil Dong</p>
+                                                <p th:text="${loginMember != null ? loginMember.name : 'Guest'}"></p>
                                                 <p class="fs-s">admin</p>
                                             </div>
                                         </div>
@@ -173,10 +189,12 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0);" class="btn">
-                                                <span class="material-symbols-outlined">
-                                                logout
-                                                </span>
+                                        <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                        </form>
+
+                                        <a href="#" class="btn" onclick="document.getElementById('logoutForm').submit(); return false;">
+                                            <span class="material-symbols-outlined">logout</span>
                                             <span>로그아웃</span>
                                         </a>
                                     </li>

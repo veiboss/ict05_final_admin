@@ -21,7 +21,10 @@
 
     <div id="container" class="container">
         <div class="title-bar">
-            <h2 class="page-title ellipsis">재료 상세(<span th:text="${material.name}">재료명</span>)</h2>
+            <h2 class="page-title ellipsis max-900">
+                <span th:text="${material.name}">재료명</span>
+                상세
+            </h2>
         </div>
 
         <main id="content" class="max-900">
@@ -39,6 +42,7 @@
                         <div class="pack-down col">
                             <span class="fs-ss fc-999">ID</span>
                             <span th:text="${material.id}">ID</span>
+                            <input type="hidden" name="id" th:value="${material.id}">
                         </div>
 
                         <div class="pack-down col">

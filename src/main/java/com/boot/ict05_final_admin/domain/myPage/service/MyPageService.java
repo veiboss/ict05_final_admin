@@ -5,6 +5,7 @@ import com.boot.ict05_final_admin.domain.myPage.dto.MyPageDTO;
 import com.boot.ict05_final_admin.domain.myPage.repository.MyPageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MyPageService {
 
     private final MyPageRepository myPageRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 마이페이지 조회
@@ -61,12 +63,23 @@ public class MyPageService {
      * @throws IllegalArgumentException 회원이 존재하지 않을 경우 발생
      */
     @Transactional
-    public void updateMember(MyPageDTO dto) {
+    public void updateMember(Long memberId, MyPageDTO dto) {
         Member member = myPageRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        // DTO 값으로 업데이트
+        // 기본 정보
         member.updateProfile(dto.getName(), dto.getPhone());
+
+        // 프로필 이미지 경로 반영(있을 때만)
+        if (dto.getMemberImagePath() != null && !dto.getMemberImagePath().isBlank()) {
+            member.setMemberImagePath(dto.getMemberImagePath());
+        } else {
+            // 이미지가 새로 업로드되지 않았을 때도 dirty-check 유도
+            // 무조건 flush 되게 강제 저장
+            member.setMemberImagePath(member.getMemberImagePath());
+        }
+        // 강제로 저장 및 flush (강제 DB 반영 (dirty-check 무시)
+        myPageRepository.saveAndFlush(member);
     }
 
     /**
@@ -85,20 +98,10 @@ public class MyPageService {
         Member member = myPageRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-//        TODO : Security 활성화 되면
-//        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
-//            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-//        }
-//        // 새 비밀번호 암호화 후 저장
-//        member.setPassword(passwordEncoder.encode(newPassword));
-
-        // Security 비활성화 임시 대응
-        if (!member.getPassword().equals(currentPassword)) {
+        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
-
-        // 임시로 암호화 없이 그대로 저장 (테스트용)
-        member.setPassword(newPassword);
+        member.setPassword(passwordEncoder.encode(newPassword));
     }
 
     /**
@@ -116,8 +119,7 @@ public class MyPageService {
         Member member = myPageRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        // return passwordEncoder.matches(currentPassword, member.getPassword());
-        return member.getPassword().equals(currentPassword);
+        return passwordEncoder.matches(currentPassword, member.getPassword());
     }
 
     /**

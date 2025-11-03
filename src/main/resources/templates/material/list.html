@@ -24,7 +24,7 @@
             <div class="title-bar">
                 <h2 class="page-title ellipsis">재료 목록</h2>
             </div>
-            <a href="/admin/material/store/list" class="btn small bdr-color2">가맹점별 재료 목록</a>
+            <a href="/admin/material/store/list" class="btn medium color2">가맹점별 재료 목록</a>
         </div>
 
         <main id="content">
@@ -122,8 +122,10 @@
                                 <div class="pack-down-center gap-0">
                                     <span th:text="${material.salesUnit}">판매단위</span>
                                     <span class="fs-s fc-999 pack-center gap-0">
+                                        <span>(</span>
                                         <span th:text="${material.conversionRate}">변환비율</span>
                                         <span th:text="${material.salesUnit}">판매단위</span>
+                                        <span>)</span>
                                     </span>
                                 </div>
                             </td>
