@@ -7,7 +7,9 @@ import java.math.BigDecimal;
 /**
  * KPI 테이블 행 DTO.
  *
- * <p>상단 Total 행과 점포별 행에 공통 사용.</p>
+ * <p>상단 Total 행과 점포별 행에 공통 사용되는 단위 레코드이다.</p>
+ *
+ * @since 1.0
  */
 @Data
 @NoArgsConstructor
@@ -24,13 +26,13 @@ public class KpiRowDto {
     /** 결제건수 */
     private Long transaction;
 
-    /** 주문당 메뉴 수 */
+    /** 주문당 메뉴 수(UPT) */
     private BigDecimal upt;
 
-    /** 주문당 평균 매출 */
+    /** 주문당 평균 매출(ADS) */
     private BigDecimal ads;
 
-    /** 메뉴별 평균 매출 */
+    /** 메뉴별 평균 매출(AUR) */
     private BigDecimal aur;
 
     /** 전월 대비 성장률(%) */
