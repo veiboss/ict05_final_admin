@@ -26,7 +26,7 @@ public class InventoryIn {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_in_id", columnDefinition = "BIGINT UNSIGNED COMMENT '입고 시퀀스'")
+    @Column(name = "inventory_in_id", columnDefinition = "BIGINT COMMENT '입고 시퀀스'")
     private Long id;
 
     /** 재료 (FK: material.material_id) */

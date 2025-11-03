@@ -41,7 +41,7 @@ public class Material {
     /** 재료 고유 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "material_id", nullable = false, columnDefinition = "BIGINT UNSIGNED COMMENT '재료 시퀀스'")
+    @Column(name = "material_id", nullable = false, columnDefinition = "BIGINT COMMENT '재료 시퀀스'")
     private Long id;
 
     /** 재료코드 */

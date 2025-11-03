@@ -30,7 +30,7 @@ public class InventoryOut {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_out_id", columnDefinition = "BIGINT UNSIGNED COMMENT '출고 시퀀스'")
+    @Column(name = "inventory_out_id", columnDefinition = "BIGINT COMMENT '출고 시퀀스'")
     private Long id;
 
     /** 재료 (FK: material.material_id) */
