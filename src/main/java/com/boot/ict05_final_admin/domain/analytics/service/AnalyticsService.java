@@ -105,26 +105,24 @@ public class AnalyticsService {
         return analyticsRepository.findMaterials(cond, pageable);
     }
 
-    /**
-     * 시간대별 상단 요약 카드 조회(YTD).
-     *
-     * @return 시간대 카드 DTO 리스트
-     */
+    /** 시간·요일: YTD 누적 차트 */
     @LogExecutionTime
     @Transactional(readOnly = true)
-    public List<TimeCardsDto> selectTimeCards() {
-        return analyticsRepository.findTimeSlicesSummary();
+    public TimeChartCardDto selectTimeChartCards() {
+        return analyticsRepository.findTimeChartSummary();
     }
 
-    /**
-     * 시간·요일 분석 테이블 목록 조회.
-     *
-     * @param cond     검색 조건
-     * @param pageable 페이징 정보
-     * @return 시간/요일 행 페이지
-     */
+    /** 시간·요일: 필터 적용 차트 */
+    @LogExecutionTime
     @Transactional(readOnly = true)
-    public Page<TimeRowDto> selectTimeSlices(AnalyticsSearchDto cond, Pageable pageable) {
-        return analyticsRepository.findTimeSlices(cond, pageable);
+    public TimeChartRowDto selectTimeChart(AnalyticsSearchDto cond) {
+        return analyticsRepository.findTimeChart(cond);
+    }
+
+    /** 시간·요일: 표(상세) */
+    @LogExecutionTime
+    @Transactional(readOnly = true)
+    public Page<TimeRowDto> selectTimeRows(AnalyticsSearchDto cond, Pageable pageable) {
+        return analyticsRepository.findTimeRows(cond, pageable);
     }
 }

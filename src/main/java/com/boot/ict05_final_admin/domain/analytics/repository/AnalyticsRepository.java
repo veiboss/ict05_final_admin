@@ -30,7 +30,6 @@ public interface AnalyticsRepository {
 
     MaterialsCardsDto findMaterialsSummary();
 
-    List<TimeCardsDto> findTimeSlicesSummary();
 
     // ===================== List Rows =====================
 
@@ -58,12 +57,8 @@ public interface AnalyticsRepository {
      */
     Page<MaterialsRowDto> findMaterials(AnalyticsSearchDto cond, Pageable pageable);
 
-    /**
-     * 시간대/요일 등 타임 슬라이스 분석 목록 행들을 조회합니다.
-     *
-     * @param cond 조회 조건 DTO (가맹점, 기간, 뷰 단위 등)
-     * @return 시간 기반 분석 행 목록
-     */
-    Page<TimeRowDto> findTimeSlices(AnalyticsSearchDto cond, Pageable pageable);
-
+    // ===== 시간·요일 =====
+    TimeChartCardDto findTimeChartSummary();                 // YTD 누적 차트
+    TimeChartRowDto  findTimeChart(AnalyticsSearchDto cond); // 필터 적용 차트
+    Page<TimeRowDto> findTimeRows(AnalyticsSearchDto cond, Pageable pageable); // 표
 }

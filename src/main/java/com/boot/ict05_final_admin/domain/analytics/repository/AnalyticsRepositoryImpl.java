@@ -1026,18 +1026,183 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     /* =========================================================
        (향후) 시간대/요일 슬라이스 (Phase A: 스텁)
        ========================================================= */
+    /* ===================== 시간·요일 — 차트(YTD) ===================== */
     @Override
     @Transactional(readOnly = true)
-    public List<TimeCardsDto> findTimeSlicesSummary() {
-        return List.of();
+    public TimeChartCardDto findTimeChartSummary() {
+        final var today    = LocalDate.now(ZONE_SEOUL);
+        final var ytdStart = LocalDate.of(today.getYear(), 1, 1);
+        final var ytdEnd   = today.minusDays(1);
+        return buildTimeChart(null, ytdStart, ytdEnd, true);
     }
 
+    /* ===================== 시간·요일 — 차트(필터적용) ===================== */
     @Override
     @Transactional(readOnly = true)
-    public Page<TimeRowDto> findTimeSlices(AnalyticsSearchDto cond, Pageable pageable) {
-        return null;
+    public TimeChartRowDto findTimeChart(AnalyticsSearchDto cond) {
+        return buildTimeChart(cond.getStoreIds(), cond.getStartDate(), cond.getEndDate(), false);
     }
 
+    /* ===================== 시간·요일 — 표(상세) ===================== */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TimeRowDto> findTimeRows(AnalyticsSearchDto cond, Pageable pageable) {
+        BooleanExpression filter = co.status.eq(OrderStatus.COMPLETED)
+                .and(betweenDateClosedOpen(co.orderedAt, cond.getStartDate(), cond.getEndDate()));
+        if (cond.getStoreIds()!=null && !cond.getStoreIds().isEmpty()) {
+            filter = filter.and(s.id.in(cond.getStoreIds()));
+        }
+
+        StringExpression hourSlot = Expressions.stringTemplate(
+                "CONCAT(DATE_FORMAT({0}, {1}), ':00-', DATE_FORMAT({0}, {1}), ':59')",
+                co.orderedAt, Expressions.constant("%H")
+        );
+        StringExpression dayName = Expressions.stringTemplate(
+                "ELT(DAYOFWEEK({0}), '일','월','화','수','목','금','토')", co.orderedAt);
+        StringExpression od = dateFormat(co.orderedAt, "%Y-%m-%d");
+
+        List<TimeRowDto> rows = readHints(
+                query.select(Projections.bean(TimeRowDto.class,
+                                s.name.as("storeName"),
+                                hourSlot.as("hourSlot"),
+                                dayName.as("dayOfWeek"),
+                                co.id.as("orderId"),
+                                cod.lineTotal.as("orderAmount"),
+                                mc.menuCategoryName.as("category"),
+                                m.menuName.as("menu"),
+                                co.orderType.stringValue().as("orderType"),
+                                od.as("orderDate")
+                        ))
+                        .from(cod)
+                        .join(cod.order, co)
+                        .join(co.storeIdFk, s)
+                        .join(cod.menuIdFk, m)
+                        .join(m.menuCategory, mc)
+                        .where(filter)
+                        .orderBy(co.orderedAt.desc(), s.id.asc(), m.menuName.asc())
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+        ).fetch();
+
+        return new PageImpl<>(rows, pageable, rows.size());
+    }
+
+    /* ===================== 내부 빌더: 차트 공용 ===================== */
+    @SuppressWarnings("unchecked")
+    private <T> T buildTimeChart(List<Long> storeIds, LocalDate start, LocalDate end, boolean ytdMode) {
+        // 08:00 ~ 22:00
+        List<String> hours = new ArrayList<>();
+        for (int h = 8; h <= 22; h++) hours.add(String.format("%02d:00", h));
+        List<String> dows = List.of("일","월","화","수","목","금","토");
+
+        BooleanExpression base = co.status.eq(OrderStatus.COMPLETED)
+                .and(betweenDateClosedOpen(co.orderedAt, start, end));
+        if (!ytdMode && storeIds != null && !storeIds.isEmpty()) {
+            base = base.and(s.id.in(storeIds));
+        }
+
+        NumberExpression<Integer> H = Expressions.numberTemplate(Integer.class, "HOUR({0})", co.orderedAt);
+        NumberExpression<Integer> D = Expressions.numberTemplate(Integer.class, "DAYOFWEEK({0})", co.orderedAt);
+
+        // Total
+        List<Tuple> hourTotal = readHints(
+                query.select(H, co.orderType, co.totalPrice.sum())
+                        .from(co).join(co.storeIdFk, s).where(base)
+                        .groupBy(H, co.orderType).orderBy(orderByNull())
+        ).fetch();
+
+        List<Tuple> dowTotal = readHints(
+                query.select(D, co.orderType, co.totalPrice.sum())
+                        .from(co).join(co.storeIdFk, s).where(base)
+                        .groupBy(D, co.orderType).orderBy(orderByNull())
+        ).fetch();
+
+        // By Store (필터 시)
+        List<Tuple> hourByStore = Collections.emptyList();
+        List<Tuple> dowByStore  = Collections.emptyList();
+        if (!ytdMode && storeIds != null && !storeIds.isEmpty()) {
+            hourByStore = readHints(
+                    query.select(s.id, s.name, H, co.orderType, co.totalPrice.sum())
+                            .from(co).join(co.storeIdFk, s).where(base)
+                            .groupBy(s.id, s.name, H, co.orderType).orderBy(orderByNull())
+            ).fetch();
+
+            dowByStore = readHints(
+                    query.select(s.id, s.name, D, co.orderType, co.totalPrice.sum())
+                            .from(co).join(co.storeIdFk, s).where(base)
+                            .groupBy(s.id, s.name, D, co.orderType).orderBy(orderByNull())
+            ).fetch();
+        }
+
+        Map<String, List<BigDecimal>> hourSeries = new LinkedHashMap<>();
+        Map<String, List<BigDecimal>> dowSeries  = new LinkedHashMap<>();
+
+        Supplier<List<BigDecimal>> hourZeros = () -> {
+            List<BigDecimal> z = new ArrayList<>(hours.size());
+            for (int i = 0; i < hours.size(); i++) z.add(BigDecimal.ZERO);
+            return z;
+        };
+        Supplier<List<BigDecimal>> dowZeros = () -> {
+            List<BigDecimal> z = new ArrayList<>(7);
+            for (int i = 0; i < 7; i++) z.add(BigDecimal.ZERO);
+            return z;
+        };
+
+        // Total: 시간대
+        for (Tuple t : hourTotal) {
+            Integer hour = t.get(0, Integer.class);
+            if (hour == null || hour < 8 || hour > 22) continue;
+            String key = "Total - " + t.get(1, OrderType.class).name();
+            List<BigDecimal> arr = hourSeries.computeIfAbsent(key, k -> hourZeros.get());
+            arr.set(hour - 8, nz(t.get(2, BigDecimal.class)));
+        }
+
+        // Total: 요일
+        for (Tuple t : dowTotal) {
+            Integer dow = t.get(0, Integer.class); // 1=일 ~ 7=토 (MySQL/MariaDB)
+            if (dow == null || dow < 1 || dow > 7) continue;
+            String key = "Total - " + t.get(1, OrderType.class).name();
+            List<BigDecimal> arr = dowSeries.computeIfAbsent(key, k -> dowZeros.get());
+            arr.set(dow - 1, nz(t.get(2, BigDecimal.class)));
+        }
+
+        // By Store: 시간대
+        for (Tuple t : hourByStore) {
+            String sname = t.get(1, String.class);
+            Integer hour = t.get(2, Integer.class);
+            if (hour == null || hour < 8 || hour > 22) continue;
+            String key = sname + " - " + t.get(3, OrderType.class).name();
+            List<BigDecimal> arr = hourSeries.computeIfAbsent(key, k -> hourZeros.get());
+            arr.set(hour - 8, nz(t.get(4, BigDecimal.class)));
+        }
+
+        // By Store: 요일
+        for (Tuple t : dowByStore) {
+            String sname = t.get(1, String.class);
+            Integer dow = t.get(2, Integer.class);
+            if (dow == null || dow < 1 || dow > 7) continue;
+            String key = sname + " - " + t.get(3, OrderType.class).name();
+            List<BigDecimal> arr = dowSeries.computeIfAbsent(key, k -> dowZeros.get());
+            arr.set(dow - 1, nz(t.get(4, BigDecimal.class)));
+        }
+
+        List<ChartSeriesDto> hourOut = new ArrayList<>(hourSeries.size());
+        List<ChartSeriesDto> dowOut  = new ArrayList<>(dowSeries.size());
+        hourSeries.forEach((k, v) -> hourOut.add(ChartSeriesDto.builder().name(k).data(v).build()));
+        dowSeries.forEach((k, v)  -> dowOut.add(ChartSeriesDto.builder().name(k).data(v).build()));
+
+        if (ytdMode) {
+            return (T) TimeChartCardDto.builder()
+                    .hours(hours).dows(dows)
+                    .timeOfDay(hourOut).dayOfWeek(dowOut)
+                    .build();
+        } else {
+            return (T) TimeChartRowDto.builder()
+                    .hours(hours).dows(dows)
+                    .timeOfDay(hourOut).dayOfWeek(dowOut)
+                    .build();
+        }
+    }
 
     /* ===================== Helper Methods ===================== */
 
@@ -1145,6 +1310,8 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         final BigDecimal compYoY;
         GlobalComp(BigDecimal mom, BigDecimal yoy) { this.compMoM = mom; this.compYoY = yoy; }
     }
+
+
 
     /** 단일 점포 선택 시 (MTD/PMT/YTD/LYTD) — WHERE에 넓은 기간 추가 */
     private GlobalComp computeGlobalComp(AnalyticsSearchDto cond) {
