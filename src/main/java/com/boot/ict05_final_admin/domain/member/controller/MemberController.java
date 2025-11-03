@@ -5,6 +5,7 @@ import com.boot.ict05_final_admin.domain.auth.entity.MemberStatus;
 import com.boot.ict05_final_admin.domain.member.dto.MemberListDTO;
 import com.boot.ict05_final_admin.domain.member.dto.MemberSearchDTO;
 import com.boot.ict05_final_admin.domain.member.service.MemberService;
+import com.boot.ict05_final_admin.domain.myPage.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MyPageService myPageService;
 
     @GetMapping("/member/list")
     public String ListOfficeMember(MemberSearchDTO memberSearchDTO,
@@ -61,5 +63,11 @@ public class MemberController {
         model.addAttribute("MemberStatus", MemberStatus.values());
 
         return "member/modify";
+    }
+
+    @GetMapping("/member/withdraw/{id}")
+    public String withdrawOfficeMember(@PathVariable Long id, Model model) {
+        myPageService.withdrawMember(id);
+        return "redirect:/member/list";
     }
 }
