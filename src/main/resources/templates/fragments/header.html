@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Header</title>
+    <script th:src="@{/js/csrf-attach.js}" defer></script>
+
 </head>
 <body>
     <th:block th:fragment="header">
@@ -151,15 +153,29 @@
                     <ul>
                         <li>
                             <button type="button" class="btn btn-toggle">
-                                <img src="https://img.imbc.com/adams/Program/20237/133342330004430266.jpg" alt="{user name}" class="img profile">
+                                <img th:if="${loginMember != null and loginMember.memberImagePath != null}"
+                                     th:src="@{${loginMember.memberImagePath}}"
+                                     alt="프로필 이미지"
+                                     class="img profile">
+                                <img th:unless="${loginMember != null and loginMember.memberImagePath != null}"
+                                     th:src="@{/images/admin/default-profile.png}"
+                                     alt="프로필 미리보기"
+                                     class="img profile">
                             </button>
                             <div class="toggle-cont">
                                 <ul>
                                     <li>
                                         <div class="item pack-left">
-                                            <img src="https://img.imbc.com/adams/Program/20237/133342330004430266.jpg" alt="{user name}" class="img profile">
+                                            <img th:if="${loginMember != null and loginMember.memberImagePath != null}"
+                                                 th:src="@{${loginMember.memberImagePath}}"
+                                                 alt="프로필 이미지"
+                                                 class="img profile">
+                                            <img th:unless="${loginMember != null and loginMember.memberImagePath != null}"
+                                                 th:src="@{/images/admin/default-profile.png}"
+                                                 alt="프로필 미리보기"
+                                                 class="img profile">
                                             <div>
-                                                <p>Hong Gil Dong</p>
+                                                <p th:text="${loginMember != null ? loginMember.name : 'Guest'}"></p>
                                                 <p class="fs-s">admin</p>
                                             </div>
                                         </div>

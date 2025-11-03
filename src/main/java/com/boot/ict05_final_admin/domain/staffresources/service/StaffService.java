@@ -118,6 +118,15 @@ public class StaffService {
 
         staffProfile.updateStaff(dto);
 
+        // 2) 근무지 반영
+        if (dto.getStoreIdFk() != null) {
+            Store store = storeRepository.findById(dto.getStoreIdFk())
+                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 근무지입니다."));
+            staffProfile.changeStore(store);  // ← 아래 4번 참고
+        } else {
+            staffProfile.changeStore(null);
+        }
+
         return staffProfile;
     }
 

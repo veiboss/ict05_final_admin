@@ -103,14 +103,14 @@ public class MaterialService {
      * @param dto 수정할 데이터
      * @return 수정된 재료 엔티티
      */
+    @Transactional
     public Material materialModify(MaterialModifyFormDTO dto) {
         Material material = findById(dto.getId());
         if (material == null) throw new IllegalArgumentException("해당 재료가 존재하지 않습니다.");
 
         material.updateMaterial(dto);
-
-        // HQ 재고의 적정 수량도 동일하게 반영
-        inventoryRepository.updateOptimalQuantityByMaterialId(dto.getId(), dto.getOptimalQuantity());
+        materialRepository.save(material);
+        inventoryRepository.updateOptimalQuantityByMaterialId(dto.getId(), dto.getOptimalQuantity());   // 본사재고의 적정 수량 반영
 
         return material;
     }
@@ -214,27 +214,4 @@ public class MaterialService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 재료 정보 수정 및 본사 재고 적정 수량 동기화
-     *
-     * <p>재료 마스터(Material)의 정보를 수정할 때,
-     * 해당 재료의 본사 재고(HqInventory)에 설정된 적정 재고 수량(optimalQuantity)도
-     * 동일하게 갱신한다.</p>
-     *
-     * <p>이 메서드는 재료 마스터와 본사 재고 간의
-     * 적정 수량 불일치를 방지하기 위한 수동 동기화 로직이다.</p>
-     *
-     * @param dto 수정할 재료 정보 DTO
-     * @throws IllegalArgumentException 재료가 존재하지 않을 경우 발생
-     */
-    @Transactional
-    public void updateMaterial(MaterialModifyFormDTO dto) {
-        Material material = materialRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("재료 없음"));
-        material.setOptimalQuantity(dto.getOptimalQuantity());
-        materialRepository.save(material);
-
-        // 본사 재고의 적정 수량도 동기화
-        inventoryRepository.updateOptimalQuantityByMaterialId(material.getId(), dto.getOptimalQuantity());
-    }
 }

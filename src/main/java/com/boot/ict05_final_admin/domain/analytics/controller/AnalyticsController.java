@@ -24,7 +24,12 @@ import java.util.List;
 /**
  * 본사 통계/분석 화면 컨트롤러.
  *
- * <p>Thymeleaf 페이지 라우팅을 담당한다.</p>
+ * <p>Thymeleaf 기반의 분석 페이지 라우팅을 담당한다.
+ * KPI / 주문 / 재료 / 시간·요일 분석 화면으로의 진입과,
+ * 공통 검색 조건의 초기값 주입을 처리한다.</p>
+ *
+ * @author
+ * @since 1.0
  */
 @Controller
 @RequiredArgsConstructor
@@ -34,20 +39,35 @@ public class AnalyticsController {
     private final AnalyticsService analyticsService;
     private final AnalyticsRepository analyticsRepository;
 
-    // 매장 목록 모델 주입 (활성 매장만 정렬)
+    /**
+     * 공통 모델 속성: 가맹점(점포) 선택 옵션 목록.
+     *
+     * <p>활성 매장만 정렬된 형태로 제공하여, 화면의 셀렉트 박스에서 사용한다.</p>
+     *
+     * @return 점포 옵션 목록
+     */
     @ModelAttribute("stores")
     public List<StoreOptionDto> stores() {
         return analyticsRepository.findStoreOptions();
     }
 
     /**
-     * KPI 분석 화면
+     * KPI 분석 화면.
+     *
+     * <p>검색 기간이 비어 있으면 기본값으로 "어제 기준 최근 7일"을 주입한다.
+     * 페이징은 1-based로 들어오는 값을 0-based로 보정하여 PageRequest를 생성한다.</p>
+     *
+     * @param analyticsSearchDto 검색 조건 DTO
+     * @param pageable           페이지/사이즈 정보
+     * @param model              뷰 모델
+     * @param request            요청(현재 URL 보존용)
+     * @return KPI 템플릿 경로 ("analytics/kpi")
      */
     @GetMapping("/kpi")
     public String viewKpiAnalysis(AnalyticsSearchDto analyticsSearchDto,
-                      @PageableDefault(page = 1, size = 50) Pageable pageable,
-                      Model model,
-                      HttpServletRequest request) {
+                                  @PageableDefault(page = 1, size = 50) Pageable pageable,
+                                  Model model,
+                                  HttpServletRequest request) {
 
         PageRequest pageRequest = PageRequest.of(
                 Math.max(0, pageable.getPageNumber() - 1),
@@ -73,13 +93,22 @@ public class AnalyticsController {
     }
 
     /**
-     * 주문 분석 화면
+     * 주문 분석 화면.
+     *
+     * <p>검색 기간이 비어 있으면 기본값으로 "어제 기준 최근 7일"을 주입한다.
+     * 상단 카드(OrdersCardsDto)는 YTD 기준이며, 목록은 조건/페이징에 따른다.</p>
+     *
+     * @param analyticsSearchDto 검색 조건 DTO
+     * @param pageable           페이지/사이즈 정보
+     * @param model              뷰 모델
+     * @param request            요청(현재 URL 보존용)
+     * @return 주문 분석 템플릿 경로 ("analytics/orders")
      */
     @GetMapping("/orders")
     public String viewOrdersAnalysis(AnalyticsSearchDto analyticsSearchDto,
-                         @PageableDefault(page = 1, size = 50) Pageable pageable,
-                         Model model,
-                         HttpServletRequest request) {
+                                     @PageableDefault(page = 1, size = 50) Pageable pageable,
+                                     Model model,
+                                     HttpServletRequest request) {
 
         PageRequest pageRequest = PageRequest.of(
                 Math.max(0, pageable.getPageNumber() - 1),
@@ -97,7 +126,6 @@ public class AnalyticsController {
         Page<OrdersRowDto> orderrows = analyticsService.selectOrders(analyticsSearchDto, pageRequest);
         OrdersCardsDto card = analyticsService.selectOrdersCards();
 
-
         model.addAttribute("analyticsSearchDto", cond);
         model.addAttribute("orderrows", orderrows);
         model.addAttribute("orderCard", card);
@@ -106,10 +134,19 @@ public class AnalyticsController {
     }
 
     /**
-     * 재료 분석 화면
+     * 재료 분석 화면.
+     *
+     * <p>검색 기간이 비어 있으면 기본값으로 "어제 기준 최근 7일"을 주입한다.
+     * 상단 카드(MaterialsCardsDto)는 YTD 기준이며, 목록은 조건/페이징에 따른다.</p>
+     *
+     * @param analyticsSearchDto 검색 조건 DTO
+     * @param pageable           페이지/사이즈 정보
+     * @param model              뷰 모델
+     * @param request            요청(현재 URL 보존용)
+     * @return 재료 분석 템플릿 경로 ("analytics/materials")
      */
     @GetMapping("/materials")
-    public String materials(AnalyticsSearchDto analyticsSearchDto,
+    public String viewMaterialsAnalysis(AnalyticsSearchDto analyticsSearchDto,
                             @PageableDefault(page = 1, size = 50) Pageable pageable,
                             Model model,
                             HttpServletRequest request) {
@@ -138,7 +175,13 @@ public class AnalyticsController {
     }
 
     /**
-     * 시간·요일 분석 화면
+     * 시간·요일 분석 화면.
+     *
+     * <p>검색 조건에 기본값을 주입해 모델로 전달한다.</p>
+     *
+     * @param search 검색 조건 DTO
+     * @param model  뷰 모델
+     * @return 시간/요일 분석 템플릿 경로 ("analytics/time")
      */
     @GetMapping("/time")
     public String viewTimeAndDayAnalysis(AnalyticsSearchDto search, Model model) {

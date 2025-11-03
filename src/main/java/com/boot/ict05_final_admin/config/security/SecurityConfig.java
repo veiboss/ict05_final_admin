@@ -1,4 +1,4 @@
-package com.boot.ict05_final_admin.config.securtiy;
+package com.boot.ict05_final_admin.config.security;
 
 import com.boot.ict05_final_admin.domain.auth.service.MemberUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -41,7 +40,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 // Thymeleaf 폼에 CSRF 히든 필드 있다면 활성 유지
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**", "/api/auth/**", "/uploads/**").permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**", "/api/auth/**", "/uploads/**",  "/uploads/profile/**").permitAll()
                         // 필요시 .requestMatchers("/admin/**").hasRole("HQ")
                         .anyRequest().authenticated()
                 )
@@ -63,11 +62,14 @@ public class SecurityConfig implements WebMvcConfigurer {
 
         return http.build();
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // ✅ 로컬 테스트용 업로드 폴더 매핑
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:///D:/ict05_uploads/");
+        // 로컬 테스트용 업로드 폴더 매핑
+        registry.addResourceHandler("/uploads/profile/**")
+                .addResourceLocations("file:///D:/ict05_uploads/profile/");
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/static/images/");
     }
 
 }

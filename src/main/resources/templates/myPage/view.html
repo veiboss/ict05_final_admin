@@ -48,9 +48,17 @@
         <main id="content">
             <div class="box-wrap">
                 <div class="profile-box">
-                    <img th:src="${member.memberImagePath != null ? member.memberImagePath : '/images/admin/default-profile.png'}"
+                    <!-- 업로드 이미지 있을 때 -->
+                    <img th:if="${member != null and member.memberImagePath != null}"
+                         th:src="@{${member.memberImagePath}}"
                          alt="프로필 이미지"
-                         style="width:120px;height:120px;border-radius:50%;object-fit:cover;"/>
+                         style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+
+                    <!-- 업로드 이미지 없을 때 -->
+                    <img th:unless="${member != null and member.memberImagePath != null}"
+                         th:src="@{/images/admin/default-profile.png}"
+                         alt="기본 이미지"
+                         style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
                 </div>
 
                 <div class="info-item">
@@ -73,8 +81,13 @@
                     <div class="value" th:text="${member.phone}">010-901-0037</div>
                 </div>
 
-                <div class="pack-right">
-                    <a th:href="@{/mypage/modify}" class="btn large color1">정보 수정</a>
+                <div class="pack-both">
+                    <div class="pack-left">
+                        <a th:href="@{/}" class="btn large color2">계정 연동</a>
+                    </div>
+                    <div class="pack-right">
+                        <a th:href="@{/mypage/modify}" class="btn large color1">정보 수정</a>
+                    </div>
                 </div>
             </div>
         </main>
