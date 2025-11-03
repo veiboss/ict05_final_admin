@@ -8,7 +8,9 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -29,6 +31,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "material")
+@DynamicUpdate
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -79,14 +82,14 @@ public class Material {
 
     /** 재료 보관온도 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "material_temperature",
-            columnDefinition = "ENUM('TEMPERATURE','REFRIGERATE','FREEZE') COMMENT '재료 보관온도'")
+    @Column(name = "material_temperature")
+    @Comment("재료 보관온도")
     private MaterialTemperature materialTemperature;
 
     /** 재료 상태 */
     @Enumerated(EnumType.STRING)
-    @Column(name = "material_status", nullable = false,
-            columnDefinition = "ENUM('USE', 'STOP') DEFAULT 'USE' COMMENT '재료 상태'")
+    @Column(name = "material_status", nullable = false)
+    @Comment("재료 상태(USE/STOP)")
     private MaterialStatus materialStatus;
 
     /** 등록일 */

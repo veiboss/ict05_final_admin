@@ -31,7 +31,7 @@ public interface InventoryRepository
     /**
      * 재고 수량 갱신
      */
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("update HqInventory i set i.optimalQuantity = :quantity where i.material.id = :materialId")
     void updateOptimalQuantityByMaterialId(@Param("materialId") Long materialId,
                                            @Param("quantity") BigDecimal quantity);
