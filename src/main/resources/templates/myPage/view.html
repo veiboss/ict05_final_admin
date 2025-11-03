@@ -81,8 +81,13 @@
                     <div class="value" th:text="${member.phone}">010-901-0037</div>
                 </div>
 
-                <div class="pack-right">
-                    <a th:href="@{/mypage/modify}" class="btn large color1">정보 수정</a>
+                <div class="pack-both">
+                    <div class="pack-left">
+                        <a th:href="@{/}" class="btn large color2">계정 연동</a>
+                    </div>
+                    <div class="pack-right">
+                        <a th:href="@{/mypage/modify}" class="btn large color1">정보 수정</a>
+                    </div>
                 </div>
             </div>
         </main>
