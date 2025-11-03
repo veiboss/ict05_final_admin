@@ -105,4 +105,8 @@ public class StaffProfile {
         this.staffEndDate = dto.getStaffEndDate();
     }
 
+    public void changeStore(Store store) {
+        this.store = store;
+    }
+
 }
