@@ -155,7 +155,8 @@
 
                             <td th:text="${row.staffName}">점주명</td>
                             <td th:text="${row.storePhone}">연락처</td>
-                            <td th:text="${row.storeMonthlySales}">월매출</td>
+                            <td th:text="${row.storeMonthlySales != null ?
+                                #numbers.formatInteger(row.storeMonthlySales / 10000, 0, 'COMMA') + '만 원' : '-'}">월매출</td>
                             <td th:text="${row.storeTotalEmployees}">직원수</td>
                             <td>
                                 <a th:href="@{/store/detail/{id}(id=${row.storeId})}" class="btn small normal">
