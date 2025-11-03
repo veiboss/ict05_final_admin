@@ -1,19 +1,58 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>출고 테스트</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <!-- Bootstrap CSS CDN -->
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <link href="/admin/css/toast.css" rel="stylesheet"/>
+    <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/admin/js/toast.js"></script>
 </head>
 <body>
-<h2>본사 출고 테스트</h2>
-<form id="outForm">
-    <label>재료 ID: <input type="number" name="materialId" value="1"></label><br>
-    <label>수량: <input type="number" name="quantity" value="10"></label><br>
-    <label>가맹점 ID: <input type="number" name="storeId" value="3"></label><br>
-    <label>비고: <input type="text" name="memo" value="테스트 출고"></label><br>
-    <button type="submit">출고 등록</button>
-</form>
+<div id="wrap" class="frame">
+    <div th:replace="~{fragments/header :: header}"></div>
 
+    <div id="container" class="container">
+        <div class="title-bar">
+            <h2 class="page-title ellipsis max-900">
+                <span class="fw-400">본사 출고 테스트</span>
+            </h2>
+        </div>
+
+        <main id="content" class="max-900">
+            <form id="outForm" class="pack-down gap-20">
+                <label class="pack-down gap-4">
+                    <span>재료 ID:</span>
+                    <input type="number"  class="input-text large" name="materialId" value="1">
+                </label>
+                <label>
+                    <span>수량: </span>
+                    <input type="number"  class="input-text large" name="quantity" value="10">
+                </label>
+                <label>
+                    <span>가맹점 ID: </span>
+                    <input type="number"  class="input-text large" name="storeId" value="3">
+                </label>
+                <label>
+                    <span>비고: </span>
+                    <input type="text"  class="input-text large" name="memo" value="테스트 출고">
+                </label>
+                <input type="file" class="input-text large">
+
+                <button type="submit" class="btn large color1">출고 등록</button>
+            </form>
+
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div><!-- // #container  -->
+</div><!--#wrap.frame-->
 <script>
     document.getElementById("outForm").addEventListener("submit", e => {
       e.preventDefault();

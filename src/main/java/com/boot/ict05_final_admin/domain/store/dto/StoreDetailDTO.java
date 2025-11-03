@@ -58,7 +58,7 @@ public class StoreDetailDTO {
     private StoreType storeType;
 
     /** 매장 총 직원수 */
-    private Long storeTotalEmployees;
+    private Integer storeTotalEmployees;
 
     /** 계약 시작일 */
     private LocalDate storeContractStartDate;

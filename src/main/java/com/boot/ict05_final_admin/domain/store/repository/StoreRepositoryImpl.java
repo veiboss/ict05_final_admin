@@ -52,7 +52,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                         .limit(1),
                                 "staffName"),
                         store.phone.as("storePhone"),
-                        store.monthlySales.as("storeMonthlySales")
+                        store.monthlySales.as("storeMonthlySales"),
+                        store.totalEmployees.as("storeTotalEmployees")
                 ))
                 .from(store)
                 .where(
@@ -154,17 +155,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                         .limit(1),
                                 "staffName"
                         ),
-
-
-                        ExpressionUtils.as(
-                                JPAExpressions.select(staffProfile.id.count())
-                                        .from(staffProfile)
-                                        .where(
-                                                staffProfile.store.id.eq(store.id),
-                                                staffProfile.staffEndDate.isNull()
-                                        ),
-                                "storeTotalEmployees"
-                        )
+                        store.totalEmployees.as("storeTotalEmployees")
                 ))
                 .from(store)
                 .leftJoin(store.member, member)
