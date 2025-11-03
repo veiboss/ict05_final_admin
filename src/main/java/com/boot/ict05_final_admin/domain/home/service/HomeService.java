@@ -10,6 +10,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,7 @@ public class HomeService {
      */
     public DashboardViewDTO buildDashboard() {
 
+
         LocalDateTime now = LocalDateTime.now();
 
         // 이번 달
@@ -73,7 +75,36 @@ public class HomeService {
         int  kpiActiveStores       = kpi != null ? kpi.activeStores()       : 0;
         long kpiOrderCount         = kpi != null ? kpi.orderCount()         : 0L;
         int  kpiNewStores          = kpi != null ? kpi.newStores()          : 0;
-        double kpiRevenueGrowthPct = kpi != null ? kpi.revenueGrowthPct()   : 0.0;
+
+        /* --------- 여기부터 교체: “분 단위 동일 시각” 기준 성장률 --------- */
+        LocalDateTime nowFloor = now.truncatedTo(ChronoUnit.MINUTES);
+
+        // 이번 달 누적: [월초, 현재분 + 1분)
+        LocalDateTime curFrom = monthStart;
+        LocalDateTime curTo   = nowFloor.plusMinutes(1);
+        long curMtd = homeRepository.kpiSummary(curFrom, curTo, storeFilter).revenueThisMonth();
+
+        // 전월 동일 ‘분’ 시각 만들기 (말일 보정)
+        YearMonth prevYm = YearMonth.from(now).minusMonths(1);
+        LocalDateTime prevStart = prevYm.atDay(1).atStartOfDay();
+        LocalDateTime prevEndExclusive = prevYm.plusMonths(1).atDay(1).atStartOfDay();
+
+        int prevDom = Math.min(now.getDayOfMonth(), prevYm.lengthOfMonth());
+        LocalDateTime prevSameMinute = prevYm.atDay(prevDom)
+                .atTime(now.getHour(), now.getMinute());
+
+        // 전월 누적: [전월초, min(전월 동일분+1분, 전월말))  (반개구간)
+        LocalDateTime prevTo = prevSameMinute.plusMinutes(1);
+        if (!prevTo.isBefore(prevEndExclusive)) prevTo = prevEndExclusive;
+
+        long prevMtd = homeRepository.kpiSummary(prevStart, prevTo, storeFilter).revenueThisMonth();
+
+        // 성장률 (분모 0 보정만)
+        double kpiRevenueGrowthPct = (prevMtd > 0)
+                ? ((curMtd - prevMtd) * 100.0 / prevMtd)
+                : (curMtd > 0 ? 100.0 : 0.0);
+        /* --------- 교체 끝 --------- */
+
 
         // 2) 월별 매출(최근 6개월)
         List<Point<Long>> salesMonthPoints =
@@ -145,7 +176,6 @@ public class HomeService {
                         growthPctById.getOrDefault(r.storeId(), 0.0) // 증감률(%)
                 ))
                 .toList();
-
         // 최종 조립
         return new DashboardViewDTO(
                 // KPI

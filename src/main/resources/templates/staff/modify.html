@@ -80,9 +80,9 @@
                                 </div>
 
                                 <div class="pack-down col">
-                                    <label class="fs-ss fc-999" for="StaffEmploymentType">근무 형태</label>
+                                    <label class="fs-ss fc-999" for="staffEmploymentType">근무 형태</label>
 
-                                    <select name="StaffEmploymentType" id="StaffEmploymentType" class="select medium">
+                                    <select name="staffEmploymentType" id="staffEmploymentType" class="select medium">
                                         <option>선택</option>
                                         <option th:each="c : ${StaffEmploymentType}"
                                                 th:value="${c.name()}"
@@ -135,13 +135,14 @@
                                     <div class="input-wrap" style="position:relative;">
                                         <input id="storeSearch" class="input-text large"
                                                placeholder="매장명 입력(선택)" list="storeList" autocomplete="off"
-                                               th:value="${staff.store.name}">
+                                               th:value="${staff?.store != null ? staff.store.storeName : ''}">
                                         <input type="hidden" id="storeIdFk" name="storeIdFk">
                                         <datalist id="storeList">
                                             <option th:each="s : ${stores}"
                                                     th:value="${s.storeName}"
                                                     th:attr="data-id=${s.storeId}"></option>
                                         </datalist>
+                                        <small id="storeHint" class="error" style="display:none">목록에서 정확히 선택해주세요</small>
                                     </div>
                                 </div>
 
