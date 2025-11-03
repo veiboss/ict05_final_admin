@@ -119,8 +119,9 @@
                                     <label class="fs-ss fc-999" for="userAddress1">주소 (선택)</label>
                                     <input type="button" class="btn small color1" id="addressSearch" style="margin-left:10px" value="주소 검색" onclick="findAddr()">
                                     <div th:with="addr=${staff.staffAddress != null ? #strings.arraySplit(staff.staffAddress, ',') : null}">
+<!--                                    </div>-->
                                     <div class="insert pack-left">
-                                        <input name="userAddress1" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly th:value="${addr != null and addr.length > 0 ? addr[0] : ''}">
+                                    <input name="userAddress1" id="userAddress1" type="text" class="input-text medium" size="50" placeholder="주소를 검색해주세요" readonly th:value="${addr != null and addr.length > 0 ? addr[0] : ''}">
                                     </div>
                                     <div class="insert pack-left">
                                         <input name="userAddress2" id="userAddress2" type="text" class="input-text medium" size="50" placeholder="나머지 주소 작성" th:value="${addr != null and addr.length > 1 ? #strings.trim(addr[1]) : ''}">
