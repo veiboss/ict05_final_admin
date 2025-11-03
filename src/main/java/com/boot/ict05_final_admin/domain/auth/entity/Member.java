@@ -81,6 +81,14 @@ public class Member  {
     }
 
     /**
+     * 이미지 경로 수정
+     * - 마이페이지에서 프로필 이미지 변경 시 사용
+     */
+    public void setMemberImagePath(String memberImagePath) {
+        this.memberImagePath = memberImagePath;
+    }
+
+    /**
      * 비밀번호 수정
      * - 마이페이지에서 비밀번호 변경 시 사용
      */

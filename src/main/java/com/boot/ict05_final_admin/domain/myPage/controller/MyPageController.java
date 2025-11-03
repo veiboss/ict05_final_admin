@@ -105,9 +105,8 @@ public class MyPageController {
     @Operation(summary = "마이페이지 수정 폼", description = "기존 회원 데이터를 불러와 수정 입력 폼을 표시한다.")
     public String modifyForm(Model model) {
 
-        // Long memberId = ((Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Long memberId = getLoginMemberId();
 
-        Long memberId = 52L; // 로그인 연동 전 임시 ID
         MyPageDTO dto = myPageService.getMyPage(memberId);
         model.addAttribute("member", dto);
         return "mypage/modify";
@@ -116,7 +115,7 @@ public class MyPageController {
     /**
      * 회원 정보 수정 처리
      *
-     * @param dto            수정할 회원 정보 DTO
+     * @param member            수정할 회원 정보 DTO
      * @param memberImage   업로드할 새 프로필 이미지
      * @param currentPassword 현재 비밀번호
      * @param newPassword     새 비밀번호
@@ -125,14 +124,14 @@ public class MyPageController {
      */
     @PostMapping("/mypage/modify")
     @Operation(summary = "마이페이지 수정 처리", description = "이름, 전화번호, 비밀번호, 프로필 이미지를 한 번에 수정한다.")
-    public String updateMember(@ModelAttribute("member") MyPageDTO dto,
+    public String updateMember(@ModelAttribute("member") MyPageDTO member,
                                @RequestParam(value = "memberImage", required = false) MultipartFile memberImage,
                                @RequestParam(required = false) String currentPassword,
                                @RequestParam(required = false) String newPassword,
                                @RequestParam(required = false) String confirmPassword) throws IOException {
 
-        // 테스트용으로 memberId도 강제로 맞춰줌
-        dto.setId(52L);
+        Long memberId = getLoginMemberId();
+        member.setId(memberId);
 
         // 1. 프로필 이미지 업로드
         if (memberImage != null && !memberImage.isEmpty()) {
@@ -145,21 +144,25 @@ public class MyPageController {
             memberImage.transferTo(path.toFile()); // 실제 파일 저장
 
             // 브라우저 접근용 URL (WebConfig에서 매핑됨)
-            dto.setMemberImagePath("/uploads/profile/" + fileName);
+            member.setMemberImagePath("/uploads/profile/" + fileName);
         }
 
-        // 2. 이름, 전화번호 수정
-        myPageService.updateMember(dto);
+        // 2. 이름, 전화번호, 이미지 경로 수정
+        myPageService.updateMember(memberId, member);
 
         // 3. 비밀번호 입력이 있는 경우만 처리
         if (currentPassword != null && !currentPassword.isBlank()) {
             if (!newPassword.equals(confirmPassword)) {
                 throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
             }
-            myPageService.updatePassword(dto.getId(), currentPassword, newPassword);
+            myPageService.updatePassword(member.getId(), currentPassword, newPassword);
         }
-
         return "redirect:/mypage";
+    }
+
+    @ModelAttribute("member")
+    public MyPageDTO defaultMember() {
+        return new MyPageDTO(); // 필드는 null
     }
 
     /**
@@ -173,12 +176,7 @@ public class MyPageController {
     @Operation(summary = "비밀번호 검증", description = "현재 비밀번호가 DB에 저장된 값과 일치하는지 확인한다.")
     public boolean checkCurrentPassword(@RequestParam String currentPassword) {
 
-//        TODO : 로그인 활성화 되면
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        Member member = (Member) authentication.getPrincipal();
-//        Long memberId = member.getId();
-
-        Long memberId = 52L; // 로그인 전 임시
+        Long memberId = getLoginMemberId();
 
         return myPageService.checkCurrentPassword(memberId, currentPassword);
     }
@@ -193,7 +191,7 @@ public class MyPageController {
     @Operation(summary = "회원 탈퇴", description = "회원 상태를 'WITHDRAWN'으로 변경하고 세션을 만료시킨다.")
     public String withdrawMember(HttpSession session) {
 
-        Long memberId = 52L; // 로그인 연동 전 임시
+        Long memberId = getLoginMemberId();
 
         // 상태 변경 (WITHDRAWN)
         myPageService.withdrawMember(memberId);
