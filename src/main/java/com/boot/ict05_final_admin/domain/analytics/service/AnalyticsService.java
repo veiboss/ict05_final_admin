@@ -109,6 +109,7 @@ public class AnalyticsService {
     @LogExecutionTime
     @Transactional(readOnly = true)
     public TimeChartCardDto selectTimeChartCards() {
+
         return analyticsRepository.findTimeChartSummary();
     }
 
@@ -116,6 +117,7 @@ public class AnalyticsService {
     @LogExecutionTime
     @Transactional(readOnly = true)
     public TimeChartRowDto selectTimeChart(AnalyticsSearchDto cond) {
+
         return analyticsRepository.findTimeChart(cond);
     }
 

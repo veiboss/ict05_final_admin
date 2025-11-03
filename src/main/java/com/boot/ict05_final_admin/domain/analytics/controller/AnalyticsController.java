@@ -176,16 +176,40 @@ public class AnalyticsController {
 
     /**
      * 시간·요일 분석 화면.
-     *
-     * <p>검색 조건에 기본값을 주입해 모델로 전달한다.</p>
-     *
-     * @param search 검색 조건 DTO
-     * @param model  뷰 모델
-     * @return 시간/요일 분석 템플릿 경로 ("analytics/time")
+
      */
     @GetMapping("/time")
-    public String viewTimeAndDayAnalysis(AnalyticsSearchDto search, Model model) {
-        model.addAttribute("search", AnalyticsSearchDto.withDefaults(search));
+    public String viewTimeAnalysis(AnalyticsSearchDto analyticsSearchDto,
+                                   @PageableDefault(page = 1, size = 40) Pageable pageable,
+                                   Model model,
+                                   HttpServletRequest request) {
+
+        // 기간 기본값: 어제 기준 최근 7일
+        if (analyticsSearchDto.getStartDate() == null || analyticsSearchDto.getEndDate() == null) {
+            LocalDate end = LocalDate.now().minusDays(1);
+            LocalDate start = end.minusDays(6);
+            analyticsSearchDto.setStartDate(start);
+            analyticsSearchDto.setEndDate(end);
+        }
+
+        PageRequest pageRequest = PageRequest.of(
+                Math.max(0, pageable.getPageNumber() - 1),
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
+
+        AnalyticsSearchDto cond = AnalyticsSearchDto.withDefaults(analyticsSearchDto);
+
+        // ✅ SSR: 차트 2개 + 표 페이지
+        TimeChartCardDto timeCard  = analyticsService.selectTimeChartCards(); // YTD
+        TimeChartRowDto  timeChart = analyticsService.selectTimeChart(cond);  // 필터 적용
+        Page<TimeRowDto> timerows  = analyticsService.selectTimeRows(cond, pageRequest);
+
+        model.addAttribute("analyticsSearchDto", cond);
+        model.addAttribute("timeCard",  timeCard);
+        model.addAttribute("timeChart", timeChart);
+        model.addAttribute("timerows",  timerows);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         return "analytics/time";
     }
 }
