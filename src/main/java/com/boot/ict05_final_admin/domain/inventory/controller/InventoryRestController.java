@@ -1,23 +1,25 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryAdjustDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.*;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -131,5 +133,31 @@ public class InventoryRestController {
     public ResponseEntity<Map<String, Object>> adjustInventory(@RequestBody InventoryAdjustDTO dto) {
         inventoryInOutService.adjustInventory(dto);
         return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    /**
+     * 본사 재고 엑셀 다운로드 API
+     *
+     * @param searchDTO 검색 조건 DTO (재료명, 상태 등)
+     * @param pageable 페이징 정보
+     * @return Excel 파일 바이트 배열
+     * @throws IOException 파일 생성 실패 시
+     */
+    @GetMapping("/download")
+    @Operation(summary = "본사 재고 목록 엑셀 다운로드", description = "본사 재고 목록을 Excel 파일로 다운로드합니다.")
+    public ResponseEntity<?> downloadInventory(InventorySearchDTO searchDTO, Pageable pageable)
+            throws IOException {
+
+        byte[] excelBytes = inventoryService.downloadExcel(searchDTO, pageable);
+
+        String filename = "본사재고목록.xlsx";
+        String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=" + encodedFilename);
+        headers.add("Cache-Control", "no-cache");
+
+        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
 }

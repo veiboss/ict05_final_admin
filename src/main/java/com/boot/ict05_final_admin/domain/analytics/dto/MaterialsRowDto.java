@@ -14,15 +14,24 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class MaterialsRowDto {
+    private String  orderDate;             // 라벨(yyyy-MM-dd 또는 yyyy-MM)
+    private String  store;
+    private String  material;
 
-    private String storeName;      // "Total" 또는 점포명
-    private String materialName;   // 재료명
+    private Long    storeInventoryQty;     // 일말/월말 스냅샷
 
-    private Long storeStock;       // 매장 보유 재고
-    private Long orderQty;         // 선택기간 발주량(옵션)
+    // ✅ 일별 전용 노출 컬럼
+    private Long    purchaseOrderId;
+    private String  purchaseOrderDate;
+    private Long    purchaseOrderQty;
 
-    private BigDecimal turnover;   // 회전율(옵션)
-    private BigDecimal salesAmount;// 매출액(옵션)
-    private BigDecimal profit;     // 이익금(옵션)
-    private BigDecimal marginRate; // 마진율(옵션)
+    // 계산/지표
+    private BigDecimal turnoverRate;       // Used / AvgInventory (소수, %는 뷰에서)
+    private Long    profit;                // Sales − Cost
+    private BigDecimal margin;             // Profit / Sales
+    private BigDecimal avgUsage;           // ✅ 이름 정정(일별=당일, 월별=월평균)
+
+    // 내부키
+    private Long    storeId;
+    private Long    materialId;
 }
