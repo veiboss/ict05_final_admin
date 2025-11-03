@@ -65,12 +65,34 @@ public class InventoryInOutService {
      * @return 생성된 입고 이력(InventoryIn)의 ID
      * @throws IllegalArgumentException 재료 또는 재고가 존재하지 않을 경우 발생
      */
+    @Transactional
     public Long insertInventoryIn(InventoryInWriteDTO dto) {
         Material material = getMaterialOrThrow(dto.getMaterialId());
-        HqInventory inventory = getInventoryOrThrow(material);
+
+        // 0. 본사 재고 조회 또는 신규 생성
+        HqInventory inventory = inventoryRepository.findByMaterial(material)
+                .orElseGet(() -> {
+                    HqInventory newInv = HqInventory.builder()
+                            .material(material)
+                            .quantity(BigDecimal.ZERO)
+                            .optimalQuantity(
+                                    material.getOptimalQuantity() != null
+                                            ? material.getOptimalQuantity()
+                                            : BigDecimal.ZERO)
+                            .status(InventoryStatus.SUFFICIENT) // ✅ 초기 상태
+                            .updateDate(LocalDateTime.now())
+                            .build();
+                    inventoryRepository.save(newInv);
+                    log.info("[INVENTORY INIT] created new HQ inventory for materialId={}", material.getId());
+                    return newInv;
+                });
 
         // 1. 수량 증가
-        inventoryRepository.addQuantity(material.getId(), dto.getQuantity());
+        BigDecimal newQty = inventory.getQuantity().add(dto.getQuantity());
+        inventory.setQuantity(newQty);
+        inventory.setUpdateDate(LocalDateTime.now());
+        inventory.updateStatus();
+        inventoryRepository.save(inventory);
         inventoryRepository.flush();
 
         // 2. 재조회
