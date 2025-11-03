@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class InventoryInOutService {
 
@@ -135,6 +134,7 @@ public class InventoryInOutService {
      * @return 생성된 출고 이력(InventoryOut)의 ID
      * @throws IllegalArgumentException 재료 또는 재고가 존재하지 않을 경우 발생
      */
+    @Transactional
     public Long insertInventoryOut(Long materialId, BigDecimal quantity, Long storeId, String memo) {
         Material material = getMaterialOrThrow(materialId);
         HqInventory inventory = getInventoryOrThrow(material);
@@ -182,6 +182,7 @@ public class InventoryInOutService {
      * @param dto 조정 요청 정보 (본사 재고 ID, 재료 ID, 조정 후 수량, 비고, 사유)
      * @throws IllegalArgumentException 재고 또는 재료를 찾을 수 없을 경우 발생
      */
+    @Transactional
     public void adjustInventory(InventoryAdjustDTO dto) {
         HqInventory inventory = inventoryRepository.findById(dto.getInventoryId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 재고 정보를 찾을 수 없습니다."));

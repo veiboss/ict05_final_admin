@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class StoreInventoryService {
 
     private final StoreInventoryRepository storeInventoryRepository;
@@ -24,6 +23,7 @@ public class StoreInventoryService {
     /**
      * 가맹점 재고 목록 조회
      */
+    @Transactional(readOnly = true)
     public Page<StoreInventoryListDTO> listStoreInventories(StoreInventorySearchDTO searchDTO, Pageable pageable) {
         return storeInventoryRepository.listStoreInventory(searchDTO, pageable);
     }
@@ -31,6 +31,7 @@ public class StoreInventoryService {
     /**
      * 가맹점 재고 개수 조회
      */
+    @Transactional(readOnly = true)
     public long countStoreInventory(StoreInventorySearchDTO searchDTO) {
         return storeInventoryRepository.countStoreInventory(searchDTO);
     }

@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class MaterialService {
 
@@ -49,6 +48,7 @@ public class MaterialService {
      * @param dto 등록할 재료 엔티티
      * @return 저장된 재료 엔티티
      */
+    @Transactional
     public Long insertOfficeMaterial(@Valid MaterialWriteFormDTO dto) {
 
         // 재료 코드 자동 생성 (카테고리 필수)
@@ -130,6 +130,7 @@ public class MaterialService {
      *
      * @param id 재료 ID
      */
+    @Transactional
     public void deleteMaterial(Long id) {
         materialRepository.deleteById(id);
     }
