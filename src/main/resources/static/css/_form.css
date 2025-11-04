@@ -47,9 +47,9 @@ textarea								{}
 .select,
 .textarea								{width: 100%; border: 1px solid var(--bdr-color); border-radius: 0;}
 .input-text.small,
-.select.small							{height: var(--small); padding: 0 .25rem; font-size: .875rem;}
+.select.small							{height: var(--small); padding: 0 .25rem; font-size: .9rem;}
 .input-text.medium,
-.select.medium							{height:  var(--medium); padding: 0 .5rem; font-size: .9rem;}
+.select.medium							{height:  var(--medium); padding: 0 .5rem; font-size: 1rem;}
 .input-text.large,
 .select.large							{height:  var(--large); padding: 0 .75rem; font-size: 1.1rem;}
 

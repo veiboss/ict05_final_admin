@@ -440,7 +440,9 @@ table p + p						{margin-top: 1rem;}
 	[class*="row-"]							{
 		flex-direction: column;
 	}
-
+	[class*="row-"] > [class*="col"]        {
+	    width: revert;
+	}
 }
 @media (min-width: 768px) {
 	.row-3 > .col						{
@@ -478,7 +480,7 @@ table p + p						{margin-top: 1rem;}
 
 #content > .box-wrap,
 [class*="row-"] > .box-wrap[class*="col"],
-#content .write-form fieldset.box-wrap			{padding: clamp(16px, 4vw, 40px);}
+#content .write-form fieldset.box-wrap			{padding: clamp(16px, 2.4vw, 40px);}
 #content > .box-wrap.write-form fieldset.pack-down > hr.line{margin: 0 -1.4rem;}
 .box-wrap > .section-title + table	{margin-top: .5rem}
 /*
