@@ -62,8 +62,8 @@ public class ReceiveOrderListDTO {
     /** 수주 주문 상품 총수량 */
     private Integer totalCount;
 
-    /** 수주 배송 예정일 */
-    private LocalDate deliveryDate;
+    /** 수주 배송 완료일 */
+    private LocalDate actualDeliveryDate;
 
     /**
      * 수주 상태(Enum)의 한글 설명 반환

@@ -31,7 +31,10 @@ public enum ReceiveOrderStatus {
     SHIPPING("배송"),
 
     /** 배송 완료됨 */
-    DELIVERED("완료");
+    DELIVERED("완료"),
+
+    /** 접수 취소 */
+    CANCELED("취소");
 
     /** 한글 설명 */
     private final String description;

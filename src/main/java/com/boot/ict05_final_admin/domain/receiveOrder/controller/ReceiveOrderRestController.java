@@ -49,33 +49,45 @@ public class ReceiveOrderRestController {
     private final ReceiveOrderService receiveOrderService;
 
     /**
-     * 수주의 배송 상태를 다음 단계로 변경한다.
+     * 수주의 배송 상태를 변경하거나 취소한다.
      *
-     * <p>상태 전환 순서:
-     * RECEIVED → SHIPPING → DELIVERED</p>
+     * <p>상태 전환 규칙:</p>
+     * <ul>
+     *     <li>RECEIVED → SHIPPING → DELIVERED</li>
+     *     <li>또는 RECEIVED → CANCELED (취소)</li>
+     * </ul>
      *
-     * @param id 상태를 변경할 수주의 ID
-     * @return 상태 업데이트 완료 메시지
+     * <p>가맹점 발주에서 접수된 주문을 본사에서 배송 시작 또는 취소 처리할 수 있다.<br>
+     * 배송 완료는 가맹점 검수 확인 시 자동 반영되지만, 필요시 본사에서도 직접 완료 가능하다.</p>
+     *
+     * @param id     상태를 변경할 수주의 ID
+     * @param action 수행할 동작 (SHIP 또는 CANCEL)
+     * @return 상태 업데이트 결과 메시지
+     *
+     * @since 2025.11
+     * @author 최민진
      */
-    @PutMapping("/status/{id}")
+    @PutMapping("/receive/status/{id}")
     @Operation(
-            summary = "수주 배송 상태 변경",
-            description = "특정 수주의 배송 상태를 다음 단계로 전환합니다. 예: 접수 → 배송 중 → 완료.",
+            summary = "수주 배송 상태 변경 또는 취소",
+            description = "본사에서 특정 수주의 상태를 배송 시작, 완료 또는 취소로 전환합니다. " +
+                    "예: RECEIVED → SHIPPING → DELIVERED, 또는 RECEIVED → CANCELED",
+            parameters = {
+                    @Parameter(name = "id", description = "수주 ID", required = true),
+                    @Parameter(name = "action", description = "SHIP 또는 CANCEL", required = true)
+            },
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "상태 업데이트 완료",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "해당 수주 ID를 찾을 수 없음"
-                    )
+                    @ApiResponse(responseCode = "200", description = "상태 업데이트 완료",
+                            content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "해당 수주 ID를 찾을 수 없음"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 상태 전환 요청 또는 액션")
             }
     )
     public ResponseEntity<String> updateStatus(
-            @Parameter(description = "수주 ID", required = true) @PathVariable Long id) {
-        receiveOrderService.advanceStatus(id);
+            @PathVariable Long id,
+            @RequestParam("action") String action) {
+
+        receiveOrderService.updateStatus(id, action);
         return ResponseEntity.ok("상태 업데이트 완료");
     }
 

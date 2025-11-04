@@ -43,11 +43,6 @@ public class Member  {
     @Column(name = "member_status", nullable = false, length = 20)
     private MemberStatus status = MemberStatus.ACTIVE;
 
-    @PrePersist
-    void prePersist() {
-        if (status == null) status = MemberStatus.ACTIVE;
-    }
-    
     @Column(name = "member_image_path")
     private String memberImagePath;
 
