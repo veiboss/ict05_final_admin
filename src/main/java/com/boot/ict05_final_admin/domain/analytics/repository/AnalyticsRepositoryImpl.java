@@ -181,13 +181,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         StringExpression groupKey = Expressions.stringTemplate(
                 "CONCAT_WS('|',{0},{1})", s.id, labelExpr
         );
-        Long total = Optional.ofNullable(
-                readHints(
-                        query.select(Expressions.numberTemplate(Long.class, "COUNT(DISTINCT {0})", groupKey))
-                                .from(co).join(co.storeIdFk, s)
-                                .where(baseFilter)
-                ).fetchOne()
-        ).orElse(0L);
+        Long total = countKpi(cond);
 
         if (total == 0L) return new PageImpl<>(Collections.emptyList(), pageable, 0L);
 
@@ -501,26 +495,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         }
 
         /* -------------------- ① total count -------------------- */
-        Long total = Optional.ofNullable(
-                readHints(  // 👈 count 전용(타임아웃 여유) 힌트 메서드 사용. 아래 2) 참고
-                        byMonth
-                                // 월별: (연,월,점포)
-                                ? query.select(Expressions.numberTemplate(Long.class,
-                                        "COUNT(DISTINCT CONCAT_WS('|', {0}, {1}, {2}))", s.id, yExpr, mExpr))
-                                .from(co).join(co.storeIdFk, s)
-                                .where(filter)
-
-                                // 일별: (점포, 메뉴, 원본 DATE, 주문형태)  ※ 카테고리 제거!
-                                : query.select(Expressions.numberTemplate(Long.class,
-                                        "COUNT(DISTINCT CONCAT_WS('|', {0}, {1}, {2}, {3}))",
-                                        s.id, m.menuId, co.orderedAt, co.orderType))
-                                .from(co)
-                                .join(cod).on(cod.order.eq(co))
-                                .join(co.storeIdFk, s)
-                                .join(cod.menuIdFk, m)
-                                .where(filter)
-                ).fetchOne()
-        ).orElse(0L);
+        Long total = countOrders(cond);
 
         if (total == 0L) return new PageImpl<>(Collections.emptyList(), pageable, 0L);
 
@@ -1420,5 +1395,60 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
             return new MoMWindows(aStart, aEnd, bStart, bEnd);
         }
     }
-}
 
+    @Override
+    public long countKpi(AnalyticsSearchDto cond) {
+        boolean byMonth = cond.getViewBy() == ViewBy.MONTH;
+        String fmt = byMonth ? "%Y-%m" : "%Y-%m-%d";
+        StringExpression labelExpr = dateFormat(co.orderedAt, fmt);
+        BooleanExpression baseFilter = eqKpiFilter(cond, co, s);
+
+        StringExpression groupKey = Expressions.stringTemplate(
+                "CONCAT_WS('|',{0},{1})", s.id, labelExpr
+        );
+        return Optional.ofNullable(
+                readHints(
+                        query.select(Expressions.numberTemplate(Long.class, "COUNT(DISTINCT {0})", groupKey))
+                                .from(co).join(co.storeIdFk, s)
+                                .where(baseFilter)
+                ).fetchOne()
+        ).orElse(0L);
+    }
+
+    @Override
+    public long countOrders(AnalyticsSearchDto cond) {
+        boolean byMonth = (cond.getViewBy() == ViewBy.MONTH);
+        if (cond.getViewBy() == null) {
+            byMonth = false;
+        }
+
+        NumberExpression<Integer> yExpr = Expressions.numberTemplate(Integer.class, "YEAR({0})",  co.orderedAt);
+        NumberExpression<Integer> mExpr = Expressions.numberTemplate(Integer.class, "MONTH({0})", co.orderedAt);
+
+        BooleanExpression filter = co.status.eq(OrderStatus.COMPLETED);
+        if (cond.getStartDate() != null || cond.getEndDate() != null) {
+            filter = filter.and(betweenDateClosedOpen(co.orderedAt, cond.getStartDate(), cond.getEndDate()));
+        }
+        if (cond.getStoreIds() != null && !cond.getStoreIds().isEmpty()) {
+            filter = filter.and(s.id.in(cond.getStoreIds()));
+        }
+
+        return Optional.ofNullable(
+                readHints(
+                        byMonth
+                                ? query.select(Expressions.numberTemplate(Long.class,
+                                        "COUNT(DISTINCT CONCAT_WS('|', {0}, {1}, {2}))", s.id, yExpr, mExpr))
+                                .from(co).join(co.storeIdFk, s)
+                                .where(filter)
+                                : query.select(Expressions.numberTemplate(Long.class,
+                                        "COUNT(DISTINCT CONCAT_WS('|', {0}, {1}, {2}, {3}))",
+                                        s.id, m.menuId, co.orderedAt, co.orderType))
+                                .from(co)
+                                .join(cod).on(cod.order.eq(co))
+                                .join(co.storeIdFk, s)
+                                .join(cod.menuIdFk, m)
+                                .where(filter)
+                ).fetchOne()
+        ).orElse(0L);
+    }
+}

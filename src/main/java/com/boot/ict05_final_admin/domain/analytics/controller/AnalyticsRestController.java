@@ -47,4 +47,25 @@ public class AnalyticsRestController {
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(new ByteArrayResource(excelBytes));
     }
+
+    /** 주문 리스트 엑셀 다운로드 */
+    @GetMapping("/orders/download")
+    public ResponseEntity<Resource> downloadExcelOrdersList(
+            @ModelAttribute AnalyticsSearchDto cond,
+            Pageable pageable
+    ) {
+        byte[] excelBytes = analyticsService.downloadExcelOrders(cond, pageable);
+
+        String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+        String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+        String filename = "Orders_" + start + "_" + end + ".xlsx";
+        String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+                .header(HttpHeaders.CACHE_CONTROL, "no-cache")
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new ByteArrayResource(excelBytes));
+    }
 }
