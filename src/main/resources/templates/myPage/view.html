@@ -9,6 +9,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <!-- Bootstrap CSS CDN -->
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
 
@@ -83,7 +85,7 @@
 
                 <div class="pack-both">
                     <div class="pack-left">
-                        <a th:href="@{/}" class="btn large color2">계정 연동</a>
+                        <button id="btnLinkMe" type="button" class="btn large color2" th:attr="data-member-id=${member.id}">계정 연동</button>
                     </div>
                     <div class="pack-right">
                         <a th:href="@{/mypage/modify}" class="btn large color1">정보 수정</a>
@@ -94,5 +96,63 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+<script th:inline="javascript">
+    // ===== 설정 =====
+    // 세션 기반 엔드포인트가 준비되어 있으면 true
+    const USE_ME_ENDPOINT = false;
+
+    // 서버가 내려준 현재 멤버 id를 JS 변수로 주입 (PathVariable 방식에서 사용)
+    const CURRENT_MEMBER_ID = /*[[${member.id}]]*/ 0;
+
+    // CSRF
+    const CSRF_TOKEN  = document.querySelector('meta[name="_csrf"]')?.content || '';
+    const CSRF_HEADER = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
+
+    function toast(msg) { alert(msg); } // 임시. 프로젝트의 toast 함수 있으면 그걸로 바꿔도 됨.
+
+    async function postJson(url, bodyObj) {
+      const headers = { 'Accept': 'application/json' };
+      if (CSRF_TOKEN) headers[CSRF_HEADER] = CSRF_TOKEN;
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: bodyObj instanceof FormData ? bodyObj : null
+      });
+      return res;
+    }
+
+    // 1) 본인 계정으로 연동
+    document.getElementById('btnLinkMe')?.addEventListener('click', async () => {
+      try {
+        const btn = document.getElementById('btnLinkMe');
+        btn.disabled = true;
+
+        let url = `/admin/API/member/${CURRENT_MEMBER_ID}/linkStaff`;
+
+        const res = await postJson(url);
+        if (res.ok) {
+          const data = await res.json().catch(()=>({}));
+          toast('연동 성공');
+          // 필요하면 이동
+          // location.reload();
+        } else if (res.status === 404) {
+          toast('동일 이메일의 사원이 없습니다');
+        } else if (res.status === 409) {
+          toast('이미 다른 멤버와 연결된 사원입니다');
+        } else {
+          const txt = await res.text();
+          console.error('연동 실패 응답:', txt);
+          toast('연동에 실패했습니다');
+        }
+      } catch (e) {
+        console.error(e);
+        toast('연동 중 오류가 발생했습니다');
+      } finally {
+        const btn = document.getElementById('btnLinkMe');
+        if (btn) btn.disabled = false;
+      }
+    });
+</script>
 </body>
 </html>
