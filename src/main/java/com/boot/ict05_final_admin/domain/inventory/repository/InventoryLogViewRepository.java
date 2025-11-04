@@ -44,4 +44,9 @@ public interface InventoryLogViewRepository extends JpaRepository<InventoryLogVi
             @Param("end") java.time.LocalDate end,
             org.springframework.data.domain.Pageable pageable);
 
+
+    // 입고·출고·조정을 모은 뷰에서 최대일시. 마지막변동일을 한 번에 구함.
+    @Query("select max(v.date) from InventoryLogView v where v.materialId = :materialId")
+    LocalDateTime lastMoveAt(@Param("materialId") Long materialId);
+
 }

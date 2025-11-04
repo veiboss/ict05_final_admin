@@ -15,8 +15,7 @@ import java.util.Optional;
  *
  * <p>본사 재고의 수량 및 적정 수량 관리 기능을 담당한다.</p>
  */
-public interface InventoryRepository
-        extends JpaRepository<HqInventory, Long>, InventoryRepositoryCustom {
+public interface InventoryRepository extends JpaRepository<HqInventory, Long>, InventoryRepositoryCustom {
     /**
      * 재료 ID로 재고 조회
      */
@@ -46,7 +45,7 @@ public interface InventoryRepository
     /**
      * 출고 시 수량 감소
      */
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE HqInventory i SET i.quantity = i.quantity - :quantity WHERE i.material.id = :materialId")
     void subtractQuantity(@Param("materialId") Long materialId, @Param("quantity") BigDecimal quantity);
 }
