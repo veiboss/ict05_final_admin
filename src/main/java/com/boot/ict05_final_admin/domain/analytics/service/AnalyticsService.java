@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.analytics.service;
 
+import com.boot.ict05_final_admin.config.PythonPdfClient;
 import com.boot.ict05_final_admin.domain.analytics.dto.*;
 import com.boot.ict05_final_admin.domain.analytics.repository.AnalyticsRepository;
 import com.boot.ict05_final_admin.domain.analytics.util.LogExecutionTime;
@@ -16,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ import java.util.List;
 public class AnalyticsService {
 
     private final AnalyticsRepository analyticsRepository;
+    private final PythonPdfClient pythonPdfClient;
 
     @LogExecutionTime
     @Transactional(readOnly = true)
@@ -263,6 +268,29 @@ public class AnalyticsService {
         return style;
     }
 
+    /**
+     * KPI 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
+     */
+    @Transactional(readOnly = true)
+    public byte[] downloadPdfKpi(AnalyticsSearchDto cond) {
+        // 1. 데이터 조회 (전체)
+        List<KpiRowDto> rows = analyticsRepository.findKpi(cond, Pageable.unpaged()).getContent();
+
+        // 2. Python 서비스에 보낼 Payload 구성
+        Map<String, Object> criteria = new HashMap<>();
+        criteria.put("title", "KPI 분석 리포트");
+        criteria.put("startDate", cond.getStartDate().format(DateTimeFormatter.ISO_DATE));
+        criteria.put("endDate", cond.getEndDate().format(DateTimeFormatter.ISO_DATE));
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("criteria", criteria);
+        payload.put("data", rows);
+
+        // 3. PDF 생성 요청
+        return pythonPdfClient.generateKpiReportPdf(payload);
+    }
+
+    // --- 셀 헬퍼들 ---
     private static void setText(Row row, int col, String val, CellStyle st) {
         Cell cell = row.createCell(col);
         cell.setCellStyle(st);

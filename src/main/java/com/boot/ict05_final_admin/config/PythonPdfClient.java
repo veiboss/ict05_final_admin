@@ -80,6 +80,17 @@ public class PythonPdfClient {
     }
 
     /**
+     * KPI 리포트 PDF를 생성합니다.
+     * <p>엔드포인트: {@code POST /pdf/kpi-report}</p>
+     *
+     * @param payload 리포트 생성에 필요한 데이터(JSON 직렬화 가능한 객체)
+     * @return 생성된 PDF의 바이트 배열. 실패 시 길이 0의 바이트 배열
+     */
+    public byte[] generateKpiReportPdf(Object payload) {
+        return postPdf("/pdf/kpi-report", payload);
+    }
+
+    /**
      * 공통 POST 헬퍼.
      * <ul>
      *   <li>요청 본문: {@code application/json}</li>

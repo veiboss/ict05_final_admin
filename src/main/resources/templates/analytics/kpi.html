@@ -300,6 +300,13 @@
     window.location.href = url;
   }
 
+  function pdfDownload() {
+    const frm = document.getElementById('frm');
+    const params = new URLSearchParams(new FormData(frm));
+    const url = `/admin/API/analytics/kpi/pdf/download?` + params.toString();
+    window.location.href = url;
+  }
+
 // 일별/월별 필터링 색상
 (function () {
 const group = document.querySelector('[data-bs-toggle="buttons"]');
