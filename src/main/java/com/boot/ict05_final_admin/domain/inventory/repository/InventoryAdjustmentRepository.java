@@ -16,8 +16,4 @@ import java.time.LocalDateTime;
  */
 @Repository
 public interface InventoryAdjustmentRepository extends JpaRepository<InventoryAdjustment, Long> {
-    // 특정 재료(material.id)의 마지막 재고조정 일시 조회 (마지막변동일 계산에 사용)
-    @Query("select max(a.createdAt) from InventoryAdjustment a " +
-            "where a.inventory.material.id = :materialId")
-    LocalDateTime lastAdjAt(@Param("materialId") Long materialId);
 }
