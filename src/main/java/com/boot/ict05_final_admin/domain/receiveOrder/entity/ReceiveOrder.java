@@ -18,6 +18,7 @@ import java.util.List;
  *     <li>가맹점 정보 ({@link Store})</li>
  *     <li>수주 코드, 수주일, 배송 예정일, 실제 납기일</li>
  *     <li>총 주문 금액, 총 수량, 상태, 우선순위</li>
+ *     <li>역할 구분 ({@link ReceiveOrderRole})</li>
  *     <li>하위 상세 항목 리스트 ({@link ReceiveOrderDetail})</li>
  * </ul>
  *
@@ -88,6 +89,11 @@ public class ReceiveOrder {
     /** 수주 실제 납기일 */
     @Column(name = "purchase_order_actual_delivery_date")
     private LocalDate actualDeliveryDate;
+
+    /** 역할 구분 (본사 / 가맹점) */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "purchase_order_role", nullable = false, columnDefinition = "ENUM('HQ','STORE') DEFAULT 'HQ'")
+    private ReceiveOrderRole role;
 
     /** 수주 상세 목록 (1:N 관계) */
     @OneToMany(mappedBy = "receiveOrder")

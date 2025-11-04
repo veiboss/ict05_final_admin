@@ -49,16 +49,15 @@ public class ReceiveOrderRestController {
     private final ReceiveOrderService receiveOrderService;
 
     /**
-     * 수주 배송 상태 업데이트 API
+     * 수주의 배송 상태를 다음 단계로 변경한다.
      *
-     * <p>지정된 수주의 배송 상태를 다음 단계로 변경한다.<br>
-     * 예: 주문 접수 → 배송 중 → 배송 완료</p>
+     * <p>상태 전환 순서:
+     * RECEIVED → SHIPPING → DELIVERED</p>
      *
      * @param id 상태를 변경할 수주의 ID
      * @return 상태 업데이트 완료 메시지
-     *
      */
-    @PutMapping("/receive/status/{id}")
+    @PutMapping("/status/{id}")
     @Operation(
             summary = "수주 배송 상태 변경",
             description = "특정 수주의 배송 상태를 다음 단계로 전환합니다. 예: 접수 → 배송 중 → 완료.",
@@ -74,7 +73,8 @@ public class ReceiveOrderRestController {
                     )
             }
     )
-    public ResponseEntity<String> updateStatus(@PathVariable Long id) {
+    public ResponseEntity<String> updateStatus(
+            @Parameter(description = "수주 ID", required = true) @PathVariable Long id) {
         receiveOrderService.advanceStatus(id);
         return ResponseEntity.ok("상태 업데이트 완료");
     }
