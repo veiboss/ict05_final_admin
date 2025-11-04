@@ -7,7 +7,6 @@ import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryLogViewRepository;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryOverviewService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,6 @@ public class InventoryController {
     private final InventoryService inventoryService;
     private final InventoryInOutService inventoryInOutService;
     private final InventoryLogViewRepository inventoryLogViewRepository;
-    private final InventoryOverviewService inventoryOverviewService;
 
     /**
      * 본사 재고 목록을 페이징 처리하여 조회한다.
@@ -140,8 +138,6 @@ public class InventoryController {
                 endPlusOne,
                 corrected
         );
-
-        model.addAttribute("overview", inventoryOverviewService.getOverview(materialId, start, end));
 
         model.addAttribute("inventory", inventory);
         model.addAttribute("material", inventory.getMaterial());
