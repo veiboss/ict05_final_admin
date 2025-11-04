@@ -1,6 +1,5 @@
 package com.boot.ict05_final_admin.domain.analytics.dto;
 
-import com.boot.ict05_final_admin.domain.order.entity.OrderType;
 import lombok.*;
 import java.math.BigDecimal;
 

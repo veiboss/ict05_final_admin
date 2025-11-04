@@ -164,7 +164,7 @@
                         <div class="filter-list">
                           <label th:each="st : ${stores}">
                             <input type="checkbox" name="storeIds" th:value="${st.id}"
-                                   th:checked="${analyticsSearchDto.storeIds != null} ? ${#lists.contains(analyticsSearchDto.storeIds, st.id)} : false">
+                                   th:checked="${analyticsSearchDto.storeIds != null ? #lists.contains(analyticsSearchDto.storeIds, st.id) : false}">
                             <span th:text="${st.name}">Store A</span>
                           </label>
                         </div>
@@ -182,10 +182,12 @@
                     <!-- 일/월 + 페이지 사이즈 -->
                     <div class="pack-left">
                       <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
-                        <label class="btn medium" th:classappend="${analyticsSearchDto.viewBy?.name() == 'DAY'} ? ' active' : ''">
+                        <label class="btn medium"
+                               th:classappend="${analyticsSearchDto.viewBy != null and analyticsSearchDto.viewBy.name() == 'DAY'} ? ' active' : ''">
                           <input type="radio" name="viewBy" value="DAY" th:checked="${analyticsSearchDto.viewBy?.name() == 'DAY'}">일별
                         </label>
-                        <label class="btn medium" th:classappend="${analyticsSearchDto.viewBy?.name() == 'MONTH'} ? ' active' : ''">
+                        <label class="btn medium"
+                               th:classappend="${analyticsSearchDto.viewBy != null and analyticsSearchDto.viewBy.name() == 'MONTH'} ? ' active' : ''">
                           <input type="radio" name="viewBy" value="MONTH" th:checked="${analyticsSearchDto.viewBy?.name() == 'MONTH'}">월별
                         </label>
                       </div>
@@ -290,99 +292,107 @@
   })();
 </script>
 <script>
-  // 일별/월별 필터링 색상
-  (function () {
-    const group = document.querySelector('[data-bs-toggle="buttons"]');
-    if (!group) return;
-    const labels = group.querySelectorAll('label');
-    const inputs = group.querySelectorAll('input[name="viewBy"]');
-    inputs.forEach(input => {
-      input.addEventListener('change', (e) => {
-        labels.forEach(lb => lb.classList.remove('active'));
-        e.target.closest('label').classList.add('active');
-      });
-    });
-  })();
-
-  // === 가맹점 필터 ===
-  const sfRoot = document.getElementById('storeFilter');
-  const sfBtn  = document.getElementById('storeFilterBtn');
-  const sfMenu = document.getElementById('storeFilterMenu');
-  const sfSearch = document.getElementById('storeSearch');
-  const sfAll = document.getElementById('storeAll');
-  const sfLabel = document.getElementById('storeFilterLabel');
-  const sfList = sfMenu.querySelector('.filter-list');
-
-  // 열기/닫기
-  sfBtn.addEventListener('click', () => sfRoot.classList.toggle('open'));
-  document.addEventListener('click', (e) => { if (!sfRoot.contains(e.target)) sfRoot.classList.remove('open'); });
-
-  // '전체' 토글
-  sfAll.addEventListener('change', () => {
-    if (sfAll.checked) { sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.checked = false); }
-    updateStoreLabel();
-  });
-
-  // 개별 체크 → 전체 해제 / 모두 해제 시 전체 자동선택
-  sfList.addEventListener('change', (e) => {
-    if (e.target.name !== 'storeIds') return;
-    if (e.target.checked) sfAll.checked = false;
-    const any = [...sfList.querySelectorAll('input[name="storeIds"]')].some(c => c.checked);
-    if (!any) sfAll.checked = true;
-    updateStoreLabel();
-  });
-
-  // 검색
-  sfSearch.addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase();
-    sfList.querySelectorAll('label').forEach(lb => {
-      const txt = lb.querySelector('span').textContent.toLowerCase();
-      lb.style.display = txt.includes(q) ? '' : 'none';
-    });
-  });
-
-  function updateStoreLabel() {
-    if (sfAll.checked) { sfLabel.textContent = '전체'; return; }
-    const selected = [...sfList.querySelectorAll('input[name="storeIds"]:checked')];
-    if (selected.length === 1) {
-      sfLabel.textContent = selected[0].closest('label').querySelector('span').textContent;
-    } else {
-      sfLabel.textContent = `선택 ${selected.length}개`;
-    }
+  function excelDownload() {
+    const frm = document.getElementById('frm');
+    const params = new URLSearchParams(new FormData(frm)); // storeIds[] 포함 다 직렬화
+    // 컨텍스트패스 /admin + RestController @RequestMapping("/API/analytics")
+    const url = `/admin/API/analytics/kpi/download?` + params.toString();
+    window.location.href = url;
   }
 
-  function applyStoreFilter(){ updateStoreLabel(); sfRoot.classList.remove('open'); }
-  function resetStoreFilter(){
-    sfAll.checked = true;
-    sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.checked = false);
-    sfSearch.value = '';
-    sfList.querySelectorAll('label').forEach(lb => lb.style.display = '');
-    updateStoreLabel();
-  }
-
-  document.getElementById('frm').addEventListener('submit', function () {
-    const sfAll  = document.getElementById('storeAll');
-    const sfList = document.querySelector('#storeFilter .filter-list');
-    if (sfAll && sfAll.checked && sfList) {
-      sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.disabled = true);
-    }
+// 일별/월별 필터링 색상
+(function () {
+const group = document.querySelector('[data-bs-toggle="buttons"]');
+if (!group) return;
+const labels = group.querySelectorAll('label');
+const inputs = group.querySelectorAll('input[name="viewBy"]');
+inputs.forEach(input => {
+  input.addEventListener('change', (e) => {
+    labels.forEach(lb => lb.classList.remove('active'));
+    e.target.closest('label').classList.add('active');
   });
+});
+})();
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const sfList = document.querySelector('#storeFilter .filter-list');
-    const any = sfList && [...sfList.querySelectorAll('input[name="storeIds"]')].some(c => c.checked);
-    document.getElementById('storeAll').checked = !any;
-    updateStoreLabel();
+// === 가맹점 필터 ===
+const sfRoot = document.getElementById('storeFilter');
+const sfBtn  = document.getElementById('storeFilterBtn');
+const sfMenu = document.getElementById('storeFilterMenu');
+const sfSearch = document.getElementById('storeSearch');
+const sfAll = document.getElementById('storeAll');
+const sfLabel = document.getElementById('storeFilterLabel');
+const sfList = sfMenu.querySelector('.filter-list');
 
-    // ✅ 페이지 사이즈 변경 시 자동 조회 금지, page=1만 리셋
-    const sizeSel = document.getElementById('pageSizeSelect');
-    if (sizeSel) {
-      sizeSel.addEventListener('change', () => {
-        const pageHidden = document.querySelector('#frm input[name="page"]');
-        if (pageHidden) pageHidden.value = 1;
-      });
-    }
+// 열기/닫기
+sfBtn.addEventListener('click', () => sfRoot.classList.toggle('open'));
+document.addEventListener('click', (e) => { if (!sfRoot.contains(e.target)) sfRoot.classList.remove('open'); });
+
+// '전체' 토글
+sfAll.addEventListener('change', () => {
+if (sfAll.checked) { sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.checked = false); }
+updateStoreLabel();
+});
+
+// 개별 체크 → 전체 해제 / 모두 해제 시 전체 자동선택
+sfList.addEventListener('change', (e) => {
+if (e.target.name !== 'storeIds') return;
+if (e.target.checked) sfAll.checked = false;
+const any = [...sfList.querySelectorAll('input[name="storeIds"]')].some(c => c.checked);
+if (!any) sfAll.checked = true;
+updateStoreLabel();
+});
+
+// 검색
+sfSearch.addEventListener('input', (e) => {
+const q = e.target.value.toLowerCase();
+sfList.querySelectorAll('label').forEach(lb => {
+  const txt = lb.querySelector('span').textContent.toLowerCase();
+  lb.style.display = txt.includes(q) ? '' : 'none';
+});
+});
+
+function updateStoreLabel() {
+if (sfAll.checked) { sfLabel.textContent = '전체'; return; }
+const selected = [...sfList.querySelectorAll('input[name="storeIds"]:checked')];
+if (selected.length === 1) {
+  sfLabel.textContent = selected[0].closest('label').querySelector('span').textContent;
+} else {
+  sfLabel.textContent = `선택 ${selected.length}개`;
+}
+}
+
+function applyStoreFilter(){ updateStoreLabel(); sfRoot.classList.remove('open'); }
+function resetStoreFilter(){
+sfAll.checked = true;
+sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.checked = false);
+sfSearch.value = '';
+sfList.querySelectorAll('label').forEach(lb => lb.style.display = '');
+updateStoreLabel();
+}
+
+document.getElementById('frm').addEventListener('submit', function () {
+const sfAll  = document.getElementById('storeAll');
+const sfList = document.querySelector('#storeFilter .filter-list');
+if (sfAll && sfAll.checked && sfList) {
+  sfList.querySelectorAll('input[name="storeIds"]').forEach(c => c.disabled = true);
+}
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+const sfList = document.querySelector('#storeFilter .filter-list');
+const any = sfList && [...sfList.querySelectorAll('input[name="storeIds"]')].some(c => c.checked);
+document.getElementById('storeAll').checked = !any;
+updateStoreLabel();
+
+// ✅ 페이지 사이즈 변경 시 자동 조회 금지, page=1만 리셋
+const sizeSel = document.getElementById('pageSizeSelect');
+if (sizeSel) {
+  sizeSel.addEventListener('change', () => {
+    const pageHidden = document.querySelector('#frm input[name="page"]');
+    if (pageHidden) pageHidden.value = 1;
   });
+}
+});
 </script>
 </body>
 </html>

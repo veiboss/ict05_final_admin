@@ -22,16 +22,11 @@ public interface AnalyticsRepository {
 
     List<StoreOptionDto> findStoreOptions();
 
-    // ===================== Summary Cards =================
-
     KpiCardsDto findKpiSummary();
 
     OrdersCardsDto findOrdersSummary();
 
     MaterialsCardsDto findMaterialsSummary();
-
-
-    // ===================== List Rows =====================
 
     /**
      * KPI 목록(일/월 단위 테이블)에 출력할 집계 행들을 조회합니다.
@@ -57,7 +52,6 @@ public interface AnalyticsRepository {
      */
     Page<MaterialsRowDto> findMaterials(AnalyticsSearchDto cond, Pageable pageable);
 
-    // ===== 시간·요일 =====
     TimeChartCardDto findTimeChartSummary();                 // YTD 누적 차트
     TimeChartRowDto  findTimeChart(AnalyticsSearchDto cond); // 필터 적용 차트
     Page<TimeRowDto> findTimeRows(AnalyticsSearchDto cond, Pageable pageable); // 표
