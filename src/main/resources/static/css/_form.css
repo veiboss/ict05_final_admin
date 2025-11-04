@@ -189,7 +189,7 @@ textarea								{}
 			transition: all 0.1s ease-in-out;
 }
 .select-options label:not(:first-child)			{border-left: 1px solid  var(--bdr-color);}
-.select-options label .btn.medium:not(.circle)	{width: 100%; font-size: .9rem;}
+.select-options label .btn:not(.circle)			{width: 100%; font-size: .9rem;}
 .select-options label:not(:first-child):not(:last-child) .btn		{border-radius: 0;}
 .select-options label:first-child .btn		{border-radius: 4px 0 0 4px;}
 .select-options label:last-child .btn		{border-radius: 0 4px 4px 0;}
