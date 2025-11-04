@@ -83,16 +83,12 @@ public class ReceiveOrderService {
     }
 
     /**
-     * 수주의 배송 상태를 다음 단계로 변경한다.
-     *
-     * <p>상태 전환 순서:
-     * RECEIVED → PREPARING → SHIPPING → DELIVERED</p>
+     * 지정된 수주의 상태를 다음 단계로 전환한다.
      *
      * @param id 수주 ID
-     * @throws IllegalStateException 이미 배송 완료된 주문일 경우
-     * @throws IllegalArgumentException 해당 ID의 수주가 없을 경우
+     * @throws IllegalArgumentException 수주가 존재하지 않을 경우
+     * @throws IllegalStateException 이미 완료된 주문일 경우
      */
-    @Transactional
     public void advanceStatus(Long id) {
         ReceiveOrder order = receiveOrderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
@@ -101,8 +97,7 @@ public class ReceiveOrderService {
         ReceiveOrderStatus next;
 
         switch (current) {
-            case RECEIVED -> next = ReceiveOrderStatus.PREPARING;
-            case PREPARING -> next = ReceiveOrderStatus.SHIPPING;
+            case RECEIVED -> next = ReceiveOrderStatus.SHIPPING;
             case SHIPPING -> next = ReceiveOrderStatus.DELIVERED;
             default -> throw new IllegalStateException("배송 완료된 주문은 변경할 수 없습니다.");
         }

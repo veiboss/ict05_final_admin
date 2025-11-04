@@ -43,5 +43,4 @@ public interface InventoryLogViewRepository extends JpaRepository<InventoryLogVi
             @Param("start") java.time.LocalDate start,
             @Param("end") java.time.LocalDate end,
             org.springframework.data.domain.Pageable pageable);
-
 }

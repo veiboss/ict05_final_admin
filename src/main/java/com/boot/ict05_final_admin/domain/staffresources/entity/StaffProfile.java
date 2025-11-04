@@ -109,4 +109,6 @@ public class StaffProfile {
         this.store = store;
     }
 
+    public void changeMember(Member member) { this.member = member;}
+
 }

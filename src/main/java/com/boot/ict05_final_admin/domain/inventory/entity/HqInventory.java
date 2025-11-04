@@ -26,7 +26,7 @@ public class HqInventory extends Inventory {
     private Long id;
 
     /** 본사 재료 (FK: material.material_id) */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id_fk", nullable = false,
             foreignKey = @ForeignKey(name = "fk_inventory_material"))
     private Material material;

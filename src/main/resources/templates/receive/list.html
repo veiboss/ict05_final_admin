@@ -262,24 +262,17 @@
                                         </label>
 
                                         <label class="btn medium"
-                                               th:classappend="${receiveOrderSearchDTO.receiveOrderStatus?.name() == 'PREPARING'} ? ' active' : ''">
-                                            <input type="radio" name="receiveOrderStatus" value="PREPARING"
-                                                   th:checked="${receiveOrderSearchDTO.receiveOrderStatus?.name() == 'PREPARING'}"
-                                                   onclick="setFilter('PREPARING')">배송준비
-                                        </label>
-
-                                        <label class="btn medium"
                                                th:classappend="${receiveOrderSearchDTO.receiveOrderStatus?.name() == 'SHIPPING'} ? ' active' : ''">
                                             <input type="radio" name="receiveOrderStatus" value="SHIPPING"
                                                    th:checked="${receiveOrderSearchDTO.receiveOrderStatus?.name() == 'SHIPPING'}"
-                                                   onclick="setFilter('SHIPPING')">배송중
+                                                   onclick="setFilter('SHIPPING')">배송
                                         </label>
 
                                         <label class="btn medium"
                                                th:classappend="${receiveOrderSearchDTO.receiveOrderStatus?.name() == 'DELIVERED'} ? ' active' : ''">
                                             <input type="radio" name="receiveOrderStatus" value="DELIVERED"
                                                    th:checked="${receiveOrderSearchDTO.receiveOrderStatus?.name() == 'DELIVERED'}"
-                                                   onclick="setFilter('DELIVERED')">배송완료
+                                                   onclick="setFilter('DELIVERED')">완료
                                         </label>
                                     </div>
 
@@ -324,29 +317,28 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="receiveOrder, stat : ${receiveOrder.content}">
-                            <!--                            <td><input type="checkbox" class="row-checkbox" th:id="'chk-'+${stat.index}" th:value="${receiveOrder.id}" /></td>&ndash;&gt;-->
-                            <td th:text="${receiveOrder.storeName}">가맹점명</td>
-                            <td th:text="${receiveOrder.orderCode}">주문번호</td>
-                            <td th:text="${receiveOrder.storeLocation}">지역</td>
+                        <tr th:each="order, stat : ${receiveOrder.content}">
+                            <td th:text="${order.storeName}">가맹점명</td>
+                            <td th:text="${order.orderCode}">주문번호</td>
+                            <td th:text="${order.storeLocation}">지역</td>
                             <td>
                                 <span th:class="|badge rounded-pill ${
-                                    receiveOrder.status.name() == 'RECEIVED' ? 'bg-warning' :
-                                    (receiveOrder.status.name() == 'PREPARING' ? 'bg-success' :
-                                    (receiveOrder.status.name() == 'SHIPPING' ? 'bg-primary' : 'bg-secondary')) }|"
-                                    th:text="${receiveOrder.status.description}">
+                                    order.status.name() == 'RECEIVED' ? 'bg-warning' :
+                                    (order.status.name() == 'SHIPPING' ? 'bg-primary' : 'bg-success')}|"
+                                      th:text="${order.status.description}">
                                 </span>
                             </td>
-
-                            <td th:text="${receiveOrder.priority.description}"
-                                th:style="${receiveOrder.priority.name() == 'URGENT'} ? 'color:red;' : ''">우선순위</td>
-                            <td th:text="${#numbers.formatInteger(receiveOrder.totalPrice, 0, 'COMMA')} + '원'">주문액</td>
-                            <td th:text="${receiveOrder.totalCount}">품목수</td>
-                            <td th:text="${#temporals.format(receiveOrder.deliveryDate, 'yyyy-MM-dd')}">배송예정일</td>
+                            <td th:text="${order.priority.description}"
+                                th:style="${order.priority.name() == 'URGENT'} ? 'color:red;' : ''">
+                                우선순위
+                            </td>
+                            <td th:text="${#numbers.formatInteger(order.totalPrice, 0, 'COMMA')} + '원'">주문액</td>
+                            <td th:text="${order.totalCount}">품목수</td>
+                            <td th:text="${#temporals.format(order.deliveryDate, 'yyyy-MM-dd')}">배송예정일</td>
                             <td>
                                 <button type="button"
                                         class="btn small normal"
-                                        th:onclick="|openPopup(${receiveOrder.id})|">
+                                        th:onclick="|openPopup(${order.id})|">
                                     <span class="material-symbols-outlined">visibility</span>
                                 </button>
                             </td>
@@ -470,22 +462,22 @@
                 <button type="button"
                         class="btn medium color1"
                         th:attr="id='updateStatusBtn-' + ${order.id}"
+                        th:attrappend="data-status=${order.status.name()}"
                         th:onclick="|updateStatus(${order.id})|"
                         th:disabled="${order.status.name() == 'DELIVERED'}">
                     <span class="material-symbols-outlined"
                           th:attr="id='statusIcon-' + ${order.id}"
-                          th:text="${order.status.name() == 'RECEIVED' ? 'pallet'
-                   : order.status.name() == 'PREPARING' ? 'delivery_truck_speed'
-                   : order.status.name() == 'SHIPPING' ? 'check_box'
-                   : order.status.name() == 'DELIVERED' ? 'deployed_code_account'
-                   : 'help'}"></span>
-
+                          th:text="${order.status.name() == 'RECEIVED' ? 'local_shipping'
+                                   : order.status.name() == 'SHIPPING' ? 'check_circle'
+                                   : order.status.name() == 'DELIVERED' ? 'done_all'
+                                   : 'help'}">
+                    </span>
                     <span th:attr="id='statusLabel-' + ${order.id}"
-                          th:text="${order.status.name() == 'RECEIVED' ? '배송 준비'
-                   : order.status.name() == 'PREPARING' ? '배송 중'
-                   : order.status.name() == 'SHIPPING' ? '배송 완료'
-                   : order.status.name() == 'DELIVERED' ? '완료됨'
-                   : '알 수 없음'}"></span>
+                          th:text="${order.status.name() == 'RECEIVED' ? '배송 시작'
+                       : order.status.name() == 'SHIPPING' ? '배송 완료 대기'
+                       : order.status.name() == 'DELIVERED' ? '완료됨'
+                       : '알 수 없음'}">
+                    </span>
                 </button>
             </div>
         </div>
@@ -494,41 +486,34 @@
 <!-- popup 끝 -->
 
 <script>
-    function setFilter(receiveOrderStatus) {
-      const params = new URLSearchParams(window.location.search);
-
-      if (receiveOrderStatus === '') {
-        params.set("receiveOrderStatus", '');
-      } else {
-        params.set("receiveOrderStatus", receiveOrderStatus);
-      }
-
-      const query = params.toString();
-      window.location = `/admin/receive/list?${query}`;
+    /** 상태 필터 변경 */
+    function setFilter(status) {
+        const params = new URLSearchParams(window.location.search);
+        if (status) {
+            params.set("receiveOrderStatus", status);
+        } else {
+            params.delete("receiveOrderStatus");
+        }
+        params.set("page", 1);
+        window.location.href = `/admin/receive/list?${params.toString()}`;
     }
 
+    /** 페이지 사이즈 변경 */
     function setPageSize(size) {
         const params = new URLSearchParams(window.location.search);
-        params.set('size', size);
-        params.set('page', 1);
-        window.location = `/admin/receive/list?${params.toString()}`;
+        params.set("size", size);
+        params.set("page", 1);
+        window.location.href = `/admin/receive/list?${params.toString()}`;
     }
 
+    /** 엑셀 다운로드 */
     function excelDownload() {
-        const formData = new FormData(document.getElementById('frm'));
-        const type = formData.get("type");
-        const s = formData.get("s");
-        const size = formData.get("size");
-        const status = formData.get("status");
-        window.location = `/admin/API/receive/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}`;
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = `/admin/API/receive/download?${params.toString()}`;
     }
-</script>
-<script>
-    function openPopup(id) {
-         // 현재 주문 ID를 전역에 저장 (배송 준비 버튼에서 사용)
-        window.currentOrderId = id;
 
-        // 팝업 열기
+    /** 팝업 열기 */
+    function openPopup(id) {
         const popup = document.getElementById('popup-' + id);
         if (!popup) {
             console.warn('팝업을 찾을 수 없음: popup-' + id);
@@ -536,87 +521,110 @@
         }
         popup.classList.add('active');
 
-        // 업 표시 후 스크롤 초기화 (렌더링 완료 후 실행)
-        setTimeout(() => {
-            const body = popup.querySelector('.popup-body');
-            if (body) {
-                body.scrollTop = 0;
-            }
-        });
-
-        // 이 부분에서 id AJAX 요청하거나 데이터 바인딩 수행
-
+        // 스크롤 초기화
+        const body = popup.querySelector('.popup-body');
+        if (body) body.scrollTop = 0;
     }
 
-    function formatCurrency(amount) {
-        if (typeof amount !== 'number') return amount;
-        return amount.toLocaleString('ko-KR') + '원';
-    }
-
-    // 팝업 닫기 함수 (기존 코드 참고)
+    /** 팝업 닫기 */
     function modalClose(selector) {
         const popup = document.querySelector(selector);
-        popup.classList.remove('active');
+        if (popup) popup.classList.remove('active');
     }
 
     /**
-     * 배송 상태 업데이트 및 버튼 갱신
+     * 배송 상태 업데이트 (본사)
+     * - RECEIVED → SHIPPING
+     * - SHIPPING → DELIVERED (확인창)
+     * - DELIVERED → 비활성화
      */
     function updateStatus(id) {
         const btn = document.getElementById('updateStatusBtn-' + id);
         const icon = document.getElementById('statusIcon-' + id);
         const label = document.getElementById('statusLabel-' + id);
 
+        const status = btn.getAttribute('data-status');
+        console.log('현재 상태:', status);
+
         if (!btn || !icon || !label) {
-            alert(`요소를 찾을 수 없음: ${id}`);
-            console.log('btn:', btn, 'icon:', icon, 'label:', label);
+            console.warn('요소를 찾을 수 없음:', id);
             return;
         }
 
-        fetch(`/admin/API/receive/status/${id}`, { method: 'PUT' })
-        .then(res => {
-          if (!res.ok) throw new Error('상태 업데이트 실패');
-          return res.text();
-        })
-        .then(() => {
-          // 상태 순서대로 변경: RECEIVED → PREPARING → SHIPPING → DELIVERED
-          const current = label.textContent.trim();
+        const currentText = label.textContent.trim();
 
-          switch (current) {
-            case '접수됨':
-              icon.textContent = 'pallet';
-              label.textContent = '배송 준비';
-              break;
-            case '배송 준비':
-              icon.textContent = 'delivery_truck_speed';
-              label.textContent = '배송 중';
-              break;
-            case '배송 중':
-              icon.textContent = 'check_box';
-              label.textContent = '배송 완료';
-              break;
-            case '배송 완료':
-              icon.textContent = 'deployed_code_account';
-              label.textContent = '완료됨';
-              btn.disabled = true;
-              break;
-            default:
-              icon.textContent = 'help';
-              label.textContent = '알 수 없음';
-          }
+        // 1️⃣ 접수 → 배송 중
+        if (currentText === '배송 시작' || currentText === '접수됨') {
+            fetch(`/admin/API/receive/status/${id}`, { method: 'PUT' })
+                .then(res => {
+                    if (!res.ok) throw new Error('상태 업데이트 실패');
+                    return res.text();
+                })
+                .then(() => {
+                    icon.textContent = 'local_shipping';
+                    label.textContent = '배송 중';
+                    toastMessage('배송 상태가 "배송 중"으로 변경되었습니다.');
+                    modalClose('#popup-' + id);
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('업데이트 실패: ' + err.message);
+                });
+            return;
+        }
 
-          // 팝업 닫기
-          modalClose('#popup-' + id);
+        // 2️⃣ 배송 중 → 완료 (확인창)
+        if (currentText === '배송 중' || currentText === '배송 완료 대기') {
+            if (!confirm('해당 주문을 "완료" 상태로 변경하시겠습니까?')) return;
 
-          // 리스트 새로고침으로 반영
-          location.reload();
-        })
-        .catch(err => {
-          console.error(err);
-          alert('업데이트 실패: ' + err.message);
-        });
+            fetch(`/admin/API/receive/status/${id}`, { method: 'PUT' })
+                .then(res => {
+                    if (!res.ok) throw new Error('상태 업데이트 실패');
+                    return res.text();
+                })
+                .then(() => {
+                    icon.textContent = 'done_all';
+                    label.textContent = '완료됨';
+
+                    btn.disabled = true;
+                    toastMessage('배송 상태가 "완료됨"으로 변경되었습니다.');
+                    modalClose('#popup-' + id);
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('업데이트 실패: ' + err.message);
+                });
+            return;
+        }
+
+        // 3️⃣ 완료 상태 → 비활성화
+        if (currentText === '완료됨') {
+            btn.disabled = true;
+            toastMessage('이미 완료된 주문입니다.');
+            modalClose('#popup-' + id);
+        }
     }
 
+    /** 간단한 알림 표시 (toast) */
+    function toastMessage(msg) {
+        const toast = document.createElement('div');
+        toast.textContent = msg;
+        Object.assign(toast.style, {
+            position: 'fixed',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#333',
+            color: '#fff',
+            padding: '10px 16px',
+            borderRadius: '6px',
+            zIndex: '99999',
+        });
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
 </script>
 </body>
 </html>

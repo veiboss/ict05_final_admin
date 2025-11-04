@@ -13,9 +13,19 @@ package com.boot.ict05_final_admin.domain.staffresources.entity;
  */
 public enum StaffDepartment {
 
-    OFFICE("본사팀"),
+    OFFICE("본사 팀"),
 
-    STORE("판매팀");
+    STORE("판매 팀"),
+
+    FRANCHISE("가맹관리 팀"),
+
+    OPS("메뉴·재고 팀"),
+
+    HR("인사 팀"),
+
+    ANALYTICS("분석 팀"),
+
+    ADMIN("시스템 관리 팀");
 
     /** 한글 설명 */
     private final String description;
