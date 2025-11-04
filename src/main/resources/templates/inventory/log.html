@@ -56,7 +56,7 @@
                                 <span class="pack-left">
                                     <input type="number" step="1"
                                            id="newQty" name="quantityAfter"
-                                           class="input-text small fc-000" style="width: 50px;"
+                                           class="input-text small fc-000" style="width: 60px;"
                                            th:value="${inventory.quantity}">
                                     <button type="button" class="btn small color1" id="confirmBtn">확인</button>
                                     <button type="button" class="btn small bdr-color1" id="cancelBtn">취소</button>
@@ -64,7 +64,7 @@
                             </span>
 
                             <!-- 수정 버튼 -->
-                            <button type="button" class="btn small bdr-color1" id="adjustBtn" style="margin-left:6px;">수정</button>
+                            <button type="button" class="btn xsmall bdr-color1" id="adjustBtn" style="margin-left:6px;">수정</button>
                         </span>
                     </div>
                     <div class="pack-down col">
@@ -72,7 +72,29 @@
                         <span class="pack-left">
                             <span th:text="${inventory.optimalQuantity}">적정 수량</span>
                             <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+                            <a th:href="@{/material/modify/{id}(id=${material.id})}" class="btn xsmall bdr-color1">재료수정</a>
                         </span>
+                    </div>
+                </div>
+
+                <hr class="line bg-gray">
+
+                <div class="row-4 mb-2" th:if="${overview != null}">
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">일평균출고량</span>
+                        <span th:text="${overview.avgDailyUse}">0</span>
+                    </div>
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">재고 커버리지(DOH)</span>
+                        <span th:text="${overview.doh}">0</span>
+                    </div>
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">재고가치</span>
+                        <span th:text="${overview.stockValue}">0</span>
+                    </div>
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">마지막 변동일</span>
+                        <span th:text="${#temporals.format(overview.lastMoveAt, 'yyyy-MM-dd')}">-</span>
                     </div>
                 </div>
 
