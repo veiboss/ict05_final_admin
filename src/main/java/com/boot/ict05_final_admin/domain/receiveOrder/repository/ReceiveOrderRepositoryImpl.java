@@ -86,7 +86,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         ro.priority,
                         ro.totalPrice,
                         ro.totalCount.as("totalCount"),
-                        ro.deliveryDate
+                        ro.actualDeliveryDate
                 ))
                 .from(ro)
                 .join(ro.store, store)
@@ -156,14 +156,14 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
     // 리스트 개수 카운팅
     @Override
-    public long countReceive(ReceiveOrderSearchDTO receiveOrederSearchDTO) {
+    public long countReceive(ReceiveOrderSearchDTO receiveOrderSearchDTO) {
         QReceiveOrder receiveOrder = QReceiveOrder.receiveOrder;
 
         long total = queryFactory
                 .select(receiveOrder.count())
                 .from(receiveOrder)
                 .where(
-                        eqOrderCode(receiveOrederSearchDTO, receiveOrder)
+                        eqOrderCode(receiveOrderSearchDTO, receiveOrder)
                 )
                 .fetchOne();
 
@@ -183,7 +183,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         ro.id,
                         ro.orderCode,
                         ro.orderDate,
-                        ro.deliveryDate,
+                        ro.actualDeliveryDate,
                         ro.status,
                         ro.priority,
                         store.name.as("storeName"),
@@ -191,8 +191,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         store.location.as("storeLocation"),
                         ro.totalCount.as("totalCount"),
                         ro.totalPrice,
-                        ro.remark,
-                        ro.deliveryDate
+                        ro.remark
                 ))
                 .from(ro)
                 .leftJoin(ro.store, store)

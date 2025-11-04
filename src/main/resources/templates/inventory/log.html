@@ -21,13 +21,13 @@
 
     <div id="container" class="container">
         <div class="title-bar">
-            <h2 class="page-title ellipsis max-900">
+            <h2 class="page-title ellipsis max-1132">
                 <span th:text="${material.name}">재료명</span>
                 <span class="fw-400">본사 재고 내역</span>
             </h2>
         </div>
 
-        <main id="content" class="max-900">
+        <main id="content" class="max-1132">
             <input type="hidden" id="inventoryId" th:value="${inventory.id}">
             <input type="hidden" id="materialId" th:value="${material.id}">
             <!-- 사용중지 경고 -->
@@ -36,7 +36,7 @@
                 본사에서 <strong>사용중지된 재료</strong>입니다.
             </div>
             <div class="box-wrap">
-                <div class="row-4">
+                <div class="row-5">
                     <div class="pack-down col">
                         <span class="fs-ss fc-999">상태</span>
                         <span>
@@ -45,34 +45,32 @@
                             </span>
                         </span>
                     </div>
-                    <div class="pack-down col-2">
-                        <span class="fs-ss fc-999">현재 수량</span>
-                        <span class="pack-left mo-pack-down">
-                            <span th:text="${inventory.quantity}">현재 수량</span>
-                            <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
-
-                            <!-- 수량 조정 -->
-                            <span id="adjustForm" style="display:none;">
-                                <span class="pack-left">
-                                    <input type="number" step="1"
-                                           id="newQty" name="quantityAfter"
-                                           class="input-text small fc-000" style="width: 60px;"
-                                           th:value="${inventory.quantity}">
-                                    <button type="button" class="btn small color1" id="confirmBtn">확인</button>
-                                    <button type="button" class="btn small bdr-color1" id="cancelBtn">취소</button>
-                                </span>
-                            </span>
-
-                            <!-- 수정 버튼 -->
-                            <button type="button" class="btn xsmall bdr-color1" id="adjustBtn" style="margin-left:6px;">수정</button>
-                        </span>
-                    </div>
                     <div class="pack-down col">
                         <span class="fs-ss fc-999">적정 수량</span>
                         <span class="pack-left">
                             <span th:text="${inventory.optimalQuantity}">적정 수량</span>
                             <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
                             <a th:href="@{/material/modify/{id}(id=${material.id})}" class="btn xsmall bdr-color1">재료수정</a>
+                        </span>
+                    </div>
+                    <div class="pack-down col-3">
+                        <span class="fs-ss fc-999">현재 수량</span>
+                        <span class="pack-left mo-pack-down">
+                            <span th:text="${inventory.quantity}">현재 수량</span>
+                            <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+
+                            <!-- 수량 조정 -->
+                            <span id="adjustForm" class="pack-left" style="display:none;">
+                                <input type="number" step="1"
+                                       id="newQty" name="quantityAfter"
+                                       class="input-text small fc-000" style="min-width: 60px;"
+                                       th:value="${inventory.quantity}">
+                                <button type="button" class="btn small color1" id="confirmBtn">확인</button>
+                                <button type="button" class="btn small bdr-color1" id="cancelBtn">취소</button>
+                            </span>
+
+                            <!-- 수정 버튼 -->
+                            <button type="button" class="btn xsmall bdr-color1" id="adjustBtn" >수정</button>
                         </span>
                     </div>
                 </div>
@@ -199,12 +197,12 @@
 
     btn.addEventListener("click", () => {
         btn.style.display = "none";
-        form.style.display = "inline";
+        form.style.display = "";
     });
 
     cancel.addEventListener("click", () => {
         form.style.display = "none";
-        btn.style.display = "inline";
+        btn.style.display = "";
     });
 
     confirm.addEventListener("click", () => {

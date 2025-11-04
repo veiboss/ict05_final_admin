@@ -85,24 +85,38 @@ public class ReceiveOrderService {
     /**
      * 지정된 수주의 상태를 다음 단계로 전환한다.
      *
+     * <p>상태 전환 순서:
+     *  * RECEIVED → SHIPPING → DELIVERED<br>
+     *  * 또는 RECEIVED → CANCELED</p>
+     *
      * @param id 수주 ID
      * @throws IllegalArgumentException 수주가 존재하지 않을 경우
      * @throws IllegalStateException 이미 완료된 주문일 경우
      */
-    public void advanceStatus(Long id) {
+    public void updateStatus(Long id, String action) {
         ReceiveOrder order = receiveOrderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
 
-        ReceiveOrderStatus current = order.getStatus();
-        ReceiveOrderStatus next;
-
-        switch (current) {
-            case RECEIVED -> next = ReceiveOrderStatus.SHIPPING;
-            case SHIPPING -> next = ReceiveOrderStatus.DELIVERED;
-            default -> throw new IllegalStateException("배송 완료된 주문은 변경할 수 없습니다.");
+        switch (action.toUpperCase()) {
+            case "SHIP" -> {
+                if (order.getStatus() == ReceiveOrderStatus.RECEIVED) {
+                    order.setStatus(ReceiveOrderStatus.SHIPPING);
+                } else if (order.getStatus() == ReceiveOrderStatus.SHIPPING) {
+                    order.setStatus(ReceiveOrderStatus.DELIVERED);
+                } else {
+                    throw new IllegalStateException("배송을 시작할 수 없는 상태입니다.");
+                }
+            }
+            case "CANCEL" -> {
+                if (order.getStatus() == ReceiveOrderStatus.RECEIVED) {
+                    order.setStatus(ReceiveOrderStatus.CANCELED);
+                } else {
+                    throw new IllegalStateException("이미 배송이 진행 중이거나 완료된 주문은 취소할 수 없습니다.");
+                }
+            }
+            default -> throw new IllegalArgumentException("알 수 없는 액션: " + action);
         }
 
-        order.setStatus(next);
         receiveOrderRepository.save(order);
     }
 
@@ -157,7 +171,7 @@ public class ReceiveOrderService {
         header.createCell(5).setCellValue("우선순위");
         header.createCell(6).setCellValue("주문액");
         header.createCell(7).setCellValue("품목수");
-        header.createCell(8).setCellValue("배송예정일");
+        header.createCell(8).setCellValue("배송완료일");
 
         long count = receiveOrderRepository.countReceive(receiveOrderSearchDTO);
         PageRequest pageRequest = PageRequest.of(0, (int) count, Sort.by("id").descending());
@@ -178,9 +192,9 @@ public class ReceiveOrderService {
             priceCell.setCellStyle(moneyCellStyle);
             sheet1_row.createCell(7).setCellValue(ro.getTotalCount());
 
-            if (ro.getDeliveryDate() != null) {
+            if (ro.getActualDeliveryDate() != null) {
                 Cell dateCell = sheet1_row.createCell(8);
-                Date excelDate = Date.from(ro.getDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date excelDate = Date.from(ro.getActualDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
                 dateCell.setCellValue(excelDate);
                 dateCell.setCellStyle(dateCellStyle);
             } else {
@@ -276,10 +290,10 @@ public class ReceiveOrderService {
         }
 
         Row orderInfo2 = sheet.createRow(rowIdx++);
-        orderInfo2.createCell(0).setCellValue("배송예정일");
+        orderInfo2.createCell(0).setCellValue("배송완료일");
         Cell deliveryDateCell = orderInfo2.createCell(1);
-        if (order.getDeliveryDate() != null) {
-            deliveryDateCell.setCellValue(Date.from(order.getDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        if (order.getActualDeliveryDate() != null) {
+            deliveryDateCell.setCellValue(Date.from(order.getActualDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             deliveryDateCell.setCellStyle(dateStyle);
         }
         orderInfo2.createCell(2).setCellValue("상태");

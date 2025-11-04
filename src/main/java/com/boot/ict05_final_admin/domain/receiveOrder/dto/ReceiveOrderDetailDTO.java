@@ -54,8 +54,8 @@ public class ReceiveOrderDetailDTO {
     /** 발주일 */
     private LocalDate orderDate;
 
-    /** 수주 배송예정일 */
-    private LocalDate deliveryDate;
+    /** 수주 배송 완료일 */
+    private LocalDate actualDeliveryDate;
 
     /** 수주 상태 */
     private ReceiveOrderStatus status;
