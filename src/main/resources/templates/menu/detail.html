@@ -43,7 +43,7 @@
 
                         <div class="field pack-down col">
                             <span class="fs-ss fc-999">판매상태</span>
-                            <span th:class="'badge rounded-pill ' + (*{menuShow.name()} == 'SHOW' ? 'bg-success text-white' : 'bg-secondary text-white')"
+                            <span th:class="'badge rounded-pill ' + (*{menuShow.name()} == 'SHOW' ? 'bg-success text-white' : 'bg-danger text-white')"
                                   th:text="${menu.menuShow.description}">판매상태
                             </span>
                         </div>

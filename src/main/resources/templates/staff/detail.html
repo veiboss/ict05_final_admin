@@ -99,13 +99,10 @@
                 </div><!--pack-down.gap-12-->
 
                 <div class="button-area pack-both">
-                    <a th:href="@{/staff/delete/{id}(id=${staff.id})}" class="btn medium bdr-color1">삭제</a>
+                    <a href="/admin/staff/list" class="btn medium color1">목록</a>
                     <a th:href="@{/staff/modify/{id}(id=${staff.id})}" class="btn medium color1">수정</a>
                 </div>
             </div><!--//.box-wrap-->
-            <div class="button-area pack-both">
-                <a href="/admin/staff/list" class="btn medium color1">목록</a>
-            </div>
         </main>
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->

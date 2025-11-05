@@ -40,7 +40,7 @@ public class MenuWriteFormDTO {
 
     /** 메뉴코드 */
     @NotNull
-    private  String menuCode;
+    private String menuCode;
 
     /** 가격(필수) */
     @NotNull @DecimalMin(value = "0.0", inclusive = true, message = "가격은 0 이상이어야 합니다")
@@ -57,9 +57,11 @@ public class MenuWriteFormDTO {
 
     /** 재료구성 – 주재료(필수) */
     @Valid
+    @Builder.Default
     private List<RecipeItemDTO> mainMaterials = new ArrayList<>();
 
     /** 재료구성 – 소스(필수) */
     @Valid
+    @Builder.Default
     private List<RecipeItemDTO> sauceMaterials= new ArrayList<>();
 }

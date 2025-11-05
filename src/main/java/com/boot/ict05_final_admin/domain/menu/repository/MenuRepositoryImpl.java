@@ -36,7 +36,8 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         // WHERE 조건
         BooleanExpression where = andAll(
                 eqNameOrInfo(dto, menu),
-                eqCategory(dto, menu)
+                eqCategory(dto, menu),
+                eqShow(dto, menu)
         );
 
         // 정렬 (기본: menuId DESC)
@@ -126,9 +127,9 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         String type = Optional.ofNullable(dto.getType()).orElse("all");
         return switch (type) {
             case "name" -> menu.menuName.containsIgnoreCase(kw);
-            case "info" -> menu.menuInformation.containsIgnoreCase(kw); // 필드명 확인
-            default -> menu.menuName.containsIgnoreCase(kw)
-                    .or(menu.menuInformation.containsIgnoreCase(kw));    // 필드명 확인
+            //case "info" -> menu.menuInformation.containsIgnoreCase(kw); // 필드명 확인
+            default -> menu.menuName.containsIgnoreCase(kw);
+                    //.or(menu.menuInformation.containsIgnoreCase(kw));    // 필드명 확인
         };
     }
 
@@ -136,6 +137,12 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
     private BooleanExpression eqCategory(MenuSearchDTO dto, QMenu menu) {
         if (dto.getMenuCategoryId() == null || dto.getMenuCategoryId() == 0) return null;
         return menu.menuCategory.menuCategoryId.eq(dto.getMenuCategoryId());
+    }
+
+    /** 판매상태 필터 */
+    private BooleanExpression eqShow(MenuSearchDTO dto, QMenu menu) {
+        if (dto.getMenuShow() == null) return null;
+        return menu.menuShow.eq(dto.getMenuShow());
     }
 
     /** 여러 조건 and 결합 */

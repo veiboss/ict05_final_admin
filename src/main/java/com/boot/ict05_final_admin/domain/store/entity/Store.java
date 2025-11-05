@@ -30,7 +30,7 @@ public class Store {
     /** 가맹점 시퀀스 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_id", columnDefinition = "BIGINT")
+    @Column(name = "store_id", columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
     /** 본사 담당자 시퀀스 */

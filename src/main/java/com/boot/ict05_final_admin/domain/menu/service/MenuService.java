@@ -75,6 +75,7 @@ public class MenuService {
                 .menuName(dto.getMenuName())
                 .menuNameEnglish(dto.getMenuNameEnglish())
                 .menuPrice(dto.getMenuPrice())
+                .menuCode(dto.getMenuCode())
                 .menuInformation(dto.getMenuInformation())
                 .menuKcal(dto.getMenuKcal())
                 .menuShow(show)

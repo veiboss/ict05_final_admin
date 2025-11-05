@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  * <p>각 {@link ReceiveOrder}와 연결되어 있으며,
  * 실제 수주에 포함된 재료({@link Material})와 본사 재고({@link HqInventory})를 참조한다.</p>
  *
- * <p>DB 테이블명: <b>purchase_order_detail</b></p>
+ * <p>DB 테이블명: <b>receive_order_detail</b></p>
  *
  * @author 최민진
  * @since 2025.10

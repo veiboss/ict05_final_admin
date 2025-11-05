@@ -212,23 +212,28 @@ public class MenuController {
             form.setMenuShow(MenuShow.SHOW);
         }
 
-        // 4️⃣ 셀렉트용 카테고리/재료 데이터 추가
+        // 카테고리 그대로
         List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
-        List<MaterialSimpleDTO> materials = new ArrayList<>();
 
-        materials.addAll(materialRepository.findByCategory(MaterialCategory.BASE)
-                .stream().map(m -> new MaterialSimpleDTO(m.getId(), m.getName())).toList());
-        materials.addAll(materialRepository.findByCategory(MaterialCategory.SAUCE)
-                .stream().map(m -> new MaterialSimpleDTO(m.getId(), m.getName())).toList());
+        // 주재료 옵션
+        List<MaterialSimpleDTO> mainOptions = materialRepository.findByCategory(MaterialCategory.BASE)
+                .stream()
+                .map(m -> new MaterialSimpleDTO(m.getId(), m.getName()))
+                .toList();
 
+        // 소스 옵션 (예: SAUCE)
+        List<MaterialSimpleDTO> sauceOptions = materialRepository.findByCategory(MaterialCategory.SAUCE)
+                .stream()
+                .map(m -> new MaterialSimpleDTO(m.getId(), m.getName()))
+                .toList();
 
-        // 4) 모델
         model.addAttribute("menuModifyFormDTO", form);
         model.addAttribute("menuCategories", categories);
         model.addAttribute("menuShowValues", MenuShow.values());
-        model.addAttribute("materials", materials);
+        model.addAttribute("mainOptions", mainOptions);
+        model.addAttribute("sauceOptions", sauceOptions);
         model.addAttribute("units", RecipeUnit.values());
-
+        
         return "menu/modify";
     }
 
