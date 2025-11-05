@@ -1,49 +1,73 @@
-# /python-pdf-download/app.py
-from fastapi import FastAPI, Response
+# app.py
+
+# 로컬 개발시:
+# uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+from fastapi import FastAPI, Response, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
-from component.pdf_generator import PdfGenerator
+from component import kpi_analytics, order_analytics
 
-# --- Pydantic 모델 정의 ---
+app = FastAPI(title="PDF Generation Service")
+
+# ---------- KPI ----------
 class KpiRow(BaseModel):
-    """KPI 데이터 행 모델"""
-    storeName: str | None = None
-    sales: float | None = None
-    transaction: int | None = None
-    upt: float | None = None
-    ads: float | None = None
-    aur: float | None = None
-    compMoM: float | None = None
-    compYoY: float | None = None
-    date: str | None = None
-    ratioVisit: float | None = None
-    ratioTakeout: float | None = None
-    ratioDelivery: float | None = None
+    storeName: Optional[str] = None
+    sales: Optional[float] = None
+    transaction: Optional[int] = None
+    upt: Optional[float] = None
+    ads: Optional[float] = None
+    aur: Optional[float] = None
+    compMoM: Optional[float] = None
+    compYoY: Optional[float] = None
+    date: Optional[str] = None
+    ratioVisit: Optional[float] = None
+    ratioTakeout: Optional[float] = None
+    ratioDelivery: Optional[float] = None
 
 class KpiPayload(BaseModel):
-    """PDF 생성을 위한 페이로드 모델"""
     criteria: Dict[str, Any] = Field(default_factory=dict)
     data: List[KpiRow] = Field(default_factory=list)
 
-# --- FastAPI 앱 설정 ---
-app = FastAPI(title="PDF Generation Service")
-pdf_service = PdfGenerator()
-
-@app.post("/pdf/kpi-report",
-          summary="KPI 분석 리포트 PDF 생성",
-          description="KPI 데이터와 검색 조건을 받아 PDF 리포트를 생성하여 반환합니다.")
+@app.post("/pdf/kpi-report", summary="KPI 분석 리포트 PDF 생성")
 def create_kpi_report(payload: KpiPayload):
-    """
-    KPI 분석 데이터를 받아 PDF 리포트를 생성합니다.
-
-    - **payload**: KPI 데이터 목록과 제목, 기간 등 검색 조건을 포함합니다.
-    - **returns**: 생성된 PDF 파일을 `application/pdf` 미디어 타입으로 반환합니다.
-    """
-    # Pydantic 모델을 dict로 변환하여 pdf_generator에 전달
-    pdf_bytes = pdf_service.generate_kpi_pdf(payload.dict())
-    
+    pdf_bytes = kpi_analytics.generate_kpi_pdf(payload.dict())
     return Response(content=pdf_bytes, media_type="application/pdf")
 
-# --- 서버 실행 (로컬 테스트용) ---
-# uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+import logging
+logger = logging.getLogger("orders-pdf")
+
+# ---------- Orders ----------
+class OrdersRow(BaseModel):
+    date: Optional[str] = None
+    orderDate: Optional[str] = None
+    storeName: Optional[str] = None
+    category: Optional[str] = None
+    menu: Optional[str] = None
+    menuCount: Optional[int] = 0
+    menuSales: Optional[float] = 0
+    orderCount: Optional[int] = 0
+    orderSales: Optional[float] = 0
+    orderType: Optional[str] = None
+
+class OrdersPayload(BaseModel):
+    criteria: Dict[str, Any] = Field(default_factory=dict)
+    data: List[OrdersRow] = Field(default_factory=list)
+
+@app.post("/pdf/orders", summary="주문 분석 리포트 PDF 생성")
+def create_orders_report(payload: OrdersPayload):
+    pdf_bytes = order_analytics.generate_orders_pdf(payload.dict())
+    logger.info("orders.pdf length = %s bytes", 0 if not pdf_bytes else len(pdf_bytes))
+    if not pdf_bytes:
+        # 빈 PDF는 바로 발견되도록 500으로 돌려버리는 편이 디버그에 유리
+        raise HTTPException(status_code=500, detail="Empty PDF generated")
+    return Response(content=pdf_bytes, media_type="application/pdf")
+
+
+# @app.post("/pdf/orders", summary="주문 분석 리포트 PDF 생성")
+# def create_orders_report(payload: OrdersPayload):
+#     pdf_bytes = order_analytics.generate_orders_pdf(payload.dict())
+#     return Response(content=pdf_bytes, media_type="application/pdf")
+
+

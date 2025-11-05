@@ -366,15 +366,22 @@ public class AnalyticsService {
         return style;
     }
 
+    private static final int MAX_PDF_ROWS = 5_000;
+
     /**
      * KPI 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
      */
     @Transactional(readOnly = true)
     public byte[] downloadPdfKpi(AnalyticsSearchDto cond) {
-        // 1. 데이터 조회 (전체)
-        List<KpiRowDto> rows = analyticsRepository.findKpi(cond, Pageable.unpaged()).getContent();
+        // ✅ 엑셀과 동일한 패턴로 '풀페이지' Pageable 사용
+        long total = analyticsRepository.countKpi(cond);
+        if (total == 0) return new byte[0];
 
-        // 2. Python 서비스에 보낼 Payload 구성
+        Pageable fullPage = PageRequest.of(0, (int) total); // ← 핵심
+        List<KpiRowDto> rows = analyticsRepository.findKpi(cond, fullPage).getContent();
+
+        rows = new ArrayList<>(rows); // 직렬화 안전
+
         Map<String, Object> criteria = new HashMap<>();
         criteria.put("title", "KPI 분석 리포트");
         criteria.put("startDate", cond.getStartDate().format(DateTimeFormatter.ISO_DATE));
@@ -384,8 +391,40 @@ public class AnalyticsService {
         payload.put("criteria", criteria);
         payload.put("data", rows);
 
-        // 3. PDF 생성 요청
         return pythonPdfClient.generateKpiReportPdf(payload);
+    }
+
+    /**
+     * 주문 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
+     */
+    @Transactional(readOnly = true)
+    public byte[] downloadPdfOrders(AnalyticsSearchDto cond) {
+        long total = analyticsRepository.countOrders(cond);
+        if (total == 0) return new byte[0];
+
+        // 너무 큰 데이터는 PDF 성능 저하 → 상한 적용(요약/절단 플래그 동봉)
+        boolean truncated = false;
+        int fetchSize = (int) Math.min(total, MAX_PDF_ROWS);
+        if (total > MAX_PDF_ROWS) truncated = true;
+
+        Pageable fullPage = PageRequest.of(0, fetchSize);
+        List<OrdersRowDto> rows = analyticsRepository.findOrders(cond, fullPage).getContent();
+        rows = new ArrayList<>(rows); // 직렬화 안전
+
+        Map<String, Object> criteria = new HashMap<>();
+        criteria.put("title", "주문 분석 리포트");
+        criteria.put("viewBy", cond.getViewBy() != null ? cond.getViewBy().name() : "DAY");
+        criteria.put("startDate", cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "");
+        criteria.put("endDate",   cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "");
+        criteria.put("rowCount", rows.size());
+        criteria.put("totalCount", total);
+        criteria.put("truncated", truncated);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("criteria", criteria);
+        payload.put("data", rows); // DTO 그대로 직렬화(필드명: date, orderDate, storeName, category, menu, menuCount, menuSales, orderCount, orderSales, orderType)
+
+        return pythonPdfClient.generateOrdersReportPdf(payload);
     }
 
     // --- 셀 헬퍼들 ---

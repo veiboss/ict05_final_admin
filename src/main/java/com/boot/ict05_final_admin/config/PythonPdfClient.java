@@ -64,10 +64,9 @@ public class PythonPdfClient {
      * @param payload 리포트 생성에 필요한 데이터(JSON 직렬화 가능한 객체)
      * @return 생성된 PDF의 바이트 배열. 실패 시 길이 0의 바이트 배열
      */
-    public byte[] generateSalesReportPdf(Object payload) {
-        return postPdf("/pdf/sales-report", payload);
+    public byte[] generateOrdersReportPdf(Object payload) {
+        return postPdf("/pdf/orders", payload);
     }
-
     /**
      * (구성에 따라) 매장 요약 리포트 PDF를 생성합니다.
      * <p>엔드포인트: {@code POST /pdf/store-summary}</p>

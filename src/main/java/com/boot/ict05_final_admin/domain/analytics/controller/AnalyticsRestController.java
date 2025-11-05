@@ -105,4 +105,24 @@ public class AnalyticsRestController {
 				.contentType(MediaType.APPLICATION_PDF)
 				.body(new ByteArrayResource(pdfBytes));
 	}
+
+	/** 주문 리스트 PDF 다운로드 */
+	@GetMapping("/orders/pdf/download")
+	public ResponseEntity<Resource> downloadPdfOrders(
+			@ModelAttribute AnalyticsSearchDto cond
+	) {
+		byte[] pdfBytes = analyticsService.downloadPdfOrders(cond);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String mode  = cond.getViewBy() != null ? cond.getViewBy().name() : "DAY";
+		String filename = "Orders_" + mode + "_" + start + "_" + end + ".pdf";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(new ByteArrayResource(pdfBytes));
+	}
 }
