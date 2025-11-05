@@ -187,6 +187,12 @@
 
         <!-- 목록 테이블: DAY -->
         <section class="pack-down" th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">
+          <div class="list-header pack-both">
+            <div class="pack-left">
+              <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
+              <button type="button" class="btn medium bdr-color1" onclick="pdfDownload()">PDF다운로드</button>
+            </div>
+          </div>
           <table class="data-table">
             <thead>
             <tr>
@@ -263,6 +269,21 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
   </div>
 </div>
+
+<script>
+  function excelDownload() {
+    const frm = document.getElementById('frm');
+    const params = new URLSearchParams(new FormData(frm));
+    // 서버 context-path가 /admin 이므로 동일하게 prefix
+    const url = `/admin/API/analytics/time/download?` + params.toString();
+    window.location.href = url;
+  }
+  function pdfDownload() {
+    // 시간·요일 PDF는 아직 없으므로 가벼운 안내
+    if (window.toast) toast('시간·요일 PDF 다운로드는 준비 중입니다.');
+    else alert('시간·요일 PDF 다운로드는 준비 중입니다.');
+  }
+</script>
 
 <script>
   function ds(series){ return (series||[]).map(s => ({label: s.name, data: s.data})); }

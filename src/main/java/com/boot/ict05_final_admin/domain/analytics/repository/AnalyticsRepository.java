@@ -26,6 +26,8 @@ public interface AnalyticsRepository {
 
     Page<MaterialsRowDto> findMaterials(AnalyticsSearchDto cond, Pageable pageable);
 
+    long countTime(AnalyticsSearchDto cond);
+
     TimeChartCardDto findTimeChartSummary();
     TimeChartRowDto  findTimeChart(AnalyticsSearchDto cond);
     Page<TimeRowDto> findTimeRows(AnalyticsSearchDto cond, Pageable pageable);

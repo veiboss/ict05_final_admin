@@ -216,6 +216,104 @@ public class AnalyticsService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public byte[] downloadExcelTime(AnalyticsSearchDto cond, Pageable pageable) {
+        // 1) 전체 건수만 먼저 확보 (limit 1)
+        long total = analyticsRepository.countTime(cond);
+        if (total == 0) return new byte[0];
+
+        // 2) 전체 로우 한번에 조회
+        Pageable fullPage = PageRequest.of(0, (int) total);
+        Page<TimeRowDto> page = analyticsRepository.findTimeRows(cond, fullPage);
+        List<TimeRowDto> rows = page.getContent();
+
+        // 3) 엑셀 작성
+        try (SXSSFWorkbook wb = new SXSSFWorkbook();
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+
+            Sheet sheet = wb.createSheet("Time");
+            DataFormat df = wb.createDataFormat();
+
+            CellStyle head    = createHeaderStyle(wb);
+            CellStyle text    = createBodyStyle(wb);
+            CellStyle money   = createMoneyStyle(wb, text, df);
+            CellStyle intStyle= createIntegerStyle(wb, text, df);
+
+            boolean isDailyView = (cond.getViewBy() == ViewBy.DAY);
+
+            // UI 컬럼 구성과 동일하게 맞춤
+            List<String> headerList = new ArrayList<>();
+            if (isDailyView) {
+                headerList = Arrays.asList(
+                        "Store", "시간대", "요일", "주문ID", "주문금액",
+                        "카테고리", "메뉴", "OrderType", "OrderDate"
+                );
+            } else {
+                headerList = Arrays.asList(
+                        "Date", "Store", "시간대", "요일", "주문금액", "OrderType"
+                );
+            }
+
+            // 헤더
+            Row hr = sheet.createRow(0);
+            for (int c = 0; c < headerList.size(); c++) {
+                Cell cell = hr.createCell(c);
+                cell.setCellValue(headerList.get(c));
+                cell.setCellStyle(head);
+            }
+
+            // 본문
+            int r = 1;
+            for (TimeRowDto dto : rows) {
+                Row row = sheet.createRow(r++);
+                int col = 0;
+
+                if (isDailyView) {
+                    setText(row, col++, dto.getStoreName(),  text);
+                    setText(row, col++, dto.getHourSlot(),   text);
+                    setText(row, col++, dto.getDayOfWeek(),  text);
+                    // 주문ID는 가끔 null/Total일 수 있으므로 문자열로
+                    setText(row, col++, dto.getOrderId() != null ? dto.getOrderId().toString() : "", text);
+                    setNum (row, col++, dto.getOrderAmount(), money);
+                    setText(row, col++, dto.getCategory(),   text);
+                    setText(row, col++, dto.getMenu(),       text);
+                    setText(row, col++, dto.getOrderType(),  text);
+                    setText(row, col++, dto.getOrderDate(),  text);
+                } else {
+                    setText(row, col++, dto.getDate(),       text);
+                    setText(row, col++, dto.getStoreName(),  text);
+                    setText(row, col++, dto.getHourSlot(),   text);
+                    setText(row, col++, dto.getDayOfWeek(),  text);
+                    setNum (row, col++, dto.getOrderAmount(), money);
+                    setText(row, col++, dto.getOrderType(),  text);
+                }
+            }
+
+            // 컬럼 폭
+            for (int c = 0; c < headerList.size(); c++) {
+                int w = switch (headerList.get(c)) {
+                    case "Store"     -> 18;
+                    case "시간대"       -> 14;
+                    case "요일"        -> 8;
+                    case "주문ID"       -> 12;
+                    case "주문금액"      -> 14;
+                    case "카테고리"      -> 16;
+                    case "메뉴"        -> 20;
+                    case "OrderType" -> 12;
+                    case "OrderDate" -> 20;
+                    case "Date"      -> 12;
+                    default -> 15;
+                };
+                sheet.setColumnWidth(c, w * 256);
+            }
+
+            wb.write(bos);
+            return bos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Excel generation failed", e);
+        }
+    }
+
     private CellStyle createHeaderStyle(Workbook wb) {
         CellStyle style = wb.createCellStyle();
         Font font = wb.createFont();
