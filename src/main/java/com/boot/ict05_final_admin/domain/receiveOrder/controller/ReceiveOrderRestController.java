@@ -87,8 +87,12 @@ public class ReceiveOrderRestController {
             @PathVariable Long id,
             @RequestParam("action") String action) {
 
-        receiveOrderService.updateStatus(id, action);
-        return ResponseEntity.ok("상태 업데이트 완료");
+        try {
+            receiveOrderService.updateStatus(id, action);
+            return ResponseEntity.ok("상태 업데이트 완료");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /**

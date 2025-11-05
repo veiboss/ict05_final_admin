@@ -131,6 +131,8 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
             return condition; // 상태만 필터링
         }
 
+        if (type == null) type = "all";
+
         switch (type) {
             case "orderCode":
                 condition = condition.and(ro.orderCode.containsIgnoreCase(keyword));

@@ -291,10 +291,10 @@ public class ReceiveOrderService {
 
         Row orderInfo2 = sheet.createRow(rowIdx++);
         orderInfo2.createCell(0).setCellValue("배송완료일");
-        Cell deliveryDateCell = orderInfo2.createCell(1);
+        Cell actualDeliveryDateCell = orderInfo2.createCell(1);
         if (order.getActualDeliveryDate() != null) {
-            deliveryDateCell.setCellValue(Date.from(order.getActualDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            deliveryDateCell.setCellStyle(dateStyle);
+            actualDeliveryDateCell.setCellValue(Date.from(order.getActualDeliveryDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            actualDeliveryDateCell.setCellStyle(dateStyle);
         }
         orderInfo2.createCell(2).setCellValue("상태");
         orderInfo2.createCell(3).setCellValue(order.getStatusDescription());

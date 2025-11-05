@@ -24,7 +24,7 @@ import java.math.BigDecimal;
  * @since 2025.10
  */
 @Entity
-@Table(name = "purchase_order_detail")
+@Table(name = "receive_order_detail")
 @Getter
 @Setter
 @NoArgsConstructor

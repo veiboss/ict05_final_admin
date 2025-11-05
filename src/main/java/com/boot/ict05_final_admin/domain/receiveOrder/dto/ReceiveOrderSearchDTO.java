@@ -9,6 +9,6 @@ public class ReceiveOrderSearchDTO {
     private String type;
     private String size = "10";
 
-    /** 수주 상태 필터 (RECEIVED/PREPARING/SHIPPING/DELIVERED) */
+    /** 수주 상태 필터 (RECEIVED/SHIPPING/DELIVERED/CANCELED) */
     private ReceiveOrderStatus receiveOrderStatus;
 }
