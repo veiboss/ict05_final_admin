@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2025.10
  */
 @Entity
-@Table(name = "purchase_order")
+@Table(name = "receive_order")
 @Getter
 @Setter
 @NoArgsConstructor
