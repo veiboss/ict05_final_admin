@@ -37,8 +37,9 @@
                                 <div class="pack-left">
                                     <input type="hidden" name="type" th:value="${menuSearchDTO.type}" />
                                     <input type="hidden" name="size" th:value="${menuSearchDTO.size}" />
+                                    <input type="hidden" name="menuShow" th:value="${menuSearchDTO.menuShow}" />
 
-                                    <input title="검색어" type="search" name="s" th:value="${menuSearchDTO.s}" class="input-text medium form-control" placeholder="상품명, 설명으로 검색" />
+                                    <input title="검색어" type="search" name="s" th:value="${menuSearchDTO.s}" class="input-text medium form-control" placeholder="상품명으로 검색" />
                                     <input type="submit" value="검색" class="btn medium color1"/>
                                 </div>
 
@@ -65,6 +66,48 @@
                                             <span th:text="${c.menuCategoryName}">카테고리명</span>
                                         </label>
 
+
+                                    </div>
+                                </div>
+
+                                <!-- 판매상태 필터 버튼 그룹 -->
+                                <div class="pack-left">
+                                    <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
+
+                                        <!-- 상태 전체 -->
+                                        <label class="btn medium"
+                                               th:classappend="${menuSearchDTO.menuShow == null} ? ' active' : ''">
+                                            <input type="radio" name="menuShow" value=""
+                                                   th:checked="${menuSearchDTO.menuShow == null}"
+                                                   onclick="setShowFilter('')">
+                                            전체
+                                        </label>
+
+                                        <!-- 판매중 -->
+                                        <label class="btn medium"
+                                               th:classappend="${menuSearchDTO.menuShow != null
+                       and menuSearchDTO.menuShow == T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).SHOW}
+                       ? ' active' : ''">
+                                            <input type="radio" name="menuShow"
+                                                   th:value="${T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).SHOW}"
+                                                   th:checked="${menuSearchDTO.menuShow != null
+                       and menuSearchDTO.menuShow == T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).SHOW}"
+                                                   onclick="setShowFilter('SHOW')">
+                                            판매중
+                                        </label>
+
+                                        <!-- 중지 -->
+                                        <label class="btn medium"
+                                               th:classappend="${menuSearchDTO.menuShow != null
+                       and menuSearchDTO.menuShow == T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).HIDE}
+                       ? ' active' : ''">
+                                            <input type="radio" name="menuShow"
+                                                   th:value="${T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).HIDE}"
+                                                   th:checked="${menuSearchDTO.menuShow != null
+                       and menuSearchDTO.menuShow == T(com.boot.ict05_final_admin.domain.menu.entity.MenuShow).HIDE}"
+                                                   onclick="setShowFilter('HIDE')">
+                                            중지
+                                        </label>
 
                                     </div>
                                 </div>
@@ -192,17 +235,50 @@
 </script>
 
 <script>
-    function setFilter(catId){
+    function setFilter(catId) {
         const frm = document.getElementById('frm');
-        const p = document.createElement('input');
-        p.type='hidden'; p.name='page'; p.value='1'; // 첫 페이지로
-        frm.appendChild(p);
+        // 카테고리 필터 클릭 시, menuCategoryId 값 갱신
+        const catInput = frm.querySelector('[name="menuCategoryId"]');
+        if (catInput) catInput.value = catId;
+
+        // 페이지 초기화
+        const pageInput = document.createElement('input');
+        pageInput.type = 'hidden';
+        pageInput.name = 'page';
+        pageInput.value = '1';
+        frm.appendChild(pageInput);
+
         frm.submit();
     }
+
+    function setShowFilter(showVal) {
+        const frm = document.getElementById('frm');
+        // menuShow hidden 필드 값 갱신
+        let showInput = frm.querySelector('[name="menuShow"]');
+        if (!showInput) {
+            showInput = document.createElement('input');
+            showInput.type = 'hidden';
+            showInput.name = 'menuShow';
+            frm.appendChild(showInput);
+        }
+        showInput.value = showVal;
+
+        // 페이지 초기화
+        const pageInput = document.createElement('input');
+        pageInput.type = 'hidden';
+        pageInput.name = 'page';
+        pageInput.value = '1';
+        frm.appendChild(pageInput);
+
+        frm.submit();
+    }
+
     document.addEventListener('change', e => {
         if (e.target.name === 'menuCategoryId') setFilter(e.target.value);
+        if (e.target.name === 'menuShow') setShowFilter(e.target.value);
     });
 </script>
+
 
 
 </body>

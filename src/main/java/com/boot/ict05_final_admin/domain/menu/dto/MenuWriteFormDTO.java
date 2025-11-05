@@ -40,7 +40,7 @@ public class MenuWriteFormDTO {
 
     /** 메뉴코드 */
     @NotNull
-    private  String menuCode;
+    private String menuCode;
 
     /** 가격(필수) */
     @NotNull @DecimalMin(value = "0.0", inclusive = true, message = "가격은 0 이상이어야 합니다")

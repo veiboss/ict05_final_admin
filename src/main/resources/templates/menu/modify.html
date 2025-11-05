@@ -380,18 +380,28 @@
 </script>
 
 <script>
-    document.getElementById('frm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const fd = new FormData(this);
-  fetch(this.action, { method:'POST', body: fd })
-    .then(r => r.json())
-    .then(data => {
-      if (!data.success) throw new Error();
-      location.href = `/admin/menu/detail/${data.id}`;
-    })
-    .catch(() => alert('저장 실패'));
-});
+    document.getElementById('frm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // FormData → 일반 URL 인코딩으로 변환
+      const formData = new FormData(this);
+      const params = new URLSearchParams();
+      formData.forEach((v, k) => params.append(k, v));
+
+      fetch(this.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) throw new Error();
+        location.href = `/admin/menu/detail/${data.id}`;
+      })
+      .catch(() => alert('저장 실패'));
+    });
 </script>
+
 
 </body>
 </html>

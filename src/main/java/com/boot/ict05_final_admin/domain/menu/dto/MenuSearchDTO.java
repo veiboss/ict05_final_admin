@@ -1,5 +1,6 @@
 package com.boot.ict05_final_admin.domain.menu.dto;
 
+import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
 import lombok.Data;
 
 @Data
@@ -13,6 +14,8 @@ public class MenuSearchDTO {
 
     /** 페이지 사이즈 */
     private String size = "10";
+
+    private MenuShow menuShow;
 
     // 필터 키 (안정성)
     private Long menuCategoryId;
