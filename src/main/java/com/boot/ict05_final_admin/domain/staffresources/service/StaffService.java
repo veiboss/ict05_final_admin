@@ -62,6 +62,9 @@ public class StaffService {
         String address1 = dto.getUserAddress1();
         String address2 = dto.getUserAddress2();
         address = address1 + "," + address2;
+        if(address.equals(",")) {
+            address = "";
+        }
         dto.setStaffAddress(address);
 
         Store store = null;
