@@ -163,7 +163,7 @@
                                             <select class="form-select"
                                                     th:name="'mainMaterials[' + ${iStat.index} + '].materialId'">
                                                 <option value="" disabled>재료 선택</option>
-                                                <option th:each="m : ${materials}"
+                                                <option th:each="m : ${mainOptions}"
                                                         th:value="${m.materialId}"
                                                         th:text="${m.materialName}"
                                                         th:selected="${it.materialId} == ${m.materialId}"></option>
@@ -217,10 +217,11 @@
                                             <select class="form-select"
                                                     th:name="'sauceMaterials[' + ${iStat.index} + '].materialId'">
                                                 <option value="" disabled>재료 선택</option>
-                                                <option th:each="m : ${materials}"
+                                                <option th:each="m : ${sauceOptions}"
                                                         th:value="${m.materialId}"
                                                         th:text="${m.materialName}"
                                                         th:selected="${it.materialId} == ${m.materialId}"></option>
+
                                             </select>
                                         </div>
 
@@ -257,7 +258,7 @@
                             <div class="col-4">
                                 <select class="form-select" name="mainMaterials[__INDEX__].materialId">
                                     <option value="" selected disabled>재료 선택</option>
-                                    <th:block th:each="m : ${materials}">
+                                    <th:block th:each="m : ${mainOptions}">
                                         <option th:value="${m.materialId}" th:text="${m.materialName}"></option>
                                     </th:block>
                                 </select>
@@ -289,7 +290,7 @@
                             <div class="col-4">
                                 <select class="form-select" name="sauceMaterials[__INDEX__].materialId">
                                     <option value="" selected disabled>재료 선택</option>
-                                    <th:block th:each="m : ${materials}">
+                                    <th:block th:each="m : ${sauceOptions}">
                                         <option th:value="${m.materialId}" th:text="${m.materialName}"></option>
                                     </th:block>
                                 </select>
