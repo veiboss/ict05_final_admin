@@ -577,7 +577,7 @@
 
         // 1️⃣ 접수 → 배송 중
         if (currentText === '배송 시작' || currentText === '접수됨') {
-            fetch(`/admin/API/receive/status/${id}`, { method: 'PUT' })
+            fetch(`/admin/API/receive/status/${id}?action=SHIP`, { method: 'PUT' })
                 .then(res => {
                     if (!res.ok) throw new Error('상태 업데이트 실패');
                     return res.text();
@@ -600,7 +600,7 @@
         if (currentText === '배송 중' || currentText === '배송 완료 대기') {
             if (!confirm('해당 주문을 "완료" 상태로 변경하시겠습니까?')) return;
 
-            fetch(`/admin/API/receive/status/${id}`, { method: 'PUT' })
+            fetch(`/admin/API/receive/status/${id}?action=SHIP`, { method: 'PUT' })
                 .then(res => {
                     if (!res.ok) throw new Error('상태 업데이트 실패');
                     return res.text();
