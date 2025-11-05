@@ -35,7 +35,8 @@ public class InventoryAdjustment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "adjustment_id", columnDefinition = "BIGINT COMMENT '조정 시퀀스'")
+    @Column(name = "adjustment_id", columnDefinition = "BIGINT UNSIGNED")
+    @Comment("재고 조정 시퀀스")
     private Long id;
 
     /** 본사 재고 FK */
@@ -62,7 +63,7 @@ public class InventoryAdjustment {
     /** 조정 단가 */
     @Column(name = "inventory_adjustment_unit_price", columnDefinition = "BIGINT")
     @Comment("조정 단가")
-    private Long unitPrice;
+    private BigDecimal unitPrice;
 
     /** 비고 / 조정 사유 */
     @Column(name = "inventory_adjustment_memo", columnDefinition = "VARCHAR(255)")
@@ -71,14 +72,15 @@ public class InventoryAdjustment {
 
     /** 조정일시 */
     @CreationTimestamp
-    @Column(name = "inventory_adjustment_created_at", nullable = false, updatable = false)
+    @Column(name = "inventory_adjustment_created_at", nullable = false, updatable = false,
+            columnDefinition = "DATETIME")
     @Comment("조정일시")
     private LocalDateTime createdAt;
 
     /** 조정 사유 분류 */
     @Enumerated(EnumType.STRING)
     @Column(name = "inventory_adjustment_reason", length = 20)
-    @Comment("조정 사유 (MANUAL, DAMAGE, LOSS 등)")
+    @Comment("조정 사유 (MANUAL, DAMAGE, LOSS, ERROR)")
     private AdjustmentReason reason;
 
     /**
@@ -88,15 +90,5 @@ public class InventoryAdjustment {
         if (quantityBefore != null && quantityAfter != null) {
             this.difference = quantityAfter.subtract(quantityBefore);
         }
-    }
-
-    /**
-     * 조정 사유 Enum
-     */
-    public enum AdjustmentReason {
-        MANUAL,     // 수동 수정
-        DAMAGE,     // 파손
-        LOSS,       // 분실
-        ERROR       // 데이터 오류 정정
     }
 }

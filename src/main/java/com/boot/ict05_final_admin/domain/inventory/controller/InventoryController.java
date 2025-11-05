@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 본사 재고 관리 화면 컨트롤러
@@ -79,6 +80,7 @@ public class InventoryController {
     public String showInventoryInForm(Model model) {
         model.addAttribute("categories", com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory.values());
         model.addAttribute("inventoryList", inventoryService.findAllForSelect());
+        model.addAttribute("now", LocalDateTime.now());
         return "inventory/inventory_in_write";
     }
 

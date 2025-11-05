@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -30,7 +31,8 @@ public class InventoryOut {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_out_id", columnDefinition = "BIGINT COMMENT '출고 시퀀스'")
+    @Column(name = "inventory_out_id", columnDefinition = "BIGINT UNSIGNED")
+    @Comment("출고 시퀀스")
     private Long id;
 
     /** 재료 (FK: material.material_id) */
@@ -48,7 +50,8 @@ public class InventoryOut {
 
     /** 출고 수량 */
     @Column(name = "inventory_out_quantity", precision = 15, scale = 3, nullable = false,
-            columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '출고 수량'")
+            columnDefinition = "DECIMAL(15,3) DEFAULT 0")
+    @Comment("출고 수량")
     private BigDecimal quantity;
 
     /** 출고 후 재고량 */
@@ -57,21 +60,25 @@ public class InventoryOut {
 
     /** 출고 단가 (가맹점 공급가 또는 판매가) */
     @Column(name = "inventory_out_unit_price", nullable = false,
-            columnDefinition = "BIGINT COMMENT '출고 단가(가맹점 공급가 또는 판매가)'")
-    private Long unitPrice;
+            columnDefinition = "BIGINT")
+    @Comment("출고 단가(가맹점 공급가 또는 판매가)")
+    private BigDecimal unitPrice;
 
     /** 출고일시 */
     @Column(name = "inventory_out_date", nullable = false,
-            columnDefinition = "DATE COMMENT '출고일'")
+            columnDefinition = "DATETIME")
+    @Comment("출고일시")
     private LocalDateTime outDate;
 
     /** 비고 */
-    @Column(name = "inventory_out_memo", columnDefinition = "VARCHAR(255) COMMENT '비고'")
+    @Column(name = "inventory_out_memo", columnDefinition = "VARCHAR(255)")
+    @Comment("비고")
     private String memo;
 
-    /** 등록일 (자동 생성) */
+    /** 등록일시 (자동 생성) */
     @CreationTimestamp
     @Column(name = "inventory_out_created_at",
-            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '등록일'")
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Comment("등록일시 (자동 생성)")
     private LocalDateTime createdAt;
 }

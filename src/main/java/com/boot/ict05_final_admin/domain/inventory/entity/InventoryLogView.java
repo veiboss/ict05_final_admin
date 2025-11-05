@@ -48,7 +48,7 @@ public class InventoryLogView {
 
     /** 단가 */
     @Column(name = "unit_price")
-    private Long unitPrice;
+    private BigDecimal unitPrice;
 
     /** 비고 */
     @Column(name = "memo")

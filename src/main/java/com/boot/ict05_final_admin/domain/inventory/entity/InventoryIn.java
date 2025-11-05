@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -26,7 +27,8 @@ public class InventoryIn {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_in_id", columnDefinition = "BIGINT COMMENT '입고 시퀀스'")
+    @Column(name = "inventory_in_id", columnDefinition = "BIGINT UNSIGNED")
+    @Comment("입고 시퀀스")
     private Long id;
 
     /** 재료 (FK: material.material_id) */
@@ -40,11 +42,13 @@ public class InventoryIn {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id_fk",
             foreignKey = @ForeignKey(name = "fk_inventory_in_store"))
+    @Comment("가맹점 코드 (fk)")
     private Store store;
 
     /** 입고 수량 */
     @Column(name = "inventory_in_quantity", precision = 15, scale = 3, nullable = false,
-            columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '입고 수량'")
+            columnDefinition = "DECIMAL(15,3) DEFAULT 0")
+    @Comment("입고 수량")
     private BigDecimal quantity;
 
     /** 입고 후 재고량 */
@@ -52,27 +56,36 @@ public class InventoryIn {
     private BigDecimal stockAfter;
 
     /** 입고 단가 (본사 매입가) */
-    @Column(name = "inventory_in_unit_price", nullable = false,
-            columnDefinition = "BIGINT COMMENT '입고 단가(본사 매입가)'")
-    private Long unitPrice;
+    @Column(name = "inventory_in_unit_price", precision = 15, scale = 2, nullable = false,
+            columnDefinition = "BIGINT")
+    @Comment("입고 단가(본사 매입가)")
+    private BigDecimal unitPrice;
 
     /** 출고 단가 (가맹점 공급가) */
-    @Column(name = "inventory_in_selling_price",
-            columnDefinition = "BIGINT COMMENT '출고 단가(가맹점 공급가)'")
-    private Long sellingPrice;
+    @Column(name = "inventory_in_selling_price", precision = 15, scale = 2,
+            columnDefinition = "BIGINT")
+    @Comment("출고 단가(가맹점 공급가)")
+    private BigDecimal sellingPrice;
 
-    /** 입고일시 */
+    /** 입고일시(실제 입고일) */
     @Column(name = "inventory_in_date", nullable = false,
-            columnDefinition = "DATE COMMENT '입고일'")
+            columnDefinition = "DATETIME")
+    @Comment("입고일시")
     private LocalDateTime inDate;
 
     /** 비고 */
-    @Column(name = "inventory_in_memo", columnDefinition = "VARCHAR(255) COMMENT '비고'")
+    @Column(name = "inventory_in_memo", columnDefinition = "VARCHAR(255)")
+    @Comment("비고")
     private String memo;
 
-    /** 등록일 (자동 생성) */
+    /** 등록일시 (자동 생성) */
     @CreationTimestamp
     @Column(name = "inventory_in_created_at",
-            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '등록일'")
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Comment("등록일 (자동 생성)")
     private LocalDateTime createdAt;
+
+    @Column(name = "lot_no", length = 50)
+    @Comment("로트 번호 (입고 단위)")
+    private String lotNo;
 }

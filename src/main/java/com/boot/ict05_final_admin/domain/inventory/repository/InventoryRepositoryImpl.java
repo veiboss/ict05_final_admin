@@ -46,7 +46,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .from(inv)
                 .join(inv.material, material)
                 .where(applyFilter(searchDTO))
-                .orderBy(inv.id.desc())
+                .orderBy(inv.updateDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

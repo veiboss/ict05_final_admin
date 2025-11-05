@@ -227,5 +227,6 @@ textarea								{}
 
 .write-form .button-area + .button-area {margin: 0; padding: 1rem 0; border-top: 1px solid var(--bdr-color);}
 .write-form .button-area .btn.large{min-width: 160px;}
+.popup .write-form .button-area{margin-top: 0;}
 
 #search > fieldset > .pack-both .pack-left:has([type="submit"]):has(.input-text){width: 50%;}

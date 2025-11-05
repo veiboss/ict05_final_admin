@@ -162,7 +162,8 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 
 /* pack (flex layout) */
 [class*="pack-"] {
-	display: flex; gap: var(--gap);
+	display: flex;
+	gap: var(--gap);
 }
 
 [class*="pack-center"] {

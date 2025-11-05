@@ -18,10 +18,10 @@ public class InventoryInWriteDTO {
     private BigDecimal quantity;
 
     /** 입고 단가 (본사 매입가) */
-    private Long unitPrice;
+    private BigDecimal unitPrice;
 
     /** 출고 단가 (가맹점 공급가) */
-    private Long sellingPrice;
+    private BigDecimal sellingPrice;
 
     /** 입고일 */
     private LocalDateTime inDate;
