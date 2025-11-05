@@ -87,7 +87,8 @@
                             <div class="field pack-down col">
                                 <label class="label medium required" for="inDate">입고일</label>
                                 <div class="insert pack-down">
-                                    <input type="date" id="inDate" name="inDate"
+                                    <input type="datetime-local" id="inDate" name="inDate"
+                                           th:value="${#temporals.format(now, 'yyyy-MM-dd''T''HH:mm')}"
                                            class="input-text medium" required>
                                     <p id="inDateError" class="warning"></p>
                                 </div>

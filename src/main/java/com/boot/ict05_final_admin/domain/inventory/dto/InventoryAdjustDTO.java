@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.dto;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryAdjustment.AdjustmentReason;
+import com.boot.ict05_final_admin.domain.inventory.entity.AdjustmentReason;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 

@@ -36,7 +36,7 @@
                 본사에서 <strong>사용중지된 재료</strong>입니다.
             </div>
             <div class="box-wrap">
-                <div class="row-5">
+                <div class="row-3">
                     <div class="pack-down col">
                         <span class="fs-ss fc-999">상태</span>
                         <span>
@@ -50,27 +50,15 @@
                         <span class="pack-left">
                             <span th:text="${inventory.optimalQuantity}">적정 수량</span>
                             <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
-                            <a th:href="@{/material/modify/{id}(id=${material.id})}" class="btn xsmall bdr-color1">재료수정</a>
+                            <a th:href="@{/material/modify/{id}(id=${material.id})}" class="btn xsmall bdr-color1">재료 수정</a>
                         </span>
                     </div>
-                    <div class="pack-down col-3">
+                    <div class="pack-down col">
                         <span class="fs-ss fc-999">현재 수량</span>
                         <span class="pack-left mo-pack-down">
                             <span th:text="${inventory.quantity}">현재 수량</span>
                             <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
-
-                            <!-- 수량 조정 -->
-                            <span id="adjustForm" class="pack-left" style="display:none;">
-                                <input type="number" step="1"
-                                       id="newQty" name="quantityAfter"
-                                       class="input-text small fc-000" style="min-width: 60px;"
-                                       th:value="${inventory.quantity}">
-                                <button type="button" class="btn small color1" id="confirmBtn">확인</button>
-                                <button type="button" class="btn small bdr-color1" id="cancelBtn">취소</button>
-                            </span>
-
-                            <!-- 수정 버튼 -->
-                            <button type="button" class="btn xsmall bdr-color1" id="adjustBtn" >수정</button>
+                            <button type="button" class="btn xsmall color2" onclick="modalOpen('#adjustModal');">재고 조정</button>
                         </span>
                     </div>
                 </div>
@@ -153,7 +141,7 @@
                             <td colspan="7">입출고 내역이 없습니다.</td>
                         </tr>
                         <tr th:each="log : ${logs.content}">
-                            <td th:text="${#temporals.format(log.date, 'yyyy-MM-dd')}"></td>
+                            <td th:text="${#temporals.format(log.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td>
                                 <span th:switch="${log.type}">
                                     <span th:case="'INCOME'" class="type-in">입고</span>
@@ -182,6 +170,55 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+
+<div id="adjustModal" class="overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title"><span th:text="${material.name}">재료명</span> 재고 조정</h2>
+            <button type="button" class="btn transparent pop-close" onclick="modalClose('#adjustModal');" title="팝업 닫기">
+                <svg viewBox="0 0 32 32" class="ico svg-close">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m16 17.414 8.485 8.485 1.415-1.414L17.414 16 25.9 7.515 24.485 6.1 16 14.586 7.515 6.1 6.1 7.515 14.586 16l-8.485 8.485L7.515 25.9 16 17.413z" />
+                </svg>
+            </button>
+        </div>
+        <div class="popup-body write-form">
+            <form>
+                <fieldset class="pack-down">
+                    <legend class="blind">재고조정폼</legend>
+                    <label class="field col">
+                        <span class="label medium required">변경 수량</span>
+                        <span class="insert">
+                            <input type="number" id="newQtyInput" class="input-text medium" step="1" min="0" placeholder="변경 후 수량 입력">
+                        </span>
+                    </label>
+                    <label class="field col">
+                        <span class="label medium required" >조정 사유</span>
+                        <span class="insert">
+                            <select id="reasonSelect" class="select medium">
+                              <option value="MANUAL">수동 수정</option>
+                              <option value="DAMAGE">파손</option>
+                              <option value="LOSS">분실</option>
+                              <option value="ERROR">데이터 오류 정정</option>
+                            </select>
+                        </span>
+                    </label>
+
+                    <label class="field col">
+                        <span class="label medium" for="select1">비고</span>
+                        <span class="insert">
+                            <textarea id="memoInput" class="textarea medium" rows="4" cols="50" placeholder="비고 입력"></textarea>
+                        </span>
+                    </label>
+
+                    <div class="button-area pack-center">
+                        <button type="button" class="btn medium color1" id="modalConfirm">확인</button>
+                        <button type="button" class="btn medium bdr-color1" id="modalCancel">취소</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     // 라디오 선택 시 자동 검색
     document.querySelectorAll("input[name='type']").forEach(radio => {
@@ -190,50 +227,49 @@
       });
     });
 
-    const btn = document.getElementById("adjustBtn");
-    const form = document.getElementById("adjustForm");
-    const cancel = document.getElementById("cancelBtn");
-    const confirm = document.getElementById("confirmBtn");
-
-    btn.addEventListener("click", () => {
-        btn.style.display = "none";
-        form.style.display = "";
+    // 모달 닫기
+    document.getElementById("modalCancel").addEventListener("click", () => {
+      modalClose("#adjustModal");
     });
 
-    cancel.addEventListener("click", () => {
-        form.style.display = "none";
-        btn.style.display = "";
-    });
+    // 모달 확인 → fetch 요청
+    document.getElementById("modalConfirm").addEventListener("click", () => {
+      const inventoryId = document.getElementById("inventoryId").value;
+      const newQty = Number(document.getElementById("newQtyInput").value);
+      const memo = document.getElementById("memoInput").value;
+      const reason = document.getElementById("reasonSelect").value;
 
-    confirm.addEventListener("click", () => {
-        const newQty = Number(document.getElementById("newQty").value);
-        const memo = prompt("조정 사유를 입력하세요:", "");
-        if (memo === null) return; // 취소 시 중단
+      if (isNaN(newQty) || newQty < 0) {
+        alert("올바른 수량을 입력하세요.");
+        return;
+      }
 
-        const inventoryId = document.getElementById("inventoryId").value;
-
-        fetch(`/admin/API/inventory/adjust`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                inventoryId: inventoryId,
-                quantityAfter: newQty,
-                memo: memo || "",              // 비고 입력
-                reason: "MANUAL"               // 기본값
-            })
+      fetch(`/admin/API/inventory/adjust`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          inventoryId: inventoryId,
+          quantityAfter: newQty,
+          memo: memo || "",
+          reason: reason
         })
-        .then(async r => {
-                if (!r.ok) throw new Error(await r.text());
-                return r.json();
-        })
-        .then(data => {
-            if (data.success) location.reload();
-            else alert("조정 실패");
-        })
-        .catch(err => {
-            console.error("요청 실패:", err);
-            alert("요청 실패");
-        });
+      })
+      .then(async r => {
+        if (!r.ok) throw new Error(await r.text());
+        return r.json();
+      })
+      .then(data => {
+        if (data.success) {
+          modalClose("#adjustModal");
+          location.reload();
+        } else {
+          alert("조정 실패");
+        }
+      })
+      .catch(err => {
+        console.error("요청 실패:", err);
+        alert("요청 실패");
+      });
     });
 </script>
 </body>

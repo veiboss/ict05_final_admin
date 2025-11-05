@@ -52,10 +52,10 @@ public class StoreMaterialListDTO {
     private Integer optimalQuantity;
 
     /** 매입가 */
-    private Long purchasePrice;
+    private BigDecimal purchasePrice;
 
     /** 판매가 */
-    private Long sellingPrice;
+    private BigDecimal sellingPrice;
 
     /** 유통기한 */
     private LocalDate expirationDate;

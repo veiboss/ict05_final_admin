@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Comment;
 
 /**
  * 가맹점 재고(StoreInventory) 엔티티
@@ -24,7 +25,8 @@ public class StoreInventory extends Inventory {
     /** 가맹점 재고 시퀀스 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_inventory_id", columnDefinition = "BIGINT COMMENT '가맹점 재고 시퀀스'")
+    @Column(name = "store_inventory_id", columnDefinition = "BIGINT UNSIGNED")
+    @Comment("가맹점 재고 시퀀스")
     private Long id;
 
     /** 가맹점 (FK: store.store_id) */

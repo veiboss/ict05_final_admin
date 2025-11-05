@@ -41,43 +41,51 @@ public class Material {
     /** 재료 고유 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "material_id", nullable = false, columnDefinition = "BIGINT COMMENT '재료 시퀀스'")
+    @Column(name = "material_id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("재료 시퀀스")
     private Long id;
 
-    /** 재료코드 */
+    /** 재료 코드 */
     @Column(name = "material_code", length = 30, nullable = false, unique = true,
-            columnDefinition = "VARCHAR(30) COMMENT '재료 코드'")
+            columnDefinition = "VARCHAR(30)")
+    @Comment("재료 코드 - 등록시 카테고리 기준으로 생성")
     private String code;
 
     /** 재료명 */
     @Column(name = "material_name", length = 100, nullable = false,
-            columnDefinition = "VARCHAR(100) COMMENT '재료명'")
+            columnDefinition = "VARCHAR(100)")
+    @Comment("재료명")
     private String name;
 
     /** 재료 카테고리 */
     @Enumerated(EnumType.STRING)
     @Column(name = "material_category", length = 50, nullable = false,
-            columnDefinition = "ENUM('BASE','SIDE','SAUCE','TOPPING','BEVERAGE','PACKAGE','ETC') COMMENT '재료 카테고리'")
+            columnDefinition = "ENUM('BASE','SIDE','SAUCE','TOPPING','BEVERAGE','PACKAGE','ETC')")
+    @Comment("재료 카테고리")
     private MaterialCategory materialCategory;
 
     /** 기본 단위 (소진 단위) */
     @Column(name = "material_base_unit", length = 20, nullable = false,
-            columnDefinition = "VARCHAR(20) COMMENT '기본 단위(소진 단위)'")
+            columnDefinition = "VARCHAR(20)")
+    @Comment("기본 단위(소진 단위)")
     private String baseUnit;
 
     /** 판매 단위 */
     @Column(name = "material_sales_unit", length = 20, nullable = false,
-            columnDefinition = "VARCHAR(20) COMMENT '판매 단위'")
+            columnDefinition = "VARCHAR(20)")
+    @Comment("판매 단위")
     private String salesUnit;
 
     /** 변환비율(판매단위 → 기본단위) */
     @Column(name = "material_conversion_rate", nullable = false,
-            columnDefinition = "INT default 1000 COMMENT '변환비율(판매단위/기본단위)'")
+            columnDefinition = "INT default 1000")
+    @Comment("변환비율(판매단위/기본단위)")
     private Integer conversionRate;
 
     /** 공급업체명 */
     @Column(name = "material_supplier", length = 100,
-            columnDefinition = "VARCHAR(100) COMMENT '재료 공급업체명'")
+            columnDefinition = "VARCHAR(100)")
+    @Comment("재료 공급업체명")
     private String supplier;
 
     /** 재료 보관온도 */
@@ -89,26 +97,29 @@ public class Material {
     /** 재료 상태 */
     @Enumerated(EnumType.STRING)
     @Column(name = "material_status", nullable = false)
-    @Comment("재료 상태(USE/STOP)")
+    @Comment("재료 상태 (USE/STOP)")
     private MaterialStatus materialStatus;
 
-    /** 등록일 */
+    /** 등록일시 */
     @CreationTimestamp
     @Column(name = "material_reg_date",
-            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '등록일'")
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Comment("등록일시")
     private LocalDateTime regDate;
 
-    /** 수정일 */
+    /** 수정일시 */
     @UpdateTimestamp
     @Column(name = "material_modify_date",
-            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'")
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Comment("수정일시")
     private LocalDateTime modifyDate;
 
     /** 본사 기준 적정 재고 수량 */
     @Setter
     @Builder.Default
     @Column(name = "material_optimal_quantity", precision = 15, scale = 3,
-            columnDefinition = "DECIMAL(15,3) DEFAULT 0 COMMENT '본사 기준 적정 재고 수량'")
+            columnDefinition = "DECIMAL(15,3) DEFAULT 0")
+    @Comment("본사 기준 적정 재고 수량")
     private BigDecimal optimalQuantity = BigDecimal.ZERO;
 
     /**
