@@ -36,7 +36,6 @@
                             <div class="pack-both">
                                 <div class="pack-left">
                                     <input type="hidden" name="type" th:value="${menuSearchDTO.type}" />
-                                    <input type="hidden" name="size" th:value="${menuSearchDTO.size}" />
                                     <input type="hidden" name="menuShow" th:value="${menuSearchDTO.menuShow}" />
 
                                     <input title="검색어" type="search" name="s" th:value="${menuSearchDTO.s}" class="input-text medium form-control" placeholder="상품명으로 검색" />
@@ -237,11 +236,9 @@
 <script>
     function setFilter(catId) {
         const frm = document.getElementById('frm');
-        // 카테고리 필터 클릭 시, menuCategoryId 값 갱신
         const catInput = frm.querySelector('[name="menuCategoryId"]');
         if (catInput) catInput.value = catId;
 
-        // 페이지 초기화
         const pageInput = document.createElement('input');
         pageInput.type = 'hidden';
         pageInput.name = 'page';
@@ -253,7 +250,6 @@
 
     function setShowFilter(showVal) {
         const frm = document.getElementById('frm');
-        // menuShow hidden 필드 값 갱신
         let showInput = frm.querySelector('[name="menuShow"]');
         if (!showInput) {
             showInput = document.createElement('input');
@@ -263,7 +259,6 @@
         }
         showInput.value = showVal;
 
-        // 페이지 초기화
         const pageInput = document.createElement('input');
         pageInput.type = 'hidden';
         pageInput.name = 'page';
@@ -273,13 +268,24 @@
         frm.submit();
     }
 
+    // 🔽 새로 추가
+    function setPageSize(size) {
+        const frm = document.getElementById('frm');
+        // page=1 로 초기화
+        const pageInput = document.createElement('input');
+        pageInput.type = 'hidden';
+        pageInput.name = 'page';
+        pageInput.value = '1';
+        frm.appendChild(pageInput);
+
+        frm.submit(); // size 값은 select(name="size")가 자동으로 같이 전송
+    }
+
     document.addEventListener('change', e => {
         if (e.target.name === 'menuCategoryId') setFilter(e.target.value);
-        if (e.target.name === 'menuShow') setShowFilter(e.target.value);
+        if (e.target.name === 'menuShow')       setShowFilter(e.target.value);
     });
 </script>
-
-
 
 </body>
 </html>
