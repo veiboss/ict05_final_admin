@@ -22,7 +22,7 @@ import java.util.List;
  *     <li>하위 상세 항목 리스트 ({@link ReceiveOrderDetail})</li>
  * </ul>
  *
- * <p>DB 테이블명: <b>purchase_order</b></p>
+ * <p>DB 테이블명: <b>receive_order</b></p>
  *
  * @author 최민진
  * @since 2025.10
