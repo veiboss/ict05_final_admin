@@ -57,9 +57,11 @@ public class MenuWriteFormDTO {
 
     /** 재료구성 – 주재료(필수) */
     @Valid
+    @Builder.Default
     private List<RecipeItemDTO> mainMaterials = new ArrayList<>();
 
     /** 재료구성 – 소스(필수) */
     @Valid
+    @Builder.Default
     private List<RecipeItemDTO> sauceMaterials= new ArrayList<>();
 }
