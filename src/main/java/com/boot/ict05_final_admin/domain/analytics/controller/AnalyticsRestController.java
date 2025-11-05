@@ -1,61 +1,108 @@
+// src/main/java/com/boot/ict05_final_admin/domain/analytics/controller/AnalyticsRestController.java
 package com.boot.ict05_final_admin.domain.analytics.controller;
 
-import com.boot.ict05_final_admin.domain.analytics.dto.*;
+import com.boot.ict05_final_admin.domain.analytics.dto.AnalyticsSearchDto;
 import com.boot.ict05_final_admin.domain.analytics.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 
-/**
- * 본사 통계/분석 REST 컨트롤러.
- *
- * <p>AJAX 요청을 처리한다.</p>
- */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/API/analytics")
 public class AnalyticsRestController {
 
-    private final AnalyticsService analyticsService;
+	private final AnalyticsService analyticsService;
 
-//    /**
-//     * KPI 집계 조회
-//     */
-//    @GetMapping("/kpi")
-//    public ResponseEntity<Page<KpiRowDto>> kpi(AnalyticsSearchDto search, Pageable pageable) {
-//        Page<KpiRowDto> page = analyticsService.selectKpis(search, pageable);
-//        System.out.println("레스트컨트롤러 호출");
-//        return ResponseEntity.ok(page);
-//    }
-//
-//    /**
-//     * 주문 분석 데이터 조회
-//     */
-//    @GetMapping("/orders")
-//    public ResponseEntity<List<OrdersRowDto>> orders(AnalyticsSearchDto search) {
-//        // 기존 시그니처가 List였다면, 우선 ResponseEntity로 래핑만 해둡니다.
-//        return ResponseEntity.ok(analyticsService.selectOrders(AnalyticsSearchDto.withDefaults(search)));
-//    }
-//
-//    /**
-//     * 재료 분석 데이터 조회
-//     */
-//    @GetMapping("/materials")
-//    public ResponseEntity<List<MaterialsRowDto>> materials(AnalyticsSearchDto search) {
-//        return ResponseEntity.ok(analyticsService.selectMaterials(AnalyticsSearchDto.withDefaults(search)));
-//    }
-//
-//    /**
-//     * 시간·요일 분석 데이터 조회
-//     */
-//    @GetMapping("/time")
-//    public ResponseEntity<List<TimeRowDto>> time(AnalyticsSearchDto search) {
-//        return ResponseEntity.ok(analyticsService.selectTimeSlices(AnalyticsSearchDto.withDefaults(search)));
-//    }
+	/** KPI 리스트 엑셀 다운로드 */
+	@GetMapping("/kpi/download")
+	public ResponseEntity<Resource> downloadExcelKpiList(
+			@ModelAttribute AnalyticsSearchDto cond,
+			Pageable pageable
+	) {
+		byte[] excelBytes = analyticsService.downloadExcelKpi(cond, pageable);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String filename = "KPI_" + start + "_" + end + ".xlsx";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.parseMediaType(
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(new ByteArrayResource(excelBytes));
+	}
+
+	/** 주문 리스트 엑셀 다운로드 */
+	@GetMapping("/orders/download")
+	public ResponseEntity<Resource> downloadExcelOrdersList(
+			@ModelAttribute AnalyticsSearchDto cond,
+			Pageable pageable
+	) {
+		byte[] excelBytes = analyticsService.downloadExcelOrders(cond, pageable);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String filename = "Orders_" + start + "_" + end + ".xlsx";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.parseMediaType(
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(new ByteArrayResource(excelBytes));
+	}
+
+	/** 시간·요일 분석 엑셀 다운로드 */
+	@GetMapping("/time/download")
+	public ResponseEntity<Resource> downloadExcelTimeList(
+			@ModelAttribute AnalyticsSearchDto cond,
+			Pageable pageable
+	) {
+		byte[] excelBytes = analyticsService.downloadExcelTime(cond, pageable);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String mode  = cond.getViewBy() != null ? cond.getViewBy().name() : "DAY";
+		String filename = "Time_" + mode + "_" + start + "_" + end + ".xlsx";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.parseMediaType(
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(new ByteArrayResource(excelBytes));
+	}
+
+	/** KPI 리스트 PDF 다운로드 */
+	@GetMapping("/kpi/pdf/download")
+	public ResponseEntity<Resource> downloadPdfKpiList(
+			@ModelAttribute AnalyticsSearchDto cond
+	) {
+		byte[] pdfBytes = analyticsService.downloadPdfKpi(cond);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String filename = "KPI_" + start + "_" + end + ".pdf";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(new ByteArrayResource(pdfBytes));
+	}
 }

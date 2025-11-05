@@ -68,7 +68,7 @@ public class ReceiveOrderListDTO {
     /**
      * 수주 상태(Enum)의 한글 설명 반환
      *
-     * @return 한글 상태 설명 (예: "접수", "배송 준비", "배송 중", "완료"), 없으면 빈 문자열
+     * @return 한글 상태 설명 (예: "접수", "배송", "완료", "취소"), 없으면 빈 문자열
      */
     public String getStatusDescription() {
         return status != null ? status.getDescription() : "";

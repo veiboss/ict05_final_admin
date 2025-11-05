@@ -141,19 +141,6 @@
               <!-- 검색 제출 시 1페이지로 -->
               <input type="hidden" name="page" value="1"/>
 
-              <!-- 기간 -->
-              <div class="pack-right">
-                <label class="pack-left">
-                  <span class="fs-ss">조회시작일</span>
-                  <input type="date" class="input-text medium form-control" name="startDate"
-                         th:value="${#temporals.format(analyticsSearchDto.startDate, 'yyyy-MM-dd')}"/>
-                </label>
-                <label class="pack-left">
-                  <span class="fs-ss">조회종료일</span>
-                  <input type="date" class="input-text medium form-control" name="endDate"
-                         th:value="${#temporals.format(analyticsSearchDto.endDate, 'yyyy-MM-dd')}"/>
-                </label>
-              </div>
 
               <div class="pack-both-down">
                 <!-- 가맹점 선택 -->
@@ -188,6 +175,19 @@
                     </div>
                   </div>
                 </div>
+                <!-- 기간 -->
+                <div class="pack-right">
+                  <label class="pack-left">
+                    <span class="fs-ss">조회시작일</span>
+                    <input type="date" class="input-text medium form-control" name="startDate"
+                           th:value="${#temporals.format(analyticsSearchDto.startDate, 'yyyy-MM-dd')}"/>
+                  </label>
+                  <label class="pack-left">
+                    <span class="fs-ss">조회종료일</span>
+                    <input type="date" class="input-text medium form-control" name="endDate"
+                           th:value="${#temporals.format(analyticsSearchDto.endDate, 'yyyy-MM-dd')}"/>
+                  </label>
+                </div>
 
                 <div class="pack-right">
                   <div class="pack-right">
@@ -199,6 +199,17 @@
                         </label>
                         <label class="btn medium" th:classappend="${analyticsSearchDto.viewBy?.name() == 'MONTH'} ? ' active' : ''">
                           <input type="radio" name="viewBy" value="MONTH" th:checked="${analyticsSearchDto.viewBy?.name() == 'MONTH'}">월별
+                        </label>
+                      </div>
+
+                      <!-- ✅ Total 토글 -->
+                      <span class="fs-ss">요약(합계)</span>
+                      <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons" role="group" style="margin-left:8px;">
+                        <label class="btn medium" th:classappend="${analyticsSearchDto.showTotal} ? ' active' : ''">
+                          <input type="radio" name="showTotal" value="true" th:checked="${analyticsSearchDto.showTotal}"> 보이기
+                        </label>
+                        <label class="btn medium" th:classappend="${!analyticsSearchDto.showTotal} ? ' active' : ''">
+                          <input type="radio" name="showTotal" value="false" th:checked="${!analyticsSearchDto.showTotal}"> 숨기기
                         </label>
                       </div>
 
@@ -214,16 +225,6 @@
                         </select>
                         <span class="fs-ss">개씩 보기</span>
                       </div>
-                    </div>
-                    <!-- ✅ Total 토글 -->
-                    <span class="fs-ss">요약(합계)</span>
-                    <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons" role="group" style="margin-left:8px;">
-                      <label class="btn medium" th:classappend="${analyticsSearchDto.showTotal} ? ' active' : ''">
-                        <input type="radio" name="showTotal" value="true" th:checked="${analyticsSearchDto.showTotal}"> 보이기
-                      </label>
-                      <label class="btn medium" th:classappend="${!analyticsSearchDto.showTotal} ? ' active' : ''">
-                        <input type="radio" name="showTotal" value="false" th:checked="${!analyticsSearchDto.showTotal}"> 숨기기
-                      </label>
                     </div>
                     <!-- 조회 버튼: 폼 submit -->
                     <input type="submit" class="btn medium color1" value="조회"/>
@@ -313,6 +314,13 @@
   })();
 </script>
 <script>
+  function excelDownload() {
+    const frm = document.getElementById('frm');
+    const params = new URLSearchParams(new FormData(frm));
+    const url = `/admin/API/analytics/orders/download?` + params.toString();
+    window.location.href = url;
+  }
+
   // 일별/월별 필터링 색상
   (function () {
     const group = document.querySelector('[data-bs-toggle="buttons"]');
