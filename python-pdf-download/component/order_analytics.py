@@ -93,13 +93,12 @@ def generate_orders_pdf(payload: Dict[str, Any]) -> bytes:
                 _fmt_num(r.get("orderCount")), _fmt_num(r.get("orderSales"))
             ])
 
-    # ⚠️ 데이터가 0행이면 테이블이 비정상 동작할 수 있으니 최소 1행 보정
+    # 데이터가 0행이면 테이블 오류 방지를 위해 최소 1행 보정
     if len(data) == 1:
         data.append([""] * len(headers))
 
     table = Table(data, colWidths=_col_widths(is_daily), repeatRows=1)
 
-    # 스타일을 조건식 없이 순차적으로 쌓아 안정화
     ts = [
         ("BACKGROUND",(0,0),(-1,0), colors.HexColor("#F3F3F3")),
         ("TEXTCOLOR",(0,0),(-1,0), colors.black),
@@ -113,22 +112,20 @@ def generate_orders_pdf(payload: Dict[str, Any]) -> bytes:
         ("TOPPADDING",(0,0),(-1,0), 3*mm),
     ]
     if is_daily:
-        # 텍스트 좌측
         ts += [
             ("ALIGN",(0,1),(1,-1), "LEFT"),  # Date, OrderDate
             ("ALIGN",(2,1),(4,-1), "LEFT"),  # Store, Category, Menu
             ("ALIGN",(9,1),(9,-1), "LEFT"),  # OrderType
-            ("ALIGN",(5,1),(8,-1), "RIGHT"), # 숫자열 (MenuCount~OrderSales)
+            ("ALIGN",(5,1),(8,-1), "RIGHT"), # 숫자열
         ]
     else:
         ts += [
             ("ALIGN",(0,1),(1,-1), "LEFT"),  # Date, Store
-            ("ALIGN",(2,1),(5,-1), "RIGHT"), # 숫자열 (MenuCount~OrderSales)
+            ("ALIGN",(2,1),(5,-1), "RIGHT"), # 숫자열
         ]
 
     table.setStyle(TableStyle(ts))
     story.append(table)
 
     doc.build(story)
-    pdf = buf.getvalue()
-    return pdf
+    return buf.getvalue()

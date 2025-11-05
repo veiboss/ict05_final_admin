@@ -1,4 +1,3 @@
-// src/main/java/com/boot/ict05_final_admin/domain/analytics/controller/AnalyticsRestController.java
 package com.boot.ict05_final_admin.domain.analytics.controller;
 
 import com.boot.ict05_final_admin.domain.analytics.dto.AnalyticsSearchDto;
@@ -89,9 +88,7 @@ public class AnalyticsRestController {
 
 	/** KPI 리스트 PDF 다운로드 */
 	@GetMapping("/kpi/pdf/download")
-	public ResponseEntity<Resource> downloadPdfKpiList(
-			@ModelAttribute AnalyticsSearchDto cond
-	) {
+	public ResponseEntity<Resource> downloadPdfKpiList(@ModelAttribute AnalyticsSearchDto cond) {
 		byte[] pdfBytes = analyticsService.downloadPdfKpi(cond);
 
 		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
@@ -108,9 +105,7 @@ public class AnalyticsRestController {
 
 	/** 주문 리스트 PDF 다운로드 */
 	@GetMapping("/orders/pdf/download")
-	public ResponseEntity<Resource> downloadPdfOrders(
-			@ModelAttribute AnalyticsSearchDto cond
-	) {
+	public ResponseEntity<Resource> downloadPdfOrders(@ModelAttribute AnalyticsSearchDto cond) {
 		byte[] pdfBytes = analyticsService.downloadPdfOrders(cond);
 
 		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";

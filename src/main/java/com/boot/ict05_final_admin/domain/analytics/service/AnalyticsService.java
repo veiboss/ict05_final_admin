@@ -15,12 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -366,8 +362,6 @@ public class AnalyticsService {
         return style;
     }
 
-    private static final int MAX_PDF_ROWS = 5_000;
-
     /**
      * KPI 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
      */
@@ -397,35 +391,62 @@ public class AnalyticsService {
     /**
      * 주문 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
      */
+    private static final int MAX_PDF_ROWS = 5_000;
+
     @Transactional(readOnly = true)
     public byte[] downloadPdfOrders(AnalyticsSearchDto cond) {
         long total = analyticsRepository.countOrders(cond);
-        if (total == 0) return new byte[0];
 
-        // 너무 큰 데이터는 PDF 성능 저하 → 상한 적용(요약/절단 플래그 동봉)
         boolean truncated = false;
         int fetchSize = (int) Math.min(total, MAX_PDF_ROWS);
         if (total > MAX_PDF_ROWS) truncated = true;
 
-        Pageable fullPage = PageRequest.of(0, fetchSize);
-        List<OrdersRowDto> rows = analyticsRepository.findOrders(cond, fullPage).getContent();
-        rows = new ArrayList<>(rows); // 직렬화 안전
+        Pageable fullPage = PageRequest.of(0, Math.max(fetchSize, 1));
+        List<OrdersRowDto> rawRows = analyticsRepository.findOrders(cond, fullPage).getContent();
+
+        if (rawRows.size() > fetchSize && fetchSize > 0) {
+            rawRows = rawRows.subList(0, fetchSize);
+        }
+
+        // DTO -> Map (직렬화 100% 안전)
+        List<Map<String, Object>> rows = new ArrayList<>(rawRows.size());
+        for (OrdersRowDto d : rawRows) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("date",       nz(d.getDate()));
+            m.put("orderDate",  nz(d.getOrderDate()));
+            m.put("storeName",  nz(d.getStoreName()));
+            m.put("category",   nz(d.getCategory()));
+            m.put("menu",       nz(d.getMenu()));
+            m.put("menuCount",  d.getMenuCount());
+            m.put("menuSales",  d.getMenuSales());
+            m.put("orderCount", d.getOrderCount());
+            m.put("orderSales", d.getOrderSales());
+            m.put("orderType",  nz(d.getOrderType()));
+            rows.add(m);
+        }
+        if (rows.isEmpty()) {
+            rows.add(new LinkedHashMap<>()); // ReportLab 테이블 최소 1행 보정
+        }
 
         Map<String, Object> criteria = new HashMap<>();
         criteria.put("title", "주문 분석 리포트");
-        criteria.put("viewBy", cond.getViewBy() != null ? cond.getViewBy().name() : "DAY");
+        criteria.put("viewBy",   cond.getViewBy() != null ? cond.getViewBy().name() : "DAY");
         criteria.put("startDate", cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "");
         criteria.put("endDate",   cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "");
-        criteria.put("rowCount", rows.size());
+        criteria.put("rowCount",  rows.size());
         criteria.put("totalCount", total);
         criteria.put("truncated", truncated);
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("criteria", criteria);
-        payload.put("data", rows); // DTO 그대로 직렬화(필드명: date, orderDate, storeName, category, menu, menuCount, menuSales, orderCount, orderSales, orderType)
+        payload.put("data", rows);
 
-        return pythonPdfClient.generateOrdersReportPdf(payload);
+        byte[] pdf = pythonPdfClient.generateOrdersReportPdf(payload);
+        log.info("Orders PDF ready: total={}, sentRows={}, bytes={}", total, rows.size(), (pdf == null ? 0 : pdf.length));
+        return pdf;
     }
+
+    private static String nz(String s) { return (s == null) ? "" : s; }
 
     // --- 셀 헬퍼들 ---
     private static void setText(Row row, int col, String val, CellStyle st) {

@@ -1,15 +1,14 @@
-# app.py
-
-# 로컬 개발시:
 # uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 
 from fastapi import FastAPI, Response, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
+import logging
 
 from component import kpi_analytics, order_analytics
 
 app = FastAPI(title="PDF Generation Service")
+logger = logging.getLogger("orders-pdf")
 
 # ---------- KPI ----------
 class KpiRow(BaseModel):
@@ -33,10 +32,10 @@ class KpiPayload(BaseModel):
 @app.post("/pdf/kpi-report", summary="KPI 분석 리포트 PDF 생성")
 def create_kpi_report(payload: KpiPayload):
     pdf_bytes = kpi_analytics.generate_kpi_pdf(payload.dict())
+    if not pdf_bytes:
+        raise HTTPException(status_code=500, detail="Empty KPI PDF generated")
     return Response(content=pdf_bytes, media_type="application/pdf")
 
-import logging
-logger = logging.getLogger("orders-pdf")
 
 # ---------- Orders ----------
 class OrdersRow(BaseModel):
@@ -60,14 +59,5 @@ def create_orders_report(payload: OrdersPayload):
     pdf_bytes = order_analytics.generate_orders_pdf(payload.dict())
     logger.info("orders.pdf length = %s bytes", 0 if not pdf_bytes else len(pdf_bytes))
     if not pdf_bytes:
-        # 빈 PDF는 바로 발견되도록 500으로 돌려버리는 편이 디버그에 유리
-        raise HTTPException(status_code=500, detail="Empty PDF generated")
+        raise HTTPException(status_code=500, detail="Empty Orders PDF generated")
     return Response(content=pdf_bytes, media_type="application/pdf")
-
-
-# @app.post("/pdf/orders", summary="주문 분석 리포트 PDF 생성")
-# def create_orders_report(payload: OrdersPayload):
-#     pdf_bytes = order_analytics.generate_orders_pdf(payload.dict())
-#     return Response(content=pdf_bytes, media_type="application/pdf")
-
-

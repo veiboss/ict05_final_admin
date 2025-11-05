@@ -1,4 +1,3 @@
-# component/pdf_generator.py
 import os
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
