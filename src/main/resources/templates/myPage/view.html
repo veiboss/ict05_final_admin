@@ -133,7 +133,7 @@
         const res = await postJson(url);
         if (res.ok) {
           const data = await res.json().catch(()=>({}));
-          toast('연동 성공');
+          toast('연동 성공, 다시 로그인 후 이용하세요');
           // 필요하면 이동
           // location.reload();
         } else if (res.status === 404) {

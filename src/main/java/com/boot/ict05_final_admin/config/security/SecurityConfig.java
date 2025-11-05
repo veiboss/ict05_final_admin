@@ -42,6 +42,17 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**", "/api/auth/**", "/uploads/**",  "/uploads/profile/**").permitAll()
                         // 필요시 .requestMatchers("/admin/**").hasRole("HQ")
+
+                        .requestMatchers("/store/**").hasAnyRole("FRANCHISE", "ADMIN")
+                        .requestMatchers("/menu/**").hasAnyRole("OPS", "ADMIN")
+                        .requestMatchers("/receive/**").hasAnyRole("OPS", "ADMIN")
+                        .requestMatchers("/inventory/**").hasAnyRole("OPS", "ADMIN")
+                        .requestMatchers("/material/**").hasAnyRole("OPS", "ADMIN")
+                        .requestMatchers("/store/material/**").hasAnyRole("OPS", "ADMIN")
+                        .requestMatchers("/staff/**").hasAnyRole("HR", "ADMIN")
+                        .requestMatchers("/analytics/**").hasAnyRole("ANALYTICS", "ADMIN")
+                        .requestMatchers("/member/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

@@ -41,6 +41,7 @@ public class Member  {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "member_status", nullable = false, length = 20)
+    @Builder.Default
     private MemberStatus status = MemberStatus.ACTIVE;
 
     @Column(name = "member_image_path")
@@ -103,5 +104,10 @@ public class Member  {
         this.email = dto.getMemberEmail();
         this.phone = dto.getMemberPhone();
         this.status = dto.getMemberStatus();
+    }
+
+    @PrePersist
+    void prePersist() {
+        if (status == null) status = MemberStatus.ACTIVE;
     }
 }
