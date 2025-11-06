@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 회원 관리 API 컨트롤러.
+ *
+ * 회원 정보 수정 등 상태 변경 요청을 처리한다.
+ * 입력 검증 결과를 표준 응답 형태로 내려주며, 서비스 계층 호출과 예외 처리의 경계를 담당한다.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/API")
@@ -27,6 +33,17 @@ public class MemberRestController {
 
     private final MemberService memberService;
 
+    /**
+     * 회원 수정 요청을 처리한다.
+     *
+     * 유효성 검증에 실패하면 400과 필드별 오류 메시지를, 성공하면 200과 수정된 회원 id를 반환한다.
+     * 폼 제출 시에는 @ModelAttribute 바인딩을 통해 DTO에 값을 채운다.
+     *
+     * @param dto           수정할 회원 정보 DTO
+     * @param bindingResult 입력값 검증 결과
+     * @return 처리 결과를 담은 ResponseEntity
+     * @throws Exception 서비스 계층 처리 중 발생하는 예외 전파
+     */
     @PostMapping("/member/modify")
     @Operation(
             summary = "회원 수정",
