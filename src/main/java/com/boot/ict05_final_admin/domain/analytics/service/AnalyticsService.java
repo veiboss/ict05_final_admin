@@ -446,6 +446,60 @@ public class AnalyticsService {
         return pdf;
     }
 
+    @Transactional(readOnly = true)
+    public byte[] downloadPdfTime(AnalyticsSearchDto cond) {
+        long total = analyticsRepository.countTime(cond);
+
+        boolean truncated = false;
+        int fetchSize = (int) Math.min(total, MAX_PDF_ROWS);
+        if (total > MAX_PDF_ROWS) truncated = true;
+
+        Pageable fullPage = PageRequest.of(0, Math.max(fetchSize, 1));
+        List<TimeRowDto> rawRows = analyticsRepository.findTimeRows(cond, fullPage).getContent();
+
+        if (rawRows.size() > fetchSize && fetchSize > 0) {
+            rawRows = rawRows.subList(0, fetchSize);
+        }
+
+        // DTO -> Map (Python에서 바로 사용)
+        List<Map<String, Object>> rows = new ArrayList<>(rawRows.size());
+        for (TimeRowDto d : rawRows) {
+            Map<String, Object> m = new java.util.LinkedHashMap<>();
+            m.put("date",       nz(d.getDate()));
+            m.put("storeName",  nz(d.getStoreName()));
+            m.put("hourSlot",   nz(d.getHourSlot()));
+            m.put("dayOfWeek",  nz(d.getDayOfWeek()));
+            m.put("orderId",    d.getOrderId());
+            m.put("orderAmount",d.getOrderAmount());
+            m.put("category",   nz(d.getCategory()));
+            m.put("menu",       nz(d.getMenu()));
+            m.put("orderType",  nz(d.getOrderType()));
+            m.put("orderDate",  nz(d.getOrderDate()));
+            rows.add(m);
+        }
+        if (rows.isEmpty()) rows.add(new java.util.LinkedHashMap<>());
+
+        Map<String, Object> criteria = new HashMap<>();
+        criteria.put("title", "시간·요일 분석 리포트");
+        criteria.put("viewBy", cond.getViewBy() != null ? cond.getViewBy().name() : "DAY");
+        criteria.put("startDate", cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "");
+        criteria.put("endDate",   cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "");
+        criteria.put("rowCount", rows.size());
+        criteria.put("totalCount", total);
+        criteria.put("truncated", truncated);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("criteria", criteria);
+        payload.put("data", rows);
+
+        byte[] pdf = pythonPdfClient.generateTimeReportPdf(payload);
+        if (pdf == null || pdf.length == 0) {
+            throw new IllegalStateException("Empty PDF from /pdf/time");
+        }
+        log.info("Time PDF ready: total={}, sentRows={}, bytes={}", total, rows.size(), pdf.length);
+        return pdf;
+    }
+
     private static String nz(String s) { return (s == null) ? "" : s; }
 
     // --- 셀 헬퍼들 ---

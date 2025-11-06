@@ -45,10 +45,9 @@ public class PythonPdfClient {
         return postPdfOrThrow("/pdf/orders", payload);
     }
 
-    public byte[] generateStoreSummaryPdf(Object payload) {
-        return postPdfOrThrow("/pdf/store-summary", payload);
+    public byte[] generateTimeReportPdf(Object payload) {
+        return postPdfOrThrow("/pdf/time", payload);
     }
-
     public byte[] generateKpiReportPdf(Object payload) {
         return postPdfOrThrow("/pdf/kpi-report", payload);
     }
