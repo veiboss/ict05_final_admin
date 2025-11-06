@@ -18,6 +18,23 @@ import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * 통계(Analytics) 도메인의 조회·내보내기(엑셀/PDF) 비즈니스 로직 서비스.
+ *
+ * <p>
+ * KPI, 주문, 재료, 시간·요일 분석에 대한 카드/테이블 데이터 조회와
+ * 엑셀(XLSX) 및 PDF 생성 바이트를 제공한다. 조회성 메서드는 기본적으로
+ * {@code @Transactional(readOnly = true)}로 동작하며, 대량 내보내기는
+ * 전체 건수를 선조회한 후 단일 페이징으로 전체를 조회하는 패턴을 따른다.
+ * </p>
+ *
+ * <h3>성능 원칙</h3>
+ * <ul>
+ *   <li>조회 메서드: 읽기 전용 트랜잭션 + Repository의 DTO 프로젝션 사용</li>
+ *   <li>엑셀: {@link SXSSFWorkbook} 스트리밍 사용으로 메모리 사용 최소화</li>
+ *   <li>PDF: Python(ReportLab) 마이크로서비스 연동, 안전한 직렬화를 위한 Map 변환</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,60 +44,127 @@ public class AnalyticsService {
     private final AnalyticsRepository analyticsRepository;
     private final PythonPdfClient pythonPdfClient;
 
+    /**
+     * KPI 카드(요약) 데이터를 조회한다.
+     *
+     * @return KPI 카드 요약 DTO
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public KpiCardsDto selectKpiCards() {
         return analyticsRepository.findKpiSummary();
     }
 
+    /**
+     * KPI 테이블 데이터를 페이지 단위로 조회한다.
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보
+     * @return KPI 행 페이지
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public Page<KpiRowDto> selectKpis(AnalyticsSearchDto cond, Pageable pageable) {
         return analyticsRepository.findKpi(cond, pageable);
     }
 
+    /**
+     * 주문 카드(요약) 데이터를 조회한다.
+     *
+     * @return 주문 카드 요약 DTO
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public OrdersCardsDto selectOrdersCards() {
         return analyticsRepository.findOrdersSummary();
     }
 
+    /**
+     * 주문 테이블 데이터를 페이지 단위로 조회한다.
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보
+     * @return 주문 행 페이지
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public Page<OrdersRowDto> selectOrders(AnalyticsSearchDto cond, Pageable pageable) {
         return analyticsRepository.findOrders(cond, pageable);
     }
 
+    /**
+     * 재료 카드(요약) 데이터를 조회한다.
+     *
+     * @return 재료 카드 요약 DTO
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public MaterialsCardsDto selectMaterialsCards() {
         return analyticsRepository.findMaterialsSummary();
     }
 
+    /**
+     * 재료 테이블 데이터를 페이지 단위로 조회한다.
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보
+     * @return 재료 행 페이지
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public Page<MaterialsRowDto> selectMaterials(AnalyticsSearchDto cond, Pageable pageable) {
         return analyticsRepository.findMaterials(cond, pageable);
     }
 
+    /**
+     * 시간·요일 분석 카드(요약) 데이터를 조회한다.
+     *
+     * @return 시간·요일 카드 요약 DTO
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public TimeChartCardDto selectTimeChartCards() {
         return analyticsRepository.findTimeChartSummary();
     }
 
+    /**
+     * 시간·요일 분석 차트 데이터를 조회한다.
+     *
+     * @param cond 조회 조건
+     * @return 시간·요일 차트 DTO
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public TimeChartRowDto selectTimeChart(AnalyticsSearchDto cond) {
         return analyticsRepository.findTimeChart(cond);
     }
 
+    /**
+     * 시간·요일 분석 테이블 데이터를 페이지 단위로 조회한다.
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보
+     * @return 시간·요일 행 페이지
+     */
     @LogExecutionTime
     @Transactional(readOnly = true)
     public Page<TimeRowDto> selectTimeRows(AnalyticsSearchDto cond, Pageable pageable) {
         return analyticsRepository.findTimeRows(cond, pageable);
     }
 
+    /**
+     * KPI 테이블을 엑셀(XLSX)로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 전체 건수를 선조회한 뒤 한 페이지로 모두 가져와 워크북을 구성한다.
+     * 통화/정수/소수/퍼센트 셀 스타일을 적용하여 가독성을 높인다.
+     * </p>
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보(엑셀 내에서는 전체 다운로드를 위해 무시됨)
+     * @return XLSX 바이트 배열(없으면 길이 0)
+     * @throws RuntimeException 엑셀 생성 실패 시
+     */
     @Transactional(readOnly = true)
     public byte[] downloadExcelKpi(AnalyticsSearchDto cond, Pageable pageable) {
         long total = analyticsRepository.countKpi(cond);
@@ -138,6 +222,19 @@ public class AnalyticsService {
         }
     }
 
+    /**
+     * 주문 테이블을 엑셀(XLSX)로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 조회 모드가 일(DAY)인 경우 주문 상세 컬럼을 포함하여 헤더/본문을 구성한다.
+     * 금액/개수에 대한 서식을 적용한다.
+     * </p>
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보(엑셀 내에서는 전체 다운로드를 위해 무시됨)
+     * @return XLSX 바이트 배열(없으면 길이 0)
+     * @throws RuntimeException 엑셀 생성 실패 시
+     */
     @Transactional(readOnly = true)
     public byte[] downloadExcelOrders(AnalyticsSearchDto cond, Pageable pageable) {
         long total = analyticsRepository.countOrders(cond);
@@ -212,18 +309,28 @@ public class AnalyticsService {
         }
     }
 
+    /**
+     * 시간·요일 분석 테이블을 엑셀(XLSX)로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 전체 건수를 선조회하여 한 번에 모두 읽어들인 뒤, 일/월 모드에 따라 헤더 구성을 달리한다.
+     * 금액/문자열 서식을 적용하고, UI 테이블 컬럼 구성과 동일한 순서로 내보낸다.
+     * </p>
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보(엑셀 내에서는 전체 다운로드를 위해 무시됨)
+     * @return XLSX 바이트 배열(없으면 길이 0)
+     * @throws RuntimeException 엑셀 생성 실패 시
+     */
     @Transactional(readOnly = true)
     public byte[] downloadExcelTime(AnalyticsSearchDto cond, Pageable pageable) {
-        // 1) 전체 건수만 먼저 확보 (limit 1)
         long total = analyticsRepository.countTime(cond);
         if (total == 0) return new byte[0];
 
-        // 2) 전체 로우 한번에 조회
         Pageable fullPage = PageRequest.of(0, (int) total);
         Page<TimeRowDto> page = analyticsRepository.findTimeRows(cond, fullPage);
         List<TimeRowDto> rows = page.getContent();
 
-        // 3) 엑셀 작성
         try (SXSSFWorkbook wb = new SXSSFWorkbook();
              ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
@@ -237,8 +344,7 @@ public class AnalyticsService {
 
             boolean isDailyView = (cond.getViewBy() == ViewBy.DAY);
 
-            // UI 컬럼 구성과 동일하게 맞춤
-            List<String> headerList = new ArrayList<>();
+            List<String> headerList;
             if (isDailyView) {
                 headerList = Arrays.asList(
                         "Store", "시간대", "요일", "주문ID", "주문금액",
@@ -250,7 +356,6 @@ public class AnalyticsService {
                 );
             }
 
-            // 헤더
             Row hr = sheet.createRow(0);
             for (int c = 0; c < headerList.size(); c++) {
                 Cell cell = hr.createCell(c);
@@ -258,7 +363,6 @@ public class AnalyticsService {
                 cell.setCellStyle(head);
             }
 
-            // 본문
             int r = 1;
             for (TimeRowDto dto : rows) {
                 Row row = sheet.createRow(r++);
@@ -268,7 +372,6 @@ public class AnalyticsService {
                     setText(row, col++, dto.getStoreName(),  text);
                     setText(row, col++, dto.getHourSlot(),   text);
                     setText(row, col++, dto.getDayOfWeek(),  text);
-                    // 주문ID는 가끔 null/Total일 수 있으므로 문자열로
                     setText(row, col++, dto.getOrderId() != null ? dto.getOrderId().toString() : "", text);
                     setNum (row, col++, dto.getOrderAmount(), money);
                     setText(row, col++, dto.getCategory(),   text);
@@ -285,7 +388,6 @@ public class AnalyticsService {
                 }
             }
 
-            // 컬럼 폭
             for (int c = 0; c < headerList.size(); c++) {
                 int w = switch (headerList.get(c)) {
                     case "Store"     -> 18;
@@ -310,71 +412,27 @@ public class AnalyticsService {
         }
     }
 
-    private CellStyle createHeaderStyle(Workbook wb) {
-        CellStyle style = wb.createCellStyle();
-        Font font = wb.createFont();
-        font.setBold(true);
-        style.setFont(font);
-        style.setAlignment(HorizontalAlignment.CENTER);
-        style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        style.setBorderTop(BorderStyle.THIN);
-        style.setBorderBottom(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle.THIN);
-        return style;
-    }
-
-    private CellStyle createBodyStyle(Workbook wb) {
-        CellStyle style = wb.createCellStyle();
-        style.setBorderTop(BorderStyle.THIN);
-        style.setBorderBottom(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle.THIN);
-        return style;
-    }
-
-    private CellStyle createMoneyStyle(Workbook wb, CellStyle base, DataFormat df) {
-        CellStyle style = wb.createCellStyle();
-        style.cloneStyleFrom(base);
-        style.setDataFormat(df.getFormat("#,##0"));
-        return style;
-    }
-
-    private CellStyle createIntegerStyle(Workbook wb, CellStyle base, DataFormat df) {
-        CellStyle style = wb.createCellStyle();
-        style.cloneStyleFrom(base);
-        style.setDataFormat(df.getFormat("#,##0"));
-        return style;
-    }
-
-    private CellStyle createDecimalStyle(Workbook wb, CellStyle base, DataFormat df, String format) {
-        CellStyle style = wb.createCellStyle();
-        style.cloneStyleFrom(base);
-        style.setDataFormat(df.getFormat(format));
-        return style;
-    }
-
-    private CellStyle createPercentStyle(Workbook wb, CellStyle base, DataFormat df, String format) {
-        CellStyle style = wb.createCellStyle();
-        style.cloneStyleFrom(base);
-        style.setDataFormat(df.getFormat(format));
-        return style;
-    }
 
     /**
-     * KPI 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
+     * KPI 행 데이터를 PDF로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 전체 건수 조회 후 한 페이지로 모두 가져와 Python PDF 서비스에 전달한다.
+     * 전달 페이로드는 조건(criteria)와 데이터(data)로 분리하여 직렬화 안정성을 확보한다.
+     * </p>
+     *
+     * @param cond 조회 조건
+     * @return PDF 바이트 배열(없으면 길이 0)
      */
     @Transactional(readOnly = true)
     public byte[] downloadPdfKpi(AnalyticsSearchDto cond) {
-        // ✅ 엑셀과 동일한 패턴로 '풀페이지' Pageable 사용
         long total = analyticsRepository.countKpi(cond);
         if (total == 0) return new byte[0];
 
-        Pageable fullPage = PageRequest.of(0, (int) total); // ← 핵심
+        Pageable fullPage = PageRequest.of(0, (int) total);
         List<KpiRowDto> rows = analyticsRepository.findKpi(cond, fullPage).getContent();
 
-        rows = new ArrayList<>(rows); // 직렬화 안전
+        rows = new ArrayList<>(rows);
 
         Map<String, Object> criteria = new HashMap<>();
         criteria.put("title", "KPI 분석 리포트");
@@ -389,10 +447,22 @@ public class AnalyticsService {
     }
 
     /**
-     * 주문 행을 PDF(.pdf)로 생성하여 바이트 배열로 반환
+     * PDF 내보내기 시 전송할 최대 행 수 상한.
+     * <p>ReportLab 렌더링 시간 및 용량 제한을 고려한 안전한 기본값.</p>
      */
     private static final int MAX_PDF_ROWS = 5_000;
 
+    /**
+     * 주문 행 데이터를 PDF로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 총 건수가 {@link #MAX_PDF_ROWS}를 초과할 경우 PDF 전송 행 수를 상한선으로 절단하고,
+     * 기준 정보에 {@code truncated=true}를 포함한다.
+     * </p>
+     *
+     * @param cond 조회 조건
+     * @return PDF 바이트 배열
+     */
     @Transactional(readOnly = true)
     public byte[] downloadPdfOrders(AnalyticsSearchDto cond) {
         long total = analyticsRepository.countOrders(cond);
@@ -408,7 +478,6 @@ public class AnalyticsService {
             rawRows = rawRows.subList(0, fetchSize);
         }
 
-        // DTO -> Map (직렬화 100% 안전)
         List<Map<String, Object>> rows = new ArrayList<>(rawRows.size());
         for (OrdersRowDto d : rawRows) {
             Map<String, Object> m = new LinkedHashMap<>();
@@ -425,7 +494,7 @@ public class AnalyticsService {
             rows.add(m);
         }
         if (rows.isEmpty()) {
-            rows.add(new LinkedHashMap<>()); // ReportLab 테이블 최소 1행 보정
+            rows.add(new LinkedHashMap<>());
         }
 
         Map<String, Object> criteria = new HashMap<>();
@@ -446,6 +515,19 @@ public class AnalyticsService {
         return pdf;
     }
 
+    /**
+     * 시간·요일 분석 행 데이터를 PDF로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 총 건수가 {@link #MAX_PDF_ROWS}를 초과하면 상한까지만 전송하며,
+     * 조건 정보에 절단 여부를 포함한다. 빈 데이터인 경우 ReportLab 테이블 구성을 위해
+     * 최소 1행을 보정한다.
+     * </p>
+     *
+     * @param cond 조회 조건
+     * @return PDF 바이트 배열
+     * @throws IllegalStateException PDF 생성 결과가 비었을 때
+     */
     @Transactional(readOnly = true)
     public byte[] downloadPdfTime(AnalyticsSearchDto cond) {
         long total = analyticsRepository.countTime(cond);
@@ -461,7 +543,6 @@ public class AnalyticsService {
             rawRows = rawRows.subList(0, fetchSize);
         }
 
-        // DTO -> Map (Python에서 바로 사용)
         List<Map<String, Object>> rows = new ArrayList<>(rawRows.size());
         for (TimeRowDto d : rawRows) {
             Map<String, Object> m = new java.util.LinkedHashMap<>();
@@ -500,15 +581,133 @@ public class AnalyticsService {
         return pdf;
     }
 
+    /**
+     * null 문자열을 빈 문자열로 치환한다.
+     *
+     * @param s 입력 문자열
+     * @return null이면 빈 문자열, 아니면 원문
+     */
     private static String nz(String s) { return (s == null) ? "" : s; }
 
-    // --- 셀 헬퍼들 ---
+    /**
+     * 헤더 셀 스타일을 생성한다.
+     *
+     * @param wb 워크북
+     * @return 헤더용 셀 스타일(볼드, 중앙정렬, 그레이 배경, 외곽선)
+     */
+    private CellStyle createHeaderStyle(Workbook wb) {
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setBold(true);
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        return style;
+    }
+
+    /**
+     * 본문(텍스트) 셀 스타일을 생성한다.
+     *
+     * @param wb 워크북
+     * @return 일반 본문용 셀 스타일(얇은 테두리)
+     */
+    private CellStyle createBodyStyle(Workbook wb) {
+        CellStyle style = wb.createCellStyle();
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        return style;
+    }
+
+    /**
+     * 통화/금액 표현용 셀 스타일을 생성한다.
+     *
+     * @param wb   워크북
+     * @param base 기본 스타일
+     * @param df   데이터 포맷
+     * @return 통화 포맷 스타일(천단위 구분)
+     */
+    private CellStyle createMoneyStyle(Workbook wb, CellStyle base, DataFormat df) {
+        CellStyle style = wb.createCellStyle();
+        style.cloneStyleFrom(base);
+        style.setDataFormat(df.getFormat("#,##0"));
+        return style;
+    }
+
+    /**
+     * 정수 표현용 셀 스타일을 생성한다.
+     *
+     * @param wb   워크북
+     * @param base 기본 스타일
+     * @param df   데이터 포맷
+     * @return 정수 포맷 스타일(천단위 구분)
+     */
+    private CellStyle createIntegerStyle(Workbook wb, CellStyle base, DataFormat df) {
+        CellStyle style = wb.createCellStyle();
+        style.cloneStyleFrom(base);
+        style.setDataFormat(df.getFormat("#,##0"));
+        return style;
+    }
+
+    /**
+     * 소수 표현용 셀 스타일을 생성한다.
+     *
+     * @param wb     워크북
+     * @param base   기본 스타일
+     * @param df     데이터 포맷
+     * @param format 소수 포맷 문자열(예: {@code "0.0"})
+     * @return 소수 포맷 스타일
+     */
+    private CellStyle createDecimalStyle(Workbook wb, CellStyle base, DataFormat df, String format) {
+        CellStyle style = wb.createCellStyle();
+        style.cloneStyleFrom(base);
+        style.setDataFormat(df.getFormat(format));
+        return style;
+    }
+
+    /**
+     * 퍼센트 표현용 셀 스타일을 생성한다.
+     *
+     * @param wb     워크북
+     * @param base   기본 스타일
+     * @param df     데이터 포맷
+     * @param format 퍼센트 포맷 문자열(예: {@code "0.0%"})
+     * @return 퍼센트 포맷 스타일
+     */
+    private CellStyle createPercentStyle(Workbook wb, CellStyle base, DataFormat df, String format) {
+        CellStyle style = wb.createCellStyle();
+        style.cloneStyleFrom(base);
+        style.setDataFormat(df.getFormat(format));
+        return style;
+    }
+    /**
+     * 문자열 셀 값을 설정한다.
+     *
+     * @param row 행
+     * @param col 열 인덱스
+     * @param val 문자열 값(null 허용)
+     * @param st  스타일
+     */
     private static void setText(Row row, int col, String val, CellStyle st) {
         Cell cell = row.createCell(col);
         cell.setCellStyle(st);
         cell.setCellValue(val != null ? val : "");
     }
 
+    /**
+     * 숫자 셀 값을 설정한다.
+     *
+     * @param row 행
+     * @param col 열 인덱스
+     * @param num 숫자 값(null 허용)
+     * @param st  스타일(정수/통화 등)
+     */
     private static void setNum(Row row, int col, Number num, CellStyle st) {
         Cell cell = row.createCell(col);
         cell.setCellStyle(st);
@@ -517,6 +716,19 @@ public class AnalyticsService {
         }
     }
 
+    /**
+     * 퍼센트 셀 값을 설정한다.
+     *
+     * <p>
+     * 입력 값이 1.0보다 크면 100 단위(예: 23.4 ⇒ 0.234)로 간주하여
+     * 엑셀 퍼센트 표현과 일치하도록 변환한다.
+     * </p>
+     *
+     * @param row      행
+     * @param col      열 인덱스
+     * @param pctValue 퍼센트 값(예: 0.234 또는 23.4)
+     * @param st       퍼센트 스타일
+     */
     private static void setPct(Row row, int col, Number pctValue, CellStyle st) {
         Cell cell = row.createCell(col);
         cell.setCellStyle(st);
