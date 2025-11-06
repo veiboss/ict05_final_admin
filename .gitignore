@@ -36,3 +36,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.egg-info/
+*.egg
