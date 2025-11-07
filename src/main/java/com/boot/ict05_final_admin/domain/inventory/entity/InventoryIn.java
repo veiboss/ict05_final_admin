@@ -84,8 +84,4 @@ public class InventoryIn {
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     @Comment("등록일 (자동 생성)")
     private LocalDateTime createdAt;
-
-    @Column(name = "lot_no", length = 50)
-    @Comment("로트 번호 (입고 단위)")
-    private String lotNo;
 }

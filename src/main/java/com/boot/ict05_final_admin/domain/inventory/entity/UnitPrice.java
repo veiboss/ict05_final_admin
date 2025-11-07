@@ -44,7 +44,7 @@ public class UnitPrice {
     /** 단가 시퀀스 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "unit_price_id", nullable = false, columnDefinition = "BIGINT")
+    @Column(name = "unit_price_id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     @Comment("단가 시퀀스")
     private Long id;
 
@@ -54,6 +54,13 @@ public class UnitPrice {
             foreignKey = @ForeignKey(name = "fk_unit_price_material"))
     @Comment("재료 시퀀스 (FK)")
     private Material material;
+
+    /** 단가 구분 */
+    @Enumerated(EnumType.STRING)
+    @Comment("단가 구분")
+    @jakarta.persistence.Column(name = "unit_price_type", length = 20, nullable = false)
+    @Builder.Default
+    private UnitPriceType type = UnitPriceType.PURCHASE;
 
     /** 본사 매입 단가 */
     @Column(name = "unit_price_purchase", precision = 15, scale = 3, nullable = false,
@@ -72,6 +79,7 @@ public class UnitPrice {
     /** 단가 적용 시작일 */
     @Column(name = "unit_price_date_from", nullable = false, columnDefinition = "DATETIME")
     @Comment("단가 적용 시작일")
+    @Builder.Default
     private LocalDateTime validFrom = LocalDateTime.now();
 
     /** 단가 적용 종료일 */

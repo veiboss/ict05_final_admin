@@ -64,16 +64,22 @@ public class InventoryOut {
     @Comment("출고 단가(가맹점 공급가 또는 판매가)")
     private BigDecimal unitPrice;
 
-    /** 출고일시 */
-    @Column(name = "inventory_out_date", nullable = false,
-            columnDefinition = "DATETIME")
-    @Comment("출고일시")
-    private LocalDateTime outDate;
+    /** 로트 아이템들 */
+    @OneToMany(mappedBy = "out", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    @Builder.Default
+    private java.util.List<InventoryOutLot> lotItems = new java.util.ArrayList<>();
 
     /** 비고 */
     @Column(name = "inventory_out_memo", columnDefinition = "VARCHAR(255)")
     @Comment("비고")
     private String memo;
+
+    /** 출고일시 */
+    @Column(name = "inventory_out_date", nullable = false,
+            columnDefinition = "DATETIME")
+    @Comment("출고일시")
+    private LocalDateTime outDate;
 
     /** 등록일시 (자동 생성) */
     @CreationTimestamp
@@ -81,4 +87,23 @@ public class InventoryOut {
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     @Comment("등록일시 (자동 생성)")
     private LocalDateTime createdAt;
+
+    /**
+     * 로트 아이템 추가 편의 메서드
+     *
+     * <p>입력된 {@link InventoryOutLot} 객체를 현재 출고 헤더(THIS)와 연관시키고
+     * 출고-로트 아이템 컬렉션에 추가합니다. 영속성 전파(Cascade.ALL) 환경에서
+     * 헤더 저장 시 아이템도 함께 저장됩니다.
+     * 헤더 1건 + 로트 아이템 N건</p>
+     *
+     * @param item 현재 출고에 연결할 로트 아이템
+     * @throws IllegalArgumentException item이 {@code null} 인 경우
+     */
+    public void addLotItem(InventoryOutLot item) {
+        if (item == null) {
+            throw new IllegalArgumentException("item must not be null");
+        }
+        item.setOut(this);
+        this.lotItems.add(item);
+    }
 }

@@ -1,163 +1,137 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.*;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryInOutService;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.OutConfirmRequest;
+import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
+import com.boot.ict05_final_admin.domain.inventory.service.InventoryInService;
+import com.boot.ict05_final_admin.domain.inventory.service.InventoryOutService;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import com.boot.ict05_final_admin.domain.inventory.service.UnitPriceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * 본사 재고 REST API 컨트롤러.
- *
- * <p>본사 재고 조회 및 입고, 출고, 수량 조정 관련 API를 통합 관리한다.</p>
- *
- * <ul>
- *     <li>본사 재고 목록 조회 (GET)</li>
- *     <li>본사 재고 입고 등록 (POST)</li>
- *     <li>본사 재고 출고 등록 (POST)</li>
- *     <li>본사 재고 수량 조정 (POST)</li>
- * </ul>
- *
- * <p>화면 컨트롤러(Thymeleaf)와 분리되어 있으며 JSON 기반으로 동작한다.</p>
+ * 등록/수정/다운로드 전용 REST 컨트롤러
  */
 @RestController
+@RequestMapping("/API")
 @RequiredArgsConstructor
-@RequestMapping("/API/inventory")
-@Tag(name = "본사 재고 API", description = "본사 재고 조회 및 입고 등록 기능 제공")
 public class InventoryRestController {
 
+    private final InventoryOutService outService;
+    private final InventoryInService inService;
+    private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
-    private final InventoryInOutService inventoryInOutService;
+
+    // -------------------- Out --------------------
 
     /**
-     * 본사 재고 목록 조회
+     * 출고 미리보기를 수행한다(FIFO).
      *
-     * @param searchDTO 검색 조건
-     * @param pageable  페이징 설정
-     * @return 재고 목록 Page 객체 (JSON)
+     * @param materialId 재료 ID
+     * @param qty        총 출고 수량
+     * @return 배치 분할 미리보기 결과
      */
-    @GetMapping("/list")
-    @Operation(summary = "본사 재고 목록 조회", description = "검색 조건과 페이징 정보를 기반으로 본사 재고 목록을 조회한다.")
-    public ResponseEntity<Page<InventoryListDTO>> listInventory(
-            InventorySearchDTO searchDTO,
-            Pageable pageable) {
-        Page<InventoryListDTO> inventories = inventoryService.getInventoryList(searchDTO, pageable);
-        return ResponseEntity.ok(inventories);
+    @PostMapping("/inventory/out/preview")
+    public List<OutPreviewItemDTO> previewOut(@RequestParam Long materialId,
+                                              @RequestParam BigDecimal qty) {
+        return outService.previewFifo(materialId, qty);
     }
 
     /**
-     * 본사 재고 입고 등록
+     * 출고를 확정한다(배치 할당 포함).
      *
-     * @param dto            입고 등록 DTO
-     * @param bindingResult  유효성 검증 결과
-     * @return 등록 결과 JSON
+     * @param req 출고 확정 요청 DTO
+     * @return 생성된 출고 ID
      */
-    @PostMapping("/in/write")
-    @Operation(summary = "본사 재고 입고 등록", description = "입고 수량 및 단가 정보를 입력받아 본사 재고를 갱신한다.")
-    public ResponseEntity<Map<String, Object>> insertInventoryIn(
-            @Validated @ModelAttribute InventoryInWriteDTO dto,
-            BindingResult bindingResult) {
+    @PostMapping("/inventory/out/confirm")
+    public Long confirmOut(@RequestBody OutConfirmRequest req) {
+        // 서비스가 DTO 오버로드를 제공하지 않으면 5파라미터 시그니처로 위임
+        return outService.confirmOut(
+                req.getMaterialId(),
+                req.getStoreId(),
+                req.getTotalQty(),
+                req.getOutDate(),
+                req.getMemo()
+        );
+    }
 
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = bindingResult.getFieldErrors().stream()
-                    .collect(Collectors.toMap(
-                            fieldError -> fieldError.getField(),
-                            fieldError -> fieldError.getDefaultMessage()
-                    ));
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("success", false, "errors", errors));
-        }
+    // -------------------- In --------------------
 
-        Long id = inventoryInOutService.insertInventoryIn(dto);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(Map.of("success", true, "id", id));
+    /**
+     * 본사 입고를 등록한다. 단가가 비어 있으면 최신 매입가로 보충하며 배치를 자동 생성한다.
+     *
+     * @param dto 입고 등록 DTO
+     * @return 생성된 입고 ID
+     */
+    @PostMapping("/inventory/in")
+    public Long receiveToHq(@RequestBody InventoryInWriteDTO dto) {
+        return inService.receiveToHq(
+                dto.getMaterialId(),
+                dto.getUnitPrice(),
+                dto.getSellingPrice(),
+                dto.getInDate(),
+                null,                // expirationDate 없으면 null
+                dto.getMemo()
+        );
+    }
+
+    // -------------------- Unit Price --------------------
+
+    /**
+     * 매입가를 등록한다.
+     *
+     * @param materialId 재료 ID
+     * @param price      단가
+     * @param validFrom  유효 시작 시각(ISO DATETIME)
+     * @return 생성된 단가 ID
+     */
+    @PostMapping("/unit-price/purchase")
+    public Long registerPurchase(@RequestParam Long materialId,
+                                 @RequestParam BigDecimal price,
+                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                 LocalDateTime validFrom) {
+        return unitPriceService.setPurchasePrice(materialId, price, validFrom, null);
     }
 
     /**
-     * 본사 재고 출고 등록
+     * 매입가를 수정한다.
      *
-     * @param materialId 출고할 재료 ID
-     * @param quantity   출고 수량
-     * @param storeId    출고 대상 가맹점 ID (없을 경우 null)
-     * @param memo       비고
-     * @return 등록 성공 여부 및 출고 ID
+     * @param unitPriceId 단가 ID
+     * @param price       수정 단가
+     * @return 수정된 단가 ID
      */
-    @PostMapping("/out/write")
-    @Operation(summary = "본사 재고 출고 등록", description = "가맹점 주문 또는 내부 출고 사유에 따라 본사 재고를 차감하고 출고 이력을 기록한다.")
-    public ResponseEntity<Map<String, Object>> insertInventoryOut(
-            @RequestParam("materialId") Long materialId,
-            @RequestParam("quantity") BigDecimal quantity,
-            @RequestParam(value = "storeId", required = false) Long storeId,
-            @RequestParam(value = "memo", required = false) String memo) {
-
-        Long id = inventoryInOutService.insertInventoryOut(materialId, quantity, storeId, memo);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(Map.of("success", true, "id", id));
+    @PutMapping("/unit-price/purchase/{unitPriceId}")
+    public Long updatePurchase(@PathVariable Long unitPriceId,
+                               @RequestParam BigDecimal price) {
+        return unitPriceService.updatePurchasePrice(unitPriceId, price);
     }
 
-    /**
-     * 본사 재고 수량 조정
-     *
-     * <p>입출고 외의 사유(분실, 파손, 오입력 등)로
-     * 본사 재고 수량을 직접 수정할 때 사용한다.</p>
-     *
-     * <p>입력받은 재고 ID(inventoryId)와 수정 수량(quantityAfter)을 기반으로
-     * 실제 재고를 갱신하고, 조정 내역(inventory_adjustment)을 로그로 남긴다.</p>
-     *
-     * @param dto 조정 정보 DTO (재고 ID, 재료 ID, 수정 수량, 사유, 메모)
-     * @return 조정 결과 JSON (성공 여부)
-     */
-    @PostMapping("/adjust")
-    @Operation(summary = "본사 재고 수량 조정", description = "입출고 외의 사유(분실, 파손, 오입력 등)로 재고 수량을 직접 수정한다.")
-    public ResponseEntity<Map<String, Object>> adjustInventory(@RequestBody InventoryAdjustDTO dto) {
-        inventoryInOutService.adjustInventory(dto);
-        return ResponseEntity.ok(Map.of("success", true));
-    }
+    // -------------------- Download --------------------
 
     /**
-     * 본사 재고 엑셀 다운로드 API
+     * 재고 로그를 엑셀로 다운로드한다.
      *
-     * @param searchDTO 검색 조건 DTO (재료명, 상태 등)
-     * @param pageable 페이징 정보
-     * @return Excel 파일 바이트 배열
-     * @throws IOException 파일 생성 실패 시
+     * @param materialId 재료 ID
+     * @param type       구분(입고/출고/조정), null 가능
+     * @param from       시작일시(ISO DATETIME), null 가능
+     * @param to         종료일시(ISO DATETIME), null 가능
+     * @return 엑셀 파일 리소스
      */
-    @GetMapping("/download")
-    @Operation(summary = "본사 재고 목록 엑셀 다운로드", description = "본사 재고 목록을 Excel 파일로 다운로드합니다.")
-    public ResponseEntity<?> downloadInventory(InventorySearchDTO searchDTO, Pageable pageable)
-            throws IOException {
-
-        byte[] excelBytes = inventoryService.downloadExcel(searchDTO, pageable);
-
-        String filename = "본사재고목록.xlsx";
-        String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
-                .replaceAll("\\+", "%20");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=" + encodedFilename);
-        headers.add("Cache-Control", "no-cache");
-
-        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+    @GetMapping("/inventory/logs/excel")
+    public Resource downloadLogsExcel(@RequestParam Long materialId,
+                                      @RequestParam(required = false) String type,
+                                      @RequestParam(required = false)
+                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+                                      @RequestParam(required = false)
+                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+        return inventoryService.downloadExcel(materialId, type, from, to, PageRequest.of(0, Integer.MAX_VALUE)).getBody();
     }
 }

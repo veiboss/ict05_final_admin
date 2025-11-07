@@ -110,7 +110,9 @@ public class MaterialService {
 
         material.updateMaterial(dto);
         materialRepository.save(material);
-        inventoryRepository.updateOptimalQuantityByMaterialId(dto.getId(), dto.getOptimalQuantity());   // 본사재고의 적정 수량 반영
+
+        // 재고 수량 업데이트 필요
+        // inventoryRepository.updateOptimalQuantityByMaterialId(dto.getId(), dto.getOptimalQuantity());   // 본사재고의 적정 수량 반영
 
         return material;
     }

@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
  * <p>입고 시마다 한 건씩 생성되며,
  * 출고 또는 소진 시 {@link #quantity} 값이 감소합니다.</p>
  *
+ * <p>잔량은 InventoryOutLot/Adjustment 경로로만 변경. 직접 업데이트 금지</p>
+ *
  * <ul>
  *     <li>store: 본사 또는 가맹점 (재고 소유 주체)</li>
  *     <li>material: 재료</li>
@@ -48,12 +50,12 @@ public class InventoryBatch {
     /** 재고 배치 시퀀스 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_batch_id", nullable = false, columnDefinition = "BIGINT")
+    @Column(name = "inventory_batch_id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     @Comment("재고 배치 시퀀스")
     private Long id;
 
     /** 로트 번호 */
-    @Column(name = "inventory_batch_lot_no", length = 50, nullable = false, unique = true)
+    @Column(name = "inventory_batch_lot_no", length = 16, nullable = false, unique = true)
     @Comment("로트 번호")
     private String lotNo;
 
@@ -72,11 +74,13 @@ public class InventoryBatch {
     /** 입고일 (실제 입고 시각) */
     @Column(name = "inventory_batch_received_date", nullable = false, columnDefinition = "DATETIME")
     @Comment("입고일시")
+    @Builder.Default
     private LocalDateTime receivedDate = LocalDateTime.now();
 
     /** 입고 단가 (본사 매입가) */
     @Column(name = "inventory_batch_unit_price", precision = 15, scale = 2, nullable = false)
     @Comment("해당 로트의 입고 단가(본사 매입가)")
+    @Builder.Default
     private BigDecimal unitPrice = BigDecimal.ZERO;
 
     /** 유통기한 */
