@@ -29,7 +29,7 @@ public class StaffService {
     private final StoreRepository storeRepository;
 
     /**
-     * 검색어로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
+     * 검색어로 필터링하여 사원 목록을 페이지 단위로 조회한다.
      *
      * @param staffSearchDTO 검색 (선택, null 가능)
      * @param pageable       페이지 정보 (페이지 번호, 크기, 정렬)
