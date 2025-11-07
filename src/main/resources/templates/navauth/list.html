@@ -75,7 +75,7 @@
                                 </td>
                                 <td>
                                     <button type="button"
-                                            class="btn small toggle-nav"
+                                            class="btn small toggle-navauth"
                                             th:classappend="${nav.navItemEnabled} ? ' bdr-color2' : ' color1'"
                                             th:data-url="${nav.navItemEnabled}
                                                               ? @{/api/navauth/{id}/disable(id=${nav.id})}
@@ -97,7 +97,7 @@
 </div><!-- // #wrap  -->
 <script th:inline="javascript">
     /*<![CDATA[*/
-    $(document).on('click', '.toggle-nav', function(e){
+    $(document).on('click', '.toggle-navauth', function(e){
       e.preventDefault();
       const url = $(this).data('url');
 
