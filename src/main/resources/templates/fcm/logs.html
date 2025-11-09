@@ -1,0 +1,46 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>FCM 발송 로그</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #e5e5e5; padding: 8px; font-size: 13px; vertical-align: top; }
+    th { background: #fafafa; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .err { color: #c62828; }
+    .ok { color: #2e7d32; }
+  </style>
+</head>
+<body>
+<h2>FCM 발송 로그 (최근 <span th:text="${limit}">100</span>건)</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Target</th>
+    <th>Title</th>
+    <th>Body</th>
+    <th>MessageId</th>
+    <th>Error</th>
+    <th>SentAt</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="r : ${rows}">
+    <td th:text="${r.id()}"></td>
+    <td>
+      <div><b>topic</b>: <span class="mono" th:text="${r.topic()}">-</span></div>
+      <div><b>token</b>: <span class="mono" th:text="${r.token()}">-</span></div>
+    </td>
+    <td th:text="${r.title()}"></td>
+    <td th:text="${r.body()}"></td>
+    <td class="ok mono" th:text="${r.resultMessageId()}">-</td>
+    <td class="err mono" th:text="${r.resultError()}">-</td>
+    <td th:text="${#temporals.format(r.sentAt(),'yyyy-MM-dd HH:mm:ss')}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

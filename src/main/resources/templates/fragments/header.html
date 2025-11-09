@@ -208,6 +208,7 @@
                 </div>
             </div><!-- #header > div : right-->
         </header>
+        <!--전체 구독-->
         <script>
             document.getElementById('btn-sub-topic')?.addEventListener('click', () => {
               fetch('/admin/fcm/topic/subscribe?topic=hq-all', { method:'POST' })
