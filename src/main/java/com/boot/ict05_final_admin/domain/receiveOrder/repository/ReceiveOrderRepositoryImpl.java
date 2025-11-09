@@ -3,10 +3,7 @@ package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderDetail;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderPriority;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.*;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
@@ -68,6 +65,18 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 shippingCount != null ? shippingCount : 0L,
                 urgentCount != null ? urgentCount : 0L
         );
+    }
+
+    @Override
+    public Optional<ReceiveOrder> findOrderById(Long id) {
+        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+
+        ReceiveOrder result = queryFactory
+                .selectFrom(ro)
+                .where(ro.id.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
     @Override
@@ -177,7 +186,6 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     public Optional<ReceiveOrderDetailDTO> findDetailById(Long id) {
         QReceiveOrder ro = QReceiveOrder.receiveOrder;
         QReceiveOrderDetail rod = new QReceiveOrderDetail("rod");
-        QReceiveOrderDetail rodSub = new QReceiveOrderDetail("rodSub");   // 서브쿼리
         QStore store = QStore.store;
 
         ReceiveOrderDetailDTO dto = queryFactory
