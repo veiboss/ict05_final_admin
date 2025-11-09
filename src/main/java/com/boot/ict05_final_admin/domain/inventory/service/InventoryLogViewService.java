@@ -7,7 +7,9 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -24,11 +26,12 @@ public class InventoryLogViewService {
     /**
      * 재료ID + 기간 페이징 조회
      */
-    @Comment("로그 뷰 페이지 조회")
-    public Page<InventoryLogView> pageByMaterialAndPeriod(Long materialId,
-                                                          LocalDateTime from,
-                                                          LocalDateTime to,
-                                                          Pageable pageable) {
-        return repo.pageByMaterialAndPeriod(materialId, from, to, pageable);
+    @Transactional(readOnly = true)
+    public Page<InventoryLogView> getFilteredLogs(Long materialId,
+                                                  String type,
+                                                  LocalDate startDate,
+                                                  LocalDate endDate,
+                                                  Pageable pageable) {
+        return repo.findLogsByFilter(materialId, type, startDate, endDate, pageable);
     }
 }

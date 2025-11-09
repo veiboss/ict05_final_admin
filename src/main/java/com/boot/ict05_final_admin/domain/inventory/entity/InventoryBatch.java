@@ -55,7 +55,7 @@ public class InventoryBatch {
     private Long id;
 
     /** 로트 번호 */
-    @Column(name = "inventory_batch_lot_no", length = 16, nullable = false, unique = true)
+    @Column(name = "inventory_batch_lot_no", length = 32, nullable = false, unique = true)
     @Comment("로트 번호")
     private String lotNo;
 

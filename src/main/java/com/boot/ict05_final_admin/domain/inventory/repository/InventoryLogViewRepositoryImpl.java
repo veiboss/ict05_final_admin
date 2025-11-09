@@ -26,8 +26,7 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
                                                           LocalDateTime from,
                                                           LocalDateTime to,
                                                           Pageable pageable) {
-
-        List<InventoryLogView> rows = qf.selectFrom(v)
+        var rows = qf.selectFrom(v)
                 .where(
                         v.materialId.eq(materialId),
                         v.date.goe(from),
@@ -56,11 +55,10 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
                                                    LocalDate startDate,
                                                    LocalDate endDate,
                                                    Pageable pageable) {
-
         LocalDateTime from = (startDate != null) ? startDate.atStartOfDay() : null;
         LocalDateTime to   = (endDate != null) ? endDate.plusDays(1).atStartOfDay() : null;
 
-        List<InventoryLogView> rows = qf.selectFrom(v)
+        var rows = qf.selectFrom(v)
                 .where(
                         eqMaterial(materialId),
                         eqType(type),
@@ -90,11 +88,11 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
     }
 
     private BooleanExpression eqType(String type) {
-        return (type != null && !type.isBlank()) ? v.type.eq(type) : null; // enum이면 변환하여 eq(enum)
+        return (type != null && !type.isBlank()) ? v.type.eq(type) : null;
     }
 
     private BooleanExpression betweenDate(LocalDateTime from, LocalDateTime to) {
-        if (from != null && to != null) return v.date.goe(from).and(v.date.lt(to));
+        if (from != null && to != null) return v.date.goe(from).and(v.date.lt(to)); // 상한 미포함
         if (from != null) return v.date.goe(from);
         if (to != null)   return v.date.lt(to);
         return null;

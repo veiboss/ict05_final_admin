@@ -19,7 +19,7 @@
 <div id="wrap" class="frame">
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <div id="container" class="container">
+    <div id="container" class="container" th:data-material-id="${materialId}">
         <div class="title-bar">
             <h2 class="page-title ellipsis max-1132">
                 <span class="fw-400">로트별 재고 현황</span>
@@ -31,7 +31,7 @@
             <div class="box-wrap">
 
                 <section class="pack-down">
-                    <table class="data-table">
+                    <table class="data-table" id="batchTable">
                         <thead>
                         <tr>
                             <th scope="col">로트 번호</th>
@@ -39,18 +39,12 @@
                             <th scope="col">현재 수량</th>
                             <th scope="col">유통 기한</th>
                             <th scope="col">입고일</th>
+                            <th scope="col">단가</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:if="${#lists.isEmpty(batches)}">
-                            <td colspan="7">입출고 내역이 없습니다.</td>
-                        </tr>
-                        <tr th:each="batch : ${batches}">
-                            <td th:text="${batch.inventoryBatchLotNo}"></td>
-                            <td th:text="${batch.inventoryBatchReceivedQuantity}"></td>
-                            <td th:text="${batch.inventoryBatchQuantity}"></td>
-                            <td th:text="${#temporals.format(batch.inventoryBatchExpirationDate, 'yyyy-MM-dd')}"></td>
-                            <td th:text="${#temporals.format(batch.inventoryBatchCreatedAt, 'yyyy-MM-dd')}"></td>
+                        <tbody id="batchTbody">
+                        <tr id="emptyRow">
+                            <td colspan="6">입출고 내역이 없습니다.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -60,10 +54,158 @@
                 <a href="/admin/inventory/list" class="btn medium color1">목록</a>
             </div>
         </main>
+
+        <!-- 출고 이력 모달 -->
+        <div id="outHistoryModal" class="modal" style="display:none;">
+            <div class="modal-dim"></div>
+            <div class="modal-box" style="max-width:900px;">
+                <div class="modal-head">
+                    <strong>배치 출고 이력</strong>
+                    <button type="button" class="btn close" id="btnCloseModal">닫기</button>
+                </div>
+                <div class="modal-body">
+                    <table class="data-table" id="outHistoryTable">
+                        <thead>
+                        <tr>
+                            <th scope="col">출고ID</th>
+                            <th scope="col">가맹점</th>
+                            <th scope="col">수량</th>
+                            <th scope="col">일시</th>
+                        </tr>
+                        </thead>
+                        <tbody id="outHistoryTbody">
+                        <tr id="outEmptyRow">
+                            <td colspan="4">출고 이력이 없습니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="button-area pack-both" style="margin-top:12px;">
+                        <button type="button" class="btn small" id="btnPrev">이전</button>
+                        <button type="button" class="btn small" id="btnNext">다음</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
+
 <script>
+    (function () {
+        const $container = $('#container');
+        const materialId = $container.data('material-id');
+
+        const $tbody = $('#batchTbody');
+        const $emptyRow = $('#emptyRow');
+
+        // 모달 refs
+        const $modal = $('#outHistoryModal');
+        const $outBody = $('#outHistoryTbody');
+        const $outEmpty = $('#outEmptyRow');
+        let paging = { page: 0, size: 10, batchId: null, totalPages: 0 };
+
+        function fmtDate(d) {
+            if (!d) return '';
+            // d: '2025-11-05' 또는 '2025-11-05T18:00:27'
+            return String(d).substring(0, 10);
+        }
+
+        function fmtDateTime(d) {
+            if (!d) return '';
+            return String(d).replace('T', ' ').substring(0, 19);
+        }
+
+        function fmtNum(n) {
+            if (n == null) return '';
+            return Number(n).toLocaleString(undefined, { maximumFractionDigits: 3 });
+        }
+
+        function loadBatches() {
+            $.getJSON('/inventory/lot/batch-status', { materialId })
+                .done(function (rows) {
+                    $tbody.empty();
+                    if (!rows || rows.length === 0) {
+                        $tbody.append($emptyRow.show());
+                        return;
+                    }
+                    rows.forEach(function (r) {
+                        const tr = $('<tr/>')
+                            .addClass('clickable')
+                            .attr('data-batch-id', r.batchId)
+                            .append($('<td/>').text(r.lotNo))
+                            .append($('<td/>').addClass('text-right').text(fmtNum(r.receivedQty)))
+                            .append($('<td/>').addClass('text-right').text(fmtNum(r.remainQty)))
+                            .append($('<td/>').text(fmtDate(r.expirationDate)))
+                            .append($('<td/>').text(fmtDateTime(r.receivedDate)))
+                            .append($('<td/>').addClass('text-right').text(fmtNum(r.unitPrice)));
+
+                        tr.on('click', function () {
+                            paging.batchId = $(this).data('batch-id');
+                            paging.page = 0;
+                            openOutHistory();
+                        });
+                        $tbody.append(tr);
+                    });
+                })
+                .fail(function (xhr) {
+                    toast.error('배치 현황 조회 실패: ' + xhr.status);
+                });
+        }
+
+        function openOutHistory() {
+            $modal.show();
+            loadOutHistory();
+        }
+
+        function closeOutHistory() {
+            $modal.hide();
+            $outBody.empty().append($outEmpty.show());
+        }
+
+        function loadOutHistory() {
+            if (!paging.batchId) return;
+            $.getJSON('/inventory/lot/' + paging.batchId + '/out-history', { page: paging.page, size: paging.size })
+                .done(function (page) {
+                    $outBody.empty();
+                    paging.totalPages = page.totalPages || 0;
+
+                    if (!page.content || page.content.length === 0) {
+                        $outBody.append($outEmpty.show());
+                        return;
+                    }
+                    page.content.forEach(function (r) {
+                        const tr = $('<tr/>')
+                            .append($('<td/>').text(r.outId))
+                            .append($('<td/>').text(r.storeName || ('#' + (r.storeId ?? ''))))
+                            .append($('<td/>').addClass('text-right').text(fmtNum(r.qty)))
+                            .append($('<td/>').text(fmtDateTime(r.createdAt)));
+                        $outBody.append(tr);
+                    });
+                })
+                .fail(function (xhr) {
+                    toast.error('출고 이력 조회 실패: ' + xhr.status);
+                });
+        }
+
+        // 모달 버튼
+        $('#btnCloseModal, .modal-dim').on('click', closeOutHistory);
+        $('#btnPrev').on('click', function () {
+            if (paging.page > 0) {
+                paging.page -= 1;
+                loadOutHistory();
+            }
+        });
+        $('#btnNext').on('click', function () {
+            if (paging.page + 1 < paging.totalPages) {
+                paging.page += 1;
+                loadOutHistory();
+            }
+        });
+
+        // init
+        loadBatches();
+    })();
 </script>
 </body>
 </html>

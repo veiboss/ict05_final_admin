@@ -1,8 +1,16 @@
 package com.boot.ict05_final_admin.domain.inventory.repository;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 /**
- * 분리 완료로 역할 종료. 즉시 삭제 가능.
+ * 재고 목록 커스텀 조회용 Repository 인터페이스.
  */
 public interface InventoryRepositoryCustom {
+    Page<InventoryListDTO> listInventory(InventorySearchDTO searchDTO, Pageable pageable);
+    long countInventory(InventorySearchDTO searchDTO);
+
 
 }

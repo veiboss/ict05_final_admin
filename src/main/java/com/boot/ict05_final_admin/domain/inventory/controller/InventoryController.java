@@ -1,19 +1,24 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.BatchStatusRowDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutLotHistoryRowDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryInService;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryLogViewService;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryLotService;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryOutService;
+import com.boot.ict05_final_admin.domain.inventory.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,10 +35,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InventoryController {
 
+    private final InventoryService inventoryService;
     private final InventoryLotService lotService;
     private final InventoryOutService outService;
     private final InventoryInService inService;
     private final InventoryLogViewService logViewService;
+    private final MaterialService materialService;
+    /**
+     * 본사 재고 목록을 페이징 처리하여 조회한다.
+     *
+     * <p>검색 조건과 페이징 정보를 기반으로
+     * 본사 재고 현황을 조회하고 목록 페이지를 렌더링한다.</p>
+     *
+     * @param inventorySearchDTO 검색 조건 DTO (재료명, 상태 등)
+     * @param pageable           페이징 정보 (페이지 번호, 크기, 정렬 기준)
+     * @param model              뷰에 전달할 모델 객체
+     * @param request            현재 요청 정보
+     * @return 재고 목록 페이지(view)
+     */
+    @GetMapping("/list")
+    public String listInventory(InventorySearchDTO inventorySearchDTO,
+                                @PageableDefault(page = 1, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                Model model,
+                                HttpServletRequest request) {
+
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
+        Page<InventoryListDTO> inventories = inventoryService.getInventoryList(inventorySearchDTO, pageRequest);
+
+        model.addAttribute("inventories", inventories);
+        model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
+        model.addAttribute("inventorySearchDTO", inventorySearchDTO);
+
+        return "inventory/list";
+    }
 
     // -------------------- View routing --------------------
 
@@ -45,9 +79,39 @@ public class InventoryController {
      * @return 템플릿 경로
      */
     @GetMapping("/log/{materialId}")
-    public String logPage(@PathVariable Long materialId, Model model) {
+    public String logPage(@PathVariable Long materialId,
+                          @RequestParam(required = false) String type,
+                          @RequestParam(required = false)
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                          LocalDate startDate,
+                          @RequestParam(required = false)
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                          LocalDate endDate,
+                          @RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
+                          Model model) {
+
+        // 재료명은 서비스로 조회
+        var material = materialService.findById(materialId);
+        String materialName = (material != null ? material.getName() : "");
+
+        // 첫 페이지 즉시 로드하여 SSR
+        var logs = logViewService.getFilteredLogs(
+                materialId,
+                type,
+                startDate,
+                endDate,
+                org.springframework.data.domain.PageRequest.of(page, size)
+        );
+
+
+        model.addAttribute("logs", logs);
         model.addAttribute("materialId", materialId);
-        return "admin/inventory/log";
+        model.addAttribute("materialName", materialName);
+        model.addAttribute("selectedType", type);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        return "inventory/log";      // 템플릿 경로 일치
     }
 
     /**
@@ -60,7 +124,7 @@ public class InventoryController {
     @GetMapping("/batch-status/{materialId}")
     public String batchStatusPage(@PathVariable Long materialId, Model model) {
         model.addAttribute("materialId", materialId);
-        return "admin/inventory/batch-status";
+        return "inventory/batch-status";
     }
 
     /**
@@ -70,7 +134,7 @@ public class InventoryController {
      */
     @GetMapping("/out_test")
     public String outTestPage() {
-        return "admin/inventory/out_test";
+        return "inventory/out_test";
     }
 
     // -------------------- Read APIs (JSON) --------------------

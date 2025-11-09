@@ -1,12 +1,10 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.AdjustCreateRequestDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutConfirmRequest;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryInService;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryOutService;
-import com.boot.ict05_final_admin.domain.inventory.service.InventoryService;
-import com.boot.ict05_final_admin.domain.inventory.service.UnitPriceService;
+import com.boot.ict05_final_admin.domain.inventory.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +25,7 @@ public class InventoryRestController {
 
     private final InventoryOutService outService;
     private final InventoryInService inService;
+    private final AdjustmentService adjustmentService;
     private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
 
@@ -81,6 +80,19 @@ public class InventoryRestController {
                 null,                // expirationDate 없으면 null
                 dto.getMemo()
         );
+    }
+
+
+    // -------------------- Adjustment --------------------
+    /**
+     * 재고 수량 조정을 등록한다.
+     *
+     * @param dto 조정 생성 요청 DTO
+     * @return 생성된 조정 ID
+     */
+    @PostMapping("/inventory/adjust")
+    public Long createAdjustment(@RequestBody AdjustCreateRequestDTO dto) {
+        return adjustmentService.createAdjustment(dto);
     }
 
     // -------------------- Unit Price --------------------

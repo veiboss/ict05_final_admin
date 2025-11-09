@@ -22,7 +22,7 @@
 
         <main id="content" class="max-1132">
             <div class="write-form box-wrap">
-                <form id="frm" name="frm" method="post">
+                <form id="frm" name="frm" method="post" onsubmit="return false;">
                     <fieldset class="pack-down gap-12">
                         <legend class="blind">입고 정보</legend>
 
@@ -120,46 +120,45 @@
 </div>
 
 <script>
-    // 카테고리 변경 시 재료 목록 로드
-    function onCategoryChange(category) {
-        const materialSelect = document.getElementById("materialSelect");
-        materialSelect.innerHTML = '<option value="">재료 선택</option>';
-
-        if (!category) return;
-
-        fetch(`/admin/API/material/list?category=${category}`)
-            .then(res => res.json())
-            .then(data => {
-                data.forEach(m => {
-                    const opt = document.createElement("option");
-                    opt.value = m.id;
-                    opt.textContent = `${m.name} (${m.code})`;
-                    materialSelect.appendChild(opt);
-                });
-            })
-            .catch(err => console.error("재료 목록 로드 실패:", err));
+    function toIso(dtLocal) {
+      // datetime-local → ISO8601
+      const v = dtLocal?.trim();
+      if (!v) return null;
+      // 브라우저 local을 그대로 보냄
+      return new Date(v).toISOString().slice(0,19); // "yyyy-MM-ddTHH:mm:ss"
     }
 
-    // 입고 등록
-    document.getElementById("frm").addEventListener("submit", function (e) {
-        e.preventDefault();
+    document.getElementById("frm").addEventListener("submit", async function () {
+      const materialId  = document.getElementById("materialSelect").value;
+      const quantity    = document.getElementById("quantity").value;
+      const unitPrice   = document.getElementById("unitPrice").value;
+      const sellingPrice= document.getElementById("sellingPrice").value;
+      const inDateRaw   = document.getElementById("inDate").value;
+      const memo        = document.getElementById("memo").value;
 
-        const formData = new FormData(this);
+      const payload = {
+        materialId:  materialId ? Number(materialId) : null,
+        quantity:    quantity ? Number(quantity) : null,
+        unitPrice:   unitPrice ? Number(unitPrice) : null,      // 비우면 최신 매입가 자동 사용
+        sellingPrice:sellingPrice ? Number(sellingPrice) : null,
+        inDate:      toIso(inDateRaw),
+        memo:        memo || ""
+      };
 
-        fetch("/admin/API/inventory/in/write", {
-            method: "POST",
-            body: formData
-        })
-            .then(async res => {
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    alert("입고 등록이 완료되었습니다.");
-                    window.location.href = "/admin/inventory/list";
-                } else {
-                    alert("입고 등록 실패. 입력값을 확인하세요.");
-                }
-            })
-            .catch(err => console.error("에러 발생:", err));
+      const res  = await fetch("/admin/API/inventory/in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const t = await res.text();
+        alert("입고 등록 실패\n" + t);
+        return;
+      }
+      const id = await res.json();
+      alert("입고 등록 완료: ID=" + id);
+      location.href = "/admin/inventory/list";
     });
 </script>
 </body>

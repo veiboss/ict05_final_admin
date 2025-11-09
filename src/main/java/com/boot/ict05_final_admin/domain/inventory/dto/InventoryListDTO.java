@@ -18,6 +18,9 @@ public class InventoryListDTO {
     /** 재고 ID */
     private Long id;
 
+    /** 재료 ID */
+    private Long materialId;
+
     /** 재료명 */
     private String materialName;
 

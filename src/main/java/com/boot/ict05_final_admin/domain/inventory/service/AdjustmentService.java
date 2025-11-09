@@ -1,13 +1,11 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.AdjustmentReason;
-import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryAdjustment;
+import com.boot.ict05_final_admin.domain.inventory.dto.AdjustCreateRequestDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.*;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryAdjustmentRepository;
+import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +21,11 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class InventoryAdjustmentService {
+public class AdjustmentService {
 
-    private final InventoryAdjustmentRepository repo;
+    private final InventoryRepository repo;
+    private final InventoryAdjustmentRepository adRepo;
+
 
     @PersistenceContext
     private EntityManager em;
@@ -41,7 +41,7 @@ public class InventoryAdjustmentService {
     public List<InventoryAdjustment> findByInventoryAndPeriod(Long inventoryId,
                                                               LocalDateTime from,
                                                               LocalDateTime to) {
-        return repo.findByInventoryAndPeriod(inventoryId, from, to);
+        return adRepo.findByInventoryAndPeriod(inventoryId, from, to);
     }
 
     /**
@@ -57,7 +57,7 @@ public class InventoryAdjustmentService {
     public BigDecimal sumAdjustmentDelta(Long inventoryId,
                                          LocalDateTime from,
                                          LocalDateTime to) {
-        return repo.sumQuantityByInventoryAndPeriod(inventoryId, from, to);
+        return adRepo.sumQuantityByInventoryAndPeriod(inventoryId, from, to);
     }
 
     /**
@@ -67,43 +67,38 @@ public class InventoryAdjustmentService {
      * @return 가장 최근 조정 일시. 없으면 null
      */
     public LocalDateTime lastAdjustmentAt(Long inventoryId) {
-        return repo.lastAdjustmentAtByInventory(inventoryId);
+        return adRepo.lastAdjustmentAtByInventory(inventoryId);
     }
 
+
     /**
-     * 조정 생성
+     * 재고 수량 조정을 등록한다.
      *
-     * <p>입력된 {@link AdjustCreateRequest}의 값을 그대로 기록한다.
-     * 호출자가 {@code quantityBefore}/{@code quantityAfter}를 계산해 전달해야 한다.</p>
-     *
-     * @param req 생성 요청
+     * @param dto 조정 생성 요청 DTO
      * @return 생성된 조정 ID
      */
     @Transactional
-    public Long createAdjustment(AdjustCreateRequest req) {
-        InventoryAdjustment a = InventoryAdjustment.builder()
-                // link 메서드 없이 JPA reference로 FK 연결
-                .inventory(em.getReference(HqInventory.class, req.getInventoryId()))
-                .difference(req.getDifference())
-                .reason(req.getReason())
-                .memo(req.getMemo())
-                .createdAt(req.getAt() != null ? req.getAt() : LocalDateTime.now())
-                .quantityBefore(req.getQuantityBefore())
-                .quantityAfter(req.getQuantityAfter())
-                .build();
-        return repo.save(a).getId();
-    }
+    public Long createAdjustment(AdjustCreateRequestDTO dto) {
+        var inv = repo.findById(dto.getInventoryId())
+                .orElseThrow(() -> new IllegalArgumentException("대상 재고를 찾을 수 없습니다. id=" + dto.getInventoryId()));
 
-    /** 조정 생성 요청 DTO */
-    @Data
-    @Builder
-    public static class AdjustCreateRequest {
-        private Long inventoryId;
-        private BigDecimal difference;
-        private AdjustmentReason reason;
-        private String memo;
-        private LocalDateTime at;
-        private BigDecimal quantityBefore;
-        private BigDecimal quantityAfter;
+        var diff = dto.getDifference();
+        if (diff == null) throw new IllegalArgumentException("difference는 필수입니다.");
+
+        var before = dto.getQuantityBefore() != null ? dto.getQuantityBefore() : inv.getQuantity();
+        var after  = dto.getQuantityAfter()  != null ? dto.getQuantityAfter()  : before.add(diff);
+
+        var adj = InventoryAdjustment.builder()
+                .inventory(inv)
+                .createdAt(dto.getAt() != null ? dto.getAt() : LocalDateTime.now())
+                .difference(diff)
+                .reason(dto.getReason())
+                .memo(dto.getMemo())
+                .build();
+
+        adRepo.save(adj);
+        // 정책상 즉시 반영할 거면: inv.setQuantity(after);
+
+        return adj.getId();
     }
 }

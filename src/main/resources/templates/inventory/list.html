@@ -52,7 +52,7 @@
 
                                         <label class="btn medium"
                                                th:classappend="${inventorySearchDTO.status?.name() == 'SUFFICIENT'} ? ' active' : ''">
-                                            <input type="radio" name="status" value="LOW"
+                                            <input type="radio" name="status" value="SUFFICIENT"
                                                    th:checked="${inventorySearchDTO.status?.name() == 'SUFFICIENT'}"
                                                    onclick="setFilter('SUFFICIENT')">충분
                                         </label>
@@ -121,7 +121,7 @@
                             </td>
                             <td th:text="${#temporals.format(inventory.updateDate, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
                             <td>
-                                <a th:href="@{'/inventory/log/' + ${inventory.id}}"
+                                <a th:href="@{'/inventory/log/' + ${inventory.materialId}}"
                                    class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
@@ -143,15 +143,8 @@
 <script>
     function setFilter(status) {
       const params = new URLSearchParams(window.location.search);
-
-      if (status === '') {
-        params.set("status", '');
-      } else {
-        params.set("status", status);
-      }
-
-      const query = params.toString();
-      window.location = `/admin/inventory/list?${query}`;
+      if (!status) params.delete('status'); else params.set('status', status);
+      window.location = `/admin/inventory/list?${params.toString()}`;
     }
 
     function setPageSize(size) {
@@ -162,13 +155,9 @@
     }
 
     function excelDownload() {
-        const formData = new FormData(document.getElementById('frm'));
-        const type = formData.get("type");
-        const s = formData.get("s");
-        const size = formData.get("size");
-        const status = formData.get("status");
-
-        window.location = `/admin/API/inventory/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}&size=${encodeURIComponent(size)}&status=${encodeURIComponent(status)}`;
+      const params = new URLSearchParams(new FormData(document.getElementById('frm')));
+      // 예상 파라미터: s, status, size, page 등
+      window.location = `/admin/API/inventory/list/excel?${params.toString()}`;
     }
 </script>
 </body>
