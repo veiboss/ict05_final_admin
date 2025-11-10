@@ -50,6 +50,7 @@ import java.util.NoSuchElementException;
 public class ReceiveOrderService {
 
     private final ReceiveOrderRepository receiveOrderRepository;
+    private final OrderSyncService orderSyncService;
 
     /**
      * 수주 목록을 페이지 단위로 조회한다.
@@ -94,7 +95,7 @@ public class ReceiveOrderService {
      * @throws IllegalStateException 이미 완료된 주문일 경우
      */
     public void updateStatus(Long id, String action) {
-        ReceiveOrder order = receiveOrderRepository.findById(id)
+        ReceiveOrder order = receiveOrderRepository.findOrderById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
 
         switch (action.toUpperCase()) {
@@ -118,6 +119,10 @@ public class ReceiveOrderService {
         }
 
         receiveOrderRepository.save(order);
+
+        // 가맹점 쪽 상태도 동기화 (REST or DB 직결)
+        log.info("🔁 [HQ] 상태 변경됨 → 가맹점 동기화 시작: {} → {}", order.getOrderCode(), order.getStatus());
+        orderSyncService.syncFromHQ(order.getOrderCode(), order.getStatus());
     }
 
     /**
