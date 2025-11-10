@@ -4,6 +4,8 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
+import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepositoryImpl;
+import com.boot.ict05_final_admin.domain.receiveOrder.service.OrderSyncService;
 import com.boot.ict05_final_admin.domain.receiveOrder.service.ReceiveOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -47,6 +49,8 @@ import java.util.List;
 public class ReceiveOrderRestController {
 
     private final ReceiveOrderService receiveOrderService;
+    private final OrderSyncService orderSyncService;
+    private final ReceiveOrderRepositoryImpl receiveOrderRepository;
 
     /**
      * 수주의 배송 상태를 변경하거나 취소한다.
@@ -87,12 +91,51 @@ public class ReceiveOrderRestController {
             @PathVariable Long id,
             @RequestParam("action") String action) {
 
+        log.info("📦 [HQ] 수주 상태 변경 요청: id={}, action={}", id, action);
+
         try {
             receiveOrderService.updateStatus(id, action);
+
+            // 상태 변경 후 가맹점에도 즉시 반영
+            ReceiveOrder order = receiveOrderRepository.findOrderById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
+            orderSyncService.syncFromHQ(order.getOrderCode(), order.getStatus());
+
             return ResponseEntity.ok("상태 업데이트 완료");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    /**
+     * 가맹점 서버로부터 수주 상태를 동기화받는다.
+     *
+     * <p>가맹점에서 배송 완료나 취소 등의 상태 변화가 발생할 때 본사 DB에 반영한다.</p>
+     *
+     * @param orderCode 가맹점 발주 코드 (본사 수주 코드와 동일)
+     * @param status    가맹점에서 전달한 상태 값 (예: RECEIVED, SHIPPING, DELIVERED, CANCELED)
+     * @since 2025.11
+     * @author 최민진
+     */
+    @PutMapping("/receive/sync/status")
+    @Operation(
+            summary = "가맹점 → 본사 수주 상태 동기화",
+            description = "가맹점 발주 상태 변경 시 본사 수주 상태를 동일하게 반영합니다.",
+            parameters = {
+                    @Parameter(name = "orderCode", description = "발주 코드 (본사 수주 코드와 동일)", required = true),
+                    @Parameter(name = "status", description = "가맹점 상태 (RECEIVED, SHIPPING, DELIVERED, CANCELED)", required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "동기화 성공"),
+                    @ApiResponse(responseCode = "400", description = "요청 파라미터 오류")
+            }
+    )
+    public ResponseEntity<Void> syncStatusFromStore(
+            @RequestParam("orderCode") String orderCode,
+            @RequestParam("status") String status
+    ) {
+        orderSyncService.syncFromStore(orderCode, status);
+        return ResponseEntity.ok().build();
     }
 
     /**
