@@ -58,7 +58,8 @@
                             <div class="field pack-down col">
                                 <label class="label medium required" for="quantity">입고 수량</label>
                                 <div class="insert pack-down">
-                                    <input type="number" step="0.001" id="quantity" name="quantity"
+                                    <input type="number" step="0.001" min="1.000"
+                                           id="quantity" name="quantity"
                                            class="input-text medium" placeholder="예: 100.000" required>
                                     <p id="quantityError" class="warning"></p>
                                 </div>
@@ -67,7 +68,8 @@
                             <div class="field pack-down col">
                                 <label class="label medium required" for="unitPrice">입고 단가 (본사 매입가)</label>
                                 <div class="insert pack-down">
-                                    <input type="number" id="unitPrice" name="unitPrice"
+                                    <input type="number" step="1.000" min="0.000"
+                                           id="unitPrice" name="unitPrice"
                                            class="input-text medium" placeholder="예: 5000" required>
                                     <p id="unitPriceError" class="warning"></p>
                                 </div>
@@ -76,14 +78,15 @@
                             <div class="field pack-down col">
                                 <label class="label medium" for="sellingPrice">출고 단가 (가맹점 공급가)</label>
                                 <div class="insert pack-down">
-                                    <input type="number" id="sellingPrice" name="sellingPrice"
+                                    <input type="number" step="1.000" min="0.000"
+                                           id="sellingPrice" name="sellingPrice"
                                            class="input-text medium" placeholder="예: 6000">
                                     <p id="sellingPriceError" class="warning"></p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row-2">
+                        <div class="row-3">
                             <div class="field pack-down col">
                                 <label class="label medium required" for="inDate">입고일</label>
                                 <div class="insert pack-down">
@@ -91,6 +94,18 @@
                                            th:value="${#temporals.format(now, 'yyyy-MM-dd''T''HH:mm')}"
                                            class="input-text medium" required>
                                     <p id="inDateError" class="warning"></p>
+                                </div>
+                            </div>
+
+                            <div class="field pack-down col">
+                                <label class="label medium" for="expirationDate">유통기한</label>
+                                <div class="insert pack-down">
+                                    <input type="date"
+                                           id="expirationDate"
+                                           name="expirationDate"
+                                           class="input-text medium"
+                                           placeholder="예: 2026-05-05">
+                                    <p id="expirationDateError" class="warning"></p>
                                 </div>
                             </div>
 
@@ -120,6 +135,43 @@
 </div>
 
 <script>
+    function toLocalDate(dateInputValue) {
+      const v = dateInputValue?.trim();
+      if (!v) return null;            // 빈 값이면 null 전송
+      // HTML date 입력은 이미 "yyyy-MM-dd" 포맷
+      return v;
+    }
+    // 안전 파서와 검증 추가
+    function parseNum(v) {
+      if (v === undefined || v === null) return null;
+      const s = String(v).trim();
+      if (s === "") return null;
+      const n = Number(s);
+      return Number.isFinite(n) ? n : null;
+    }
+
+
+    // 카테고리 변경 시 재료 목록 로드
+    function onCategoryChange(category) {
+        const materialSelect = document.getElementById("materialSelect");
+        materialSelect.innerHTML = '<option value="">재료 선택</option>';
+
+        if (!category) return;
+
+        fetch(`/admin/API/material/list?category=${category}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(m => {
+                    const opt = document.createElement("option");
+                    opt.value = m.id;
+                    opt.textContent = `${m.name} (${m.code})`;
+                    materialSelect.appendChild(opt);
+                });
+            })
+            .catch(err => console.error("재료 목록 로드 실패:", err));
+    }
+
+
     function toIso(dtLocal) {
       // datetime-local → ISO8601
       const v = dtLocal?.trim();
@@ -130,18 +182,31 @@
 
     document.getElementById("frm").addEventListener("submit", async function () {
       const materialId  = document.getElementById("materialSelect").value;
-      const quantity    = document.getElementById("quantity").value;
-      const unitPrice   = document.getElementById("unitPrice").value;
-      const sellingPrice= document.getElementById("sellingPrice").value;
+      const quantityRaw = document.getElementById("quantity").value;
+      const unitPriceRaw= document.getElementById("unitPrice").value;
+      const sellPriceRaw= document.getElementById("sellingPrice").value;
       const inDateRaw   = document.getElementById("inDate").value;
+      const expRaw      = document.getElementById("expirationDate")?.value;
       const memo        = document.getElementById("memo").value;
 
+      const quantity     = parseNum(quantityRaw);
+      const unitPrice    = parseNum(unitPriceRaw);
+      const sellingPrice = parseNum(sellPriceRaw);
+
+      // 클라 검증
+      if (!materialId)           return alert("재료를 선택하세요.");
+      if (quantity === null)     return alert("입고 수량을 입력하세요.");
+      if (quantity <= 0)         return alert("입고 수량은 0보다 커야 합니다.");
+      if (unitPrice === null)    return alert("입고 단가를 입력하세요.");
+      if (unitPrice < 0)         return alert("입고 단가는 0 이상이어야 합니다.");
+
       const payload = {
-        materialId:  materialId ? Number(materialId) : null,
-        quantity:    quantity ? Number(quantity) : null,
-        unitPrice:   unitPrice ? Number(unitPrice) : null,      // 비우면 최신 매입가 자동 사용
-        sellingPrice:sellingPrice ? Number(sellingPrice) : null,
-        inDate:      toIso(inDateRaw),
+        materialId:  Number(materialId),
+        quantity:    quantity,              // 0도 그대로 전송됨
+        unitPrice:   unitPrice,
+        sellingPrice:sellingPrice,          // null 허용
+        inDate:      toIso(inDateRaw),      // "yyyy-MM-ddTHH:mm:ss"
+        expirationDate: toLocalDate(expRaw),// "yyyy-MM-dd" 또는 null
         memo:        memo || ""
       };
 
@@ -158,7 +223,7 @@
       }
       const id = await res.json();
       alert("입고 등록 완료: ID=" + id);
-      location.href = "/admin/inventory/list";
+      location.href = "/admin/inventory/log/" + payload.materialId; // 저장 후 동선
     });
 </script>
 </body>

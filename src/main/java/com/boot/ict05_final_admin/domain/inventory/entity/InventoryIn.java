@@ -67,6 +67,10 @@ public class InventoryIn {
     @Comment("출고 단가(가맹점 공급가)")
     private BigDecimal sellingPrice;
 
+    @Column(name = "inventory_lot", length = 32, unique = true)
+    @Comment("로트 번호")
+    private String lotNo;
+
     /** 입고일시(실제 입고일) */
     @Column(name = "inventory_in_date", nullable = false,
             columnDefinition = "DATETIME")

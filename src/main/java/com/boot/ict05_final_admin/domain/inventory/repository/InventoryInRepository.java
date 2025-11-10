@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryInRepository
         extends JpaRepository<InventoryIn, Long>, InventoryInRepositoryCustom {
+    boolean existsByLotNo(String lotNo);   // lotNo는 엔티티 필드명 기준
 }

@@ -1,8 +1,10 @@
 package com.boot.ict05_final_admin.domain.inventory.dto;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -24,7 +26,12 @@ public class InventoryInWriteDTO {
     private BigDecimal sellingPrice;
 
     /** 입고일 */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime inDate;
+
+    /** 유통기한 */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate expirationDate;
 
     /** 비고 */
     private String memo;

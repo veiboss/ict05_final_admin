@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryBatchRepository
         extends JpaRepository<InventoryBatch, Long>, InventoryBatchRepositoryCustom {
+    boolean existsByLotNo(String lotNo);   // InventoryBatch.lotNo 매핑(= inventory_batch_lot_no)
 }

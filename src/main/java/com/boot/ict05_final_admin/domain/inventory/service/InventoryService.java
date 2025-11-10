@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.inventory.service;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepository;
 
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryLogViewRepository;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -44,6 +46,15 @@ public class InventoryService {
     @Transactional(readOnly = true)
     public Page<InventoryListDTO> getInventoryList(InventorySearchDTO inventorySearchDTO, Pageable pageable) {
         return inventoryRepository.listInventory(inventorySearchDTO, pageable);
+    }
+
+    /**
+     * 본사 입고 등록용 - 재고 선택 목록 조회
+     * (재고 + 재료명 출력용)
+     */
+    @Transactional(readOnly = true)
+    public List<HqInventory> findAllForSelect() {
+        return inventoryRepository.findAll();
     }
 
     /**

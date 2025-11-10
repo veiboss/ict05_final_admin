@@ -5,6 +5,7 @@ import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutConfirmRequest;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
@@ -71,15 +72,9 @@ public class InventoryRestController {
      * @return 생성된 입고 ID
      */
     @PostMapping("/inventory/in")
-    public Long receiveToHq(@RequestBody InventoryInWriteDTO dto) {
-        return inService.receiveToHq(
-                dto.getMaterialId(),
-                dto.getUnitPrice(),
-                dto.getSellingPrice(),
-                dto.getInDate(),
-                null,                // expirationDate 없으면 null
-                dto.getMemo()
-        );
+    public Long insertInventoryIn(@RequestBody @Valid InventoryInWriteDTO dto) {
+
+        return inService.insertInventoryIn(dto);
     }
 
 

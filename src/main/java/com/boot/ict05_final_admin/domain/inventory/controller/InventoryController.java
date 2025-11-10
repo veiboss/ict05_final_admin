@@ -1,10 +1,8 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.BatchStatusRowDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.OutLotHistoryRowDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.*;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
+import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,11 +40,13 @@ public class InventoryController {
     private final InventoryInService inService;
     private final InventoryLogViewService logViewService;
     private final MaterialService materialService;
+
+    // -------------------- View routing --------------------
+
     /**
      * 본사 재고 목록을 페이징 처리하여 조회한다.
      *
-     * <p>검색 조건과 페이징 정보를 기반으로
-     * 본사 재고 현황을 조회하고 목록 페이지를 렌더링한다.</p>
+     * <p>검색 조건과 페이징 정보를 받아 SSR로 목록을 렌더링한다.</p>
      *
      * @param inventorySearchDTO 검색 조건 DTO (재료명, 상태 등)
      * @param pageable           페이징 정보 (페이지 번호, 크기, 정렬 기준)
@@ -69,41 +70,33 @@ public class InventoryController {
         return "inventory/list";
     }
 
-    // -------------------- View routing --------------------
-
     /**
      * 본사 재고 로그 화면으로 이동한다.
      *
      * @param materialId 재료 ID
      * @param model      뷰 모델
-     * @return 템플릿 경로
+     * @return 재고 로그 페이지(view)
      */
     @GetMapping("/log/{materialId}")
     public String logPage(@PathVariable Long materialId,
                           @RequestParam(required = false) String type,
-                          @RequestParam(required = false)
-                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                          LocalDate startDate,
-                          @RequestParam(required = false)
-                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                          LocalDate endDate,
+                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                           @RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size,
                           Model model) {
 
-        // 재료명은 서비스로 조회
+        // 재료 조회
         var material = materialService.findById(materialId);
         String materialName = (material != null ? material.getName() : "");
 
-        // 첫 페이지 즉시 로드하여 SSR
+        // 첫 페이지 즉시 로드
         var logs = logViewService.getFilteredLogs(
                 materialId,
                 type,
                 startDate,
                 endDate,
-                org.springframework.data.domain.PageRequest.of(page, size)
-        );
-
+                PageRequest.of(page, size));
 
         model.addAttribute("logs", logs);
         model.addAttribute("materialId", materialId);
@@ -119,13 +112,31 @@ public class InventoryController {
      *
      * @param materialId 재료 ID
      * @param model      뷰 모델
-     * @return 템플릿 경로
+     * @return 재료별 배치
      */
     @GetMapping("/batch-status/{materialId}")
     public String batchStatusPage(@PathVariable Long materialId, Model model) {
         model.addAttribute("materialId", materialId);
         return "inventory/batch-status";
     }
+
+    /**
+     * 본사 재고 입고 등록 페이지
+     *
+     * <p>입고 대상 재료를 선택하고, 입고 수량 및 단가를 입력할 수 있는
+     * 입고 등록 화면을 렌더링한다.</p>
+     *
+     * @param model 뷰에 전달할 모델 객체
+     * @return 입고 등록 페이지(view)
+     */
+    @GetMapping("/in/write")
+    public String showInventoryInForm(Model model) {
+        model.addAttribute("categories", MaterialCategory.values());
+        model.addAttribute("inventoryList", inventoryService.findAllForSelect());
+        model.addAttribute("now", LocalDateTime.now());
+        return "inventory/inventory_in_write";
+    }
+
 
     /**
      * 본사 출고 테스트 화면으로 이동한다.
