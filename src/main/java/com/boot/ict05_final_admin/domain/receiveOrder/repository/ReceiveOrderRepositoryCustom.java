@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
@@ -20,5 +21,6 @@ public interface ReceiveOrderRepositoryCustom {
     List<ReceiveOrderItemDTO> findItemsByOrderId(Long id);
     // 상단 카드 데이터
     ReceiveOrderSummaryDTO getSummary();
-
+    // 수주 코드로 상태 변경 시에도 필요
+    Optional<ReceiveOrder> findOrderById(Long id);
 }
