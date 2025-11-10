@@ -14,7 +14,7 @@ import java.util.List;
  * 대시보드 화면 컨트롤러.
  *
  * HomeService 에서 대시보드용 집계 데이터를 조회하여
- * Thymeleaf 뷰(index.html)에 모델로 전달한다.
+ * Thymeleaf 뷰(home.html)에 모델로 전달한다.
  */
 @Controller
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class HomeController {
      * 조회된 DTO를 모델에 주입한 뒤 index 템플릿을 반환한다.
      *
      * @param model 뷰에 전달할 모델 객체
-     * @return 대시보드 뷰 이름("index")
+     * @return 대시보드 뷰 이름("home")
      */
     @GetMapping("/home")
     public String home(Model model) {
@@ -54,7 +54,7 @@ public class HomeController {
         // 표
         model.addAttribute("storeRows", viewDTO.storeRows());
 
-        return "index";
+        return "home/home";
     }
 
 }
