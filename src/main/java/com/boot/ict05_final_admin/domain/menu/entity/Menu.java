@@ -65,6 +65,10 @@ public class Menu {
     @JoinColumn(name= "menu_category_id_fk")
     private MenuCategory menuCategory;
 
+    /** 재료 */
+    @Column(name = "ingredients", length = 500)
+    private String ingredients;
+
     // 수정 편의 메서드
     /** DTO 기반 필드 수정(카테고리는 별도 changeCategory 사용) */
     public void updateMenu(MenuModifyFormDTO dto) {
