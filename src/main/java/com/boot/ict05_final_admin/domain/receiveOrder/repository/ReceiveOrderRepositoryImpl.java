@@ -32,7 +32,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     // 상단 카드 데이터
     @Override
     public ReceiveOrderSummaryDTO getSummary() {
-        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+        QReceiveOrderView ro = QReceiveOrderView.receiveOrderView;
 
         Long totalCount = queryFactory
                 .select(ro.id.count())
@@ -68,10 +68,10 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     }
 
     @Override
-    public Optional<ReceiveOrder> findOrderById(Long id) {
-        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+    public Optional<ReceiveOrderView> findOrderById(Long id) {
+        QReceiveOrderView ro = QReceiveOrderView.receiveOrderView;
 
-        ReceiveOrder result = queryFactory
+        ReceiveOrderView result = queryFactory
                 .selectFrom(ro)
                 .where(ro.id.eq(id))
                 .fetchOne();
@@ -81,8 +81,16 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
     @Override
     public Page<ReceiveOrderListDTO> listReceive(ReceiveOrderSearchDTO receiveOrderSearchDTO, Pageable pageable) {
-        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+        QReceiveOrderView ro = QReceiveOrderView.receiveOrderView;
+        QReceiveOrderDetailView rod = QReceiveOrderDetailView.receiveOrderDetailView;
         QStore store = QStore.store;
+
+        // details 존재 여부 → exists 서브쿼리
+        BooleanExpression hasDetails = JPAExpressions
+                .selectOne()
+                .from(rod)
+                .where(rod.receiveOrder.eq(ro))
+                .exists();
 
         // 데이터 목록 조회
         List<ReceiveOrderListDTO> content = queryFactory
@@ -101,7 +109,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 .join(ro.store, store)
                 .where(
                         eqOrderCode(receiveOrderSearchDTO, ro),
-                        ro.details.isNotEmpty()     // 주문 건이 있는 주문만
+                        hasDetails                          // 주문 건이 있는 주문만
                 )
                 .orderBy(ro.id.desc())
                 .offset(pageable.getOffset())
@@ -114,7 +122,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 .from(ro)
                 .where(
                         eqOrderCode(receiveOrderSearchDTO, ro),
-                        ro.details.isNotEmpty()
+                        hasDetails
                 )
                 .fetchOne();
 
@@ -122,7 +130,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     }
 
     // 검색 필터 - 가맹점명, 주문번호, 지역
-    private BooleanExpression eqOrderCode(ReceiveOrderSearchDTO dto, QReceiveOrder ro) {
+    private BooleanExpression eqOrderCode(ReceiveOrderSearchDTO dto, QReceiveOrderView ro) {
 
         // BooleanExpression condition = null;
         // 기본값 true
@@ -168,24 +176,31 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     // 리스트 개수 카운팅
     @Override
     public long countReceive(ReceiveOrderSearchDTO receiveOrderSearchDTO) {
-        QReceiveOrder receiveOrder = QReceiveOrder.receiveOrder;
+        QReceiveOrderView ro = QReceiveOrderView.receiveOrderView;
+        QReceiveOrderDetailView rod = QReceiveOrderDetailView.receiveOrderDetailView;
 
-        long total = queryFactory
-                .select(receiveOrder.count())
-                .from(receiveOrder)
+        BooleanExpression hasDetails = JPAExpressions
+                .selectOne()
+                .from(rod)
+                .where(rod.receiveOrder.eq(ro))
+                .exists();
+
+        Long total = queryFactory
+                .select(ro.count())
+                .from(ro)
                 .where(
-                        eqOrderCode(receiveOrderSearchDTO, receiveOrder)
+                        eqOrderCode(receiveOrderSearchDTO, ro),
+                        hasDetails
                 )
                 .fetchOne();
 
-        return total;
+        return total != null ? total : 0L;
     }
 
     // 수주 상세 조회
     @Override
     public Optional<ReceiveOrderDetailDTO> findDetailById(Long id) {
-        QReceiveOrder ro = QReceiveOrder.receiveOrder;
-        QReceiveOrderDetail rod = new QReceiveOrderDetail("rod");
+        QReceiveOrderView ro = QReceiveOrderView.receiveOrderView;
         QStore store = QStore.store;
 
         ReceiveOrderDetailDTO dto = queryFactory
@@ -214,8 +229,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     // 수주 상세 - 주문 상품 리스트
     @Override
     public List<ReceiveOrderItemDTO> findItemsByOrderId(Long id) {
-        QReceiveOrderDetail rod = new QReceiveOrderDetail("rod");
-        QReceiveOrder ro = QReceiveOrder.receiveOrder;
+        QReceiveOrderDetailView rod = QReceiveOrderDetailView.receiveOrderDetailView;
         QMaterial material = QMaterial.material;
         QInventory hq = QInventory.inventory;
 
@@ -223,9 +237,9 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 .selectDistinct(Projections.fields(ReceiveOrderItemDTO.class,
                         material.name.as("name"),
                         material.materialCategory.as("materialCategory"),
-                        rod.detailCount.as("detailCount"),
-                        rod.detailUnitPrice.as("detailUnitPrice"),
-                        rod.detailTotalPrice.as("detailTotalPrice"),
+                        rod.count.as("detailCount"),
+                        rod.unitPrice.as("detailUnitPrice"),
+                        rod.totalPrice.as("detailTotalPrice"),
                         hq.status.as("inventoryStatus")
                 ))
                 .from(rod)

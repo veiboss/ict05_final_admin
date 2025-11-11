@@ -5,6 +5,7 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,6 @@ import java.util.NoSuchElementException;
 public class ReceiveOrderService {
 
     private final ReceiveOrderRepository receiveOrderRepository;
-    private final OrderSyncService orderSyncService;
 
     /**
      * 수주 목록을 페이지 단위로 조회한다.
@@ -95,34 +95,36 @@ public class ReceiveOrderService {
      * @throws IllegalStateException 이미 완료된 주문일 경우
      */
     public void updateStatus(Long id, String action) {
-        ReceiveOrder order = receiveOrderRepository.findOrderById(id)
+        ReceiveOrderView order = receiveOrderRepository.findOrderById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
 
+        ReceiveOrderStatus curr = order.getStatus();
+        ReceiveOrderStatus next;
         switch (action.toUpperCase()) {
-            case "SHIP" -> {
-                if (order.getStatus() == ReceiveOrderStatus.RECEIVED) {
-                    order.setStatus(ReceiveOrderStatus.SHIPPING);
-                } else if (order.getStatus() == ReceiveOrderStatus.SHIPPING) {
-                    order.setStatus(ReceiveOrderStatus.DELIVERED);
-                } else {
-                    throw new IllegalStateException("배송을 시작할 수 없는 상태입니다.");
-                }
-            }
-            case "CANCEL" -> {
-                if (order.getStatus() == ReceiveOrderStatus.RECEIVED) {
-                    order.setStatus(ReceiveOrderStatus.CANCELED);
-                } else {
-                    throw new IllegalStateException("이미 배송이 진행 중이거나 완료된 주문은 취소할 수 없습니다.");
-                }
-            }
-            default -> throw new IllegalArgumentException("알 수 없는 액션: " + action);
+            case "SHIP":
+                if (curr != ReceiveOrderStatus.RECEIVED) throw new IllegalStateException("invalid");
+                next = ReceiveOrderStatus.SHIPPING;
+                break;
+            case "CANCEL":
+                if (curr != ReceiveOrderStatus.RECEIVED) throw new IllegalStateException("invalid");
+                next = ReceiveOrderStatus.CANCELED;
+                break;
+            default: throw new IllegalArgumentException("unknown action");
         }
 
-        receiveOrderRepository.save(order);
+        int updated = receiveOrderRepository.updateStatusIfCurrent(id, curr.name(), next.name());
+        if (updated == 0) {
+            throw new IllegalStateException("상태 업데이트 실패: id=" + id);
+        }
 
-        // 가맹점 쪽 상태도 동기화 (REST or DB 직결)
-        log.info("🔁 [HQ] 상태 변경됨 → 가맹점 동기화 시작: {} → {}", order.getOrderCode(), order.getStatus());
-        orderSyncService.syncFromHQ(order.getOrderCode(), order.getStatus());
+        // 가맹점으로 동기화 콜 (이중 시스템일 때만)
+        // orderSyncService.syncFromHQ(order.getOrderCode(), next);
+    }
+
+    public void applyStatusFromStore(String orderCode, String status) {
+        ReceiveOrderStatus next = ReceiveOrderStatus.valueOf(status.toUpperCase());
+        int updated = receiveOrderRepository.updateStatusByOrderCode(orderCode, next.name());
+        if (updated == 0) throw new IllegalArgumentException("해당 주문코드 없음: " + orderCode);
     }
 
     /**

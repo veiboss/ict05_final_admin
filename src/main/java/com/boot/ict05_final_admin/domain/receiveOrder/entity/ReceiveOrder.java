@@ -26,7 +26,7 @@ import java.util.List;
  * @author 최민진
  * @since 2025.10
  */
-@Entity
+@MappedSuperclass
 @Table(name = "receive_order")
 @Getter
 @Setter

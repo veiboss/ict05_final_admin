@@ -22,7 +22,7 @@ import java.math.BigDecimal;
  * @author 최민진
  * @since 2025.10
  */
-@Entity
+@MappedSuperclass
 @Table(name = "receive_order_detail")
 @Getter
 @Setter

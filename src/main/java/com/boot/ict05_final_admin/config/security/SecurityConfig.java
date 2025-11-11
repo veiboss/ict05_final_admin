@@ -4,14 +4,29 @@ import com.boot.ict05_final_admin.domain.auth.service.MemberUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+
+// ADD >>
+import org.springframework.http.HttpMethod;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+// << ADD
 
 @Configuration
 @EnableWebSecurity
@@ -19,10 +34,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig implements WebMvcConfigurer {
 
     private final MemberUserDetailsService memberUserDetailsService;
+    private static final RequestMatcher ADMIN_API = new AntPathRequestMatcher("/admin/API/**");
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // DB는 $2a$... 해시만 (접두어 {bcrypt} 금지)
         return new BCryptPasswordEncoder();
     }
 
@@ -34,49 +49,113 @@ public class SecurityConfig implements WebMvcConfigurer {
         return p;
     }
 
+    // 1) API 전용 체인
     @Bean
+    @Order(0)
+    public SecurityFilterChain apiChain(HttpSecurity http) throws Exception {
+        http
+                // ★ 여기! context-path 포함 매처로 강제
+                .securityMatcher(ADMIN_API)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().permitAll()   // API는 전부 통과
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .requestCache(AbstractHttpConfigurer::disable) // ★ savedRequest로 로그인 리다이렉트 방지
+                .exceptionHandling(e -> e.authenticationEntryPoint((req,res,ex) -> res.sendError(401)));
+        return http.build();
+    }
+
+
+    @Bean
+    @Order(1) // 체인 하나만 사용
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Thymeleaf 폼에 CSRF 히든 필드 있다면 활성 유지
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(ADMIN_API) // API는 CSRF 미적용
+                )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/assets/**", "/api/auth/**", "/uploads/**",  "/uploads/profile/**").permitAll()
-                        // 필요시 .requestMatchers("/admin/**").hasRole("HQ")
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        .requestMatchers("/store/**").hasAnyRole("FRANCHISE", "ADMIN")
-                        .requestMatchers("/menu/**").hasAnyRole("OPS", "ADMIN")
-                        .requestMatchers("/receive/**").hasAnyRole("OPS", "ADMIN")
-                        .requestMatchers("/inventory/**").hasAnyRole("OPS", "ADMIN")
-                        .requestMatchers("/material/**").hasAnyRole("OPS", "ADMIN")
-                        .requestMatchers("/store/material/**").hasAnyRole("OPS", "ADMIN")
-                        .requestMatchers("/staff/**").hasAnyRole("HR", "ADMIN")
-                        .requestMatchers("/analytics/**").hasAnyRole("ANALYTICS", "ADMIN")
+                        // 공개 경로
+                        .requestMatchers(
+                                "/login", "/login/**",
+                                "/register",
+                                "/css/**", "/js/**", "/images/**", "/assets/**",
+                                "/api/**", "/API/**", // ★ API 전부 허용
+                                "/uploads/**", "/uploads/profile/**"
+                        ).permitAll()
+
+                        // ★ 백업 안전장치: 혹시라도 웹 체인이 잡아도 /admin/API/**는 통과
+                        .requestMatchers("/admin/API/**").permitAll()
+
+                        // 역할별 보호 경로
+                        .requestMatchers("/store/**").hasAnyRole("FRANCHISE","ADMIN")
+                        .requestMatchers("/menu/**").hasAnyRole("OPS","ADMIN")
+                        .requestMatchers("/receive/**").hasAnyRole("OPS","ADMIN")
+                        .requestMatchers("/inventory/**").hasAnyRole("OPS","ADMIN")
+                        .requestMatchers("/material/**").hasAnyRole("OPS","ADMIN")
+                        .requestMatchers("/store/material/**").hasAnyRole("OPS","ADMIN")
+                        .requestMatchers("/staff/**").hasAnyRole("HR","ADMIN")
+                        .requestMatchers("/analytics/**").hasAnyRole("ANALYTICS","ADMIN")
                         .requestMatchers("/member/**").hasRole("ADMIN")
 
+                        // 나머지
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")                 // GET
-                        .loginProcessingUrl("/login")        // POST: 시큐리티가 처리
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/home", true)
-                        .failureUrl("/login?error")
+                        .failureUrl("/login?error=true")
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/login?logout=true")
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
+                        .permitAll()
                 )
                 .authenticationProvider(daoAuthProvider());
 
         return http.build();
     }
 
+
+    // ADD >>
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration cfg = new CorsConfiguration();
+        // 개발 도메인
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:8082", // 가맹점 프런트/게이트웨이
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://localhost"
+        ));
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setAllowCredentials(true);
+        cfg.setExposedHeaders(List.of("Authorization", "Content-Type", "Location"));
+        cfg.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+        src.registerCorsConfiguration("/**", cfg);
+        src.registerCorsConfiguration("/admin/**", cfg);
+        return src;
+    }
+    // << ADD
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 로컬 테스트용 업로드 폴더 매핑
         registry.addResourceHandler("/uploads/profile/**")
                 .addResourceLocations("file:///D:/ict05_uploads/profile/");
         registry.addResourceHandler("/images/**")

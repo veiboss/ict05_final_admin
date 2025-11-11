@@ -16,6 +16,8 @@
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
 
+    <title>토스트랩 관리자</title>
+
     <style>
          .row-4 .col.box-wrap {
             background: #fff;
@@ -249,7 +251,7 @@
                                     <div class="btn medium bdr-color1 btn-group btn-group-toggle" data-bs-toggle="buttons">
                                         <label class="btn medium"
                                                th:classappend="${receiveOrderSearchDTO.receiveOrderStatus == null or #strings.isEmpty(receiveOrderSearchDTO.receiveOrderStatus)} ? ' active' : ''">
-                                            <input type="radio" name="status" value=""
+                                            <input type="radio" name="receiveOrderStatus" value=""
                                                    th:checked="${receiveOrderSearchDTO.receiveOrderStatus == null or #strings.isEmpty(receiveOrderSearchDTO.receiveOrderStatus)}"
                                                    onclick="setFilter('')">전체
                                         </label>
@@ -473,8 +475,8 @@
 
                 <button type="button"
                         class="btn medium color1"
-                        th:attr="id='updateStatusBtn-' + ${order.id}"
-                        th:onclick="|updateStatus(${order.id}, 'SHIP')|"
+                        th:attr="id='updateStatusBtn-' + ${order.id}, data-status=${order.status.name()}"
+                        th:onclick="|event.preventDefault(); updateStatus(${order.id})|"
                         th:disabled="${order.status.name() == 'DELIVERED' or order.status.name() == 'CANCELED'}">
                     <span class="material-symbols-outlined"
                           th:attr="id='statusIcon-' + ${order.id}"

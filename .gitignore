@@ -50,3 +50,8 @@ __pycache__/
 # Firebase Admin JSON (만약 레포 내부에 둘 경우)
 **/firebase-admin.json
 **/service-account*.json
+
+# HQ receive secrets (개인/서버별 로컬 파일)
+src/main/resources/application-receive.properties
+application-receive.properties
+config/application-receive.properties

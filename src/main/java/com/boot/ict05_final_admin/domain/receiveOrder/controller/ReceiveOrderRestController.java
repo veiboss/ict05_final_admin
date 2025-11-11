@@ -4,8 +4,8 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepositoryImpl;
-import com.boot.ict05_final_admin.domain.receiveOrder.service.OrderSyncService;
 import com.boot.ict05_final_admin.domain.receiveOrder.service.ReceiveOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,11 +47,28 @@ import java.util.List;
 @RequestMapping("/API")
 @Tag(name = "수주현황 API", description = "본사 수주 현황 관리용 REST API (상태 변경, 엑셀 다운로드 제공)")
 @Slf4j
+// ★ 프런트용 CORS 명시(전역 CORS와 중복돼도 무방, 여기선 확실히 보장)
+@CrossOrigin(
+        origins = {
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://localhost:8082",
+                "http://localhost"
+        },
+        allowedHeaders = {"*"},
+        exposedHeaders = {"Authorization","Content-Type","Location"},
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS},
+        allowCredentials = "true",
+        maxAge = 3600
+)
 public class ReceiveOrderRestController {
 
     private final ReceiveOrderService receiveOrderService;
-    private final OrderSyncService orderSyncService;
     private final ReceiveOrderRepositoryImpl receiveOrderRepository;
+
+    // ★ 공유 시크릿 주입(없으면 local-dev-secret 사용)
+    @Value("${sync.shared-secret:local-dev-secret}")
+    private String sharedSecret;
 
     /**
      * 수주의 배송 상태를 변경하거나 취소한다.
@@ -71,6 +89,8 @@ public class ReceiveOrderRestController {
      * @since 2025.11
      * @author 최민진
      */
+
+
     @PutMapping("/receive/status/{id}")
     @Operation(
             summary = "수주 배송 상태 변경 또는 취소",
@@ -94,18 +114,16 @@ public class ReceiveOrderRestController {
         log.info("📦 [HQ] 수주 상태 변경 요청: id={}, action={}", id, action);
 
         try {
+            // 전이 검증 + 현재상태 조건부 업데이트까지 서비스에서 처리
             receiveOrderService.updateStatus(id, action);
-
-            // 상태 변경 후 가맹점에도 즉시 반영
-            ReceiveOrder order = receiveOrderRepository.findOrderById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
-            orderSyncService.syncFromHQ(order.getOrderCode(), order.getStatus());
-
             return ResponseEntity.ok("상태 업데이트 완료");
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) { // 잘못된 action or 미존재 ID
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) { // 전이 불가 또는 경쟁 갱신 충돌
+            return ResponseEntity.status(409).body(e.getMessage());
         }
     }
+
 
     /**
      * 가맹점 서버로부터 수주 상태를 동기화받는다.
@@ -132,10 +150,21 @@ public class ReceiveOrderRestController {
     )
     public ResponseEntity<Void> syncStatusFromStore(
             @RequestParam("orderCode") String orderCode,
-            @RequestParam("status") String status
+            @RequestParam("status") String status,
+            // ★ 가맹점에서 보낸 공유 토큰 헤더 받기
+            @RequestHeader(value = "X-Sync-Auth", required = false) String token
     ) {
-        orderSyncService.syncFromStore(orderCode, status);
-        return ResponseEntity.ok().build();
+        // ★ 토큰 검증: 실패 시 401을 반환(리다이렉트 없이 종료)
+        if (token == null || !token.equals(sharedSecret)) {
+            log.warn("Sync 인증 실패 orderCode={}, status={}, token={}", orderCode, status, token);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        log.info("Sync 수신 orderCode={}, status={}", orderCode, status);
+        receiveOrderService.applyStatusFromStore(orderCode, status);
+
+        // ★ 본문 없는 성공은 204가 더 깔끔
+        return ResponseEntity.noContent().build();
     }
 
     /**

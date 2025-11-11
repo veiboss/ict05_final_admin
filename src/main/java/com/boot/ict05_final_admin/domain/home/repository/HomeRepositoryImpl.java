@@ -3,11 +3,13 @@ package com.boot.ict05_final_admin.domain.home.repository;
 import com.boot.ict05_final_admin.domain.home.dto.*;
 import com.boot.ict05_final_admin.domain.order.entity.QCustomerOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderView;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.*;
 
+import static com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderView.receiveOrderView;
 import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
@@ -30,7 +32,7 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
 
     private static final QStore store = QStore.store;
     private static final QCustomerOrder customerOrder = QCustomerOrder.customerOrder;
-    private static final QReceiveOrder receiveOrder = QReceiveOrder.receiveOrder;
+    private static final QReceiveOrderView receiveOrder = receiveOrderView;
 
     // 기간 필터 (주문: LocalDateTime)
     private BooleanExpression range(DateTimePath<LocalDateTime> dt, LocalDateTime from, LocalDateTime to) {
@@ -211,15 +213,15 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
         LocalDate dFrom = from.toLocalDate();
         LocalDate dTo   = to.toLocalDate();
 
-        StringExpression bucket = monthKey(receiveOrder.orderDate);
-        NumberExpression<java.math.BigDecimal> sumExpr = receiveOrder.totalPrice.sum();
+        StringExpression bucket = monthKey(receiveOrderView.orderDate);
+        NumberExpression<java.math.BigDecimal> sumExpr = receiveOrderView.totalPrice.sum();
 
         List<Tuple> rows = QueryFactory
                 .select(bucket, sumExpr)
                 .from(receiveOrder)
                 .where(
-                        range(receiveOrder.orderDate, dFrom, dTo),
-                        storeFilter(storeIds, receiveOrder.store.id)
+                        range(receiveOrderView.orderDate, dFrom, dTo),
+                        storeFilter(storeIds, receiveOrderView.store.id)
                 )
                 .groupBy(bucket)
                 .orderBy(bucket.asc())
