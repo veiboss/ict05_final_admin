@@ -38,7 +38,7 @@ import java.time.format.DateTimeFormatter;
  *   <li>캐시: <code>Cache-Control: no-cache</code> 적용</li>
  * </ul>
  *
- * @author ICT
+ * @author 이경욱
  * @since 2025.10
  */
 @RestController

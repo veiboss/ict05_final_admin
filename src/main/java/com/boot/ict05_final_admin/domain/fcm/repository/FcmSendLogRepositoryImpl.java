@@ -10,12 +10,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * {@link FcmSendLogRepositoryCustom}의 QueryDSL 구현체.
+ *
+ * <p>최근 전송 로그를 DTO로 투영(projection)하여 반환한다.</p>
+ *
+ * @author 이경욱
+ * @since 2025-11-10
+ */
 @Repository
 @RequiredArgsConstructor
 public class FcmSendLogRepositoryImpl implements FcmSendLogRepositoryCustom {
 
 	private final JPAQueryFactory query;
 
+	/**
+	 * 최근 전송 로그를 최신순으로 조회하여 {@link FcmLogRowDto} 리스트로 반환한다.
+	 *
+	 * @param limit 조회 제한 수
+	 * @return 최근 로그 DTO 목록
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public List<FcmLogRowDto> findRecent(int limit) {
@@ -32,7 +46,7 @@ public class FcmSendLogRepositoryImpl implements FcmSendLogRepositoryCustom {
 						l.sentAt
 				))
 				.from(l)
-				.orderBy(l.sentAt.desc()) // 최신순
+				.orderBy(l.sentAt.desc())
 				.limit(limit)
 				.setHint("org.hibernate.readOnly", true)
 				.setHint("org.hibernate.flushMode", "COMMIT")

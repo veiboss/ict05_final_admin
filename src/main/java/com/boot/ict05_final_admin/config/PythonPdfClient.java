@@ -39,7 +39,7 @@ import reactor.core.publisher.Mono;
  *
  * <p>이 클래스는 Thread-safe 하며, 싱글턴 빈으로 동작한다.</p>
  *
- * @author ICT
+ * @author 이경욱
  * @since 2025.10
  */
 @Component

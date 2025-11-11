@@ -1,4 +1,4 @@
-// /static/js/fcm-web.js (ES Module)
+// /static/js/fcm-web.js (ES Module, 단일 onMessage, 스코프 정리판)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { isSupported, getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-messaging.js";
 
@@ -14,6 +14,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// ⬇️ 바깥에서 참조할 전역(모듈 스코프) 변수
+let messaging;
+
 // CSRF 메타에서 헤더 추출
 function csrfHeaders() {
   const t = document.querySelector('meta[name="_csrf"]')?.content;
@@ -21,104 +24,79 @@ function csrfHeaders() {
   return (t && h) ? { [h]: t } : {};
 }
 
-(async () => {
+/** 초기 세팅 + onMessage 바인딩을 한 번에 */
+async function setupFcm() {
   if (!(await isSupported())) {
     console.warn('[FCM] Web Push not supported in this browser.');
     return;
   }
 
-  const messaging = getMessaging(app);
+  messaging = getMessaging(app);
   const VAPID_KEY = (document.querySelector('meta[name="vapid-key"]')?.content || '').trim();
   if (!VAPID_KEY) {
     console.warn('[FCM] Missing VAPID public key (meta[name="vapid-key"])');
     return;
   }
 
-  async function enableWebPush() {
-    // 1) 서비스워커 등록 (스코프는 /admin/)
-    const reg = await navigator.serviceWorker.register('/admin/firebase-messaging-sw.js', { scope: '/admin/' });
+  // 서비스워커 등록 (스코프는 /admin/ 유지)
+  const reg = await navigator.serviceWorker.register('/admin/firebase-messaging-sw.js', { scope: '/admin/' });
 
-    // 2) 권한 요청
+  // ⬇️ 외부에서 호출할 수 있게 window에 노출
+  window.enableWebPush = async function enableWebPush() {
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') {
       console.warn('[FCM] Notification permission denied');
       return;
     }
-
-    // 3) 토큰 발급
-    const token = await getToken(messaging, {
-      vapidKey: VAPID_KEY,
-      serviceWorkerRegistration: reg
-    });
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
     if (!token) {
       console.warn('[FCM] Failed to get token');
       return;
     }
-
-    // 4) 백엔드에 토큰 등록 (CSRF 포함)
     await fetch('/admin/fcm/register', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...csrfHeaders()
-      },
+      headers: { 'Content-Type': 'application/json', ...csrfHeaders() },
       body: JSON.stringify({ appType: 'HQ', platform: 'WEB', token })
     });
-
-    console.log('[FCM] token registered', token);
-    // 브라우저 보관 (로그아웃 시 꺼낼 용도)
     localStorage.setItem('fcm_token', token);
+    console.log('[FCM] token registered', token);
+  };
 
-  }
-
-  // 포그라운드 수신 시
-  onMessage(messaging, (payload) => {
+  // ✅ 단일 onMessage (중복 금지)
+  onMessage(messaging, async (payload) => {
     console.log('[FCM] onMessage', payload);
-    // TODO: 필요시 토스트/배지 처리
+
+    const { notification, data } = payload;
+    const title = notification?.title || data?.title || '알림';
+    const body  = notification?.body  || data?.body  || '';
+    const icon  = '/admin/images/fcm/toastlab.png';
+    const badge = '/admin/images/fcm/badge-72.png';
+    const link  = data?.link || '/admin';
+    const tag   = 'hq-fcm-' + (data?.type || 'general');
+
+    try {
+      const swReg = await navigator.serviceWorker.getRegistration('/admin/');
+      if (swReg) {
+        await swReg.showNotification(title, {
+          body, icon, badge,
+          data: { link },
+          requireInteraction: true, // OS별 동작 차이 있음
+          tag
+        });
+      } else if (Notification.permission === 'granted') {
+        // SW가 없을 때 fallback (거의 안 탑니다)
+        new Notification(title, { body, icon });
+      }
+    } catch (e) {
+      console.warn('[FCM] showNotification failed:', e);
+    }
   });
 
-  // 전역에 노출(버튼에서 호출)
-  window.enableWebPush = enableWebPush;
-})();
-
-// 페이지 진입 시 자동으로 WebPush 활성화
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    if (!(await isSupported())) return;
-
-    if (Notification.permission === 'granted') {
-      // 권한이 이미 있으면 바로 토큰(재)발급 + 서버 업서트 + localStorage 저장
-      await enableWebPush();
-    } else {
-      console.log('[FCM] permission not granted yet');
-      // (선택) 배너/버튼을 띄워서 window.enableWebPush() 호출 유도
-      // window.showEnablePush && window.showEnablePush();
-    }
-  } catch (err) {
-    console.warn('[FCM] auto-enable failed:', err);
+  // 권한이 이미 있으면 자동 업서트
+  if (Notification.permission === 'granted') {
+    try { await window.enableWebPush(); } catch (e) { console.warn('[FCM] auto-enable failed:', e); }
   }
-});
+}
 
-// 포그라운드 수신
-onMessage(messaging, async (payload) => {
-  console.log('[FCM] onMessage', payload);
-
-  const { notification, data } = payload;
-  const title = notification?.title || data?.title || '알림';
-  const body  = notification?.body  || data?.body  || '';
-  const icon  = '/admin/images/fcm/toastlab.png';       // 존재하는 경로 확인 필수!
-  const link  = data?.link || '/admin';
-
-  // ★ 포그라운드에서도 OS 알림 강제 표시
-  try {
-    const reg = await navigator.serviceWorker.getRegistration('/admin/');
-    if (reg) {
-      await reg.showNotification(title, { body, icon, data: { link } });
-    } else if (Notification.permission === 'granted') {
-      // SW 없으면(예외) 페이지 알림으로라도
-      new Notification(title, { body, icon });
-    }
-  } catch (e) {
-    console.warn('[FCM] foreground notification failed:', e);
-  }
-});
+// DOM 로드 후 초기화
+document.addEventListener('DOMContentLoaded', setupFcm);

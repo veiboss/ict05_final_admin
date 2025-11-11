@@ -14,7 +14,7 @@ import java.util.List;
  *
  * <p>가맹점 선택, 조회 기간(시작/종료), 일/월 단위 보기, 출력 개수, Total 표시 여부를 포함한다.</p>
  *
- * @author
+ * @author 이경욱
  * @since 1.0
  */
 @Data

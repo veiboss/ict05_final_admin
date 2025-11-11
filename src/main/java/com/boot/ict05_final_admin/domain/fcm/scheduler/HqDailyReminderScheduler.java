@@ -5,10 +5,18 @@ import com.boot.ict05_final_admin.domain.fcm.service.FcmService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-// import org.springframework.scheduling.annotation.Scheduled; // 필요 시 활성화
 
 import java.util.Map;
 
+/**
+ * 본사 아침 리마인드 알림 스케줄러.
+ *
+ * <p>매일 아침 본사(HQ) 공용 토픽으로 재고/공지 확인을 유도하는 리마인드 알림을 보낸다.
+ * 실제 스케줄 주기는 운영 환경에서 @Scheduled로 제어한다.</p>
+ *
+ * @author 이경욱
+ * @since 2025-11-10
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -16,7 +24,10 @@ public class HqDailyReminderScheduler {
 
     private final FcmService fcmService;
 
-    // @Scheduled(cron = "0 10 9 * * *")
+    /**
+     * 아침 리마인드 알림을 HQ 공용 토픽(hq-all)으로 전송한다.
+     * 예외 발생 시 경고 로그만 남긴다.
+     */
     public void sendMorningReminder() {
         try {
             fcmService.sendToTopic(

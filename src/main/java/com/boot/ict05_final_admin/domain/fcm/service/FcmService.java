@@ -25,6 +25,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * FCM 토큰 등록/전송/구독 및 전송 로그 관리를 담당하는 서비스.
+ *
+ * <p>FirebaseApp 비활성화 환경에서는 전송 메서드가 예외를 던지니,
+ * 운영 설정에서 {@code fcm.enabled=true}와 서비스 계정 경로 설정을 확인해야 한다.</p>
+ *
+ * <ul>
+ *   <li>토큰 등록/해제</li>
+ *   <li>템플릿 렌더링</li>
+ *   <li>토큰/토픽 전송 (WebPush 설정 적용)</li>
+ *   <li>토픽 구독/해제</li>
+ *   <li>전송 로그 저장</li>
+ * </ul>
+ *
+ * @author 이경욱
+ * @since 2025-11-10
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -35,51 +52,20 @@ public class FcmService {
     private final FcmSendLogRepository logRepository;
     private final ObjectMapper objectMapper;
     private final FcmTopicPolicyProperties topicProps;
-
-    /** NEW: WebPush 설정 주입 */
     private final FcmWebpushProperties webpushProps;
 
-    /** FirebaseApp은 fcm.enabled=false면 빈이 생성되지 않으므로 선택 주입 */
     @Autowired(required = false)
     @Nullable
     private FirebaseApp firebaseApp;
 
-    // ① 토픽 검증(허용 문자/길이)
-    private static final java.util.regex.Pattern TOPIC_PATTERN = java.util.regex.Pattern.compile("^[a-z0-9-]{1,64}$");
-
-    private String validateTopic(String topic) {
-        if (topic == null) throw new IllegalArgumentException("Invalid topic name: null");
-        topic = topic.trim().toLowerCase();
-        if (!TOPIC_PATTERN.matcher(topic).matches()) {
-            throw new IllegalArgumentException("Invalid topic pattern: " + topic);
-        }
-        // 화이트리스트(선택 정책) 적용
-        if (topicProps.isRestrict() && !HqTopic.isAllowed(topic)) {
-            throw new IllegalArgumentException("Topic not allowed in HQ: " + topic);
-        }
-        return topic;
-    }
-
-    // ② data 1KB 제한: 초과 시 최소 필드만 유지(link, type)
-    private Map<String,String> sanitizeData(Map<String,String> data) {
-        if (data == null || data.isEmpty()) return Map.of();
-        try {
-            byte[] raw = objectMapper.writeValueAsBytes(data);
-            if (raw.length <= 1024) return data;
-        } catch (Exception ignore) { return data; }
-
-        Map<String,String> slim = new java.util.HashMap<>();
-        if (data.containsKey("type")) slim.put("type", data.get("type"));
-        if (data.containsKey("link")) slim.put("link", data.get("link"));
-        return slim;
-    }
-
-    /* ======================== Registration ======================== */
+    private static final java.util.regex.Pattern TOPIC_PATTERN =
+            java.util.regex.Pattern.compile("^[a-z0-9-]{1,64}$");
 
     /**
      * HQ 세션 사용자의 토큰을 등록/업서트한다.
-     * @param req 클라이언트에서 온 등록 요청
-     * @param sessionMemberId 세션에서 추출한 HQ 사용자 ID (우선 적용)
+     *
+     * @param req             등록 요청
+     * @param sessionMemberId 세션에서 추출된 HQ 사용자 ID(우선 적용)
      */
     @Transactional
     public void registerToken(FcmRegisterTokenRequest req, Long sessionMemberId) {
@@ -97,22 +83,39 @@ public class FcmService {
         tokenRepository.save(row);
     }
 
+    /**
+     * 토큰을 비활성화 처리한다(논리적 해제).
+     *
+     * @param token           대상 토큰
+     * @param sessionMemberId 세션 사용자 ID(필요 시 소유자 검증에 활용)
+     */
     @Transactional
     public void unregisterToken(String token, Long sessionMemberId) {
         tokenRepository.findByToken(token).ifPresent(row -> {
-            // 필요 시 sessionMemberId와 row.memberIdFk 일치 검증
             row.setIsActive(false);
             row.setLastSeenAt(LocalDateTime.now());
         });
     }
 
-    /* ======================== Template Render ======================== */
-
+    /**
+     * 템플릿 코드와 변수로 제목을 렌더링한다.
+     *
+     * @param templateCode 템플릿 코드
+     * @param vars         템플릿 변수 맵
+     * @return 렌더링된 제목
+     */
     @Transactional(readOnly = true)
     public String renderTitle(String templateCode, Map<String, Object> vars) {
         return render(templateCode, true, vars);
     }
 
+    /**
+     * 템플릿 코드와 변수로 본문을 렌더링한다.
+     *
+     * @param templateCode 템플릿 코드
+     * @param vars         템플릿 변수 맵
+     * @return 렌더링된 본문
+     */
     @Transactional(readOnly = true)
     public String renderBody(String templateCode, Map<String, Object> vars) {
         return render(templateCode, false, vars);
@@ -130,9 +133,16 @@ public class FcmService {
         return out;
     }
 
-    /* ======================== Send (Token / Topic) ======================== */
-
-    /** ⬇️ UPDATED: 공통 빌더 사용 + 설정 기반 WebpushConfig */
+    /**
+     * 단일 토큰으로 알림을 전송하고 결과를 로그로 저장한다.
+     *
+     * @param appType 앱 타입
+     * @param token   대상 토큰
+     * @param title   제목
+     * @param body    본문
+     * @param data    데이터 맵(1KB 초과 시 핵심 필드만 유지)
+     * @return 메시지 ID
+     */
     public String sendToToken(AppType appType, String token, String title, String body, Map<String, String> data) {
         ensureFirebase();
         try {
@@ -154,7 +164,16 @@ public class FcmService {
         }
     }
 
-    /** 공통 빌더 사용 + 설정 기반 WebpushConfig */
+    /**
+     * 토픽으로 알림을 전송하고 결과를 로그로 저장한다.
+     *
+     * @param appType 앱 타입
+     * @param topic   대상 토픽
+     * @param title   제목
+     * @param body    본문
+     * @param data    데이터 맵(1KB 초과 시 핵심 필드만 유지)
+     * @return 메시지 ID
+     */
     public String sendToTopic(AppType appType, String topic, String title, String body, Map<String, String> data) {
         ensureFirebase();
         try {
@@ -181,6 +200,32 @@ public class FcmService {
         if (firebaseApp == null) {
             throw new IllegalStateException("FCM is disabled (no FirebaseApp bean). Set fcm.enabled=true");
         }
+    }
+
+    private String validateTopic(String topic) {
+        if (topic == null) throw new IllegalArgumentException("Invalid topic name: null");
+        topic = topic.trim().toLowerCase();
+        if (!TOPIC_PATTERN.matcher(topic).matches()) {
+            throw new IllegalArgumentException("Invalid topic pattern: " + topic);
+        }
+        if (topicProps.isRestrict() && !HqTopic.isAllowed(topic)) {
+            throw new IllegalArgumentException("Topic not allowed in HQ: " + topic);
+        }
+        return topic;
+    }
+
+    private Map<String, String> sanitizeData(Map<String, String> data) {
+        if (data == null || data.isEmpty()) return Map.of();
+        try {
+            byte[] raw = objectMapper.writeValueAsBytes(data);
+            if (raw.length <= 1024) return data;
+        } catch (Exception ignore) {
+            return data;
+        }
+        Map<String, String> slim = new java.util.HashMap<>();
+        if (data.containsKey("type")) slim.put("type", data.get("type"));
+        if (data.containsKey("link")) slim.put("link", data.get("link"));
+        return slim;
     }
 
     private void persistLog(AppType appType, String topic, String token,
@@ -215,7 +260,12 @@ public class FcmService {
         }
     }
 
-    /** 토픽 구독 (멤버의 활성 토큰 전부를 topic에 구독) */
+    /**
+     * 회원의 활성 토큰 전체를 지정 토픽에 구독시킨다.
+     *
+     * @param topic    토픽
+     * @param memberId 회원 ID
+     */
     public void subscribeToTopic(String topic, Long memberId) {
         ensureFirebase();
         topic = validateTopic(topic);
@@ -224,7 +274,6 @@ public class FcmService {
             log.info("[FCM] subscribe skipped (no active tokens) memberId={}", memberId);
             return;
         }
-        // FCM는 1000개 단위 권장 → 청크 처리
         for (int i = 0; i < tokens.size(); i += 1000) {
             var batch = tokens.subList(i, Math.min(i + 1000, tokens.size()));
             try {
@@ -238,7 +287,12 @@ public class FcmService {
         }
     }
 
-    /** 토픽 구독 해제 */
+    /**
+     * 회원의 활성 토큰 전체를 지정 토픽에서 구독 해제한다.
+     *
+     * @param topic    토픽
+     * @param memberId 회원 ID
+     */
     public void unsubscribeFromTopic(String topic, Long memberId) {
         ensureFirebase();
         topic = validateTopic(topic);
@@ -260,13 +314,17 @@ public class FcmService {
         }
     }
 
-    /** 설정 기반 WebpushConfig(아이콘/배지/TTL/긴급도/딥링크) */
+    /**
+     * WebPush 설정(아이콘/배지/TTL/긴급도/딥링크)을 구성한다.
+     *
+     * @param data 전송 데이터(딥링크 link 키 우선)
+     * @return WebpushConfig
+     */
     private WebpushConfig webpushConfigFor(Map<String, String> data) {
         String link = (data != null && data.get("link") != null && !data.get("link").isBlank())
                 ? data.get("link")
                 : webpushProps.getDefaultLink();
 
-        // TTL/Urency 헤더는 Push Service(브라우저 서버)에 전달됨
         return WebpushConfig.builder()
                 .putHeader("TTL", String.valueOf(Math.max(0, webpushProps.getTtlSeconds())))
                 .putHeader("Urgency", webpushProps.getUrgency())
@@ -280,17 +338,37 @@ public class FcmService {
                 .build();
     }
 
-    // 오버로드 메서드들
+    /**
+     * 토픽 전송 오버로드(HqTopic 사용).
+     *
+     * @param appType 앱 타입
+     * @param topic   HQ 토픽 열거형
+     * @param title   제목
+     * @param body    본문
+     * @param data    데이터
+     * @return 메시지 ID
+     */
     public String sendToTopic(AppType appType, HqTopic topic, String title, String body, Map<String, String> data) {
         return sendToTopic(appType, topic.value(), title, body, data);
     }
 
+    /**
+     * 구독 오버로드(HqTopic 사용).
+     *
+     * @param topic    HQ 토픽 열거형
+     * @param memberId 회원 ID
+     */
     public void subscribeToTopic(HqTopic topic, Long memberId) {
         subscribeToTopic(topic.value(), memberId);
     }
 
+    /**
+     * 구독 해제 오버로드(HqTopic 사용).
+     *
+     * @param topic    HQ 토픽 열거형
+     * @param memberId 회원 ID
+     */
     public void unsubscribeFromTopic(HqTopic topic, Long memberId) {
         unsubscribeFromTopic(topic.value(), memberId);
     }
-
 }
