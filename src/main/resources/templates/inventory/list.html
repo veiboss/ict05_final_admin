@@ -112,8 +112,14 @@
                         <tr th:each="inventory : ${inventories.content}">
                             <td th:text="${inventory.categoryName}">카테고리</td>
                             <td th:text="${inventory.materialName}">재료명</td>
-                            <td th:text="${inventory.quantity}">0</td>
-                            <td th:text="${inventory.optimalQuantity}">0</td>
+                            <td>
+                                <span th:text="${inventory.quantity != null ? #numbers.formatDecimal(inventory.quantity,1,'COMMA',0,'POINT') : '0'}"></span>
+                                <span th:text="${inventory.materialSalesUnit}" class="fs-s fc-999"></span>
+                            </td>
+                            <td>
+                                <span th:text="${inventory.optimalQuantity != null ? #numbers.formatDecimal(inventory.optimalQuantity,1,'COMMA',0,'POINT') : '0'}"></span>
+                                <span th:text="${inventory.materialSalesUnit}" class="fs-s fc-999"></span>
+                            </td>
                             <td>
                                 <span th:class="|badge rounded-pill ${inventory.status.name() == 'SUFFICIENT' ? 'bg-success' : (inventory.status.name() == 'LOW' ? 'bg-warning' : 'bg-danger') }|"
                                       th:text="${inventory.status.description}">
@@ -125,6 +131,7 @@
                                    class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
+                                <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|">배치</a>
                             </td>
                         </tr>
                         </tbody>

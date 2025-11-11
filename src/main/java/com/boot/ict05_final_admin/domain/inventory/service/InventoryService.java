@@ -2,7 +2,7 @@ package com.boot.ict05_final_admin.domain.inventory.service;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepository;
 
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryLogViewRepository;
@@ -53,7 +53,7 @@ public class InventoryService {
      * (재고 + 재료명 출력용)
      */
     @Transactional(readOnly = true)
-    public List<HqInventory> findAllForSelect() {
+    public List<Inventory> findAllForSelect() {
         return inventoryRepository.findAll();
     }
 

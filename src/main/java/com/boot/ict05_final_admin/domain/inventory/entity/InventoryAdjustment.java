@@ -43,7 +43,7 @@ public class InventoryAdjustment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id_fk", nullable = false)
     @Comment("본사 재고 FK")
-    private HqInventory inventory;
+    private Inventory inventory;
 
     /** 조정 전 수량 */
     @Column(name = "inventory_adjustment_quantity_before", precision = 15, scale = 3, nullable = false)

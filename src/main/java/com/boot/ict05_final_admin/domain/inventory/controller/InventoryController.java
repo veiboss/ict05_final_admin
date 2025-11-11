@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.*;
+import com.boot.ict05_final_admin.domain.inventory.entity.InventoryBatch;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
@@ -34,12 +35,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InventoryController {
 
-    private final InventoryService inventoryService;
-    private final InventoryLotService lotService;
-    private final InventoryOutService outService;
-    private final InventoryInService inService;
-    private final InventoryLogViewService logViewService;
     private final MaterialService materialService;
+    private final InventoryService inventoryService;
+    private final InventoryInService inService;
+    private final InventoryOutService outService;
+    private final InventoryLotService lotService;
+    private final InventoryLogViewService logViewService;
+    private final InventoryBatchService batchService;
 
     // -------------------- View routing --------------------
 
@@ -116,8 +118,9 @@ public class InventoryController {
      */
     @GetMapping("/batch-status/{materialId}")
     public String batchStatusPage(@PathVariable Long materialId, Model model) {
+        model.addAttribute("batches", batchService.getBatchesByMaterial(materialId));
         model.addAttribute("materialId", materialId);
-        return "inventory/batch-status";
+        return "inventory/batch_status";
     }
 
     /**

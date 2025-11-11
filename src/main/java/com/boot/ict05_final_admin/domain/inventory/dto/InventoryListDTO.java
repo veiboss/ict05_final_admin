@@ -33,6 +33,9 @@ public class InventoryListDTO {
     /** 적정 수량 */
     private BigDecimal optimalQuantity;
 
+    /** 판매 단위 */
+    private String materialSalesUnit;
+
     /** 재고 상태 */
     @Setter
     private InventoryStatus status;

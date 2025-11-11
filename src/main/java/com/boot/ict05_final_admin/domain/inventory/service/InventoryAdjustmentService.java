@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class AdjustmentService {
+public class InventoryAdjustmentService {
 
     private final InventoryRepository repo;
     private final InventoryAdjustmentRepository adRepo;

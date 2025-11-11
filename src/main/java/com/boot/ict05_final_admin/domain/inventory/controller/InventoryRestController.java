@@ -26,7 +26,7 @@ public class InventoryRestController {
 
     private final InventoryOutService outService;
     private final InventoryInService inService;
-    private final AdjustmentService adjustmentService;
+    private final InventoryAdjustmentService inventoryAdjustmentService;
     private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
 
@@ -87,7 +87,7 @@ public class InventoryRestController {
      */
     @PostMapping("/inventory/adjust")
     public Long createAdjustment(@RequestBody AdjustCreateRequestDTO dto) {
-        return adjustmentService.createAdjustment(dto);
+        return inventoryAdjustmentService.createAdjustment(dto);
     }
 
     // -------------------- Unit Price --------------------

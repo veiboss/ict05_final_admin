@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.*;
@@ -217,7 +217,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
         QReceiveOrderDetail rod = new QReceiveOrderDetail("rod");
         QReceiveOrder ro = QReceiveOrder.receiveOrder;
         QMaterial material = QMaterial.material;
-        QHqInventory hq = QHqInventory.hqInventory;
+        QInventory hq = QInventory.inventory;
 
         return queryFactory
                 .selectDistinct(Projections.fields(ReceiveOrderItemDTO.class,

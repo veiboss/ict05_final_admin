@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.repository;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
-import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 본사 재고(Inventory) 커스텀 Repository 구현체.
+ * 본사 재고(InventoryBase) 커스텀 Repository 구현체.
  * 분리 완료로 역할 종료. 즉시 삭제 가능.
  */
 @Repository
@@ -31,7 +31,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
 
     @Override
     public Page<InventoryListDTO> listInventory(InventorySearchDTO searchDTO, Pageable pageable) {
-        QHqInventory inv = QHqInventory.hqInventory;
+        QInventory inv = QInventory.inventory;
         QMaterial material = QMaterial.material;
 
         List<InventoryListDTO> content = queryFactory
@@ -42,7 +42,8 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         material.materialCategory.stringValue().as("categoryName"),
                         inv.quantity,
                         material.optimalQuantity.as("optimalQuantity"),
-                        inv.status,  // DB 상태 그대로 가져오기
+                        material.salesUnit.as("materialSalesUnit"),
+                        inv.status,
                         inv.updateDate))
                 .from(inv)
                 .join(inv.material, material)
@@ -65,7 +66,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
 
     @Override
     public long countInventory(InventorySearchDTO searchDTO) {
-        QHqInventory inv = QHqInventory.hqInventory;
+        QInventory inv = QInventory.inventory;
         QMaterial material = QMaterial.material;
 
         Long total = queryFactory
@@ -82,7 +83,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
      * 검색 필터 구성
      */
     private BooleanExpression applyFilter(InventorySearchDTO dto) {
-        QHqInventory inv = QHqInventory.hqInventory;
+        QInventory inv = QInventory.inventory;
         QMaterial material = QMaterial.material;
 
         BooleanExpression condition = Expressions.asBoolean(true).isTrue();

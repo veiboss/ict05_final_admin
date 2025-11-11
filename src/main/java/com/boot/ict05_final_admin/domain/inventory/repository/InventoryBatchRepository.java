@@ -4,6 +4,8 @@ import com.boot.ict05_final_admin.domain.inventory.entity.InventoryBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 배치(로트) 저장소
  *
@@ -12,5 +14,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryBatchRepository
         extends JpaRepository<InventoryBatch, Long>, InventoryBatchRepositoryCustom {
+
+    // 단순 메서드: 재료ID로 정렬 조회
+    List<InventoryBatch> findAllByMaterial_IdOrderByReceivedDateDesc(Long materialId);
+
     boolean existsByLotNo(String lotNo);   // InventoryBatch.lotNo 매핑(= inventory_batch_lot_no)
 }
