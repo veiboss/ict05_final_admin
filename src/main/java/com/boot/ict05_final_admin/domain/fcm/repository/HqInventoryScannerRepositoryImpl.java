@@ -3,7 +3,7 @@ package com.boot.ict05_final_admin.domain.fcm.repository;
 import com.boot.ict05_final_admin.domain.fcm.dto.HqExpireSoonCandidate;
 import com.boot.ict05_final_admin.domain.fcm.dto.HqStockLowCandidate;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
-import com.boot.ict05_final_admin.domain.inventory.entity.QHqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QInventoryBatch;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.querydsl.core.types.Projections;
@@ -43,7 +43,7 @@ public class HqInventoryScannerRepositoryImpl implements HqInventoryScannerRepos
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<HqStockLowCandidate> findStockLow(int maxRows) {
 
-        QHqInventory inv = QHqInventory.hqInventory;
+        QInventory inv = QInventory.inventory;
         QMaterial m      = QMaterial.material;
 
         // threshold := COALESCE(inv.optimalQuantity, m.optimalQuantity)
