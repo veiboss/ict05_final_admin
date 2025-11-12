@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
  * <ul>
  *     <li>재료 등록</li>
  *     <li>재료 수정</li>
+ *     <li>재료 다운로드</li>
  * </ul>
  * *
  * <p>{@link MaterialWriteFormDTO}, {@link MaterialModifyFormDTO} 를 통해
@@ -175,7 +176,9 @@ public class MaterialRestController {
      */
     @GetMapping("/download")
     @Operation(summary = "재료 목록 엑셀 다운로드", description = "재료 목록을 Excel 파일로 다운로드합니다.")
-    public ResponseEntity<byte[]> downloadMaterial(MaterialSearchDTO searchDTO, Pageable pageable) throws IOException {
+    public ResponseEntity<byte[]> downloadMaterial(MaterialSearchDTO searchDTO,
+                                                   Pageable pageable)
+            throws IOException {
         byte[] xlsx = materialService.downloadExcel(searchDTO, pageable);
         return ExcelResponse.ok(xlsx, ExcelFilename.hqMaterial());
     }

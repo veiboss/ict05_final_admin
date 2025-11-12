@@ -14,6 +14,7 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
+    <script src="/admin/js/excel-download.js" defer></script>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -31,14 +32,12 @@
             <input type="hidden" id="materialId" th:value="${materialId}"/>
 
             <div class="box-wrap">
-
                 <!-- 검색 영역 -->
-                <section class="pack-down">
-                    <div id="search" class="search">
+                <div id="search" class="search">
                         <form id="filterForm" onsubmit="return false;">
                             <fieldset>
                                 <legend class="blind">검색</legend>
-                                <div class="pack-both">
+                                <div class="pack-both-bottom rw-mo-direction-column">
                                     <!-- 타입 라디오 -->
                                     <div class="select-options r4">
                                         <label>
@@ -59,31 +58,39 @@
                                         </label>
                                     </div>
 
-                                    <div class="pack-left">
-                                        <!-- 기간 -->
-                                        <div class="pack-left">
-                                            <input type="date" id="startDate" th:value="${startDate}" class="input-text medium" style="width:112px;">
-                                            <span>~</span>
-                                            <input type="date" id="endDate" th:value="${endDate}" class="input-text medium" style="width:112px;">
-                                        </div>
-
+                                    <div class="pack-down-right">
                                         <!-- 버튼 -->
                                         <div class="pack-left">
+                                            <button type="button" id="btnToday" class="btn small bdr-color1">오늘</button>
+                                            <button type="button" id="btn7d" class="btn small bdr-color1">7일</button>
+                                            <button type="button" id="btn30d" class="btn small bdr-color1">30일</button>
+                                        </div>
+
+                                        <!-- 기간 -->
+                                        <div class="pack-left">
+                                            <input type="date" id="startDate" th:value="${startDate}" class="input-text medium" style="width: clamp(112px, 29.87vw, 128px)">
+                                            <span>~</span>
+                                            <input type="date" id="endDate" th:value="${endDate}" class="input-text medium" style="width: clamp(112px, 29.87vw, 128px)">
                                             <button type="button" id="btnSearch" class="btn medium color1">검색</button>
-                                            <button type="button" id="btnToday" class="btn medium">오늘</button>
-                                            <button type="button" id="btn7d" class="btn medium">7일</button>
-                                            <button type="button" id="btn30d" class="btn medium">30일</button>
-                                            <button type="button" id="btnExcel" class="btn medium bdr-color1">엑셀</button>
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
                         </form>
                     </div>
-                </section>
 
                 <!-- 목록 -->
                 <section class="pack-down">
+                    <div class="list-header pack-both">
+                        <div class="pack-left">
+                        </div>
+
+                        <div class="pack-left">
+                            <button type="button" class="btn medium bdr-color2"
+                                    th:attr="data-excel-endpoint=@{'/API/inventory/' + ${materialId} + '/log/download'}"
+                                    onclick="excelDownload(this)">엑셀다운로드</button>
+                        </div>
+                    </div>
                     <table class="data-table" id="logTable">
                         <thead>
                         <tr>
@@ -102,9 +109,9 @@
                         </tr>
 
                         <tr th:each="row : ${logs.content}">
-                            <td th:text="${#temporals.format(row.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td th:text="${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td>
-                                <span th:switch="${row.type}">
+                                <span th:switch="${row.logType}">
                                   <span th:case="'INCOME'" class="type-in">입고</span>
                                   <span th:case="'OUTGO'"  class="type-out">출고</span>
                                   <span th:case="'ADJUST'" class="type-adj">조정</span>
@@ -120,14 +127,10 @@
                         </tbody>
                     </table>
 
-                    <!-- 페이징 -->
-                    <div class="button-area pack-center" style="margin-top:12px;">
-                        <button type="button" id="btnPrev" class="btn small">이전</button>
-                        <span id="pageInfo" class="pack-left" style="padding:8px 12px;"></span>
-                        <button type="button" id="btnNext" class="btn small">다음</button>
+                    <div style="text-align:center;">
+                        <div th:replace="~{fragments/pagination :: pagination (${logs})}"></div>
                     </div>
                 </section>
-
             </div>
 
             <div class="button-area pack-both">
@@ -138,127 +141,53 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
 <script>
     (function () {
-      const $container = $('#container');
-      const materialId = Number($container.data('material-id'));
+      const materialId = document.getElementById('materialId').value;
 
-      const $tbody   = $('#logTbody');
-      const $empty   = $('#emptyRow');
-      const $pageInfo = $('#pageInfo');
-
-      let state = { page: 0, size: 10, totalPages: 0 };
-
-      // 유틸
-      function fmtDateTime(s) {
-        if (!s) return '';
-        return String(s).replace('T', ' ').substring(0, 19);
-      }
-      function fmtNum(n) {
-        if (n == null) return '';
-        return Number(n).toLocaleString(undefined, { maximumFractionDigits: 3 });
-      }
-      function badge(type) {
-        if (type === 'INCOME') return '<span class="type-in">입고</span>';
-        if (type === 'OUTGO')  return '<span class="type-out">출고</span>';
-        if (type === 'ADJUST') return '<span class="type-adj">조정</span>';
-        return type || '';
+      function setQS(obj){
+        const p = new URLSearchParams(location.search);
+        Object.entries(obj).forEach(([k,v])=>{
+          if (v==='' || v==null) p.delete(k); else p.set(k, v);
+        });
+        // 검색 시 항상 첫 페이지로
+        p.set('page','0');
+        location.href = `/admin/inventory/log/${materialId}?` + p.toString();
       }
 
-      // 폼 값 읽기
-      function readFilter() {
-        const type = $('input[name="type"]:checked').val() || '';
-        const start = $('#startDate').val() || '';
-        const end = $('#endDate').val() || '';
-        return { type, start, end };
-      }
-
-      // 조회
-      function loadLogs(resetPage) {
-        if (resetPage) state.page = 0;
-        const { type, start, end } = readFilter();
-
-        const params = new URLSearchParams();
-        params.set('materialId', String(materialId));
-        if (type) params.set('type', type);
-        if (start) params.set('startDate', start);
-        if (end) params.set('endDate', end);
-        params.set('page', String(state.page));
-        params.set('size', String(state.size));
-
-        fetch('/inventory/logs?' + params.toString())
-          .then(r => r.ok ? r.json() : Promise.reject(r))
-          .then(page => {
-            renderRows(page);
-            state.totalPages = page.totalPages || 0;
-            $pageInfo.text((page.number + 1) + ' / ' + (page.totalPages || 0));
-          })
-          .catch(err => {
-            $tbody.empty().append($empty.show());
-            toast.error('로그 조회 실패: ' + (err.status || err));
-          });
-      }
-
-      function renderRows(page){
-          const rows = (page && page.content) ? page.content : [];
-          $tbody.find('tr:not(#emptyRow)').remove();
-          if (!rows.length){
-            $empty.show();
-            return;
-          }
-          $empty.hide();
-          rows.forEach(log => {
-            const tr = $('<tr/>')
-              .append($('<td/>').text(fmtDateTime(log.date)))
-              .append($('<td/>').html(badge(log.type)))
-              .append($('<td/>').addClass('text-right').text(fmtNum(log.quantity)))
-              .append($('<td/>').addClass('text-right').text(fmtNum(log.stockAfter)))
-              .append($('<td/>').text(log.storeId != null ? log.storeId : '-')))
-              .append($('<td/>').addClass('text-right').text(fmtNum(log.unitPrice)))
-              .append($('<td/>').text(log.memo ? log.memo : '-'));
-            $tbody.append(tr);
-          });
-        }
-
-      // 퀵필터
-      function setQuick(days) {
+      function setQuick(days){
         const today = new Date();
-        const end = today.toISOString().slice(0, 10);
-        const from = new Date(today.getTime() - (days - 1) * 86400000);
-        const start = from.toISOString().slice(0, 10);
-        $('#startDate').val(start);
-        $('#endDate').val(end);
+        const end = today.toISOString().slice(0,10);
+        const from = new Date(today.getTime() - (days-1)*86400000).toISOString().slice(0,10);
+        document.getElementById('startDate').value = from;
+        document.getElementById('endDate').value   = end;
       }
 
-      // 이벤트
-      $('#btnSearch').on('click', () => loadLogs(true));
-      $('input[name="type"]').on('change', () => loadLogs(true));
-      $('#btnToday').on('click', () => { setQuick(1); loadLogs(true); });
-      $('#btn7d').on('click', () => { setQuick(7); loadLogs(true); });
-      $('#btn30d').on('click', () => { setQuick(30); loadLogs(true); });
-
-      $('#btnPrev').on('click', () => {
-        if (state.page > 0) { state.page -= 1; loadLogs(false); }
-      });
-      $('#btnNext').on('click', () => {
-        if (state.page + 1 < state.totalPages) { state.page += 1; loadLogs(false); }
+      // 검색
+      document.getElementById('btnSearch').addEventListener('click', function(){
+        const type  = document.querySelector('input[name="type"]:checked')?.value || '';
+        const start = document.getElementById('startDate').value || '';
+        const end   = document.getElementById('endDate').value || '';
+        setQS({ type, startDate: start, endDate: end });
       });
 
-      // 엑셀
-      $('#btnExcel').on('click', () => {
-        const { type, start, end } = readFilter();
-        const params = new URLSearchParams();
-        params.set('materialId', String(materialId));
-        if (type) params.set('type', type);
-        if (start) params.set('from', start + 'T00:00:00');
-        if (end) params.set('to', end + 'T23:59:59');
-        window.location.href = '/API/inventory/logs/excel?' + params.toString();
+      // 타입 변경 즉시 검색
+      document.querySelectorAll('input[name="type"]').forEach(r=>{
+        r.addEventListener('change', ()=> document.getElementById('btnSearch').click());
       });
 
-      // 초기 로드
-      loadLogs(true);
+      // 퀵 기간
+      document.getElementById('btnToday').addEventListener('click', ()=>{ setQuick(1);  document.getElementById('btnSearch').click(); });
+      document.getElementById('btn7d').addEventListener('click',   ()=>{ setQuick(7);  document.getElementById('btnSearch').click(); });
+      document.getElementById('btn30d').addEventListener('click',  ()=>{ setQuick(30); document.getElementById('btnSearch').click(); });
+
+      // 엑셀: 현재 쿼리스트링 그대로 전달
+      document.getElementById('btnExcel')?.addEventListener('click', function(){
+        const p = new URLSearchParams(location.search);
+        location.href = `/admin/API/inventory/${materialId}/log/download?` + p.toString();
+      });
     })();
 </script>
+
 </body>
 </html>

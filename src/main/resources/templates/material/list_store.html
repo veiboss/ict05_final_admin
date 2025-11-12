@@ -14,6 +14,7 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
+    <script src="/admin/js/excel-download.js" defer></script>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -104,7 +105,7 @@
                         <div class="pack-left"></div>
 
                         <div class="pack-left">
-                            <button type="button" class="btn medium bdr-color1"
+                            <button type="button" class="btn medium bdr-color2"
                                     data-excel-endpoint="/API/store/material/download"
                                     data-store-id="[[${storeId}]]"
                                     data-form-id="frm"
@@ -158,23 +159,15 @@
         window.location = `/admin/material/store/list?storeId=${storeId}`;
     }
 
-    function setFilter(status) {
-      const params = new URLSearchParams(window.location.search);
-      if (!status) params.delete('status'); else params.set('status', status);
-      window.location = `/admin/inventory/list?${params.toString()}`;
+    function setFilter(status, path){
+        const p=new URLSearchParams(location.search);
+        p.set('status',status||'');
+        location.href=(path||location.pathname)+'?'+p;
     }
-
-    function setPageSize(size) {
-        const params = new URLSearchParams(window.location.search);
-        params.set('size', size);
-        params.set('page', 1);
-        window.location = `/admin/inventory/list?${params.toString()}`;
-    }
-
-    function excelDownload() {
-      const params = new URLSearchParams(new FormData(document.getElementById('frm')));
-      // 예상 파라미터: s, status, size, page 등
-      window.location = `/admin/API/inventory/list/download?${params.toString()}`;
+    function setPageSize(size, path){
+        const p=new URLSearchParams(location.search);
+        p.delete('page');p.set('size',size);
+        location.href=(path||location.pathname)+'?'+p;
     }
 </script>
 </body>

@@ -10,6 +10,7 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
+    <script src="/admin/js/excel-download.js" defer></script>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -31,7 +32,7 @@
                     <form name="frm" id="frm" method="get">
                         <fieldset>
                             <legend class="blind">검색</legend>
-                            <div class="pack-both">
+                            <div class="pack-both rw-mo-direction-column">
                                 <div class="pack-left">
                                     <input title="검색어" type="search"
                                            name="s" th:value="${inventorySearchDTO.s}"
@@ -139,7 +140,8 @@
                                    class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
-                                <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|">
+                                <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|"
+                                   class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">pallet</span>
                                 </a>
                             </td>
@@ -158,17 +160,15 @@
 </div>
 
 <script>
-    function setFilter(status) {
-      const params = new URLSearchParams(window.location.search);
-      if (!status) params.delete('status'); else params.set('status', status);
-      window.location = `/admin/inventory/list?${params.toString()}`;
+    function setFilter(status, path){
+        const p=new URLSearchParams(location.search);
+        p.set('status',status||'');
+        location.href=(path||location.pathname)+'?'+p;
     }
-
-    function setPageSize(size) {
-        const params = new URLSearchParams(window.location.search);
-        params.set('size', size);
-        params.set('page', 1);
-        window.location = `/admin/inventory/list?${params.toString()}`;
+    function setPageSize(size, path){
+        const p=new URLSearchParams(location.search);
+        p.delete('page');p.set('size',size);
+        location.href=(path||location.pathname)+'?'+p;
     }
 </script>
 </body>

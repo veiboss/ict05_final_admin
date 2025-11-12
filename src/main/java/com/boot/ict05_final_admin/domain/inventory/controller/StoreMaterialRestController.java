@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/API/store/material/")
+@RequestMapping("/API/store/material")
 public class StoreMaterialRestController {
 
     private final StoreMaterialService storeMaterialService;
@@ -63,9 +63,9 @@ public class StoreMaterialRestController {
      */
     @GetMapping("/download")
     @Operation(summary = "가맹점 재료 목록 엑셀 다운로드")
-    public ResponseEntity<byte[]> downloadStoreMaterial(final StoreMaterialSearchDTO searchDTO,
-                                                        final Pageable pageable,
-                                                        @RequestParam(required = false) final Long storeId)
+    public ResponseEntity<byte[]> downloadStoreMaterial(StoreMaterialSearchDTO searchDTO,
+                                                        Pageable pageable,
+                                                        @RequestParam(required = false) Long storeId)
             throws IOException {
         byte[] xlsx = storeMaterialService.downloadExcel(searchDTO, pageable, storeId);
         String storeName = (storeId == null) ? null : storeNameResolver.resolveOrFallback(storeId);

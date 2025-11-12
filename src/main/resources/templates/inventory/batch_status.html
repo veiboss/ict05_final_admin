@@ -14,6 +14,7 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
+    <script src="/admin/js/excel-download.js" defer></script>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -35,8 +36,7 @@
 
                     <div class="pack-left">
                         <button type="button" class="btn medium bdr-color2"
-                                data-excel-endpoint="/API/inventory/{materialId}/batch/download"
-                                data-material-id="[[${materialId}]]"
+                                th:attr="data-excel-endpoint=@{'/API/inventory/' + ${materialId} + '/batch/download'}"
                                 onclick="excelDownload(this)">엑셀다운로드</button>
                     </div>
                 </div>
@@ -73,5 +73,7 @@
     </div><!-- // #container  -->
 </div><!--#wrap.frame-->
 
+<script>
+</script>
 </body>
 </html>

@@ -72,6 +72,13 @@ public class InventoryController {
         return "inventory/list";
     }
 
+    // 로그 화면에서 fragments/pagination 이 기대하는 urlBuilder 변수를 주입하기 위한 헬퍼
+    static final class UrlBuilderHelper {
+        public ServletUriComponentsBuilder fromCurrentRequest() {
+            return ServletUriComponentsBuilder.fromCurrentRequest();
+        }
+    }
+
     /**
      * 본사 재고 로그 화면으로 이동한다.
      *
@@ -87,8 +94,10 @@ public class InventoryController {
     @GetMapping("/log/{materialId}")
     public String logPage(@PathVariable Long materialId,
                           @RequestParam(required = false) String type,
-                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                          @RequestParam(required = false)
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                          @RequestParam(required = false)
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                           @RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size,
                           Model model) {
@@ -99,27 +108,18 @@ public class InventoryController {
         Page<InventoryLogDTO> logs = inventoryService.getFilteredLogs(
                 materialId, type, startDate, endDate, PageRequest.of(page, size));
 
+        // 뷰 모델
         model.addAttribute("logs", logs);
         model.addAttribute("materialId", materialId);
         model.addAttribute("materialName", materialName);
         model.addAttribute("selectedType", type);
-        model.addAttribute("startDate", startDate);
+        model.addAttribute("startDate", startDate);   // null이면 템플릿에서 빈칸
         model.addAttribute("endDate", endDate);
-        return "inventory/log";
-    }
 
-    /**
-     * 재료별 배치 현황 화면으로 이동한다.
-     *
-     * @param materialId 재료 ID
-     * @param model      뷰 모델
-     * @return 재료별 배치
-     */
-    @GetMapping("/batch-status/{materialId}")
-    public String batchStatusPage(@PathVariable Long materialId, Model model) {
-        model.addAttribute("batches", batchService.getBatchesByMaterial(materialId));
-        model.addAttribute("materialId", materialId);
-        return "inventory/batch_status";
+        // 공통 pagination 프래그먼트가 사용하는 urlBuilder 컨텍스트 제공
+        model.addAttribute("urlBuilder", new UrlBuilderHelper());
+
+        return "inventory/log";
     }
 
     /**

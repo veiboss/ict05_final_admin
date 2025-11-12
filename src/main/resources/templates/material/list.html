@@ -14,7 +14,7 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
-    <script src="/admin/js/excel-download.js"></script>
+    <script src="/admin/js/excel-download.js" defer></script>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -155,20 +155,15 @@
 </div><!-- // #container  -->
 </div><!--#wrap.frame-->
 <script>
-    function setFilter(status){
-      const u = new URL(location.href), p = u.searchParams;
-      p.delete('page');                                // 페이지 리셋
-      status && status.trim() ? p.set('status', status.trim()) : p.delete('status');
-      u.search = p.toString();
-      location = u.toString();
+    function setFilter(status, path){
+        const p=new URLSearchParams(location.search);
+        p.set('status',status||'');
+        location.href=(path||location.pathname)+'?'+p;
     }
-
-    function setPageSize(size){
-      const u = new URL(location.href), p = u.searchParams;
-      p.set('size', String(size));                     // 선택값만 반영
-      p.set('page', '1');                              // 페이지 리셋
-      u.search = p.toString();
-      location = u.toString();
+    function setPageSize(size, path){
+        const p=new URLSearchParams(location.search);
+        p.delete('page');p.set('size',size);
+        location.href=(path||location.pathname)+'?'+p;
     }
 </script>
 </body>
