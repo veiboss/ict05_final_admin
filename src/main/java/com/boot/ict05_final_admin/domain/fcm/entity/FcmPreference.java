@@ -109,6 +109,7 @@ public class FcmPreference {
         LocalDateTime now = LocalDateTime.now();
         if (createdAt == null) createdAt = now;
         if (updatedAt == null) updatedAt = now;
+        if (appType == null) appType = AppType.HQ;
         if (catNotice == null) catNotice = true;
         if (catStockLow == null) catStockLow = true;
         if (catExpireSoon == null) catExpireSoon = true;
