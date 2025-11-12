@@ -244,7 +244,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 ))
                 .from(rod)
                 .leftJoin(rod.material, material)
-                .leftJoin(rod.hqInventory, hq)
+                .leftJoin(rod.inventory, hq)
                 .where(rod.receiveOrder.id.eq(id))
                 .fetch();
     }

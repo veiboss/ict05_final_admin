@@ -1,6 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 
-import com.boot.ict05_final_admin.domain.inventory.entity.HqInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class ReceiveOrderDetailView {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id_fk", insertable = false, updatable = false)
-    private HqInventory hqInventory;
+    private Inventory inventory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id_fk", insertable = false, updatable = false)
