@@ -36,18 +36,13 @@ public class MyPageController {
     private Member member;
     /**
      * 마이페이지 조회
-     * - 로그인 전에는 임시 memberId로 테스트
-     * - 로그인 연동 시 SecurityContext에서 memberId 자동 추출
+     * - SecurityContext에서 memberId 자동 추출
      */
     @GetMapping("/mypage")
     @Operation(summary = "마이페이지 상세 조회", description = "회원의 프로필 정보를 조회한다.")
     public String myPage(Model model) {
 
-        // ===== 로그인 연동 이후 버전 =====
         Long memberId = getLoginMemberId();;
-
-        // ===== 로그인 전 임시 버전 =====
-        //Long memberId = 52L;
 
         // 마이페이지 조회
         MyPageDTO dto = myPageService.getMyPage(memberId);
