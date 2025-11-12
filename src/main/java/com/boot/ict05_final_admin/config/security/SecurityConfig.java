@@ -1,7 +1,9 @@
 package com.boot.ict05_final_admin.config.security;
 
+import com.boot.ict05_final_admin.config.security.filter.SyncAuthFilter;
 import com.boot.ict05_final_admin.domain.auth.service.MemberUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -13,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -52,7 +55,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     // 1) API 전용 체인
     @Bean
     @Order(0)
-    public SecurityFilterChain apiChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiChain(HttpSecurity http,
+                                        ObjectProvider<SyncAuthFilter> syncAuthFilterProvider) throws Exception {
         http
                 // ★ 여기! context-path 포함 매처로 강제
                 .securityMatcher(ADMIN_API)
@@ -67,6 +71,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .requestCache(AbstractHttpConfigurer::disable) // ★ savedRequest로 로그인 리다이렉트 방지
                 .exceptionHandling(e -> e.authenticationEntryPoint((req,res,ex) -> res.sendError(401)));
+        SyncAuthFilter filter = syncAuthFilterProvider.getIfAvailable();
+        if (filter != null) {
+            http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        }
         return http.build();
     }
 

@@ -51,7 +51,18 @@ __pycache__/
 **/firebase-admin.json
 **/service-account*.json
 
-# HQ receive secrets (개인/서버별 로컬 파일)
-src/main/resources/application-receive.properties
+# 수신/비밀 설정 (개인/서버별 로컬 파일)
 application-receive.properties
+application-receive.yml
+application-receive-*.properties
+application-receive-*.yml
+src/main/resources/application-receive.properties
+src/main/resources/application-receive.yml
 config/application-receive.properties
+config/application-receive.yml
+
+# 로컬/시크릿 관례 패턴
+*.local.properties
+*.local.yml
+*secrets*.properties
+*secrets*.yml
