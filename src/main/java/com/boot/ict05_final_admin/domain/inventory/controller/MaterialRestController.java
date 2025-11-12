@@ -6,12 +6,14 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialWriteFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.MaterialService;
+import com.boot.ict05_final_admin.domain.inventory.utility.ExcelFilename;
+import com.boot.ict05_final_admin.domain.inventory.utility.ExcelResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/API")
+@RequestMapping("/API/material")
 @Tag(name = "재료 API", description = "재료 등록/조회/수정/삭제 기능 제공")
 @Slf4j
 public class MaterialRestController {
@@ -57,7 +57,7 @@ public class MaterialRestController {
      * @return 등록 성공 여부 및 생성된 재료 ID
      * @throws Exception 파일 업로드 실패 시 예외 발생 가능
      */
-    @PostMapping("/material/write")
+    @PostMapping("/write")
     @Operation(
             summary = "재료 등록",
             description = "본사에서 새로운 재료를 등록하는 API입니다.",
@@ -115,7 +115,7 @@ public class MaterialRestController {
      * @return 수정 성공 여부 및 재료 ID
      * @throws Exception 파일 업로드 실패 시 예외 발생 가능
      */
-    @PostMapping("/material/modify")
+    @PostMapping("/modify")
     @Operation(
             summary = "재료 수정",
             description = "기존 재료 정보를 수정하는 API입니다.",
@@ -172,24 +172,12 @@ public class MaterialRestController {
      * @param searchDTO 검색 조건
      * @param pageable 페이징 정보
      * @return Excel 파일 바이트 배열
-     * @throws IOException 파일 생성 실패 시
      */
-    @GetMapping("/material/download")
+    @GetMapping("/download")
     @Operation(summary = "재료 목록 엑셀 다운로드", description = "재료 목록을 Excel 파일로 다운로드합니다.")
-    public ResponseEntity<?> downloadMaterial(MaterialSearchDTO searchDTO, Pageable pageable)
-            throws IOException {
-
-        byte[] excelBytes = materialService.downloadExcel(searchDTO, pageable);
-
-        String filename = "재료목록.xlsx";
-        String encodeFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
-                .replaceAll("\\+", "%20");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=" + encodeFilename);
-        headers.add("Cache-Control", "no-cache");
-
-        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+    public ResponseEntity<byte[]> downloadMaterial(MaterialSearchDTO searchDTO, Pageable pageable) throws IOException {
+        byte[] xlsx = materialService.downloadExcel(searchDTO, pageable);
+        return ExcelResponse.ok(xlsx, ExcelFilename.hqMaterial());
     }
 
     /**
@@ -198,7 +186,7 @@ public class MaterialRestController {
      * @param id 재료 ID
      * @return 삭제 성공 여부
      */
-    @DeleteMapping("/material/delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "재료 삭제", description = "재료 ID를 기준으로 재료 정보를 삭제합니다.")
     public ResponseEntity<Map<String, Object>> deleteMaterial(@RequestParam("id") Long id) {
         materialService.deleteMaterial(id);
@@ -216,7 +204,7 @@ public class MaterialRestController {
      * @param category 재료 카테고리 (예: BASE, SAUCE 등)
      * @return 카테고리 조건에 맞는 재료 목록
      */
-    @GetMapping("/material/list")
+    @GetMapping("/list")
     public ResponseEntity<List<MaterialListDTO>> getMaterialsByCategory(
             @RequestParam MaterialCategory category) {
         List<MaterialListDTO> list = materialService.findByCategory(category);

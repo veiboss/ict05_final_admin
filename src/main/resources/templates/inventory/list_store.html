@@ -107,7 +107,13 @@
                 <section class="pack-down">
                     <div class="list-header pack-both">
                         <div class="pack-left">
-                            <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
+                        </div>
+                        <div class="pack-left">
+                            <button type="button" class="btn medium bdr-color1"
+                                    data-excel-endpoint="/API/store/inventory/download"
+                                    data-store-id="[[${storeId}]]"
+                                    data-form-id="frm"
+                                    onclick="excelDownload(this)">엑셀다운로드</button>
                         </div>
                     </div>
 
@@ -176,13 +182,8 @@
     }
 
     function excelDownload() {
-        const formData = new FormData(document.getElementById('frm'));
-        const type = formData.get("type");
-        const s = formData.get("s");
-        const size = formData.get("size");
-        const status = formData.get("status");
-
-        window.location = `/admin/API/inventory/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}&size=${encodeURIComponent(size)}&status=${encodeURIComponent(status)}`;
+      const params = new URLSearchParams(new FormData(document.getElementById('frm')));
+      window.location = `/admin/API/inventory/store/download?${params.toString()}`;
     }
 </script>
 </body>

@@ -30,7 +30,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<InventoryListDTO> listInventory(InventorySearchDTO searchDTO, Pageable pageable) {
+    public Page<InventoryListDTO> listInventory(InventorySearchDTO inventorySearchDTO, Pageable pageable) {
         QInventory inv = QInventory.inventory;
         QMaterial material = QMaterial.material;
 
@@ -47,7 +47,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         inv.updateDate))
                 .from(inv)
                 .join(inv.material, material)
-                .where(applyFilter(searchDTO))
+                .where(applyFilter(inventorySearchDTO))
                 .orderBy(inv.updateDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -60,20 +60,18 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
             );
         }
 
-        long total = countInventory(searchDTO);
+        long total = countInventory(inventorySearchDTO);
         return new PageImpl<>(content, pageable, total);
     }
 
     @Override
-    public long countInventory(InventorySearchDTO searchDTO) {
+    public long countInventory(InventorySearchDTO inventorySearchDTO) {
         QInventory inv = QInventory.inventory;
-        QMaterial material = QMaterial.material;
 
         Long total = queryFactory
                 .select(inv.count())
                 .from(inv)
-                .join(inv.material, material)
-                .where(applyFilter(searchDTO))
+                .where(applyFilter(inventorySearchDTO))
                 .fetchOne();
 
         return total != null ? total : 0L;

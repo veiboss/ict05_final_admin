@@ -20,17 +20,6 @@ public interface StoreInventoryRepository
     @Query("SELECT si FROM StoreInventory si WHERE si.storeMaterial.id = :storeMaterialId")
     Optional<StoreInventory> findByStoreMaterialId(@Param("storeMaterialId") Long storeMaterialId);
 
-    /** 입고 시 수량 증가 */
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE StoreInventory si SET si.quantity = si.quantity + :quantity WHERE si.storeMaterial.id = :storeMaterialId")
-    void addQuantity(@Param("storeMaterialId") Long storeMaterialId, @Param("quantity") BigDecimal quantity);
-
-    /** 출고 시 수량 감소 */
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE StoreInventory si SET si.quantity = si.quantity - :quantity WHERE si.storeMaterial.id = :storeMaterialId")
-    void subtractQuantity(@Param("storeMaterialId") Long storeMaterialId, @Param("quantity") BigDecimal quantity);
-
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
   select si

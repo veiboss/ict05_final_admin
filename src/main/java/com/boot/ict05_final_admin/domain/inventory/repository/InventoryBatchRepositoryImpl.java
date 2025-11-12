@@ -2,6 +2,8 @@ package com.boot.ict05_final_admin.domain.inventory.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryBatch;
 import com.boot.ict05_final_admin.domain.inventory.entity.QInventoryBatch;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,7 @@ public class InventoryBatchRepositoryImpl implements InventoryBatchRepositoryCus
 
     @Override
     public List<InventoryBatch> findHqBatchesForMaterial(Long materialId) {
-        return queryFactory
+        List<InventoryBatch> rows = queryFactory
                 .selectFrom(b)
                 .where(
                         b.material.id.eq(materialId),
@@ -32,11 +34,12 @@ public class InventoryBatchRepositoryImpl implements InventoryBatchRepositoryCus
                         b.quantity.gt(BigDecimal.ZERO)
                 )
                 .orderBy(
-                        b.expirationDate.isNull().asc(),  // not-null first
-                        b.expirationDate.asc(),
+                        // null은 뒤로(= not-null 먼저)
+                        new OrderSpecifier<>(Order.ASC, b.expirationDate, OrderSpecifier.NullHandling.NullsLast),
                         b.receivedDate.asc()
                 )
                 .fetch();
+        return rows != null ? rows : java.util.Collections.emptyList();
     }
 
     @Override

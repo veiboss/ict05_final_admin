@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
 
-
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -57,6 +56,9 @@ public class MaterialRepositoryImpl implements MaterialRepositoryCustom{
         return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
 
+    /**
+     * 검색 조건 필터 (StoreMaterialSearchDTO 기반)
+     */
     private BooleanExpression eqMaterialFilter(MaterialSearchDTO dto, QMaterial material) {
         // BooleanExpression condition = null;
         // 기본값 true

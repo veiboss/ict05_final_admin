@@ -51,7 +51,7 @@ public class StoreMaterialRepositoryImpl implements StoreMaterialRepositoryCusto
                 .from(sm)
                 .leftJoin(sm.material, material)
                 .join(sm.store, store)
-                .where(applyFilter(searchDTO))
+                .where(eqStoreMaterialFilter(searchDTO))
                 .orderBy(sm.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -61,28 +61,11 @@ public class StoreMaterialRepositoryImpl implements StoreMaterialRepositoryCusto
         return new PageImpl<>(content, pageable, total);
     }
 
-    @Override
-    public long countStoreMaterial(StoreMaterialSearchDTO searchDTO) {
-        QStoreMaterial sm = QStoreMaterial.storeMaterial;
-        QMaterial material = QMaterial.material;
-        QStore store = QStore.store;
-
-        Long total = queryFactory
-                .select(sm.count())
-                .from(sm)
-                .leftJoin(sm.material, material)
-                .join(sm.store, store)
-                .where(applyFilter(searchDTO))
-                .fetchOne();
-
-        return total != null ? total : 0L;
-    }
-
     /**
      * 검색 조건 필터 (StoreMaterialSearchDTO 기반)
      */
-    private BooleanExpression applyFilter(StoreMaterialSearchDTO dto) {
-        QStoreMaterial sm = QStoreMaterial.storeMaterial;
+    private BooleanExpression eqStoreMaterialFilter(StoreMaterialSearchDTO dto) {
+        QStoreMaterial storeMaterial = QStoreMaterial.storeMaterial;
         QMaterial material = QMaterial.material;
         QStore store = QStore.store;
 
@@ -92,7 +75,7 @@ public class StoreMaterialRepositoryImpl implements StoreMaterialRepositoryCusto
         if (dto.getS() != null && !dto.getS().isEmpty()) {
             condition = condition.and(
                     material.name.containsIgnoreCase(dto.getS())
-                            .or(sm.name.containsIgnoreCase(dto.getS()))
+                            .or(storeMaterial.name.containsIgnoreCase(dto.getS()))
                             .or(material.materialCategory.stringValue().containsIgnoreCase(dto.getS()))
             );
         }
@@ -101,13 +84,13 @@ public class StoreMaterialRepositoryImpl implements StoreMaterialRepositoryCusto
         if (dto.getStatus() != null) {
             condition = condition.and(
                     material.materialStatus.eq(dto.getStatus())
-                            .or(sm.status.eq(dto.getStatus()))
+                            .or(storeMaterial.status.eq(dto.getStatus()))
             );
         }
 
         // 본사 재료 여부
         if (dto.getIsHqMaterial() != null) {
-            condition = condition.and(sm.isHqMaterial.eq(dto.getIsHqMaterial()));
+            condition = condition.and(storeMaterial.isHqMaterial.eq(dto.getIsHqMaterial()));
         }
 
         // 가맹점 ID
@@ -116,5 +99,20 @@ public class StoreMaterialRepositoryImpl implements StoreMaterialRepositoryCusto
         }
 
         return condition;
+    }
+
+    @Override
+    public long countStoreMaterial(StoreMaterialSearchDTO searchDTO) {
+        QStoreMaterial storeMaterial = QStoreMaterial.storeMaterial;
+        QStore store = QStore.store;
+
+        Long total = queryFactory
+                .select(storeMaterial.count())
+                .from(storeMaterial)
+                .join(storeMaterial.store, store)
+                .where(eqStoreMaterialFilter(searchDTO))
+                .fetchOne();
+
+        return total != null ? total : 0L;
     }
 }

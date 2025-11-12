@@ -26,11 +26,8 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
 
     private final JPAQueryFactory queryFactory;
 
-    /**
-     * 가맹점 재고 목록 조회
-     */
     @Override
-    public Page<StoreInventoryListDTO> listStoreInventory(StoreInventorySearchDTO searchDTO, Pageable pageable) {
+    public Page<StoreInventoryListDTO> listStoreInventory(StoreInventorySearchDTO storeInventorySearchDTO, Pageable pageable) {
         QStoreInventory si = QStoreInventory.storeInventory;
         QStoreMaterial sm = QStoreMaterial.storeMaterial;
         QStore store = QStore.store;
@@ -51,13 +48,13 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
                 .join(si.storeMaterial, sm)
                 .leftJoin(sm.material)
                 .join(si.store, store)
-                .where(applyFilter(searchDTO))
+                .where(applyFilter(storeInventorySearchDTO))
                 .orderBy(si.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = countStoreInventory(searchDTO);
+        long total = countStoreInventory(storeInventorySearchDTO);
         return new PageImpl<>(content, pageable, total);
     }
 
@@ -65,7 +62,7 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
      * 재고 총 개수 조회
      */
     @Override
-    public long countStoreInventory(StoreInventorySearchDTO searchDTO) {
+    public long countStoreInventory(StoreInventorySearchDTO storeInventorySearchDTO) {
         QStoreInventory si = QStoreInventory.storeInventory;
         QStoreMaterial sm = QStoreMaterial.storeMaterial;
         QStore store = QStore.store;
@@ -76,14 +73,14 @@ public class StoreInventoryRepositoryImpl implements StoreInventoryRepositoryCus
                 .join(si.storeMaterial, sm)
                 .leftJoin(sm.material)
                 .join(si.store, store)
-                .where(applyFilter(searchDTO))
+                .where(applyFilter(storeInventorySearchDTO))
                 .fetchOne();
 
         return total != null ? total : 0L;
     }
 
     /**
-     * 검색 조건 필터 구성 (StoreInventorySearchDTO 기준)
+     * 검색 필터 구성
      */
     private BooleanExpression applyFilter(StoreInventorySearchDTO dto) {
         QStoreInventory si = QStoreInventory.storeInventory;

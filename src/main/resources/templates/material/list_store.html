@@ -104,7 +104,11 @@
                         <div class="pack-left"></div>
 
                         <div class="pack-left">
-                            <button type="button" class="btn medium bdr-color1" onclick="excelDownload()">엑셀다운로드</button>
+                            <button type="button" class="btn medium bdr-color1"
+                                    data-excel-endpoint="/API/store/material/download"
+                                    data-store-id="[[${storeId}]]"
+                                    data-form-id="frm"
+                                    onclick="excelDownload(this)">엑셀다운로드</button>
                         </div>
                     </div>
 
@@ -156,32 +160,21 @@
 
     function setFilter(status) {
       const params = new URLSearchParams(window.location.search);
-
-      if (status === '') {
-        params.set("status", '');
-      } else {
-        params.set("status", status);
-      }
-
-      const query = params.toString();
-      window.location = `/admin/material/store/list?${query}`;
+      if (!status) params.delete('status'); else params.set('status', status);
+      window.location = `/admin/inventory/list?${params.toString()}`;
     }
 
     function setPageSize(size) {
         const params = new URLSearchParams(window.location.search);
         params.set('size', size);
         params.set('page', 1);
-        window.location = `/admin/material/store/list?${params.toString()}`;
+        window.location = `/admin/inventory/list?${params.toString()}`;
     }
 
     function excelDownload() {
-        const formData = new FormData(document.getElementById('frm'));
-        const type = formData.get("type");
-        const s = formData.get("s");
-        const size = formData.get("size");
-        const status = formData.get("status");
-
-        window.location = `/admin/API/material/download?type=${encodeURIComponent(type)}&s=${encodeURIComponent(s)}&size=${encodeURIComponent(size)}&status=${encodeURIComponent(status)}`;
+      const params = new URLSearchParams(new FormData(document.getElementById('frm')));
+      // 예상 파라미터: s, status, size, page 등
+      window.location = `/admin/API/inventory/list/download?${params.toString()}`;
     }
 </script>
 </body>

@@ -63,7 +63,7 @@ public class InventoryController {
                                 HttpServletRequest request) {
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
-        Page<InventoryListDTO> inventories = inventoryService.getInventoryList(inventorySearchDTO, pageRequest);
+        Page<InventoryListDTO> inventories = inventoryService.listInventory(inventorySearchDTO, pageRequest);
 
         model.addAttribute("inventories", inventories);
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
@@ -76,6 +76,11 @@ public class InventoryController {
      * 본사 재고 로그 화면으로 이동한다.
      *
      * @param materialId 재료 ID
+     * @param type       필터: 로그 유형(INCOME/OUTCOME/ADJUST 등) 선택값(옵션)
+     * @param startDate  필터: 시작일(옵션)
+     * @param endDate    필터: 종료일(옵션)
+     * @param page       페이지 인덱스(0-base)
+     * @param size       페이지 크기
      * @param model      뷰 모델
      * @return 재고 로그 페이지(view)
      */
@@ -88,17 +93,11 @@ public class InventoryController {
                           @RequestParam(defaultValue = "10") int size,
                           Model model) {
 
-        // 재료 조회
         var material = materialService.findById(materialId);
-        String materialName = (material != null ? material.getName() : "");
+        String materialName = material != null ? material.getName() : "";
 
-        // 첫 페이지 즉시 로드
-        var logs = logViewService.getFilteredLogs(
-                materialId,
-                type,
-                startDate,
-                endDate,
-                PageRequest.of(page, size));
+        Page<InventoryLogDTO> logs = inventoryService.getFilteredLogs(
+                materialId, type, startDate, endDate, PageRequest.of(page, size));
 
         model.addAttribute("logs", logs);
         model.addAttribute("materialId", materialId);
@@ -106,7 +105,7 @@ public class InventoryController {
         model.addAttribute("selectedType", type);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
-        return "inventory/log";      // 템플릿 경로 일치
+        return "inventory/log";
     }
 
     /**

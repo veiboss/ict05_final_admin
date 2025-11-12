@@ -55,7 +55,7 @@ public class StoreInventoryController {
 
         // 조회
         Page<StoreInventoryListDTO> inventories =
-                storeInventoryService.listStoreInventories(searchDTO, pageRequest);
+                storeInventoryService.listStoreInventory(searchDTO, pageRequest);
 
         // 모델 바인딩
         model.addAttribute("inventories", inventories);

@@ -92,8 +92,16 @@
                 <!-- 목록 테이블 -->
                 <section class="pack-down">
                     <div class="list-header pack-both">
-                        <a href="/admin/inventory/in/write" class="btn medium color2">입고등록</a>
-                        <button type="button" class="btn medium bdr-color2" onclick="excelDownload()">엑셀다운로드</button>
+                        <div class="pack-left">
+                            <a href="/admin/inventory/in/write" class="btn medium color2">입고등록</a>
+                        </div>
+
+                        <div class="pack-left">
+                            <button type="button" class="btn medium bdr-color2"
+                                    data-excel-endpoint="/API/inventory/download"
+                                    data-form-id="frm"
+                                    onclick="excelDownload(this)">엑셀다운로드</button>
+                        </div>
                     </div>
 
                     <table class="data-table">
@@ -131,7 +139,9 @@
                                    class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
-                                <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|">배치</a>
+                                <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|">
+                                    <span class="material-symbols-outlined md-18">pallet</span>
+                                </a>
                             </td>
                         </tr>
                         </tbody>
@@ -159,12 +169,6 @@
         params.set('size', size);
         params.set('page', 1);
         window.location = `/admin/inventory/list?${params.toString()}`;
-    }
-
-    function excelDownload() {
-      const params = new URLSearchParams(new FormData(document.getElementById('frm')));
-      // 예상 파라미터: s, status, size, page 등
-      window.location = `/admin/API/inventory/list/excel?${params.toString()}`;
     }
 </script>
 </body>

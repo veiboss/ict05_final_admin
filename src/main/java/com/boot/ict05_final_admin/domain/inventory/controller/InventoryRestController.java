@@ -1,34 +1,55 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.AdjustCreateRequestDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryInWriteDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.OutConfirmRequest;
-import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.*;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
+import com.boot.ict05_final_admin.domain.inventory.utility.ExcelFilename;
+import com.boot.ict05_final_admin.domain.inventory.utility.ExcelResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
+
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * 등록/수정/다운로드 전용 REST 컨트롤러
+ * 본사 재고 관련 REST API 컨트롤러
+ *
+ * <p>이 컨트롤러는 다음과 같은 기능을 제공합니다:</p>
+ * <ul>
+ *     <li>출고 등록</li>
+ *     <li>입고 등록</li>
+ *     <li>재고 조정</li>
+ *     <li>매입가 등록</li>
+ *     <li>재고 목록 다운로드</li>
+ *     <li>재고 로그 목록 다운로드</li>
+ *     <li>재고 배치(로트) 목록 다운로드</li>
+ * </ul>
+ *
+ * @author 김주연
+ * @since 2025.11.12
  */
 @RestController
-@RequestMapping("/API")
+@RequestMapping("/API/inventory")
 @RequiredArgsConstructor
 public class InventoryRestController {
 
-    private final InventoryOutService outService;
-    private final InventoryInService inService;
+    private final InventoryService inventoryService;
+    private final InventoryInService inventoryInService;
+    private final InventoryOutService inventoryOutService;
     private final InventoryAdjustmentService inventoryAdjustmentService;
     private final UnitPriceService unitPriceService;
-    private final InventoryService inventoryService;
+    private final MaterialService materialService;
+
 
     // -------------------- Out --------------------
 
@@ -39,10 +60,10 @@ public class InventoryRestController {
      * @param qty        총 출고 수량
      * @return 배치 분할 미리보기 결과
      */
-    @PostMapping("/inventory/out/preview")
+    @PostMapping("/out/preview")
     public List<OutPreviewItemDTO> previewOut(@RequestParam Long materialId,
                                               @RequestParam BigDecimal qty) {
-        return outService.previewFifo(materialId, qty);
+        return inventoryOutService.previewFifo(materialId, qty);
     }
 
     /**
@@ -51,10 +72,10 @@ public class InventoryRestController {
      * @param req 출고 확정 요청 DTO
      * @return 생성된 출고 ID
      */
-    @PostMapping("/inventory/out/confirm")
+    @PostMapping("/out/confirm")
     public Long confirmOut(@RequestBody OutConfirmRequest req) {
         // 서비스가 DTO 오버로드를 제공하지 않으면 5파라미터 시그니처로 위임
-        return outService.confirmOut(
+        return inventoryOutService.confirmOut(
                 req.getMaterialId(),
                 req.getStoreId(),
                 req.getTotalQty(),
@@ -71,10 +92,10 @@ public class InventoryRestController {
      * @param dto 입고 등록 DTO
      * @return 생성된 입고 ID
      */
-    @PostMapping("/inventory/in")
+    @PostMapping("/in")
     public Long insertInventoryIn(@RequestBody @Valid InventoryInWriteDTO dto) {
 
-        return inService.insertInventoryIn(dto);
+        return inventoryInService.insertInventoryIn(dto);
     }
 
 
@@ -85,7 +106,7 @@ public class InventoryRestController {
      * @param dto 조정 생성 요청 DTO
      * @return 생성된 조정 ID
      */
-    @PostMapping("/inventory/adjust")
+    @PostMapping("/adjust")
     public Long createAdjustment(@RequestBody AdjustCreateRequestDTO dto) {
         return inventoryAdjustmentService.createAdjustment(dto);
     }
@@ -122,23 +143,82 @@ public class InventoryRestController {
     }
 
     // -------------------- Download --------------------
+    /**
+     * 재고 엑셀 다운로드 API
+     *
+     * @param searchDTO 검색 조건 (재료명, 상태 등)
+     * @param pageable 페이징 정보
+     * @return Excel 파일 바이트 배열
+     */
+    @GetMapping("/download")
+    @Operation(summary = "재고 목록 엑셀 다운로드", description = "재고 목록을 Excel 파일로 다운로드합니다.")
+    public ResponseEntity<byte[]> downloadInventory(InventorySearchDTO searchDTO, Pageable pageable) throws IOException {
+        byte[] xlsx = inventoryService.downloadExcel(searchDTO, pageable);
+        return ExcelResponse.ok(xlsx, ExcelFilename.hqInventory());
+    }
 
     /**
-     * 재고 로그를 엑셀로 다운로드한다.
+     * 재고 로그 엑셀 다운로드 API
+     *
+     * <p>화면 필터(유형/기간/페이징)를 그대로 적용해 재료별 로그를 XLSX로 생성한다.</p>
      *
      * @param materialId 재료 ID
-     * @param type       구분(입고/출고/조정), null 가능
-     * @param from       시작일시(ISO DATETIME), null 가능
-     * @param to         종료일시(ISO DATETIME), null 가능
-     * @return 엑셀 파일 리소스
+     * @param type       로그 유형(INCOME/OUTCOME/ADJUST 등), 옵션
+     * @param startDate  시작일(포함), 옵션
+     * @param endDate    종료일(포함), 옵션
+     * @param page       페이지 인덱스(기본 0). 서비스 내부에서는 전체 덤프로 생성 가능
+     * @param size       페이지 크기(기본 10). 서비스 내부에서는 전체 덤프로 생성 가능
+     * @return XLSX 바이너리 응답
+     * @throws java.io.IOException 워크북 생성·쓰기 오류
      */
-    @GetMapping("/inventory/logs/excel")
-    public Resource downloadLogsExcel(@RequestParam Long materialId,
-                                      @RequestParam(required = false) String type,
-                                      @RequestParam(required = false)
-                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-                                      @RequestParam(required = false)
-                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-        return inventoryService.downloadExcel(materialId, type, from, to, PageRequest.of(0, Integer.MAX_VALUE)).getBody();
+    @Operation(summary = "본사 재고 로그 엑셀 다운로드", description = "재료별 재고 로그를 Excel 파일로 다운로드합니다.")
+    @GetMapping("/{materialId}/log/download")
+    public ResponseEntity<byte[]> downloadInventoryLog(@PathVariable Long materialId,
+                                                       @RequestParam(required = false) String type,
+                                                       @RequestParam(required = false)
+                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                       @RequestParam(required = false)
+                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                                       @RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") int size)
+            throws IOException {
+        byte[] xlsx = inventoryService.downloadLogExcel(
+                materialId, type, startDate, endDate, PageRequest.of(page, size)
+        );
+
+        String materialName = Optional.ofNullable(materialService.findById(materialId))
+                .map(m -> m.getName())
+                .orElse(null);
+
+        return ExcelResponse.ok(xlsx, ExcelFilename.inventoryLogByName(materialName));
+    }
+
+
+    /**
+     * 본사 재고 배치(로트) 엑셀 다운로드 API
+     *
+     * <p>HQ 배치(가맹점 미지정, 잔량 &gt; 0)를 유통기한↑ → 입고일↑ 순으로 전체 덤프한다.</p>
+     *
+     * @param materialId 재료 ID
+     * @param page       페이지 인덱스(기본 0). 엑셀은 전체 덤프이나 정렬 힌트로 수집
+     * @param size       페이지 크기(기본 10). 엑셀은 전체 덤프이나 정렬 힌트로 수집
+     * @return XLSX 바이너리 응답
+     * @throws java.io.IOException 워크북 쓰기·닫기 중 I/O 오류
+     */
+    @Operation(summary = "본사 재고 배치 엑셀 다운로드")
+    @GetMapping("/{materialId}/batch/download")
+    public ResponseEntity<byte[]> downloadInventoryBatch(@PathVariable Long materialId,
+                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size)
+            throws IOException {
+        byte[] xlsx = inventoryService.downloadBatchExcel(materialId, PageRequest.of(page, size));
+
+        // 재료명 조회 후 파일명 생성. 없으면 “재고배치_YYYY...”로 처리
+        String materialName = Optional.ofNullable(materialService.findById(materialId))
+                .map(m -> m.getName())
+                .orElse(null);
+        String filename = ExcelFilename.inventoryBatchByName(materialName);
+
+        return ExcelResponse.ok(xlsx, filename);
     }
 }

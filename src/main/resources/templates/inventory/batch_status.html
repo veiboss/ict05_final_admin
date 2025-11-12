@@ -29,7 +29,17 @@
         <main id="content" class="max-1132">
 
             <div class="box-wrap">
+                <div class="list-header pack-both">
+                    <div class="pack-left">
+                    </div>
 
+                    <div class="pack-left">
+                        <button type="button" class="btn medium bdr-color2"
+                                data-excel-endpoint="/API/inventory/{materialId}/batch/download"
+                                data-material-id="[[${materialId}]]"
+                                onclick="excelDownload(this)">엑셀다운로드</button>
+                    </div>
+                </div>
                 <section class="pack-down">
                     <table class="data-table" id="batchTable">
                         <thead>

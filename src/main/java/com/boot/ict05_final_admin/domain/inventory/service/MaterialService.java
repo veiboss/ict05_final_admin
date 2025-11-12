@@ -7,14 +7,11 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialWriteFormDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
-import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.boot.ict05_final_admin.domain.inventory.utility.ExcelUtil.n;
+
 /**
  * 재료 관련 비즈니스 로직 처리 서비스 클래스
  *
@@ -40,7 +39,6 @@ import java.util.stream.Collectors;
 public class MaterialService {
 
     private final MaterialRepository materialRepository;
-    private final InventoryRepository inventoryRepository;
 
     /**
      * 새로운 재료를 등록한다.
@@ -138,50 +136,52 @@ public class MaterialService {
     }
 
     /**
-     * 재료 목록을 엑셀 파일로 다운로드한다.
-     * @return
-     * @throws IOException
+     * 재료 목록을 XLSX로 생성한다.
+     *
+     * <p>헤더는 서비스에서 정의한다. 페이징은 전체 건수를 1페이지로 조회해 일괄 덤프한다.</p>
+     *
+     * @param materialSearchDTO   재료 검색 조건 DTO
+     * @param pageable 스프링 페이징 파라미터(페이지 크기·정렬 힌트). 실제 생성은 전체 덤프
+     * @return XLSX 바이트 배열
+     * @throws IOException 워크북 쓰기·닫기 중 I/O 오류
+     * @throws IllegalStateException 리포지토리 접근 등 런타임 오류
      */
-    public byte[] downloadExcel(MaterialSearchDTO materialSearchDTO, Pageable pageable)
-            throws IOException {
+    public byte[] downloadExcel(MaterialSearchDTO materialSearchDTO, Pageable pageable) throws IOException {
+        try (Workbook wb = new XSSFWorkbook(); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            Sheet sheet = wb.createSheet("재료목록");
 
-        Workbook workbook = new XSSFWorkbook();
+            // Header
+            String[] cols = { "ID","CODE","카테고리","재료명","기본단위","판매단위","공급업체","상태" };
+            Row h = sheet.createRow(0);
+            CellStyle hs = wb.createCellStyle(); Font f = wb.createFont(); f.setBold(true); hs.setFont(f);
+            for (int i = 0; i < cols.length; i++) { Cell c = h.createCell(i); c.setCellValue(cols[i]); c.setCellStyle(hs); }
 
-        Sheet sheet = workbook.createSheet("재료목록");
+            // Data
+            long total = materialRepository.countMaterial(materialSearchDTO);
+            PageRequest p0 = PageRequest.of(0, (int)Math.min(Integer.MAX_VALUE, total), Sort.by("id").descending());
+            Page<MaterialListDTO> page = materialRepository.listMaterial(materialSearchDTO, p0);
 
-        Row header = sheet.createRow(0);
-        header.createCell(0).setCellValue("ID");
-        header.createCell(1).setCellValue("CODE");
-        header.createCell(2).setCellValue("카테고리");
-        header.createCell(3).setCellValue("재료명");
-        header.createCell(4).setCellValue("기본단위");
-        header.createCell(5).setCellValue("판매단위");
-        header.createCell(6).setCellValue("공급업체");
-        header.createCell(7).setCellValue("상태");
+            int r = 1;
+            for (MaterialListDTO m : page) {
+                Row row = sheet.createRow(r++);
+                row.createCell(0).setCellValue(m.getId());
+                row.createCell(1).setCellValue(n(m.getCode()));
+                row.createCell(2).setCellValue(String.valueOf(m.getMaterialCategory()));
+                row.createCell(3).setCellValue(n(m.getName()));
+                row.createCell(4).setCellValue(n(m.getBaseUnit()));
+                row.createCell(5).setCellValue(n(m.getSalesUnit()));
+                row.createCell(6).setCellValue(n(m.getSupplier()));
+                row.createCell(7).setCellValue(String.valueOf(m.getMaterialStatus()));
+            }
+            for (int i = 0; i < cols.length; i++) sheet.autoSizeColumn(i);
 
-        long count = materialRepository.countMaterial(materialSearchDTO);
-        PageRequest pageRequest = PageRequest.of(0, (int) count, Sort.by("id").descending());
-        Page<MaterialListDTO> list = materialRepository.listMaterial(materialSearchDTO, pageRequest);
-
-        int i = 1;
-        for (MaterialListDTO m : list) {
-            Row sheet1_row = sheet.createRow(i);
-            sheet1_row.createCell(0).setCellValue(m.getId());
-            sheet1_row.createCell(1).setCellValue(m.getCode());
-            sheet1_row.createCell(2).setCellValue(String.valueOf(m.getMaterialCategory()));
-            sheet1_row.createCell(3).setCellValue(m.getName());
-            sheet1_row.createCell(4).setCellValue(m.getBaseUnit());
-            sheet1_row.createCell(5).setCellValue(m.getSalesUnit());
-            sheet1_row.createCell(6).setCellValue(m.getSupplier());
-            sheet1_row.createCell(7).setCellValue(String.valueOf(m.getMaterialStatus()));
-            i++;
+            wb.write(bos);           // IOException 전달
+            return bos.toByteArray();
+        } catch (IOException ioe) {
+            throw ioe;              // 체크예외는 그대로
+        } catch (Exception e) {
+            throw new IllegalStateException("재료 목록 엑셀 생성 실패", e);
         }
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        workbook.write(outputStream);
-        workbook.close();
-
-        return outputStream.toByteArray();
     }
 
     /** 코드 생성 로직 */
