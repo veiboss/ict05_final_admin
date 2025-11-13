@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -38,8 +40,9 @@ import java.util.Optional;
  * @author 김주연
  * @since 2025.11.12
  */
+@Slf4j
 @RestController
-@RequestMapping("/API/inventory")
+@RequestMapping("/API")
 @RequiredArgsConstructor
 public class InventoryRestController {
 
@@ -52,7 +55,6 @@ public class InventoryRestController {
 
 
     // -------------------- Out --------------------
-
     /**
      * 출고 미리보기를 수행한다(FIFO).
      *
@@ -60,7 +62,7 @@ public class InventoryRestController {
      * @param qty        총 출고 수량
      * @return 배치 분할 미리보기 결과
      */
-    @PostMapping("/out/preview")
+    @PostMapping("/inventory/out/preview")
     public List<OutPreviewItemDTO> previewOut(@RequestParam Long materialId,
                                               @RequestParam BigDecimal qty) {
         return inventoryOutService.previewFifo(materialId, qty);
@@ -72,7 +74,7 @@ public class InventoryRestController {
      * @param req 출고 확정 요청 DTO
      * @return 생성된 출고 ID
      */
-    @PostMapping("/out/confirm")
+    @PostMapping("/inventory/out/confirm")
     public Long confirmOut(@RequestBody OutConfirmRequest req) {
         // 서비스가 DTO 오버로드를 제공하지 않으면 5파라미터 시그니처로 위임
         return inventoryOutService.confirmOut(
@@ -92,7 +94,7 @@ public class InventoryRestController {
      * @param dto 입고 등록 DTO
      * @return 생성된 입고 ID
      */
-    @PostMapping("/in")
+    @PostMapping("/inventory/in")
     public Long insertInventoryIn(@RequestBody @Valid InventoryInWriteDTO dto) {
 
         return inventoryInService.insertInventoryIn(dto);
@@ -101,14 +103,20 @@ public class InventoryRestController {
 
     // -------------------- Adjustment --------------------
     /**
-     * 재고 수량 조정을 등록한다.
+     * 본사 재고 수량 조정을 등록한다.
      *
-     * @param dto 조정 생성 요청 DTO
-     * @return 생성된 조정 ID
+     * <p>입출고 외의 사유(분실, 파손, 오입력 등)로 재고 수량을 직접 수정한다.</p>
+     *
+     * @param dto 재고 수량 조정 요청 DTO
+     * @return 처리 결과(success 여부)
      */
-    @PostMapping("/adjust")
-    public Long createAdjustment(@RequestBody AdjustCreateRequestDTO dto) {
-        return inventoryAdjustmentService.createAdjustment(dto);
+    @PostMapping("/inventory/adjust")
+    public ResponseEntity<Map<String, Object>> adjustInventory(@RequestBody InventoryAdjustDTO dto) {
+
+        log.info("[ADJUST_CTRL] HIT dto={}", dto);  // ★ 컨트롤러 진입 로그
+
+        inventoryAdjustmentService.adjustInventory(dto);
+        return ResponseEntity.ok(Map.of("success", true));
     }
 
     // -------------------- Unit Price --------------------
@@ -121,7 +129,7 @@ public class InventoryRestController {
      * @param validFrom  유효 시작 시각(ISO DATETIME)
      * @return 생성된 단가 ID
      */
-    @PostMapping("/unit-price/purchase")
+    @PostMapping("/inventory/unit-price/purchase")
     public Long registerPurchase(@RequestParam Long materialId,
                                  @RequestParam BigDecimal price,
                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -136,7 +144,7 @@ public class InventoryRestController {
      * @param price       수정 단가
      * @return 수정된 단가 ID
      */
-    @PutMapping("/unit-price/purchase/{unitPriceId}")
+    @PutMapping("/inventory/unit-price/purchase/{unitPriceId}")
     public Long updatePurchase(@PathVariable Long unitPriceId,
                                @RequestParam BigDecimal price) {
         return unitPriceService.updatePurchasePrice(unitPriceId, price);
@@ -150,7 +158,7 @@ public class InventoryRestController {
      * @param pageable 페이징 정보
      * @return Excel 파일 바이트 배열
      */
-    @GetMapping("/download")
+    @GetMapping("/inventory/download")
     @Operation(summary = "재고 목록 엑셀 다운로드", description = "재고 목록을 Excel 파일로 다운로드합니다.")
     public ResponseEntity<byte[]> downloadInventory(InventorySearchDTO searchDTO, Pageable pageable) throws IOException {
         byte[] xlsx = inventoryService.downloadExcel(searchDTO, pageable);
@@ -172,7 +180,7 @@ public class InventoryRestController {
      * @throws java.io.IOException 워크북 생성·쓰기 오류
      */
     @Operation(summary = "본사 재고 로그 엑셀 다운로드", description = "재료별 재고 로그를 Excel 파일로 다운로드합니다.")
-    @GetMapping("/{materialId}/log/download")
+    @GetMapping("/inventory/{materialId}/log/download")
     public ResponseEntity<byte[]> downloadInventoryLog(@PathVariable Long materialId,
                                                        @RequestParam(required = false) String type,
                                                        @RequestParam(required = false)
@@ -206,7 +214,7 @@ public class InventoryRestController {
      * @throws java.io.IOException 워크북 쓰기·닫기 중 I/O 오류
      */
     @Operation(summary = "본사 재고 배치 엑셀 다운로드")
-    @GetMapping("/{materialId}/batch/download")
+    @GetMapping("/inventory/{materialId}/batch/download")
     public ResponseEntity<byte[]> downloadInventoryBatch(@PathVariable Long materialId,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size)

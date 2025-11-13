@@ -67,6 +67,15 @@ public class InventoryService {
         return inventoryRepository.countInventory(searchDTO);
     }
 
+    /**
+     * 재료 아이디로 재고 조회
+     *
+     * @param materialId 재료아이디로
+     * @return 재고
+     */
+    public Optional<Inventory> findByMaterialId(Long materialId) {
+        return inventoryRepository.findByMaterialId(materialId);
+    }
 
     /**
      * 본사 입고 등록용 - 재고 선택 목록 조회

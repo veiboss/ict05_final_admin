@@ -30,8 +30,47 @@
 
         <main id="content" class="max-1132">
             <input type="hidden" id="materialId" th:value="${materialId}"/>
+            <input type="hidden" id="inventoryId" th:value="${inventory.id}"/>
+
+            <!-- 사용중지 경고 -->
+            <div th:if="${material.materialStatus.name() == 'STOP'}"
+                 class="alert alert-warning mb-3">
+                본사에서 <strong>사용중지된 재료</strong>입니다.
+            </div>
 
             <div class="box-wrap">
+                <div class="row-2 rw-mo-direction-column">
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">현재 수량</span>
+                        <span class="pack-left mo-pack-down">
+                            <!-- inventory가 있을 때만 상태표시 -->
+                            <span th:if="${inventory != null}">
+                                <span class="badge rounded-pill"
+                                      th:classappend="${inventory.status.name() == 'SUFFICIENT'} ? ' bg-success' :
+                                                      (${inventory.status.name() == 'LOW'} ? ' bg-warning' : ' bg-danger')"
+                                      th:text="${inventory.status.description}">
+                                </span>
+                            </span>
+                            <span th:text="${inventory.quantity != null ? #numbers.formatDecimal(inventory.quantity,1,'COMMA',0,'POINT') : '0'}" class="fs-2xl fw-700">현재 수량</span>
+                            <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+
+                            <button type="button" class="btn small color2" onclick="modalOpen('#adjustModal');">조정</button>
+                        </span>
+                    </div>
+
+                    <div class="pack-down col">
+                        <span class="fs-ss fc-999">적정 수량</span>
+                        <span class="pack-left">
+                            <span th:text="${inventory.optimalQuantity != null ? #numbers.formatDecimal(inventory.optimalQuantity,1,'COMMA',0,'POINT') : '0'}" class="fs-2xl fw-300">적정 수량</span>
+                            <span th:text="${material.salesUnit}" class="fs-ss fc-999">기본단위</span>
+
+                            <a th:href="@{/material/modify/{id}(id=${material.id})}" class="btn small color2">수정</a>
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="line bg-000">
+
                 <!-- 검색 영역 -->
                 <div id="search" class="search">
                         <form id="filterForm" onsubmit="return false;">
@@ -101,13 +140,13 @@
                             <th scope="col">가맹점</th>
                             <th scope="col">단가</th>
                             <th scope="col">비고</th>
+                            <th scope="col">상세</th>
                         </tr>
                         </thead>
-                        <tbody id="logTbody">
-                        <tr id="emptyRow" style="display:none;">
-                            <td colspan="7">입출고 내역이 없습니다.</td>
+                        <tbody>
+                        <tr  th:if="${logs == null or #lists.isEmpty(logs.content)}">
+                            <td colspan="8">입출고 내역이 없습니다.</td>
                         </tr>
-
                         <tr th:each="row : ${logs.content}">
                             <td th:text="${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td>
@@ -120,9 +159,32 @@
                             </td>
                             <td th:text="${row.quantity}"></td>
                             <td th:text="${row.stockAfter}"></td>
-                            <td th:text="${row.storeId != null ? row.storeId : '-'}"></td>
+                            <td th:text="${row.storeName != null ? row.storeName : '-'}"></td>
                             <td th:text="${row.unitPrice}"></td>
                             <td th:text="${row.memo != null && row.memo != '' ? row.memo : '-'}"></td>
+                            <td>
+                                <!-- INCOME/OUTGO: LOT 상세 -->
+                                <button type="button" class="btn log-detail-link"
+                                        onclick="modalOpen('#detailModal');"
+                                        th:if="${row.logType == 'INCOME' or row.logType == 'OUTGO'}"
+                                        th:attr="data-log-id=${row.logId}, data-log-type=${row.logType}">
+                                    <span class="fc-primary"
+                                          th:text="|LOT상세 - 배치 ID ${row.batchId}|">
+                                        LOT상세 - 배치 ID
+                                    </span>
+                                </button>
+
+                                <!-- ADJUST: 조정 상세 -->
+                                <button type="button" class="btn log-detail-link"
+                                        onclick="modalOpen('#detailModal');"
+                                        th:if="${row.logType == 'ADJUST'}"
+                                        th:attr="data-log-id=${row.logId}, data-log-type=${row.logType}">
+                                    <span class="fc-primary"
+                                          th:text="|조정상세 - 조정로그ID ${row.logId}|">
+                                        조정상세 - 조정로그ID
+                                    </span>
+                                </button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -141,16 +203,194 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
+
+<div id="detailModal" class="overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title">
+                <span id="detailModalTitle">로트번호</span>
+            </h2>
+            <button type="button" class="btn transparent pop-close" onclick="modalClose('#detailModal');" title="팝업 닫기">
+                <svg viewBox="0 0 32 32" class="ico svg-close">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m16 17.414 8.485 8.485 1.415-1.414L17.414 16 25.9 7.515 24.485 6.1 16 14.586 7.515 6.1 6.1 7.515 14.586 16l-8.485 8.485L7.515 25.9 16 17.413z" />
+                </svg>
+            </button>
+        </div>
+        <div class="popup-body">
+
+
+            <!-- 공통 요약 -->
+            <div id="detailSummary" class="pack-down">
+                <table class="data-table small">
+                    <tbody>
+                    <tr>
+                        <th scope="row" class="w-100">로그 ID</th>
+                        <td id="detailLogId">-</td>
+                        <th scope="row" class="w-100">유형</th>
+                        <td id="detailLogType">-</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">일시</th>
+                        <td id="detailLogDate" colspan="3">-</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--입고-->
+            <div id="section-income" class="pack-down gap-8" style="display:none;">
+                <p class="pack-right gap-8">
+                    <span>총 입고수량: X</span>
+                    <span>가중평균단가: Y</span>
+                </p>
+                <div class="table-wrap">
+                    <table class="data-table markup-list">
+                        <thead>
+                        <tr>
+                            <th scope="col">LOT</th>
+                            <th scope="col">입고일</th>
+                            <th scope="col">유통기한</th>
+                            <th scope="col">입고수량</th>
+                            <th scope="col">단가</th>
+                            <th scope="col">기타</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-th="LOT">LOT</td>
+                            <td data-th="입고일">입고일</td>
+                            <td data-th="유통기한">유통기한</td>
+                            <td data-th="입고수량">입고수량</td>
+                            <td data-th="단가">단가</td>
+                            <td data-th="기타">기타</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--출고-->
+            <div id="section-outgo" class="pack-down gap-8" style="display:none;">
+                <p class="pack-right gap-8">
+                    <span>총 출고수량: X</span>
+                    <span>가중평균단가: Y</span>
+                    <span>대상 가맹점: Y</span>
+                </p>
+                <div class="table-wrap">
+                    <table class="data-table markup-list">
+                        <thead>
+                        <tr>
+                            <th scope="col">LOT</th>
+                            <th scope="col">출고일</th>
+                            <th scope="col">출고수량</th>
+                            <th scope="col">출고 후 잔량</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-th="LOT">LOT</td>
+                            <td data-th="출고일">출고일</td>
+                            <td data-th="출고수량">출고수량</td>
+                            <td data-th="출고 후 잔량">출고 후 잔량</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--조정-->
+            <div id="section-adjust" class="pack-down gap-8" style="display:none;">
+                <p class="pack-right gap-8">
+                    <span>증감 합계: X</span>
+                </p>
+                <div class="table-wrap">
+                    <table class="data-table markup-list">
+                        <thead>
+                        <tr>
+                            <th scope="col">조정 전</th>
+                            <th scope="col">조정 후</th>
+                            <th scope="col">증감</th>
+                            <th scope="col">사유코드</th>
+                            <th scope="col">메모</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-th="조정 전">조정 전</td>
+                            <td data-th="조정 후">조정 후</td>
+                            <td data-th="증감">증감</td>
+                            <td data-th="사유코드">사유코드</td>
+                            <td data-th="메모">메모</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="adjustModal" class="overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title"><span th:text="${material.name}">재료명</span> 재고 조정</h2>
+            <button type="button" class="btn transparent pop-close" onclick="modalClose('#adjustModal');" title="팝업 닫기">
+                <svg viewBox="0 0 32 32" class="ico svg-close">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m16 17.414 8.485 8.485 1.415-1.414L17.414 16 25.9 7.515 24.485 6.1 16 14.586 7.515 6.1 6.1 7.515 14.586 16l-8.485 8.485L7.515 25.9 16 17.413z" />
+                </svg>
+            </button>
+        </div>
+        <div class="popup-body write-form">
+            <form>
+                <fieldset class="pack-down">
+                    <legend class="blind">재고조정폼</legend>
+                    <label class="field col">
+                        <span class="label medium required">변경 수량</span>
+                        <span class="insert">
+                            <input type="number" id="newQtyInput" class="input-text medium" step="1" min="0" placeholder="변경 후 수량 입력">
+                        </span>
+                    </label>
+                    <label class="field col">
+                        <span class="label medium required" >조정 사유</span>
+                        <span class="insert">
+                            <select id="reasonSelect" class="select medium">
+                              <option value="MANUAL">수동 수정</option>
+                              <option value="DAMAGE">파손</option>
+                              <option value="LOSS">분실</option>
+                              <option value="ERROR">데이터 오류 정정</option>
+                            </select>
+                        </span>
+                    </label>
+
+                    <label class="field col">
+                        <span class="label medium" for="select1">비고</span>
+                        <span class="insert">
+                            <textarea id="memoInput" class="textarea medium" rows="4" cols="50" placeholder="비고 입력"></textarea>
+                        </span>
+                    </label>
+
+                    <div class="button-area pack-center">
+                        <button type="button" class="btn medium color1" id="modalConfirm">확인</button>
+                        <button type="button" class="btn medium bdr-color1" id="modalCancel">취소</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     (function () {
       const materialId = document.getElementById('materialId').value;
+      const inventoryIdEl = document.getElementById('inventoryId');
+      const inventoryId = inventoryIdEl ? inventoryIdEl.value : null;
 
       function setQS(obj){
         const p = new URLSearchParams(location.search);
         Object.entries(obj).forEach(([k,v])=>{
           if (v==='' || v==null) p.delete(k); else p.set(k, v);
         });
-        // 검색 시 항상 첫 페이지로
         p.set('page','0');
         location.href = `/admin/inventory/log/${materialId}?` + p.toString();
       }
@@ -181,11 +421,115 @@
       document.getElementById('btn7d').addEventListener('click',   ()=>{ setQuick(7);  document.getElementById('btnSearch').click(); });
       document.getElementById('btn30d').addEventListener('click',  ()=>{ setQuick(30); document.getElementById('btnSearch').click(); });
 
-      // 엑셀: 현재 쿼리스트링 그대로 전달
-      document.getElementById('btnExcel')?.addEventListener('click', function(){
-        const p = new URLSearchParams(location.search);
-        location.href = `/admin/API/inventory/${materialId}/log/download?` + p.toString();
-      });
+        // ================= 재고 조정 =================
+        const confirmBtn = document.getElementById('modalConfirm');
+        const cancelBtn  = document.getElementById('modalCancel');
+
+        if (confirmBtn) {
+          confirmBtn.addEventListener('click', function () {
+            if (!inventoryId) {
+              alert('재고 ID를 찾을 수 없습니다.');
+              return;
+            }
+
+            const newQty = document.getElementById('newQtyInput').value;
+            const reason = document.getElementById('reasonSelect').value;
+            const memo   = document.getElementById('memoInput').value;
+
+            if (newQty === '' || newQty == null) {
+              alert('변경 수량을 입력하세요.');
+              return;
+            }
+
+            const payload = {
+              inventoryId: Number(inventoryId),
+              material: Number(materialId),
+              quantityAfter: Number(newQty),
+              reason: reason,
+              memo: memo
+            };
+
+            fetch('/admin/API/inventory/adjust', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            })
+              .then(async (res) => {
+                const raw = await res.text();   // ★ 항상 텍스트로 먼저 읽기
+
+                if (!res.ok) {
+                  // 에러일 때는 HTML이든 뭐든 그대로 메시지로 노출
+                  throw new Error(raw || `HTTP ${res.status}`);
+                }
+
+                // 성공인데 JSON이면 파싱, 아니면 그냥 통과
+                if (!raw) {
+                  return { success: true };
+                }
+
+                try {
+                  return JSON.parse(raw);
+                } catch (e) {
+                  console.warn('재고조정 API가 JSON이 아닌 응답을 반환했습니다:', raw);
+                  // 그래도 성공 응답이므로 true로 취급
+                  return { success: true };
+                }
+              })
+              .then((data) => {
+                alert('재고가 조정되었습니다.');
+                location.reload();
+              })
+              .catch(err => {
+                console.error('재고 조정 오류:', err);
+                alert('재고 조정 중 오류가 발생했습니다.\n' + err.message);
+              });
+          });
+        }
+
+        if (cancelBtn) {
+          cancelBtn.addEventListener('click', function () {
+            modalClose('#adjustModal');
+          });
+        }
+
+        // 조정 상세
+        function openAdjustDetail(logId) {
+          api.get('/admin/API/inventory/log/' + logId + '/adjust-detail')
+            .then(res => {
+              const d = res.data;
+              $('#adj-log-id').text(d.logId ?? '-');
+              $('#adj-type').text(d.type ?? '-');
+              $('#adj-datetime').text(d.createdAt ?? '-');
+              $('#adj-before').text(d.quantityBefore ?? '-');
+              $('#adj-after').text(d.quantityAfter ?? '-');
+              $('#adj-diff').text(d.difference ?? '-');
+              $('#adj-memo').text(d.memo ?? '-');
+              $('#adj-reason').text(d.reason ?? '-');
+            })
+            .catch(err => {
+              console.error('조정 상세 조회 실패', err);
+              alert('조정 상세 조회 중 오류가 발생했습니다.');
+            });
+        }
+
+        // LOT 상세
+        function openLotDetail(logId) {
+          api.get('/admin/API/inventory/log/' + logId + '/lot-detail')
+            .then(res => {
+              const d = res.data;
+              $('#lot-log-id').text(d.logId ?? '-');
+              $('#lot-type').text(d.type ?? '-');
+              $('#lot-datetime').text(d.createdAt ?? '-');
+              $('#lot-lotno').text(d.lotNo ?? '-');
+            })
+            .catch(err => {
+              console.error('LOT 상세 조회 실패', err);
+              alert('LOT 상세 조회 중 오류가 발생했습니다.');
+            });
+        }
+
     })();
 </script>
 

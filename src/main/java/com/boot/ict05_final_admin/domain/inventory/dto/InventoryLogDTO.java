@@ -60,4 +60,7 @@ public class InventoryLogDTO {
     /** 가맹점명 */
     @Schema(description = "가맹점명")
     private String storeName;
+
+    /** LOT 상세용 배치 PK (nullable) */
+    private Long batchId;
 }

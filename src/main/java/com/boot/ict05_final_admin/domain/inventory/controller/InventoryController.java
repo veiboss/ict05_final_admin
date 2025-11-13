@@ -1,7 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.*;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryBatch;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +41,9 @@ public class InventoryController {
     private final InventoryOutService outService;
     private final InventoryLotService lotService;
     private final InventoryLogViewService logViewService;
-    private final InventoryBatchService batchService;
+    private final InventoryBatchService inventoryBatchService;
+    private final InventoryAdjustmentService inventoryAdjustmentService;
+
 
     // -------------------- View routing --------------------
 
@@ -95,16 +97,23 @@ public class InventoryController {
     public String logPage(@PathVariable Long materialId,
                           @RequestParam(required = false) String type,
                           @RequestParam(required = false)
-                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                           @RequestParam(required = false)
-                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                           @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(defaultValue = "10") int size,
+                          @RequestParam(defaultValue = "20") int size,
                           Model model) {
 
+        // 재료
         var material = materialService.findById(materialId);
         String materialName = material != null ? material.getName() : "";
 
+        // 재고: Optional → 실제 엔티티(or null)로 변환
+        // findByMaterialId가 Optional<Inventory>를 리턴한다고 가정
+        var inventoryOpt = inventoryService.findByMaterialId(materialId); // Optional<Inventory>
+        var inventory = inventoryOpt != null ? inventoryOpt.orElse(null) : null;
+
+        // 로그 페이징 (기존 그대로)
         Page<InventoryLogDTO> logs = inventoryService.getFilteredLogs(
                 materialId, type, startDate, endDate, PageRequest.of(page, size));
 
@@ -112,11 +121,14 @@ public class InventoryController {
         model.addAttribute("logs", logs);
         model.addAttribute("materialId", materialId);
         model.addAttribute("materialName", materialName);
+
+        model.addAttribute("material", material);
+        model.addAttribute("inventory", inventory); // ★ Optional 말고 실제 엔티티만 올리기
+
         model.addAttribute("selectedType", type);
-        model.addAttribute("startDate", startDate);   // null이면 템플릿에서 빈칸
+        model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
 
-        // 공통 pagination 프래그먼트가 사용하는 urlBuilder 컨텍스트 제공
         model.addAttribute("urlBuilder", new UrlBuilderHelper());
 
         return "inventory/log";
@@ -213,6 +225,18 @@ public class InventoryController {
         return logViewService.getFilteredLogs(materialId, type, startDate, endDate, PageRequest.of(page, size));
     }
 
+    // 조정 상세
+    @GetMapping("/log/adjust/{logId}")
+    public ResponseEntity<InventoryAdjustDTO> getAdjustDetail(@PathVariable Long logId) {
+        return ResponseEntity.ok(inventoryAdjustmentService.getAdjustDetail(logId));
+    }
+
+    // LOT 상세
+    @GetMapping("/log/lot/{batchId}")
+    public ResponseEntity<InventoryLotDetailDTO> getLotDetail(@PathVariable Long batchId) {
+        return ResponseEntity.ok(inventoryBatchService.getLotDetail(batchId));
+    }
+
     // -------------------- Delete APIs --------------------
 
     /**
@@ -247,4 +271,5 @@ public class InventoryController {
     public void deleteOutLotItem(@PathVariable Long lotId) {
         lotService.deleteOutLot(lotId);
     }
+
 }

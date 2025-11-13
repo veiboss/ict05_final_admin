@@ -8,6 +8,7 @@ import lombok.Data;
 import org.hibernate.annotations.Comment;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 본사 재고 수량 조정 등록 DTO
@@ -16,6 +17,11 @@ import java.math.BigDecimal;
  */
 @Data
 public class InventoryAdjustDTO {
+
+    // 팝업용 메타 필드
+    private Long logId;                 // adjustment_id
+    private String type;                // "ADJUST"
+    private LocalDateTime logDate;      // createdAt
 
     /** 본사 재고 ID */
     @NotNull
@@ -40,4 +46,11 @@ public class InventoryAdjustDTO {
     /** 조정 사유 분류 (MANUAL, DAMAGE, LOSS 등) */
     @Comment("조정 사유 분류")
     private AdjustmentReason reason;
+
+
+    /** 조정 전 수량 */
+    private BigDecimal quantityBefore;
+
+    /** 조정 수량 */
+    private BigDecimal difference;
 }
