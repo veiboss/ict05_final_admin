@@ -2,15 +2,19 @@ package com.boot.ict05_final_admin.domain.inventory.service;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.BatchOutRowDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.BatchStatusRowDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.OutLotDetailRowDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutLotHistoryRowDTO;
+import com.boot.ict05_final_admin.domain.inventory.entity.InventoryOutLot;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchQueryRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotQueryRepository;
+import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static com.boot.ict05_final_admin.domain.inventory.utility.InventoryLogIdUtil.unwrap;
 
 import java.util.List;
 
@@ -23,8 +27,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InventoryLotService {
 
-    private final InventoryBatchQueryRepository batchRepo;
-    private final InventoryOutLotQueryRepository outLotRepo;
+    private final InventoryBatchQueryRepository inventoryBatchQueryRepository;
+    private final InventoryOutLotQueryRepository inventoryOutLotQueryRepository;
+    private final InventoryOutLotRepository inventoryOutLotRepository;
+
 
     /**
      * 재료별 배치 현황을 조회한다.
@@ -34,7 +40,7 @@ public class InventoryLotService {
      */
     @Transactional(readOnly = true)
     public List<BatchStatusRowDTO> getBatchStatusForMaterial(Long materialId) {
-        return batchRepo.findBatchStatusByMaterial(materialId);
+        return inventoryBatchQueryRepository.findBatchStatusByMaterial(materialId);
     }
 
     /**
@@ -46,7 +52,7 @@ public class InventoryLotService {
      */
     @Transactional(readOnly = true)
     public Page<OutLotHistoryRowDTO> getOutLotHistory(Long batchId, Pageable pageable) {
-        Page<BatchOutRowDTO> rows = outLotRepo.pageOutHistoryByBatch(batchId, pageable);
+        Page<BatchOutRowDTO> rows = inventoryOutLotQueryRepository.pageOutHistoryByBatch(batchId, pageable);
 
         List<OutLotHistoryRowDTO> mapped = rows.getContent().stream()
                 .map(r -> OutLotHistoryRowDTO.builder()
@@ -68,6 +74,32 @@ public class InventoryLotService {
      */
     @Transactional
     public void deleteOutLot(Long lotId) {
-        outLotRepo.deleteOutById(lotId);
+        inventoryOutLotQueryRepository.deleteOutById(lotId);
+    }
+
+    /**
+     * 출고 헤더(logId) 기준 LOT 상세 목록.
+     *
+     * 로그 뷰의 logId(예: 1000000001)를 받아서 실제 출고 PK로 언랩 후 조회한다.
+     */
+    @Transactional(readOnly = true)
+    public List<OutLotDetailRowDTO> getOutDetailByOutId(Long outLogId) {
+        long outId = unwrap(outLogId); // 1000000001 → 1
+
+        List<InventoryOutLot> lots = inventoryOutLotRepository.findByOutId(outId);
+
+        return lots.stream()
+                .map(lot -> OutLotDetailRowDTO.builder()
+                        .lotNo(lot.getBatch().getLotNo())
+                        .outDate(lot.getOut().getOutDate())
+                        .quantity(lot.getQuantity())
+                        .remainingQuantity(lot.getBatch().getQuantity())
+                        .storeName(
+                                lot.getOut().getStore() != null
+                                        ? lot.getOut().getStore().getName()
+                                        : null
+                        )
+                        .build())
+                .toList();
     }
 }

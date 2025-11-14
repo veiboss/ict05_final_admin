@@ -7,6 +7,7 @@ import com.boot.ict05_final_admin.domain.inventory.repository.InventoryAdjustmen
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.UnitPriceRepository;
+import static com.boot.ict05_final_admin.domain.inventory.utility.InventoryLogIdUtil.unwrap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,7 +102,7 @@ public class InventoryAdjustmentService {
                     .lotNo(lotNo)
                     .quantity(diff)
                     .unitPrice(latestPrice)
-                    .receivedDate(now)   // 스키마에 맞게 createdAt/receivedDate 중 하나
+                    .receivedDate(now)
                     .createdAt(now)
                     .build();
 
@@ -158,40 +159,28 @@ public class InventoryAdjustmentService {
         );
     }
 
-
-    // InventoryAdjustmentService 내부에 추가
-
     /**
      * 재고 조정 상세 조회
      *
-     * @param adjustmentId inventory_adjustment.adjustment_id (로그 ID)
+     * @param logId inventory_adjustment.adjustment_id (로그 ID)
      * @return 조정 상세 DTO
      */
     @Transactional(readOnly = true)
-    public InventoryAdjustDTO getAdjustDetail(Long adjustmentId) {
+    public InventoryAdjustDTO getAdjustDetail(Long logId) {
+        long pk = unwrap(logId); // 2000000001 → 1 이런 식으로 언랩
 
-        InventoryAdjustment adj = inventoryAdjustmentRepository.findById(adjustmentId)
+        InventoryAdjustment adj = inventoryAdjustmentRepository.findById(pk)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("재고 조정 이력을 찾을 수 없습니다. id=" + adjustmentId));
+                        new IllegalArgumentException("재고 조정 이력을 찾을 수 없습니다. id=" + logId));
 
-        Inventory inventory = adj.getInventory();
-        Material material = inventory.getMaterial();
-
-        InventoryAdjustDTO dto = new InventoryAdjustDTO();
-
-        // 팝업용 메타
-        dto.setLogId(adj.getId());
-        dto.setType("ADJUST");
-        dto.setLogDate(adj.getCreatedAt());
-
-        dto.setInventoryId(inventory.getId());
-        dto.setMaterial(material.getId());
-        dto.setQuantityBefore(adj.getQuantityBefore());
-        dto.setQuantityAfter(adj.getQuantityAfter());
-        dto.setDifference(adj.getDifference());
-        dto.setMemo(adj.getMemo());
-        dto.setReason(adj.getReason());
-
-        return dto;
+        return InventoryAdjustDTO.builder()
+                .inventoryId(adj.getInventory().getId())
+                .material(adj.getInventory().getMaterial().getId())
+                .quantityBefore(adj.getQuantityBefore())
+                .quantityAfter(adj.getQuantityAfter())
+                .difference(adj.getDifference())
+                .reason(adj.getReason())
+                .memo(adj.getMemo())
+                .build();
     }
 }

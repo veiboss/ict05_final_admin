@@ -37,9 +37,9 @@ public class InventoryController {
 
     private final MaterialService materialService;
     private final InventoryService inventoryService;
-    private final InventoryInService inService;
-    private final InventoryOutService outService;
-    private final InventoryLotService lotService;
+    private final InventoryInService inventoryInService;
+    private final InventoryOutService inventoryOutService;
+    private final InventoryLotService inventoryLotService;
     private final InventoryLogViewService inventoryLogViewService;
     private final InventoryBatchService inventoryBatchService;
     private final InventoryAdjustmentService inventoryAdjustmentService;
@@ -123,7 +123,7 @@ public class InventoryController {
         model.addAttribute("materialName", materialName);
 
         model.addAttribute("material", material);
-        model.addAttribute("inventory", inventory); // ★ Optional 말고 실제 엔티티만 올리기
+        model.addAttribute("inventory", inventory);
 
         model.addAttribute("selectedType", type);
         model.addAttribute("startDate", startDate);
@@ -173,7 +173,7 @@ public class InventoryController {
     @GetMapping("/lot/batch-status")
     @ResponseBody
     public List<BatchStatusRowDTO> batchStatus(@RequestParam Long materialId) {
-        return lotService.getBatchStatusForMaterial(materialId)
+        return inventoryLotService.getBatchStatusForMaterial(materialId)
                 .stream()
                 .map(r -> BatchStatusRowDTO.builder()
                         .batchId(r.getBatchId())
@@ -200,7 +200,7 @@ public class InventoryController {
     public Page<OutLotHistoryRowDTO> batchOutHistory(@PathVariable Long batchId,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size) {
-        return lotService.getOutLotHistory(batchId, PageRequest.of(page, size));
+        return inventoryLotService.getOutLotHistory(batchId, PageRequest.of(page, size));
     }
 
     /**
@@ -248,6 +248,13 @@ public class InventoryController {
         return inventoryBatchService.getLotDetail(batchId);
     }
 
+    // 출고 LOT 상세 (로그 팝업용)  --- NEW
+    @GetMapping("/log/out/{outId}")
+    @ResponseBody
+    public List<OutLotDetailRowDTO> getOutDetail(@PathVariable Long outId) {
+        return inventoryLotService.getOutDetailByOutId(outId);
+    }
+
     // -------------------- Delete APIs --------------------
 
     /**
@@ -258,7 +265,7 @@ public class InventoryController {
     @DeleteMapping("/out/{outId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOut(@PathVariable Long outId) {
-        outService.deleteOut(outId);
+        inventoryOutService.deleteOut(outId);
     }
 
     /**
@@ -269,7 +276,7 @@ public class InventoryController {
     @DeleteMapping("/in/{inId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteIn(@PathVariable Long inId) {
-        inService.deleteIn(inId);
+        inventoryInService.deleteIn(inId);
     }
 
     /**
@@ -280,7 +287,7 @@ public class InventoryController {
     @DeleteMapping("/lot/out-item/{lotId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOutLotItem(@PathVariable Long lotId) {
-        lotService.deleteOutLot(lotId);
+        inventoryOutService.deleteOut(lotId);
     }
 
 }

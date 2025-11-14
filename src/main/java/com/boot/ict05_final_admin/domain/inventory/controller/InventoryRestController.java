@@ -113,7 +113,7 @@ public class InventoryRestController {
     @PostMapping("/inventory/adjust")
     public ResponseEntity<Map<String, Object>> adjustInventory(@RequestBody InventoryAdjustDTO dto) {
 
-        log.info("[ADJUST_CTRL] HIT dto={}", dto);  // ★ 컨트롤러 진입 로그
+        log.info("[ADJUST_CTRL] HIT dto={}", dto);
 
         inventoryAdjustmentService.adjustInventory(dto);
         return ResponseEntity.ok(Map.of("success", true));

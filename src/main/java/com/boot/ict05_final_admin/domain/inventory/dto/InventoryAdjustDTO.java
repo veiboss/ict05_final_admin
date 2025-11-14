@@ -4,18 +4,23 @@ import com.boot.ict05_final_admin.domain.inventory.entity.AdjustmentReason;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 본사 재고 수량 조정 등록 DTO
+ * 재고 조정 DTO
  *
- * <p>입출고 외의 사유로 재고를 직접 수정할 때 사용하는 입력용 DTO.</p>
+ * - adjustInventory 요청/응답 공용
+ * - 상세 조회(getAdjustDetail) 응답에도 사용
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class InventoryAdjustDTO {
 
     // 팝업용 메타 필드
