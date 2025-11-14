@@ -227,14 +227,16 @@ public class InventoryController {
 
     // 조정 상세
     @GetMapping("/log/adjust/{logId}")
-    public ResponseEntity<InventoryAdjustDTO> getAdjustDetail(@PathVariable Long logId) {
-        return ResponseEntity.ok(inventoryAdjustmentService.getAdjustDetail(logId));
+    @ResponseBody
+    public InventoryAdjustDTO getAdjustDetail(@PathVariable Long logId) {
+        return inventoryAdjustmentService.getAdjustDetail(logId);
     }
 
     // LOT 상세
     @GetMapping("/log/lot/{batchId}")
-    public ResponseEntity<InventoryLotDetailDTO> getLotDetail(@PathVariable Long batchId) {
-        return ResponseEntity.ok(inventoryBatchService.getLotDetail(batchId));
+    @ResponseBody
+    public InventoryLotDetailDTO getLotDetail(@PathVariable Long batchId) {
+        return inventoryBatchService.getLotDetail(batchId);
     }
 
     // -------------------- Delete APIs --------------------
