@@ -157,31 +157,31 @@
                                   <span th:case="*">-</span>
                                 </span>
                             </td>
-                            <td th:text="${row.quantity}"></td>
-                            <td th:text="${row.stockAfter}"></td>
+                            <td th:text="${row.quantity != null ? #numbers.formatDecimal(row.quantity,1,'COMMA',0,'POINT') : '0'}"></td>
+                            <td th:text="${row.stockAfter != null ? #numbers.formatDecimal(row.stockAfter,1,'COMMA',0,'POINT') : '0'}"></td>
                             <td th:text="${row.storeName != null ? row.storeName : '-'}"></td>
                             <td th:text="${row.unitPrice}"></td>
                             <td th:text="${row.memo != null && row.memo != '' ? row.memo : '-'}"></td>
                             <td>
-                                <!-- INCOME/OUTGO: LOT 상세 -->
+                                <!-- INCOME/OUTGO: LOT 상세 (batchId 있을 때만) -->
                                 <button type="button" class="btn log-detail-link"
                                         onclick="modalOpen('#detailModal');"
-                                        th:if="${row.logType == 'INCOME' or row.logType == 'OUTGO'}"
-                                        th:attr="data-log-id=${row.logId}, data-log-type=${row.logType}">
-                                    <span class="fc-primary"
-                                          th:text="|LOT상세 - 배치 ID ${row.batchId}|">
-                                        LOT상세 - 배치 ID
+                                        th:if="${(row.logType == 'INCOME' or row.logType == 'OUTGO') and row.batchId != null}"
+                                        th:attr="data-log-id=${row.logId},
+                                                 data-log-type=${row.logType},
+                                                 data-batch-id=${row.batchId}">
+                                    <span class="fc-primary">
+                                        #[[${row.batchId}]]
                                     </span>
                                 </button>
-
                                 <!-- ADJUST: 조정 상세 -->
                                 <button type="button" class="btn log-detail-link"
                                         onclick="modalOpen('#detailModal');"
                                         th:if="${row.logType == 'ADJUST'}"
-                                        th:attr="data-log-id=${row.logId}, data-log-type=${row.logType}">
-                                    <span class="fc-primary"
-                                          th:text="|조정상세 - 조정로그ID ${row.logId}|">
-                                        조정상세 - 조정로그ID
+                                        th:attr="data-log-id=${row.logId},
+                                                 data-log-type=${row.logType}">
+                                    <span class="fc-primary">
+                                        #[[${row.logId}]]
                                     </span>
                                 </button>
                             </td>
@@ -217,8 +217,6 @@
             </button>
         </div>
         <div class="popup-body">
-
-
             <!-- 공통 요약 -->
             <div id="detailSummary" class="pack-down">
                 <table class="data-table small">
@@ -371,8 +369,8 @@
                     </label>
 
                     <div class="button-area pack-center">
-                        <button type="button" class="btn medium color1" id="modalConfirm">확인</button>
-                        <button type="button" class="btn medium bdr-color1" id="modalCancel">취소</button>
+                        <button type="button" class="btn medium color1" id="adjustConfirm">확인</button>
+                        <button type="button" class="btn medium bdr-color1"  onclick="modalClose('#adjustModal');">취소</button>
                     </div>
                 </fieldset>
             </form>
@@ -422,8 +420,7 @@
       document.getElementById('btn30d').addEventListener('click',  ()=>{ setQuick(30); document.getElementById('btnSearch').click(); });
 
         // ================= 재고 조정 =================
-        const confirmBtn = document.getElementById('modalConfirm');
-        const cancelBtn  = document.getElementById('modalCancel');
+        const confirmBtn = document.getElementById('adjustConfirm');
 
         if (confirmBtn) {
           confirmBtn.addEventListener('click', function () {
@@ -487,50 +484,98 @@
               });
           });
         }
-
-        if (cancelBtn) {
-          cancelBtn.addEventListener('click', function () {
-            modalClose('#adjustModal');
-          });
-        }
-
-        // 조정 상세
-        function openAdjustDetail(logId) {
-          api.get('/admin/API/inventory/log/' + logId + '/adjust-detail')
-            .then(res => {
-              const d = res.data;
-              $('#adj-log-id').text(d.logId ?? '-');
-              $('#adj-type').text(d.type ?? '-');
-              $('#adj-datetime').text(d.createdAt ?? '-');
-              $('#adj-before').text(d.quantityBefore ?? '-');
-              $('#adj-after').text(d.quantityAfter ?? '-');
-              $('#adj-diff').text(d.difference ?? '-');
-              $('#adj-memo').text(d.memo ?? '-');
-              $('#adj-reason').text(d.reason ?? '-');
-            })
-            .catch(err => {
-              console.error('조정 상세 조회 실패', err);
-              alert('조정 상세 조회 중 오류가 발생했습니다.');
-            });
-        }
-
-        // LOT 상세
-        function openLotDetail(logId) {
-          api.get('/admin/API/inventory/log/' + logId + '/lot-detail')
-            .then(res => {
-              const d = res.data;
-              $('#lot-log-id').text(d.logId ?? '-');
-              $('#lot-type').text(d.type ?? '-');
-              $('#lot-datetime').text(d.createdAt ?? '-');
-              $('#lot-lotno').text(d.lotNo ?? '-');
-            })
-            .catch(err => {
-              console.error('LOT 상세 조회 실패', err);
-              alert('LOT 상세 조회 중 오류가 발생했습니다.');
-            });
-        }
-
     })();
+</script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal   = document.querySelector('#detailModal');
+      const tbody   = modal.querySelector('tbody');
+
+      const titleEl    = document.getElementById('detailModalTitle');
+      const logIdEl    = document.getElementById('detailLogId');
+      const logTypeEl  = document.getElementById('detailLogType');
+      const logDateEl  = document.getElementById('detailLogDate');
+
+      const materialName =
+        document.querySelector('.page-title span')?.textContent.trim() || '';
+
+      const adjustBase = /*[[@{/inventory/log/adjust/}]]*/ '/inventory/log/adjust/';
+      const lotBase    = /*[[@{/inventory/log/lot/}]]*/    '/inventory/log/lot/';
+
+      document.querySelectorAll('.log-detail-link').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const type    = e.currentTarget.dataset.logType;
+          const logId   = e.currentTarget.dataset.logId;
+          const batchId = e.currentTarget.dataset.batchId;
+          const logDate = e.currentTarget.dataset.logDate;
+
+          // 요약 영역 세팅
+          logIdEl.textContent   = logId || '-';
+          logDateEl.textContent = logDate || '-';
+
+          if (type === 'INCOME')      logTypeEl.textContent = '입고';
+          else if (type === 'OUTGO')  logTypeEl.textContent = '출고';
+          else if (type === 'ADJUST') logTypeEl.textContent = '조정';
+          else                        logTypeEl.textContent = type || '-';
+
+          // 제목 세팅
+          titleEl.textContent = materialName + ' ' + logTypeEl.textContent;
+
+          // 상세 API 호출
+          let url;
+          if (type === 'ADJUST') {
+            url = adjustBase + logId;
+          } else {
+            if (!batchId) {
+              tbody.innerHTML =
+                '<tr><td colspan="2">배치 ID가 없어 LOT 상세를 조회할 수 없습니다.</td></tr>';
+              return;
+            }
+            url = lotBase + batchId;
+          }
+
+          try {
+            const res = await fetch(url, {
+              headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            const raw = await res.text();
+
+            if (!res.ok) {
+              console.error('LOT/조정 상세 오류', res.status, raw);
+              tbody.innerHTML =
+                '<tr><td colspan="2">상세 조회 중 오류가 발생했습니다.</td></tr>';
+              return;
+            }
+
+            const detail = raw ? JSON.parse(raw) : {};
+
+            if (type === 'ADJUST') {
+              tbody.innerHTML = `
+                <tr><th>조정 전 수량</th><td class="ta-l">${detail.quantityBefore}</td></tr>
+                <tr><th>조정 후 수량</th><td class="ta-l">${detail.quantityAfter}</td></tr>
+                <tr><th>증감 수량</th><td class="ta-l">${detail.difference}</td></tr>
+                <tr><th>사유</th><td class="ta-l">${detail.reason || '-'}</td></tr>
+                <tr><th>메모</th><td class="ta-l">${detail.memo || '-'}</td></tr>
+              `;
+            } else {
+              tbody.innerHTML = `
+                <tr><th>LOT 번호</th><td class="ta-l">${detail.lotNo || '-'}</td></tr>
+                <tr><th>입고일</th><td class="ta-l">${detail.receivedDate || '-'}</td></tr>
+                <tr><th>유통기한</th><td class="ta-l">${detail.expirationDate || '-'}</td></tr>
+                <tr><th>입고 수량</th><td class="ta-l">${detail.receivedQuantity}</td></tr>
+                <tr><th>현재 잔량</th><td class="ta-l">${detail.remainingQuantity}</td></tr>
+                <tr><th>단가</th><td class="ta-l">${detail.unitPrice}</td></tr>
+              `;
+            }
+          } catch (e) {
+            console.error('상세 조회 fetch 실패', e);
+            tbody.innerHTML =
+              '<tr><td colspan="2">상세 조회 중 오류가 발생했습니다.</td></tr>';
+          }
+        });
+      });
+    });
 </script>
 
 </body>

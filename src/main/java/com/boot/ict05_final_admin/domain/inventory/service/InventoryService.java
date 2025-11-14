@@ -219,27 +219,37 @@ public class InventoryService {
     }
 
     /** 화면용 페이지 조회도 동일 커스텀 메서드를 감싸서 DTO로 내보낼 수 있다. */
-    public Page<InventoryLogDTO> getFilteredLogs(Long materialId, String type,
-                                                 LocalDate startDate, LocalDate endDate,
+    @Transactional(readOnly = true)
+    public Page<InventoryLogDTO> getFilteredLogs(Long materialId,
+                                                 String type,
+                                                 LocalDate startDate,
+                                                 LocalDate endDate,
                                                  Pageable pageable) {
+
         Page<InventoryLogView> page =
                 inventoryLogViewRepository.findLogsByFilter(materialId, type, startDate, endDate, pageable);
 
+        // storeId → 가맹점명 매핑
         Set<Long> ids = page.getContent().stream()
-                .map(InventoryLogView::getStoreId).filter(Objects::nonNull).collect(Collectors.toSet());
+                .map(InventoryLogView::getStoreId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
         Map<Long,String> nameMap = storeNameResolver.resolveAllWithFallback(ids);
 
-        List<InventoryLogDTO> list = page.getContent().stream().map(v -> InventoryLogDTO.builder()
-                .logId(v.getId())
-                .logDate(v.getDate())
-                .logType(v.getType())     // 문자열 유지
-                .quantity(v.getQuantity())
-                .stockAfter(v.getStockAfter())
-                .unitPrice(v.getUnitPrice())
-                .memo(v.getMemo())
-                .storeId(v.getStoreId())
-                .storeName(v.getStoreId()==null? null : nameMap.get(v.getStoreId()))
-                .build()).toList();
+        List<InventoryLogDTO> list = page.getContent().stream()
+                .map(v -> InventoryLogDTO.builder()
+                        .logId(v.getId())
+                        .logDate(v.getDate())
+                        .logType(v.getType())
+                        .quantity(v.getQuantity())
+                        .stockAfter(v.getStockAfter())
+                        .unitPrice(v.getUnitPrice())
+                        .memo(v.getMemo())
+                        .storeId(v.getStoreId())
+                        .storeName(v.getStoreId()==null? null : nameMap.get(v.getStoreId()))
+                        .batchId(v.getBatchId())
+                        .build())
+                .toList();
 
         return new PageImpl<>(list, pageable, page.getTotalElements());
     }

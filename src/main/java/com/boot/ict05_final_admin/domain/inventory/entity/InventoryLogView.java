@@ -61,4 +61,8 @@ public class InventoryLogView {
     /** 재고 */
     @Column(name = "stock_after", precision = 15, scale = 3)
     private BigDecimal stockAfter;
+
+    /** LOT 상세용 배치 PK (nullable) */
+    @Column(name = "batch_id")
+    private Long batchId;
 }
