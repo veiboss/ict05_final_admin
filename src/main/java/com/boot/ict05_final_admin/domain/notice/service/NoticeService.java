@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.notice.service;
 
+import com.boot.ict05_final_admin.domain.fcm.dto.NoticeFcmEvent;
+import com.boot.ict05_final_admin.domain.fcm.service.HqNoticeFcmBridgeService;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeListDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeModifyFormDTO;
 import com.boot.ict05_final_admin.domain.notice.dto.NoticeSearchDTO;
@@ -15,6 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +45,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final NoticeAttachmentRepository noticeAttachmentRepository;
     private final NoticeAttachmentService noticeAttachmentService;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 새로운 공지사항을 등록하고 첨부파일을 저장한다.
@@ -81,6 +85,9 @@ public class NoticeService {
                 }
             }
         }
+        eventPublisher.publishEvent(
+                new NoticeFcmEvent(id, NoticeFcmEvent.Type.CREATED)
+        );
 
         return id;
     }
@@ -133,6 +140,10 @@ public class NoticeService {
                 }
             }
         }
+
+        eventPublisher.publishEvent(
+                new NoticeFcmEvent(dto.getId(), NoticeFcmEvent.Type.UPDATED)
+        );
 
         return notice;
     }
