@@ -89,7 +89,7 @@ public class InventoryService {
     /**
      * 본사 현재고(재료ID 기준)
      *
-     * <p>HQ 배치 잔량 합.</p>
+     * <p>배치 기준 현재 HQ 재고 합</p>
      */
     @Comment("HQ 현재고 합계")
     public BigDecimal hqRemainOfMaterial(Long materialId) {
@@ -196,7 +196,7 @@ public class InventoryService {
             int r = 1;
             for (InventoryLogView v : page) {
                 Row row = sheet.createRow(r++);
-                row.createCell(0).setCellValue(v.getId());
+                row.createCell(0).setCellValue(v.getLogId());
                 row.createCell(1).setCellValue(v.getDate() == null ? "" : v.getDate().toString());
                 row.createCell(2).setCellValue(v.getType() == null ? "" : v.getType());
                 row.createCell(3).setCellValue(v.getQuantity() == null ? 0d : v.getQuantity().doubleValue());
@@ -238,7 +238,7 @@ public class InventoryService {
 
         List<InventoryLogDTO> list = page.getContent().stream()
                 .map(v -> InventoryLogDTO.builder()
-                        .logId(v.getId())
+                        .logId(v.getLogId())
                         .logDate(v.getDate())
                         .logType(v.getType())
                         .quantity(v.getQuantity())
@@ -314,4 +314,15 @@ public class InventoryService {
             throw new IllegalStateException("재고 배치 엑셀 생성 실패: materialId=" + materialId, e);
         }
     }
+
+    // Inventory 테이블의 quantity를 배치 합계로 맞춰주는 동기화
+    @Transactional
+    public void syncInventoryQuantity(Long materialId, BigDecimal newQty) {
+        inventoryRepository.findByMaterialId(materialId)
+                .ifPresent(inv -> {
+                    inv.setQuantity(newQty);   // 엔티티에 setter 또는 change 메서드 있다고 가정
+                    inv.updateStatusNow();     // 여니가 말한 상태 재계산 메서드
+                });
+    }
+
 }

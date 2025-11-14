@@ -40,7 +40,7 @@ public class InventoryController {
     private final InventoryInService inService;
     private final InventoryOutService outService;
     private final InventoryLotService lotService;
-    private final InventoryLogViewService logViewService;
+    private final InventoryLogViewService inventoryLogViewService;
     private final InventoryBatchService inventoryBatchService;
     private final InventoryAdjustmentService inventoryAdjustmentService;
 
@@ -114,7 +114,7 @@ public class InventoryController {
         var inventory = inventoryOpt != null ? inventoryOpt.orElse(null) : null;
 
         // 로그 페이징 (기존 그대로)
-        Page<InventoryLogDTO> logs = inventoryService.getFilteredLogs(
+        Page<InventoryLogDTO> logs = inventoryLogViewService.getFilteredLogs(
                 materialId, type, startDate, endDate, PageRequest.of(page, size));
 
         // 뷰 모델
@@ -216,13 +216,22 @@ public class InventoryController {
      */
     @GetMapping("/logs")
     @ResponseBody
-    public Page<InventoryLogView> logs(@RequestParam Long materialId,
-                                       @RequestParam(required = false) String type,
-                                       @RequestParam(required = false) LocalDate startDate,
-                                       @RequestParam(required = false) LocalDate endDate,
-                                       @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
-        return logViewService.getFilteredLogs(materialId, type, startDate, endDate, PageRequest.of(page, size));
+    public Page<InventoryLogDTO> logs(@RequestParam Long materialId,
+                                      @RequestParam(required = false) String type,
+                                      @RequestParam(required = false)
+                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                      @RequestParam(required = false)
+                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                      @RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int size) {
+
+        return inventoryLogViewService.getFilteredLogs(
+                materialId,
+                type,
+                startDate,
+                endDate,
+                PageRequest.of(page, size)
+        );
     }
 
     // 조정 상세

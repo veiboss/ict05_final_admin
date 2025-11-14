@@ -1,5 +1,7 @@
 package com.boot.ict05_final_admin.domain.inventory.repository;
 
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryLogDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryLogSearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.entity.QInventoryLogView;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -32,12 +34,12 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
                         v.date.goe(from),
                         v.date.lt(to)
                 )
-                .orderBy(v.date.desc(), v.id.desc())
+                .orderBy(v.date.desc(), v.logId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        Long total = qf.select(v.id.count())
+        Long total = qf.select(v.logId.count())
                 .from(v)
                 .where(
                         v.materialId.eq(materialId),
@@ -64,12 +66,12 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
                         eqType(type),
                         betweenDate(from, to)
                 )
-                .orderBy(v.date.desc(), v.id.desc())
+                .orderBy(v.date.desc(), v.logId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        Long total = qf.select(v.id.count())
+        Long total = qf.select(v.logId.count())
                 .from(v)
                 .where(
                         eqMaterial(materialId),
@@ -81,8 +83,49 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
         return new PageImpl<>(rows, pageable, total != null ? total : 0L);
     }
 
-    // helpers
+    // ================= DTO 전용 메서드 추가 =================
 
+    /**
+     * 재고 로그 검색 DTO 기반 조회 (InventoryLogDTO 페이지 리턴).
+     *
+     * 컨트롤러에서 InventoryLogSearchDTO 그대로 넘겨 쓰면 됨.
+     */
+    public Page<InventoryLogDTO> findLogDto(InventoryLogSearchDTO cond, Pageable pageable) {
+        LocalDateTime from = (cond.getStartDate() != null)
+                ? cond.getStartDate().atStartOfDay()
+                : null;
+        LocalDateTime to = (cond.getEndDate() != null)
+                ? cond.getEndDate().plusDays(1).atStartOfDay()
+                : null;
+
+        List<InventoryLogView> rows = qf.selectFrom(v)
+                .where(
+                        eqMaterial(cond.getMaterialId()),
+                        eqType(cond.getType()),
+                        betweenDate(from, to)
+                )
+                .orderBy(v.date.desc(), v.logId.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = qf.select(v.logId.count())
+                .from(v)
+                .where(
+                        eqMaterial(cond.getMaterialId()),
+                        eqType(cond.getType()),
+                        betweenDate(from, to)
+                )
+                .fetchOne();
+
+        List<InventoryLogDTO> dtoList = rows.stream()
+                .map(this::toDto)
+                .toList();
+
+        return new PageImpl<>(dtoList, pageable, total != null ? total : 0L);
+    }
+
+    // helpers
     private BooleanExpression eqMaterial(Long materialId) {
         return materialId != null ? v.materialId.eq(materialId) : null;
     }
@@ -96,5 +139,20 @@ public class InventoryLogViewRepositoryImpl implements InventoryLogViewRepositor
         if (from != null) return v.date.goe(from);
         if (to != null)   return v.date.lt(to);
         return null;
+    }
+
+    private InventoryLogDTO toDto(InventoryLogView row) {
+        return InventoryLogDTO.builder()
+                .logId(row.getLogId())
+                .logDate(row.getDate())
+                .logType(row.getType())
+                .quantity(row.getQuantity())
+                .stockAfter(row.getStockAfter())
+                .unitPrice(row.getUnitPrice())
+                .memo(row.getMemo())
+                .storeId(row.getStoreId())
+                .storeName(row.getStoreName())
+                .batchId(row.getBatchId())
+                .build();
     }
 }

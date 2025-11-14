@@ -4,6 +4,7 @@ import com.boot.ict05_final_admin.domain.inventory.dto.InventoryLogDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryLogViewRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -44,7 +46,7 @@ public class InventoryLogService {
 
         List<InventoryLogDTO> list = page.getContent().stream()
                 .map(v -> InventoryLogDTO.builder()
-                        .logId(v.getId())
+                        .logId(v.getLogId())
                         .logDate(v.getDate())
                         .logType(v.getType())          // DTO는 String 타입
                         .quantity(v.getQuantity())

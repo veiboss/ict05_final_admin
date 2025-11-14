@@ -92,7 +92,6 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
 <script>
     (function () {
       const $btnPreview = $('#btnPreview');
@@ -101,15 +100,22 @@
       const $empty = $('#previewEmpty');
       const $sumQty = $('#sumQty');
 
+      // toast 없으면 alert로 대체
+      const toastApi = (window.toast) ? window.toast : {
+        success: msg => alert(msg),
+        error: msg => alert(msg),
+        warn: msg => alert(msg)
+      };
+
       let lastPreview = []; // OutPreviewItemDTO[]
 
       function fmtDate(d) {
         if (!d) return '';
-        // LocalDate 문자열 가정: 2025-11-05
-        return String(d).substring(0, 10);
+        return String(d).substring(0, 10); // 2025-11-05T... or 2025-11-05 둘 다 커버
       }
+
       function fmtNum(n) {
-        if (n == null) return '';
+        if (n == null || isNaN(n)) return '';
         return Number(n).toLocaleString(undefined, { maximumFractionDigits: 3 });
       }
 
@@ -124,92 +130,146 @@
 
       function renderPreview(rows) {
         $tbody.empty();
+
         if (!rows || rows.length === 0) {
           $tbody.append($empty.show());
           $sumQty.text('0');
           $btnConfirm.prop('disabled', true);
           return;
         }
+
         let total = 0;
         rows.forEach(r => {
-          total += Number(r.qty);
+          // 서버 DTO가 qty 또는 quantity 를 쓸 수 있으니 둘 다 지원
+          const q = (r.qty != null) ? r.qty : r.quantity;
+          const lotNo = r.lotNo || '';
+          const batchId = r.batchId || '';
+
+          total += Number(q) || 0;
+
           const tr = $('<tr/>')
-            .append($('<td/>').text(r.lotNo))
-            .append($('<td/>').text(r.batchId))
-            .append($('<td/>').addClass('text-right').text(fmtNum(r.qty)))
+            .append($('<td/>').text(lotNo))
+            .append($('<td/>').text(batchId))
+            .append($('<td/>').addClass('text-right').text(fmtNum(q)))
             .append($('<td/>').text(fmtDate(r.expirationDate)));
+
           $tbody.append(tr);
         });
+
         $sumQty.text(fmtNum(total));
         $btnConfirm.prop('disabled', false);
       }
 
-      // 미리보기
+      // ===== 미리보기 =====
       $btnPreview.on('click', function () {
         const { materialId, qty } = readInputs();
         if (!materialId || !qty || qty <= 0) {
-          toast.warn('재료 ID와 수량을 확인하세요.');
+          toastApi.warn('재료 ID와 수량을 확인하세요.');
           return;
         }
 
-        // POST x-www-form-urlencoded
         const body = new URLSearchParams();
         body.set('materialId', String(materialId));
         body.set('qty', String(qty));
 
-        fetch('/API/inventory/out/preview', {
+        fetch('/admin/API/inventory/out/preview', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
           body
         })
-          .then(r => r.ok ? r.json() : Promise.reject(r))
+          .then(async (res) => {
+            const raw = await res.text();
+            console.log('[OUT PREVIEW] status=', res.status, 'raw=', raw);
+
+            if (!res.ok) {
+              // 로그인 리다이렉트(HTML)나 에러 메시지 그대로 보기 위해 raw 포함
+              throw new Error(raw || `HTTP ${res.status}`);
+            }
+
+            if (!raw) return [];
+
+            try {
+              const json = JSON.parse(raw);
+              if (!Array.isArray(json)) {
+                console.warn('[OUT PREVIEW] JSON is not array:', json);
+                return [];
+              }
+              return json;
+            } catch (e) {
+              console.error('[OUT PREVIEW] JSON parse error:', e);
+              throw new Error('미리보기 응답 JSON 파싱 실패');
+            }
+          })
           .then(rows => {
             lastPreview = rows || [];
             renderPreview(lastPreview);
-            toast.success('미리보기 완료');
+            toastApi.success('미리보기 완료');
           })
           .catch(err => {
+            console.error('[OUT PREVIEW] error:', err);
             lastPreview = [];
             renderPreview([]);
-            toast.error('미리보기 실패: ' + (err.status || err));
+            toastApi.error('미리보기 실패: ' + err.message);
           });
       });
 
-      // 확정
+      // ===== 확정 =====
       $btnConfirm.on('click', function () {
         const { materialId, qty, storeId, memo } = readInputs();
         if (!materialId || !qty || qty <= 0) {
-          toast.warn('재료 ID와 수량을 확인하세요.');
+          toastApi.warn('재료 ID와 수량을 확인하세요.');
           return;
         }
         if (!lastPreview || lastPreview.length === 0) {
-          toast.warn('먼저 미리보기를 수행하세요.');
+          toastApi.warn('먼저 미리보기를 수행하세요.');
           return;
         }
 
         const payload = {
           materialId: materialId,
-          storeId: storeId,            // null 가능
-          totalQty: qty,               // BigDecimal
-          outDate: null,               // 서버에서 now() 처리
+          storeId: storeId,     // null 가능
+          totalQty: qty,        // BigDecimal
+          outDate: null,        // 서버에서 now() 처리
           memo: memo
         };
 
-        fetch('/API/inventory/out/confirm', {
+        fetch('/admin/API/inventory/out/confirm', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json;charset=UTF-8' },
           body: JSON.stringify(payload)
         })
-          .then(r => r.ok ? r.json() : Promise.reject(r))
+          .then(async (res) => {
+            const raw = await res.text();
+            console.log('[OUT CONFIRM] status=', res.status, 'raw=', raw);
+
+            if (!res.ok) {
+              throw new Error(raw || `HTTP ${res.status}`);
+            }
+
+            if (!raw) return null;
+
+            try {
+              // 서버가 Long ID를 그대로 JSON number로 내려준다는 가정
+              const json = JSON.parse(raw);
+              return json;
+            } catch (e) {
+              // 그냥 문자열 ID를 내려줄 수도 있으니 그때는 raw 그대로 사용
+              console.warn('[OUT CONFIRM] JSON parse error, use raw:', e);
+              return raw;
+            }
+          })
           .then(id => {
-            toast.success('출고 확정 완료. ID=' + id);
-            // 확정 후 미리보기 초기화
+            toastApi.success('출고 확정 완료. ID=' + id);
             lastPreview = [];
             renderPreview([]);
           })
-          .catch(err => toast.error('출고 확정 실패: ' + (err.status || err)));
+          .catch(err => {
+            console.error('[OUT CONFIRM] error:', err);
+            toastApi.error('출고 확정 실패: ' + err.message);
+          });
       });
     })();
 </script>
+
 </body>
 </html>

@@ -144,48 +144,79 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr  th:if="${logs == null or #lists.isEmpty(logs.content)}">
-                            <td colspan="8">입출고 내역이 없습니다.</td>
-                        </tr>
-                        <tr th:each="row : ${logs.content}">
-                            <td th:text="${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                            <td>
-                                <span th:switch="${row.logType}">
-                                  <span th:case="'INCOME'" class="type-in">입고</span>
-                                  <span th:case="'OUTGO'"  class="type-out">출고</span>
-                                  <span th:case="'ADJUST'" class="type-adj">조정</span>
-                                  <span th:case="*">-</span>
-                                </span>
-                            </td>
-                            <td th:text="${row.quantity != null ? #numbers.formatDecimal(row.quantity,1,'COMMA',0,'POINT') : '0'}"></td>
-                            <td th:text="${row.stockAfter != null ? #numbers.formatDecimal(row.stockAfter,1,'COMMA',0,'POINT') : '0'}"></td>
-                            <td th:text="${row.storeName != null ? row.storeName : '-'}"></td>
-                            <td th:text="${row.unitPrice}"></td>
-                            <td th:text="${row.memo != null && row.memo != '' ? row.memo : '-'}"></td>
-                            <td>
-                                <!-- INCOME/OUTGO: LOT 상세 (batchId 있을 때만) -->
-                                <button type="button" class="btn log-detail-link"
-                                        onclick="modalOpen('#detailModal');"
-                                        th:if="${(row.logType == 'INCOME' or row.logType == 'OUTGO') and row.batchId != null}"
-                                        th:attr="data-log-id=${row.logId},
-                                                 data-log-type=${row.logType},
-                                                 data-batch-id=${row.batchId}">
-                                    <span class="fc-primary">
-                                        #[[${row.batchId}]]
+                            <tr th:if="${logs == null or #lists.isEmpty(logs.content)}">
+                                <td colspan="8">입출고 내역이 없습니다.</td>
+                            </tr>
+
+                            <tr th:each="row : ${logs.content}">
+                                <!-- 날짜 -->
+                                <td th:text="${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+
+                                <!-- 구분 -->
+                                <td>
+                                    <span th:switch="${row.logType}">
+                                        <span th:case="'INCOME'" class="type-in">입고</span>
+                                        <span th:case="'OUTGO'"   class="type-out">출고</span>
+                                        <span th:case="'ADJUST'" class="type-adj">조정</span>
+                                        <span th:case="*">-</span>
                                     </span>
-                                </button>
-                                <!-- ADJUST: 조정 상세 -->
-                                <button type="button" class="btn log-detail-link"
-                                        onclick="modalOpen('#detailModal');"
-                                        th:if="${row.logType == 'ADJUST'}"
-                                        th:attr="data-log-id=${row.logId},
-                                                 data-log-type=${row.logType}">
-                                    <span class="fc-primary">
-                                        #[[${row.logId}]]
-                                    </span>
-                                </button>
-                            </td>
-                        </tr>
+                                </td>
+
+                                <!-- 수량 -->
+                                <td th:text="${row.quantity != null ? #numbers.formatDecimal(row.quantity,1,'COMMA',0,'POINT') : '0'}"></td>
+
+                                <!-- 재고 -->
+                                <td th:text="${row.stockAfter != null ? #numbers.formatDecimal(row.stockAfter,1,'COMMA',0,'POINT') : '0'}"></td>
+
+                                <!-- 가맹점 -->
+                                <td th:text="${row.storeName != null ? row.storeName : '-'}"></td>
+
+                                <!-- 단가 -->
+                                <td th:text="${row.unitPrice}"></td>
+
+                                <!-- 비고 -->
+                                <td th:text="${row.memo != null && row.memo != '' ? row.memo : '-'}"></td>
+
+                                <!-- 상세 -->
+                                <td>
+                                    <!-- INCOME: LOT 1건 기준, batchId 필요 -->
+                                    <button type="button" class="btn log-detail-link"
+                                            th:if="${row.logType == 'INCOME' and row.batchId != null}"
+                                            onclick="modalOpen('#detailModal');"
+                                            th:attr="data-log-id=${row.logId},
+                                                     data-log-type=${row.logType},
+                                                     data-batch-id=${row.batchId},
+                                                     data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                        <span class="fc-primary">
+                                            LOT #[[${row.batchId}]]
+                                        </span>
+                                    </button>
+
+                                    <!-- OUTGO: 항상 헤더 기준 1행, logId만 넘김 -->
+                                    <button type="button" class="btn log-detail-link"
+                                            th:if="${row.logType == 'OUTGO' or row.logType == 'OUTCOME'}"
+                                            onclick="modalOpen('#detailModal');"
+                                            th:attr="data-log-id=${row.logId},
+                                                     data-log-type=${row.logType},
+                                                     data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                        <span class="fc-primary">
+                                            출고 상세
+                                        </span>
+                                    </button>
+
+                                    <!-- ADJUST: 조정 상세 -->
+                                    <button type="button" class="btn log-detail-link"
+                                            th:if="${row.logType == 'ADJUST'}"
+                                            onclick="modalOpen('#detailModal');"
+                                            th:attr="data-log-id=${row.logId},
+                                                     data-log-type=${row.logType},
+                                                     data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                        <span class="fc-primary">
+                                            조정 상세
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 
@@ -219,20 +250,20 @@
         <div class="popup-body">
             <!-- 공통 요약 -->
             <div id="detailSummary" class="pack-down">
-                <table class="data-table small">
-                    <tbody>
-                    <tr>
-                        <th scope="row" class="w-100">로그 ID</th>
-                        <td id="detailLogId">-</td>
-                        <th scope="row" class="w-100">유형</th>
-                        <td id="detailLogType">-</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">일시</th>
-                        <td id="detailLogDate" colspan="3">-</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="data-table small">
+                    <dl>
+                        <dt class="w-100">로그 ID</dt>
+                        <dd id="detailLogId">-</dd>
+                    </dl>
+                    <dl>
+                        <dt class="w-100">유형</dt>
+                        <dd id="detailLogType">-</dd>
+                    </dl>
+                    <dl class="pack-left">
+                        <dt>일시</dt>
+                        <dd id="detailLogDate">-</dd>
+                    </dl>
+                </div>
             </div>
 
             <!--입고-->
@@ -272,7 +303,7 @@
                 <p class="pack-right gap-8">
                     <span>총 출고수량: X</span>
                     <span>가중평균단가: Y</span>
-                    <span>대상 가맹점: Y</span>
+                    <span>대상 가맹점: Z</span>
                 </p>
                 <div class="table-wrap">
                     <table class="data-table markup-list">
@@ -489,8 +520,8 @@
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
       const modal   = document.querySelector('#detailModal');
-      const tbody   = modal.querySelector('tbody');
 
+      // 요약 영역
       const titleEl    = document.getElementById('detailModalTitle');
       const logIdEl    = document.getElementById('detailLogId');
       const logTypeEl  = document.getElementById('detailLogType');
@@ -499,8 +530,29 @@
       const materialName =
         document.querySelector('.page-title span')?.textContent.trim() || '';
 
+      // 상세 섹션/테이블
+      const sectionIncome = document.getElementById('section-income');
+      const sectionOutgo  = document.getElementById('section-outgo');
+      const sectionAdjust = document.getElementById('section-adjust');
+
+      const incomeTbody = sectionIncome.querySelector('tbody');
+      const outgoTbody  = sectionOutgo.querySelector('tbody');
+      const adjustTbody = sectionAdjust.querySelector('tbody');
+
+      // 엔드포인트 베이스 (컨트롤러에 맞춰 구현 필요)
       const adjustBase = /*[[@{/inventory/log/adjust/}]]*/ '/inventory/log/adjust/';
       const lotBase    = /*[[@{/inventory/log/lot/}]]*/    '/inventory/log/lot/';
+      const outBase    = /*[[@{/inventory/log/out/}]]*/    '/inventory/log/out/';
+
+      function hideAllSections() {
+        sectionIncome.style.display = 'none';
+        sectionOutgo.style.display  = 'none';
+        sectionAdjust.style.display = 'none';
+
+        incomeTbody.innerHTML = '';
+        outgoTbody.innerHTML  = '';
+        adjustTbody.innerHTML = '';
+      }
 
       document.querySelectorAll('.log-detail-link').forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -509,7 +561,9 @@
           const batchId = e.currentTarget.dataset.batchId;
           const logDate = e.currentTarget.dataset.logDate;
 
-          // 요약 영역 세팅
+          hideAllSections();
+
+          // 요약 세팅
           logIdEl.textContent   = logId || '-';
           logDateEl.textContent = logDate || '-';
 
@@ -518,60 +572,110 @@
           else if (type === 'ADJUST') logTypeEl.textContent = '조정';
           else                        logTypeEl.textContent = type || '-';
 
-          // 제목 세팅
+          // 제목: 재료명 + 유형
           titleEl.textContent = materialName + ' ' + logTypeEl.textContent;
 
-          // 상세 API 호출
           let url;
+          let targetTbody;
+          let renderFn;
+
           if (type === 'ADJUST') {
+            // 조정 상세
+            sectionAdjust.style.display = 'block';
+            targetTbody = adjustTbody;
             url = adjustBase + logId;
-          } else {
+
+            renderFn = (detail) => {
+              targetTbody.innerHTML = `
+                <tr>
+                  <td data-th="조정 전">${detail.quantityBefore}</td>
+                  <td data-th="조정 후">${detail.quantityAfter}</td>
+                  <td data-th="증감">${detail.difference}</td>
+                  <td data-th="사유코드">${detail.reason || '-'}</td>
+                  <td data-th="메모">${detail.memo || '-'}</td>
+                </tr>
+              `;
+            };
+          } else if (type === 'INCOME') {
+            // 입고 LOT 1건 상세 (batchId 기준)
             if (!batchId) {
-              tbody.innerHTML =
-                '<tr><td colspan="2">배치 ID가 없어 LOT 상세를 조회할 수 없습니다.</td></tr>';
+              incomeTbody.innerHTML =
+                '<tr><td colspan="6">배치 ID가 없어 LOT 상세를 조회할 수 없습니다.</td></tr>';
+              sectionIncome.style.display = 'block';
               return;
             }
+            sectionIncome.style.display = 'block';
+            targetTbody = incomeTbody;
             url = lotBase + batchId;
+
+            // detail: {lotNo, receivedDate, expirationDate, receivedQuantity, remainingQuantity, unitPrice, memo}
+            renderFn = (detail) => {
+              targetTbody.innerHTML = `
+                <tr>
+                  <td data-th="LOT">${detail.lotNo || '-'}</td>
+                  <td data-th="입고일">${detail.receivedDate || '-'}</td>
+                  <td data-th="유통기한">${detail.expirationDate || '-'}</td>
+                  <td data-th="입고수량">${detail.receivedQuantity}</td>
+                  <td data-th="단가">${detail.unitPrice}</td>
+                  <td data-th="기타">${detail.memo || '-'}</td>
+                </tr>
+              `;
+            };
+          } else if (type === 'OUTGO') {
+            // 출고 LOT N건 상세 (헤더 logId 기준)
+            sectionOutgo.style.display = 'block';
+            targetTbody = outgoTbody;
+            url = outBase + logId;
+
+            // detail: [{lotNo, outDate, quantity, remainingQuantity, unitPrice}, ...] 형식 가정
+            renderFn = (list) => {
+              if (!Array.isArray(list) || list.length === 0) {
+                targetTbody.innerHTML =
+                  '<tr><td colspan="4">출고 LOT 상세가 없습니다.</td></tr>';
+                return;
+              }
+              targetTbody.innerHTML = list.map(row => `
+                <tr>
+                  <td data-th="LOT">${row.lotNo || '-'}</td>
+                  <td data-th="출고일">${row.outDate || '-'}</td>
+                  <td data-th="출고수량">${row.quantity}</td>
+                  <td data-th="출고 후 잔량">${row.remainingQuantity}</td>
+                </tr>
+              `).join('');
+            };
+          } else {
+            // 알 수 없는 타입
+            return;
           }
 
           try {
             const res = await fetch(url, {
               headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
-
             const raw = await res.text();
 
             if (!res.ok) {
-              console.error('LOT/조정 상세 오류', res.status, raw);
-              tbody.innerHTML =
-                '<tr><td colspan="2">상세 조회 중 오류가 발생했습니다.</td></tr>';
+              console.error('상세 조회 오류', res.status, raw);
+              targetTbody.innerHTML =
+                '<tr><td colspan="6">상세 조회 중 오류가 발생했습니다.</td></tr>';
               return;
             }
 
-            const detail = raw ? JSON.parse(raw) : {};
-
-            if (type === 'ADJUST') {
-              tbody.innerHTML = `
-                <tr><th>조정 전 수량</th><td class="ta-l">${detail.quantityBefore}</td></tr>
-                <tr><th>조정 후 수량</th><td class="ta-l">${detail.quantityAfter}</td></tr>
-                <tr><th>증감 수량</th><td class="ta-l">${detail.difference}</td></tr>
-                <tr><th>사유</th><td class="ta-l">${detail.reason || '-'}</td></tr>
-                <tr><th>메모</th><td class="ta-l">${detail.memo || '-'}</td></tr>
-              `;
-            } else {
-              tbody.innerHTML = `
-                <tr><th>LOT 번호</th><td class="ta-l">${detail.lotNo || '-'}</td></tr>
-                <tr><th>입고일</th><td class="ta-l">${detail.receivedDate || '-'}</td></tr>
-                <tr><th>유통기한</th><td class="ta-l">${detail.expirationDate || '-'}</td></tr>
-                <tr><th>입고 수량</th><td class="ta-l">${detail.receivedQuantity}</td></tr>
-                <tr><th>현재 잔량</th><td class="ta-l">${detail.remainingQuantity}</td></tr>
-                <tr><th>단가</th><td class="ta-l">${detail.unitPrice}</td></tr>
-              `;
+            let data;
+            try {
+              data = raw ? JSON.parse(raw) : null;
+            } catch (e2) {
+              console.error('JSON 파싱 실패', raw);
+              targetTbody.innerHTML =
+                '<tr><td colspan="6">상세 데이터 파싱 중 오류가 발생했습니다.</td></tr>';
+              return;
             }
+
+            renderFn(data);
           } catch (e) {
             console.error('상세 조회 fetch 실패', e);
-            tbody.innerHTML =
-              '<tr><td colspan="2">상세 조회 중 오류가 발생했습니다.</td></tr>';
+            targetTbody.innerHTML =
+              '<tr><td colspan="6">상세 조회 중 오류가 발생했습니다.</td></tr>';
           }
         });
       });

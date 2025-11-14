@@ -116,10 +116,15 @@ public class InventoryBatch {
      * @param amount 차감할 수량
      */
     public void subtractQuantity(BigDecimal amount) {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) return;
-        this.quantity = this.quantity.subtract(amount);
-        if (this.quantity.compareTo(BigDecimal.ZERO) < 0) {
+        if (amount == null || amount.signum() <= 0) return;
+        if (this.quantity == null) {
             this.quantity = BigDecimal.ZERO;
         }
+        BigDecimal after = this.quantity.subtract(amount);
+        if (after.signum() < 0) {
+            throw new IllegalArgumentException("배치 잔량 부족: batchId=" + id +
+                    ", 현재=" + this.quantity + ", 요청=" + amount);
+        }
+        this.quantity = after;
     }
 }

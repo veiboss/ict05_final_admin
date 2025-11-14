@@ -2,10 +2,7 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
 
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -55,6 +52,7 @@ public class InventoryOut {
     private BigDecimal quantity;
 
     /** 출고 후 재고량 */
+    @Setter
     @Column(name = "inventory_out_stock_after", precision = 15, scale = 3)
     private BigDecimal stockAfter;
 
