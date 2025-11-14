@@ -50,19 +50,3 @@ __pycache__/
 # Firebase Admin JSON (만약 레포 내부에 둘 경우)
 **/firebase-admin.json
 **/service-account*.json
-
-# 수신/비밀 설정 (개인/서버별 로컬 파일)
-application-receive.properties
-application-receive.yml
-application-receive-*.properties
-application-receive-*.yml
-src/main/resources/application-receive.properties
-src/main/resources/application-receive.yml
-config/application-receive.properties
-config/application-receive.yml
-
-# 로컬/시크릿 관례 패턴
-*.local.properties
-*.local.yml
-*secrets*.properties
-*secrets*.yml
