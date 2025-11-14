@@ -98,8 +98,10 @@ public class StaffService {
      * @param id 사원 ID
      * @return 사원 엔티티, 존재하지 않으면 null
      */
+    @Transactional(readOnly = true)
     public StaffProfile detailStaff(Long id) {
-        return staffRepository.findById(id).orElse(null);
+        return staffRepository.findWithStoreById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사원이 존재하지 않습니다."));
     }
 
     /**
