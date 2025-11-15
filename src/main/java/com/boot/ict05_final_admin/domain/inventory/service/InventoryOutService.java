@@ -1,9 +1,9 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.OutConfirmRequest;
 import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.*;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchQueryRepository;
+import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutRepository;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,8 +27,11 @@ public class InventoryOutService {
 
     private final InventoryBatchQueryRepository inventoryBatchQueryRepository;
     private final InventoryOutRepository inventoryOutRepository;
-    private final InventoryOutLotRepository outLotRepo;
+    private final InventoryOutLotRepository inventoryOutLotRepository;
+    private final InventoryBatchRepository inventoryBatchRepository;
+
     private final EntityManager em;
+
     private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
 
@@ -112,10 +114,9 @@ public class InventoryOutService {
             throw new IllegalArgumentException("출고 수량이 0 이하입니다.");
         }
 
-        // 기준 시각
         LocalDateTime ts = (outDate != null) ? outDate : LocalDateTime.now();
 
-        // 1) 현재 HQ 재고 (배치 합계 기준)
+        // 1) 현재 HQ 재고
         BigDecimal currentStock = inventoryService.hqRemainOfMaterial(materialId);
         if (currentStock == null) currentStock = BigDecimal.ZERO;
         if (currentStock.compareTo(totalQty) < 0) {
@@ -123,25 +124,20 @@ public class InventoryOutService {
                     currentStock + ", out=" + totalQty);
         }
 
-        // 2) FIFO plan 뽑기
-        var plan = previewFifo(materialId, totalQty);
+        // 2) FIFO plan
+        List<OutPreviewItemDTO> plan = previewFifo(materialId, totalQty);
 
         BigDecimal plannedSum = BigDecimal.ZERO;
-
-        for (var p : plan) {
+        for (OutPreviewItemDTO p : plan) {
             plannedSum = plannedSum.add(p.getQty());
 
-            // 배치 차감
-            InventoryBatch batch = em.getReference(InventoryBatch.class, p.getBatchId());
-            batch.subtractQuantity(p.getQty());
+            // 배치 조회 + 차감 + 저장
+            InventoryBatch batch = inventoryBatchRepository.findById(p.getBatchId())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("배치를 찾을 수 없습니다. id=" + p.getBatchId()));
 
-            // out_lot 생성
-            InventoryOutLot lot = InventoryOutLot.builder()
-                    .out(null) // 아래서 addLotItem 로 셋
-                    .batch(batch)
-                    .quantity(p.getQty())
-                    .build();
-            // 헤더 생성 후 addLotItem에서 out 세팅
+            batch.subtractQuantity(p.getQty());
+            inventoryBatchRepository.save(batch); // DynamicUpdate 덕분에 quantity만 UPDATE
         }
 
         if (plannedSum.compareTo(totalQty) != 0) {
@@ -149,13 +145,13 @@ public class InventoryOutService {
                     + plannedSum + ", requested=" + totalQty);
         }
 
-        // 3) 배치 차감까지 끝난 이후 현재고 재계산
+        // 3) 배치 차감 이후 현재고 재계산
         BigDecimal remain = inventoryService.hqRemainOfMaterial(materialId);
 
-        // 4) 단가 (규칙: 최신 매입가 → 마지막 출고단가 → 0)
+        // 4) 단가 결정
         BigDecimal unitPrice = resolveOutUnitPrice(materialId, ts);
 
-        // 5) 헤더 생성 (stockAfter 채워서)
+        // 5) 헤더 생성
         InventoryOut out = InventoryOut.builder()
                 .material(em.getReference(Material.class, materialId))
                 .store(storeId != null ? em.getReference(Store.class, storeId) : null)
@@ -165,17 +161,16 @@ public class InventoryOutService {
                 .unitPrice(unitPrice)
                 .memo(memo)
                 .build();
-
         out = inventoryOutRepository.save(out);
 
-        // 6) LOT 재연결
-        for (var p : plan) {
+        // 6) LOT 생성 (plan 기준으로만 생성)
+        for (OutPreviewItemDTO p : plan) {
             InventoryOutLot lot = InventoryOutLot.builder()
                     .out(out)
                     .batch(em.getReference(InventoryBatch.class, p.getBatchId()))
                     .quantity(p.getQty())
                     .build();
-            outLotRepo.save(lot);
+            inventoryOutLotRepository.save(lot);
         }
 
         // 7) inventory 테이블 현재고 동기화
@@ -183,6 +178,7 @@ public class InventoryOutService {
 
         return out.getId();
     }
+
 
     /** 출고 헤더 삭제. */
     @Transactional

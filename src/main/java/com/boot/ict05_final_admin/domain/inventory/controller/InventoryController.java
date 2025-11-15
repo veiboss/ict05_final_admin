@@ -162,6 +162,21 @@ public class InventoryController {
         return "inventory/out_test";
     }
 
+    /**
+     * 재료별 배치 현황 화면으로 이동한다.
+     * * @param materialId 재료 ID
+     * @param model      뷰 모델
+     * @return 템플릿 경로
+     * @return 재료별 배치
+     */
+    @GetMapping("/batch-status/{materialId}")
+    public String batchStatusPage(@PathVariable Long materialId, Model model) {
+        model.addAttribute("batches", inventoryBatchService.getBatchesByMaterial(materialId));
+        model.addAttribute("materialId", materialId);
+        model.addAttribute("materialName", materialService.findById(materialId).getName());
+        return "inventory/batch_status";
+    }
+
     // -------------------- Read APIs (JSON) --------------------
 
     /**
