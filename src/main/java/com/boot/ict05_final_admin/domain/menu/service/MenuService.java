@@ -120,8 +120,18 @@ public class MenuService {
         Menu menu = findMenuById(dto.getMenuId());
         if (menu == null) throw new IllegalArgumentException("메뉴 없음");
 
-        // 기본필드 갱신 (엔티티에 updateMenu(dto) 존재 가정)
-        menu.updateMenu(dto);
+        // 기본필드 갱신
+        menu.setMenuName(dto.getMenuName());
+        menu.setMenuNameEnglish(dto.getMenuNameEnglish());
+        menu.setMenuPrice(dto.getMenuPrice());
+        menu.setMenuCode(dto.getMenuCode());
+        menu.setMenuInformation(dto.getMenuInformation());
+        menu.setMenuKcal(dto.getMenuKcal());
+
+        if (dto.getMenuShow() != null) {
+            menu.setMenuShow(dto.getMenuShow());
+        }
+
 
         // 카테고리: ID만 처리(있을 때만)
         if (dto.getMenuCategoryId() != null) {

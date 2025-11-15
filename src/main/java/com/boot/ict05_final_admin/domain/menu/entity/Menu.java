@@ -1,12 +1,11 @@
 package com.boot.ict05_final_admin.domain.menu.entity;
 
-import com.boot.ict05_final_admin.domain.menu.dto.MenuModifyFormDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,13 +37,7 @@ public class Menu {
 
     /** 메뉴 칼로리 */
     @Column(name = "menu_kcal")
-    private int menuKcal;
-
-    /** 품절 상태 */
-    @Builder.Default
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sold_out_staus")
-    private SoldOutStatus soldOutStatus = SoldOutStatus.ON_SALE;
+    private Integer menuKcal;
 
     /** 판매상태(0:중지, 1:판매중) */
     @Enumerated(EnumType.STRING)
@@ -64,22 +57,6 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "menu_category_id_fk")
     private MenuCategory menuCategory;
-
-    /** 재료 */
-    @Column(name = "ingredients", length = 500)
-    private String ingredients;
-
-    // 수정 편의 메서드
-    /** DTO 기반 필드 수정(카테고리는 별도 changeCategory 사용) */
-    public void updateMenu(MenuModifyFormDTO dto) {
-        if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
-        if (dto.getMenuCode() != null) this.menuCode = dto.getMenuCode();
-        if (dto.getMenuInformation() != null) this.menuInformation = dto.getMenuInformation();
-        if (dto.getMenuNameEnglish() != null) this.menuNameEnglish = dto.getMenuNameEnglish();
-        if (dto.getMenuKcal() != null) this.menuKcal = dto.getMenuKcal();
-        if (dto.getMenuShow() != null) this.menuShow = dto.getMenuShow();
-        if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
-    }
 
     /** 카테고리 교체 */
     public void changeCategory(MenuCategory category) { this.menuCategory = category; }
