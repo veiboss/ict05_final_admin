@@ -1,7 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.*;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

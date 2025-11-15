@@ -8,7 +8,6 @@ import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepo
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryInRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/API/material")
 @Tag(name = "재료 API", description = "재료 등록/조회/수정/삭제 기능 제공")
-@Slf4j
 public class MaterialRestController {
 
     private final MaterialService materialService;
