@@ -76,7 +76,6 @@ public class HomeService {
         long kpiOrderCount         = kpi != null ? kpi.orderCount()         : 0L;
         int  kpiNewStores          = kpi != null ? kpi.newStores()          : 0;
 
-        /* --------- 여기부터 교체: “분 단위 동일 시각” 기준 성장률 --------- */
         LocalDateTime nowFloor = now.truncatedTo(ChronoUnit.MINUTES);
 
         // 이번 달 누적: [월초, 현재분 + 1분)
@@ -103,8 +102,6 @@ public class HomeService {
         double kpiRevenueGrowthPct = (prevMtd > 0)
                 ? ((curMtd - prevMtd) * 100.0 / prevMtd)
                 : (curMtd > 0 ? 100.0 : 0.0);
-        /* --------- 교체 끝 --------- */
-
 
         // 2) 월별 매출(최근 6개월)
         List<Point<Long>> salesMonthPoints =
