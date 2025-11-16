@@ -160,6 +160,9 @@ public class InventoryOutService {
         // 4) 단가 결정
         BigDecimal unitPrice = resolveOutUnitPrice(materialId, ts);
 
+        // 가격 추가
+        unitPriceService.addPricesForMaterial(materialId, unitPrice, unitPrice);  // 출고가는 매입가와 동일
+
         // 5) 헤더 생성
         InventoryOut out = InventoryOut.builder()
                 .material(em.getReference(Material.class, materialId))

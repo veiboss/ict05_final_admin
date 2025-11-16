@@ -95,4 +95,59 @@ public class UnitPriceService {
     public List<UnitPrice> historyPurchasePrice(Long materialId, int limit) {
         return unitPriceRepository.historyPurchasePrice(materialId, limit);
     }
+
+    /**
+     * 최신 출고가 조회
+     *
+     * @param materialId 재료 ID
+     * @param at 기준 시각
+     * @return 최신 출고가
+     */
+    @Transactional(readOnly = true)
+    public Optional<UnitPrice> latestSellingPrice(Long materialId, LocalDateTime at) {
+        return unitPriceRepository.findLatestSellingPrice(materialId, at != null ? at : LocalDateTime.now());
+    }
+
+    /**
+     * 출고가 이력 조회
+     *
+     * @param materialId 재료 ID
+     * @param limit 최대 행 수
+     * @return 출고가 이력
+     */
+    @Transactional(readOnly = true)
+    public List<UnitPrice> historySellingPrice(Long materialId, int limit) {
+        return unitPriceRepository.historySellingPrice(materialId, limit);
+    }
+
+
+    /**
+     * 재료의 매입 단가와 판매 단가를 새로 추가한다.
+     *
+     * @param materialId 재료 ID
+     * @param unitPrice  매입 단가
+     * @param sellingPrice 판매 단가
+     */
+    @Transactional
+    public void addPricesForMaterial(Long materialId, BigDecimal unitPrice, BigDecimal sellingPrice) {
+        // 매입 단가 추가
+        UnitPrice purchasePrice = UnitPrice.builder()
+                .material(em.getReference(Material.class, materialId))
+                .type(UnitPriceType.PURCHASE)
+                .purchasePrice(unitPrice != null ? unitPrice : BigDecimal.ZERO)
+                .sellingPrice(BigDecimal.ZERO)  // 판매가는 0으로 설정
+                .validFrom(LocalDateTime.now())  // 유효 시작일은 현재 시간
+                .build();
+        unitPriceRepository.save(purchasePrice);
+
+        // 판매 단가 추가
+        UnitPrice sellPrice = UnitPrice.builder()
+                .material(em.getReference(Material.class, materialId))
+                .type(UnitPriceType.SELLING)
+                .purchasePrice(BigDecimal.ZERO)  // 매입가는 0으로 설정
+                .sellingPrice(sellingPrice != null ? sellingPrice : BigDecimal.ZERO)
+                .validFrom(LocalDateTime.now())  // 유효 시작일은 현재 시간
+                .build();
+        unitPriceRepository.save(sellPrice);
+    }
 }

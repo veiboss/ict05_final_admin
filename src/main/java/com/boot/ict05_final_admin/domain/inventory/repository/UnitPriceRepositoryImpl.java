@@ -44,4 +44,47 @@ public class UnitPriceRepositoryImpl implements UnitPriceRepositoryCustom {
                 .limit(limit)
                 .fetch();
     }
+
+
+    /**
+     * 최신 출고가 조회
+     *
+     * @param materialId 재료 ID
+     * @param at         기준 시각
+     * @return 최신 출고가
+     */
+    @Override
+    public Optional<UnitPrice> findLatestSellingPrice(Long materialId, LocalDateTime at) {
+        LocalDateTime ts = at != null ? at : LocalDateTime.now();
+        UnitPrice row = qf.selectFrom(p)
+                .where(
+                        p.material.id.eq(materialId),
+                        p.type.eq(UnitPriceType.SELLING),
+                        p.validFrom.loe(ts),
+                        p.validTo.isNull().or(p.validTo.gt(ts))   // 기간 종료가 없거나, ts 이후
+                )
+                .orderBy(p.validFrom.desc(), p.id.desc())     // validFrom 기준 최신
+                .limit(1)
+                .fetchOne();
+        return Optional.ofNullable(row);
+    }
+
+    /**
+     * 출고가 이력 조회
+     *
+     * @param materialId 재료 ID
+     * @param limit      최대 행 수
+     * @return 출고가 이력
+     */
+    @Override
+    public List<UnitPrice> historySellingPrice(Long materialId, int limit) {
+        return qf.selectFrom(p)
+                .where(
+                        p.material.id.eq(materialId),
+                        p.type.eq(UnitPriceType.SELLING)
+                )
+                .orderBy(p.validFrom.desc(), p.id.desc())
+                .limit(limit)
+                .fetch();
+    }
 }
