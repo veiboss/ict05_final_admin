@@ -163,7 +163,7 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 /* pack (flex layout) */
 [class*="pack-"] {
 	display: flex;
-	gap: var(--gap);
+	gap: var(--gap) !important;
 }
 
 [class*="pack-center"] {
@@ -324,17 +324,15 @@ hr.line			{border-width: 2px 0 0 0; border-color: var(--body-bg-color); border-s
 table							{overflow: hidden; width: 100%; margin: 1rem 0; border-collapse: collapse; border-top: 1px solid var(--title-color);}
 .list-header + table.data-table {margin-top: 0;}
 table th,
-table td						{border-bottom: 1px solid var(--bdr-color);}
-table thead th					{padding: .75rem 1.25rem; text-align: center;}
-table tbody th,
-table tbody td					{padding: .75rem;}
+table td						{padding: .75rem; border-bottom: 1px solid var(--bdr-color);}
+table thead th					{text-align: center;}
 table tbody td					{vertical-align: middle;}
 table img 						{vertical-align: inherit;}
 table p + p						{margin-top: 1rem;}
 /* data-table */
-.data-table thead th			{color: var(--body-dark);}
-.data-table tbody td			{text-align: center;}
-.data-table tbody td[data-th="버튼"] .btn	{margin: 2px}
+.data-table th			        {color: var(--body-dark);}
+.data-table td	        		{text-align: center;}
+.data-table td[data-th="버튼"] .btn	{margin: 2px}
 @media (max-width: 761px) {
 	.data-table thead th,
 	.data-table colgroup,

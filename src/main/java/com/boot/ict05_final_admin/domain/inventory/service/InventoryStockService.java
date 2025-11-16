@@ -4,13 +4,11 @@ import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

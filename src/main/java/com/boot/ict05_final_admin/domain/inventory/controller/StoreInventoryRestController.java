@@ -1,6 +1,5 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreInventoryListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreInventorySearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.service.StoreInventoryService;

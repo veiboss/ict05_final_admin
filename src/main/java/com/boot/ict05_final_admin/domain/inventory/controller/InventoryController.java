@@ -1,7 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.*;
-import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -160,6 +158,21 @@ public class InventoryController {
     @GetMapping("/out_test")
     public String outTestPage() {
         return "inventory/out_test";
+    }
+
+    /**
+     * 재료별 배치 현황 화면으로 이동한다.
+     * * @param materialId 재료 ID
+     * @param model      뷰 모델
+     * @return 템플릿 경로
+     * @return 재료별 배치
+     */
+    @GetMapping("/batch-status/{materialId}")
+    public String batchStatusPage(@PathVariable Long materialId, Model model) {
+        model.addAttribute("batches", inventoryBatchService.getBatchesByMaterial(materialId));
+        model.addAttribute("materialId", materialId);
+        model.addAttribute("materialName", materialService.findById(materialId).getName());
+        return "inventory/batch_status";
     }
 
     // -------------------- Read APIs (JSON) --------------------

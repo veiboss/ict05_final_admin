@@ -59,7 +59,7 @@ public class InventoryBatch {
     @Comment("로트 번호")
     private String lotNo;
 
-    /** 가맹점 또는 본사 (소유 주체) */
+    /** 가맹점 또는 본사 */
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id_fk", columnDefinition="BIGINT UNSIGNED",
             foreignKey = @ForeignKey(name = "fk_si_store"))

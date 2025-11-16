@@ -1,9 +1,7 @@
 package com.boot.ict05_final_admin.domain.inventory.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.StoreMaterialSearchDTO;
-import com.boot.ict05_final_admin.domain.inventory.entity.StoreMaterial;
 import com.boot.ict05_final_admin.domain.inventory.service.StoreMaterialService;
 
 import com.boot.ict05_final_admin.domain.inventory.service.StoreNameResolver;

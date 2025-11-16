@@ -114,7 +114,7 @@
                             <th scope="col">적정 수량</th>
                             <th scope="col">상태</th>
                             <th scope="col">마지막 수정일</th>
-                            <th scope="col">관리</th>
+                            <th scope="col">상세/로트</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -137,11 +137,11 @@
                             <td th:text="${#temporals.format(inventory.updateDate, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
                             <td>
                                 <a th:href="@{'/inventory/log/' + ${inventory.materialId}}"
-                                   class="btn small bdr-gray">
+                                   class="btn small bdr-gray" title="재고의 입출고 상세">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
                                 <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|"
-                                   class="btn small bdr-gray">
+                                   class="btn small bdr-gray" title="로트별 재고 현황">
                                     <span class="material-symbols-outlined md-18">pallet</span>
                                 </a>
                             </td>
