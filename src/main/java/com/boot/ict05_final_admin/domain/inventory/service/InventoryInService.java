@@ -30,6 +30,7 @@ public class InventoryInService {
     private final InventoryInRepository inRepo;
     private final InventoryBatchRepository batchRepo;
     private final InventoryStockService stockService; // ← 재고 증감/상태 갱신 전담 서비스
+    private final UnitPriceService unitPriceService;
 
     /** 소수점 3자리 Half-Up 고정 */
     private static BigDecimal s3(BigDecimal v) {
@@ -63,6 +64,9 @@ public class InventoryInService {
         final BigDecimal unitPrice = s3(dto.getUnitPrice());
         final BigDecimal sellingPrice = s3(dto.getSellingPrice());
         final LocalDateTime inDate = dto.getInDate() != null ? dto.getInDate() : LocalDateTime.now();
+
+        // 가격 추가
+        unitPriceService.addPricesForMaterial(materialRef.getId(), unitPrice, sellingPrice);
 
         // 2) 재고 갱신: 본사 재고 += qty → after 반환
         final BigDecimal after = stockService.addToInventory(dto.getMaterialId(), qty); // 내부에서 touchAfterQuantityChange 호출됨

@@ -45,7 +45,7 @@ public class InventoryOut {
             foreignKey = @ForeignKey(name = "fk_inventory_out_store"))
     private Store store;
 
-    /** 출고 수량 */
+    /** 출고 수량 (LOT 합계) */
     @Column(name = "inventory_out_quantity", precision = 15, scale = 3, nullable = false,
             columnDefinition = "DECIMAL(15,3) DEFAULT 0")
     @Comment("출고 수량")
@@ -86,6 +86,17 @@ public class InventoryOut {
     @Comment("등록일시 (자동 생성)")
     private LocalDateTime createdAt;
 
+    @Comment("트랜잭션 상태(DRAFT/CONFIRMED/CANCELLED/REVERSED)")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
+    @Builder.Default
+    private InventoryRecordStatus status = InventoryRecordStatus.CONFIRMED;
+
+    @Comment("리버설 대상 출고 헤더 ID(원본 출고)")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reversal_for_id")
+    private InventoryOut reversalFor;
+
     /**
      * 로트 아이템 추가 편의 메서드
      *
@@ -103,5 +114,24 @@ public class InventoryOut {
         }
         item.setOut(this);
         this.lotItems.add(item);
+    }
+
+    /**
+     * 특정 로트 수량만큼 출고 수량 합계를 감소시킨다.
+     *
+     * @param quantity 차감할 수량 (null 허용 안 함)
+     */
+    public void decreaseQuantity(BigDecimal quantity) {
+        if (quantity == null) {
+            return;
+        }
+        if (this.quantity == null) {
+            this.quantity = BigDecimal.ZERO;
+        }
+
+        this.quantity = this.quantity.subtract(quantity);
+        if (this.quantity.compareTo(BigDecimal.ZERO) < 0) {
+            this.quantity = BigDecimal.ZERO;
+        }
     }
 }

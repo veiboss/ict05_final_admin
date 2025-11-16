@@ -18,5 +18,7 @@ public interface InventoryBatchRepository
     // 단순 메서드: 재료ID로 정렬 조회
     List<InventoryBatch> findAllByMaterial_IdOrderByReceivedDateDesc(Long materialId);
 
-    boolean existsByLotNo(String lotNo);   // InventoryBatch.lotNo 매핑(= inventory_batch_lot_no)
+    // InventoryBatch.lotNo 매핑(= inventory_batch_lot_no)
+    boolean existsByLotNo(String lotNo);
+
 }

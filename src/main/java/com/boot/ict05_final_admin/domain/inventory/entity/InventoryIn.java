@@ -88,4 +88,11 @@ public class InventoryIn {
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     @Comment("등록일 (자동 생성)")
     private LocalDateTime createdAt;
+
+
+    @Comment("트랜잭션 상태(DRAFT/CONFIRMED/CANCELLED/REVERSED)")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
+    @Builder.Default
+    private InventoryRecordStatus status = InventoryRecordStatus.CONFIRMED;
 }

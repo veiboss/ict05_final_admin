@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Data
-public class OutLotHistoryRowDTO {
+public class InventoryOutLotHistoryRowDTO {
 
     /** 출고 헤더 ID */
     private Long outId;

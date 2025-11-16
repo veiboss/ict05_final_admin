@@ -1,11 +1,16 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryOutPreviewItemDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.*;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchQueryRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutRepository;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderDetailView;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
+import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +41,9 @@ public class InventoryOutService {
     private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
 
+    private final ReceiveOrderRepository receiveOrderRepository;
+
+
     /**
      * FIFO 미리보기.
      *
@@ -42,15 +51,15 @@ public class InventoryOutService {
      * @param qty   총 출고 수량
      * @return 배치 분할 미리보기
      */
-    public List<OutPreviewItemDTO> previewFifo(Long materialId, BigDecimal qty) {
+    public List<InventoryOutPreviewItemDTO> previewFifo(Long materialId, BigDecimal qty) {
         var candidates = inventoryBatchQueryRepository.findAvailableBatchesForFifo(materialId);
         var remain = qty;
-        List<OutPreviewItemDTO> plan = new java.util.ArrayList<>();
+        List<InventoryOutPreviewItemDTO> plan = new java.util.ArrayList<>();
         for (var c : candidates) {
             if (remain.signum() <= 0) break;
             var take = c.getAvailable().min(remain);
             if (take.signum() > 0) {
-                plan.add(OutPreviewItemDTO.builder()
+                plan.add(InventoryOutPreviewItemDTO.builder()
                         .batchId(c.getBatchId())
                         .lotNo(c.getLotNo())
                         .qty(take)
@@ -125,10 +134,10 @@ public class InventoryOutService {
         }
 
         // 2) FIFO plan
-        List<OutPreviewItemDTO> plan = previewFifo(materialId, totalQty);
+        List<InventoryOutPreviewItemDTO> plan = previewFifo(materialId, totalQty);
 
         BigDecimal plannedSum = BigDecimal.ZERO;
-        for (OutPreviewItemDTO p : plan) {
+        for (InventoryOutPreviewItemDTO p : plan) {
             plannedSum = plannedSum.add(p.getQty());
 
             // 배치 조회 + 차감 + 저장
@@ -151,6 +160,9 @@ public class InventoryOutService {
         // 4) 단가 결정
         BigDecimal unitPrice = resolveOutUnitPrice(materialId, ts);
 
+        // 가격 추가
+        unitPriceService.addPricesForMaterial(materialId, unitPrice, unitPrice);  // 출고가는 매입가와 동일
+
         // 5) 헤더 생성
         InventoryOut out = InventoryOut.builder()
                 .material(em.getReference(Material.class, materialId))
@@ -164,7 +176,7 @@ public class InventoryOutService {
         out = inventoryOutRepository.save(out);
 
         // 6) LOT 생성 (plan 기준으로만 생성)
-        for (OutPreviewItemDTO p : plan) {
+        for (InventoryOutPreviewItemDTO p : plan) {
             InventoryOutLot lot = InventoryOutLot.builder()
                     .out(out)
                     .batch(em.getReference(InventoryBatch.class, p.getBatchId()))
@@ -177,6 +189,82 @@ public class InventoryOutService {
         inventoryService.syncInventoryQuantity(materialId, remain);
 
         return out.getId();
+    }
+
+    /**
+     * 수주 기반 본사 → 가맹점 출고 생성 유즈케이스
+     *
+     * <p>
+     * 수주 상세 DTO({@link ReceiveOrderDetailDTO})와 그 하위 품목 DTO({@link ReceiveOrderItemDTO})를 기반으로
+     * 각 자재별로 {@link #confirmOut(Long, Long, BigDecimal, LocalDateTime, String)} 을 호출하여
+     * 출고를 생성한다.
+     * </p>
+     *
+     * <p>
+     * 여러 자재가 포함된 수주의 경우 자재별로 여러 개의 {@link InventoryOut} 헤더가
+     * 생성될 수 있으며, 이 메서드는 그 중 첫 번째 헤더를 반환한다.
+     * (주요 효과는 재고 차감 및 출고/배치 로그 생성이다.)
+     * </p>
+     *
+     * @param orderDetail 출고 대상으로 하는 수주 상세 DTO (헤더 + 아이템 목록 포함)
+     * @return 생성된 출고 헤더 중 첫 번째 엔티티
+     */
+    @Transactional
+    public InventoryOut createOutByReceiveOrder(ReceiveOrderDetailDTO orderDetail) {
+        if (orderDetail == null) {
+            throw new IllegalArgumentException("수주 상세 정보가 null 입니다.");
+        }
+
+        List<ReceiveOrderItemDTO> items = orderDetail.getItems();
+        if (items == null || items.isEmpty()) {
+            throw new IllegalStateException("수주 상세 품목이 없습니다. orderId=" + orderDetail.getId()
+                    + ", orderCode=" + orderDetail.getOrderCode());
+        }
+
+        Long storeId = orderDetail.getStoreId();
+        String baseMemo = "수주 자동 출고: " + orderDetail.getOrderCode();
+        LocalDateTime outDate = LocalDateTime.now();
+
+        InventoryOut firstOut = null;
+
+        for (ReceiveOrderItemDTO item : items) {
+            if (item == null) {
+                continue;
+            }
+
+            Integer cnt = item.getDetailCount();
+            if (cnt == null || cnt <= 0) {
+                continue;
+            }
+
+            Long materialId = item.getMaterialId();
+            if (materialId == null) {
+                throw new IllegalStateException(
+                        "수주 상세 품목에 재료 ID가 없습니다. orderId=" + orderDetail.getId()
+                                + ", orderCode=" + orderDetail.getOrderCode()
+                                + ", itemName=" + item.getName()
+                );
+            }
+
+            BigDecimal qty = BigDecimal.valueOf(cnt.longValue());
+
+            Long outId = confirmOut(materialId, storeId, qty, outDate, baseMemo);
+
+            if (firstOut == null) {
+                firstOut = inventoryOutRepository.findById(outId)
+                        .orElseThrow(() ->
+                                new IllegalStateException("출고 헤더를 찾을 수 없습니다. id=" + outId));
+            }
+        }
+
+        if (firstOut == null) {
+            throw new IllegalStateException(
+                    "출고 대상 수량이 없습니다. orderId=" + orderDetail.getId()
+                            + ", orderCode=" + orderDetail.getOrderCode()
+            );
+        }
+
+        return firstOut;
     }
 
 

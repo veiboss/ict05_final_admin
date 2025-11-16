@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OutLotDetailRowDTO {
+public class InventoryOutLotDetailRowDTO {
 
     /** LOT 번호 */
     @Schema(description = "LOT 번호", example = "MAT-20251114-001")
