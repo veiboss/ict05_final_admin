@@ -27,7 +27,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OutConfirmRequest {
+public class InventoryOutConfirmRequest {
 
     /** 출고 대상 재료 ID */
     private Long materialId;

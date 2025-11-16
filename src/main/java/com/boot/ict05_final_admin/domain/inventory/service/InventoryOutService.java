@@ -1,11 +1,16 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.OutPreviewItemDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.InventoryOutPreviewItemDTO;
 import com.boot.ict05_final_admin.domain.inventory.entity.*;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchQueryRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryBatchRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotRepository;
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutRepository;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderDetailView;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
+import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +41,9 @@ public class InventoryOutService {
     private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
 
+    private final ReceiveOrderRepository receiveOrderRepository;
+
+
     /**
      * FIFO 미리보기.
      *
@@ -42,15 +51,15 @@ public class InventoryOutService {
      * @param qty   총 출고 수량
      * @return 배치 분할 미리보기
      */
-    public List<OutPreviewItemDTO> previewFifo(Long materialId, BigDecimal qty) {
+    public List<InventoryOutPreviewItemDTO> previewFifo(Long materialId, BigDecimal qty) {
         var candidates = inventoryBatchQueryRepository.findAvailableBatchesForFifo(materialId);
         var remain = qty;
-        List<OutPreviewItemDTO> plan = new java.util.ArrayList<>();
+        List<InventoryOutPreviewItemDTO> plan = new java.util.ArrayList<>();
         for (var c : candidates) {
             if (remain.signum() <= 0) break;
             var take = c.getAvailable().min(remain);
             if (take.signum() > 0) {
-                plan.add(OutPreviewItemDTO.builder()
+                plan.add(InventoryOutPreviewItemDTO.builder()
                         .batchId(c.getBatchId())
                         .lotNo(c.getLotNo())
                         .qty(take)
@@ -125,10 +134,10 @@ public class InventoryOutService {
         }
 
         // 2) FIFO plan
-        List<OutPreviewItemDTO> plan = previewFifo(materialId, totalQty);
+        List<InventoryOutPreviewItemDTO> plan = previewFifo(materialId, totalQty);
 
         BigDecimal plannedSum = BigDecimal.ZERO;
-        for (OutPreviewItemDTO p : plan) {
+        for (InventoryOutPreviewItemDTO p : plan) {
             plannedSum = plannedSum.add(p.getQty());
 
             // 배치 조회 + 차감 + 저장
@@ -164,7 +173,7 @@ public class InventoryOutService {
         out = inventoryOutRepository.save(out);
 
         // 6) LOT 생성 (plan 기준으로만 생성)
-        for (OutPreviewItemDTO p : plan) {
+        for (InventoryOutPreviewItemDTO p : plan) {
             InventoryOutLot lot = InventoryOutLot.builder()
                     .out(out)
                     .batch(em.getReference(InventoryBatch.class, p.getBatchId()))

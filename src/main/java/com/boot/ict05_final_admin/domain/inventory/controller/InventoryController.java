@@ -210,9 +210,9 @@ public class InventoryController {
      */
     @GetMapping("/lot/{batchId}/out-history")
     @ResponseBody
-    public Page<OutLotHistoryRowDTO> batchOutHistory(@PathVariable Long batchId,
-                                                     @RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "10") int size) {
+    public Page<InventoryOutLotHistoryRowDTO> batchOutHistory(@PathVariable Long batchId,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size) {
         return inventoryLotService.getOutLotHistory(batchId, PageRequest.of(page, size));
     }
 
@@ -264,7 +264,7 @@ public class InventoryController {
     // 출고 LOT 상세 (로그 팝업용)  --- NEW
     @GetMapping("/log/out/{outId}")
     @ResponseBody
-    public List<OutLotDetailRowDTO> getOutDetail(@PathVariable Long outId) {
+    public List<InventoryOutLotDetailRowDTO> getOutDetail(@PathVariable Long outId) {
         return inventoryLotService.getOutDetailByOutId(outId);
     }
 
@@ -300,7 +300,6 @@ public class InventoryController {
     @DeleteMapping("/lot/out-item/{lotId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOutLotItem(@PathVariable Long lotId) {
-        inventoryOutService.deleteOut(lotId);
+        inventoryLotService.deleteOutLot(lotId);
     }
-
 }

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * 출고 LOT 상세 DTO (OutDetailDTO)
+ * 출고 LOT 상세 DTO (InventoryOutDetailDTO)
  *
  * <p>본사 재고 로그 화면의 LOT 상세 팝업 응답 모델이다.
  * 배치(InventoryBatch) 기준의 단일 행 정보를 전달한다.</p>
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OutDetailDTO {
+public class InventoryOutDetailDTO {
 
     /** 배치(로트) 번호 (inventory_batch_lot_no) */
     private String lotNo;

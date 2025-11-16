@@ -26,7 +26,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Data
-public class OutPreviewItemDTO {
+public class InventoryOutPreviewItemDTO {
 
     /** 배치 고유 ID */
     private Long batchId;

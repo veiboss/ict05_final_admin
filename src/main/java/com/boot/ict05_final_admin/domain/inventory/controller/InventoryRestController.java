@@ -63,8 +63,8 @@ public class InventoryRestController {
      * @return 배치 분할 미리보기 결과
      */
     @PostMapping("/inventory/out/preview")
-    public List<OutPreviewItemDTO> previewOut(@RequestParam Long materialId,
-                                              @RequestParam BigDecimal qty) {
+    public List<InventoryOutPreviewItemDTO> previewOut(@RequestParam Long materialId,
+                                                       @RequestParam BigDecimal qty) {
         return inventoryOutService.previewFifo(materialId, qty);
     }
 
@@ -75,7 +75,7 @@ public class InventoryRestController {
      * @return 생성된 출고 ID
      */
     @PostMapping("/inventory/out/confirm")
-    public Long confirmOut(@RequestBody OutConfirmRequest req) {
+    public Long confirmOut(@RequestBody InventoryOutConfirmRequest req) {
         // 서비스가 DTO 오버로드를 제공하지 않으면 5파라미터 시그니처로 위임
         return inventoryOutService.confirmOut(
                 req.getMaterialId(),

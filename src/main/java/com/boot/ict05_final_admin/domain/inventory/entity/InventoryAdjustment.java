@@ -83,6 +83,12 @@ public class InventoryAdjustment {
     @Comment("조정 사유 (MANUAL, DAMAGE, LOSS, ERROR)")
     private AdjustmentReason reason;
 
+    @Comment("트랜잭션 상태(DRAFT/CONFIRMED/CANCELLED/REVERSED)")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
+    @Builder.Default
+    private InventoryRecordStatus status = InventoryRecordStatus.CONFIRMED;
+
     /**
      * 수량 증감 계산 헬퍼
      */
