@@ -196,7 +196,7 @@ public class MenuController {
         // 2) 상세 -> 폼 DTO
         MenuModifyFormDTO form = MenuModifyFormDTO.builder()
                 .menuId(menu.getMenuId())
-                .menuCategoryId(menu.getMenuCategory().getMenuCategoryId())
+                .menuCategoryId(menu.getMenuCategoryId())
                 .menuShow(menu.getMenuShow())
                 .menuCode(menu.getMenuCode())
                 .menuName(menu.getMenuName())
@@ -208,12 +208,13 @@ public class MenuController {
                 .sauceMaterials(menu.getSauceMaterials())
                 .build();
 
+
         if (form.getMenuShow() == null) {
             form.setMenuShow(MenuShow.SHOW);
         }
 
         // 카테고리 그대로
-        List<MenuCategory> categories = menuCategoryRepository.findAll(Sort.by("menuCategoryName").ascending());
+        List<MenuCategory> categories = menuCategoryRepository.findSetAndLevel3Categories();
 
         // 주재료 옵션
         List<MaterialSimpleDTO> mainOptions = materialRepository.findByCategory(MaterialCategory.BASE)

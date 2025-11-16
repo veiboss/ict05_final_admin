@@ -72,10 +72,17 @@
                                 <div class="insert pack-down">
                                     <select id="menuCategoryId" class="select medium"
                                             th:field="*{menuCategoryId}">
-                                        <option value="">카테고리 선택</option>
+                                        <!-- 등록 화면과 동일한 placeholder -->
+                                        <option value="" disabled
+                                                th:selected="*{menuCategoryId} == null">
+                                            카테고리 선택
+                                        </option>
+
+                                        <!-- 실제 카테고리 목록 -->
                                         <option th:each="c : ${menuCategories}"
                                                 th:value="${c.menuCategoryId}"
-                                                th:text="${c.menuCategoryName}"></option>
+                                                th:text="${c.menuCategoryName}">
+                                        </option>
                                     </select>
                                     <p id="menuCategoryIdError" class="warning"></p>
                                 </div>

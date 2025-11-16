@@ -7,6 +7,14 @@ import com.boot.ict05_final_admin.domain.menu.entity.Menu;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
 import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
+
+// 🔹 가맹점/가맹점메뉴 관련 import (패키지명 프로젝트에 맞게 필요하면 수정)
+import com.boot.ict05_final_admin.domain.store.entity.Store;
+import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
+import com.boot.ict05_final_admin.domain.menu.entity.StoreMenu;
+import com.boot.ict05_final_admin.domain.menu.entity.StoreMenuSoldout;
+import com.boot.ict05_final_admin.domain.menu.repository.StoreMenuRepository;
+
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRecipeRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
@@ -33,22 +41,21 @@ import java.util.List;
 @Slf4j  // 로그를 찍을 수 있음
 public class MenuService {
 
-    private final MenuRepository menuRepository;    // @RequiredArgsConstructor가 자동으로 주입해 줘서 @Autowired가 필요 없음
+    private final MenuRepository menuRepository;
     private final MaterialRepository materialRepository;
     private final MenuRecipeRepository menuRecipeRepository;
     private final MenuCategoryRepository menuCategoryRepository;
 
+    // 🔹 가맹점 / 가맹점 메뉴
+    private final StoreRepository storeRepository;
+    private final StoreMenuRepository storeMenuRepository;
+
     /**
      * 작성자 이름으로 필터링하여 메뉴 목록을 페이지 단위로 조회한다.
-     *
-     * @param menuSearchDTO
-     * @param pageable      페이지 정보 (페이지 번호, 크기, 정렬)
-     * @return 페이징 처리된 메뉴 리스트 DTO
      */
     public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
         var menus = menuRepository.listMenu(menuSearchDTO, pageable);
 
-        // 디버깅 로그 추가
         log.info("rows={}", menus.getNumberOfElements());
         menus.getContent().forEach(m ->
                 log.info("id={}, name={}, materials={}", m.getMenuId(), m.getMenuName(), m.getMaterialNames())
@@ -57,11 +64,10 @@ public class MenuService {
         return menus;
     }
 
-
     /**
      * 새로운 메뉴를 등록한다.
      *
-     * @param dto 메뉴 등록 정보 (제목, 내용, 카테고리 등)
+     * @param dto 메뉴 등록 정보
      * @return 저장된 메뉴 ID
      */
     @Transactional
@@ -82,31 +88,55 @@ public class MenuService {
                 .menuCategory(category)
                 .build();
 
-        menuRepository.save(menu);
+        menu = menuRepository.save(menu);   // 🔹 저장 후 PK 확보
 
         // 레시피 저장 (자유 입력: material FK 없음)
         saveRecipes(menu, dto.getMainMaterials(),  MenuRecipe.RecipeRole.MAIN);
         saveRecipes(menu, dto.getSauceMaterials(), MenuRecipe.RecipeRole.SAUCE);
 
+        // 🔥 새 메뉴가 등록되면, 모든 가맹점에 대해 StoreMenu ON_SALE 생성
+        createStoreMenusForNewMenu(menu);
+
         return menu.getMenuId();
     }
 
+    /**
+     * 새로 등록된 본사 메뉴에 대해, 모든 가맹점의 StoreMenu row 를
+     * 기본값 ON_SALE 로 생성한다.
+     */
+    private void createStoreMenusForNewMenu(Menu menu) {
+        List<Store> stores = storeRepository.findAll();   // 필요하면 활성 매장만 필터링
+
+        int created = 0;
+        for (Store store : stores) {
+
+            // 혹시 중복 생성 방지
+            boolean exists = storeMenuRepository.existsByStoreAndMenu(store, menu);
+            if (exists) continue;
+
+            StoreMenu sm = StoreMenu.builder()
+                    .store(store)
+                    .menu(menu)
+                    .storeMenuSoldout(StoreMenuSoldout.ON_SALE)  // 기본: 판매중
+                    .build();
+
+            storeMenuRepository.save(sm);
+            created++;
+        }
+
+        log.info("[createStoreMenusForNewMenu] menuId={}, stores={}, createdRows={}",
+                menu.getMenuId(), stores.size(), created);
+    }
 
     /**
      * ID를 기준으로 메뉴를 조회한다.
-     *
-     * @param menuId 메뉴 ID
-     * @return 메뉴 엔티티, 존재하지 않으면 null
      */
     public Menu findMenuById(Long menuId) {
         return menuRepository.findById(menuId).orElse(null);
     }
 
     /**
-     * 기존 메뉴 수정한다
-     *
-     * @param dto   수정할 메뉴 정보
-     * @return 수정된 메뉴 엔티티
+     * 기존 메뉴 수정
      */
     @Transactional
     public Menu menuModify(MenuModifyFormDTO dto) {
@@ -131,7 +161,6 @@ public class MenuService {
         if (dto.getMenuShow() != null) {
             menu.setMenuShow(dto.getMenuShow());
         }
-
 
         // 카테고리: ID만 처리(있을 때만)
         if (dto.getMenuCategoryId() != null) {
@@ -162,11 +191,10 @@ public class MenuService {
                 r.setRecipeUnit(it.getRecipeUnit());
                 r.setRecipeSort(sort++);
 
-                // ★ 여기 추가: 표기명 없으면 재료명으로 채움 (NOT NULL 대응)
                 String itemName = (it.getItemName() != null && StringUtils.hasText(it.getItemName()))
                         ? it.getItemName()
-                        : mat.getName(); // 또는 mat.getMaterialName()
-                r.setRecipeItemName(itemName); // 엔티티 세터명에 맞게
+                        : mat.getName();
+                r.setRecipeItemName(itemName);
 
                 menuRecipeRepository.save(r);
             }
@@ -190,7 +218,6 @@ public class MenuService {
                 r.setRecipeUnit(it.getRecipeUnit());
                 r.setRecipeSort(sort++);
 
-                // ★ 동일 로직
                 String itemName = (it.getItemName() != null && StringUtils.hasText(it.getItemName()))
                         ? it.getItemName()
                         : mat.getName();
@@ -203,12 +230,8 @@ public class MenuService {
         return menu;
     }
 
-
     /**
      * 메뉴 상세 정보를 조회한다.
-     *
-     * @param menuId 공지사항 ID
-     * @return 메뉴 엔티티, 존재하지 않으면 null
      */
     public MenuDetailDTO MenuDetail(Long menuId) {
         Menu m = menuRepository.findById(menuId)
@@ -221,11 +244,10 @@ public class MenuService {
                 .map(r -> {
                     RecipeItemDTO d = new RecipeItemDTO();
                     d.setMaterialId(r.getMaterial() != null ? r.getMaterial().getId() : null);
-                    d.setItemName(r.getRecipeItemName());           // null이면 템플릿에서 materialName 표시
+                    d.setItemName(r.getRecipeItemName());
                     d.setRecipeQty(r.getRecipeQty());
                     d.setRecipeUnit(r.getRecipeUnit());
                     d.setRecipeSortNo(r.getRecipeSort());
-                    // (선택) 화면 편의용 materialName 필드가 필요하면 DTO에 추가해서 세팅
                     return d;
                 }).toList();
 
@@ -243,10 +265,15 @@ public class MenuService {
                     return d;
                 }).toList();
 
+        MenuCategory category = m.getMenuCategory();
+        Long categoryId = (category != null) ? category.getMenuCategoryId() : null;
+        String categoryName = (category != null) ? category.getMenuCategoryName() : null;
+
         return MenuDetailDTO.builder()
                 .menuId(m.getMenuId())
-                .menuCategoryId(m.getMenuCategory().getMenuCategoryId())
-                .menuCategory(m.getMenuCategory())
+                .menuCategoryId(categoryId)
+                .menuCategory(category)
+                .menuCategoryName(categoryName)
                 .menuShow(m.getMenuShow())
                 .menuCode(m.getMenuCode())
                 .menuName(m.getMenuName())
@@ -259,11 +286,8 @@ public class MenuService {
                 .build();
     }
 
-
     /**
-     * 자유입력 레시피 저장 유틸 (옵션 A)
-     * - material FK 사용 안 함
-     * - recipeItemName / recipeQty / recipeUnit / recipeRole / recipeSort 만 저장
+     * 자유입력 레시피 저장 유틸
      */
     private void saveRecipes(Menu menu,
                              List<RecipeItemDTO> items,
@@ -275,25 +299,23 @@ public class MenuService {
         for (RecipeItemDTO it : items) {
             if (it == null) continue;
 
-            // 수량/단위 필수 값 체크
             if (it.getRecipeQty() == null || it.getRecipeQty().signum() <= 0) continue;
             if (it.getRecipeUnit() == null) continue;
 
             Material material = null;
             if (it.getMaterialId() != null) {
                 material = materialRepository.findById(it.getMaterialId())
-                        .orElse(null); // 못 찾으면 그냥 null 처리
+                        .orElse(null);
             }
 
-            // ✅ itemName 보정: 비어있으면 재료명 또는 "기타"
             String itemName = it.getItemName();
             if (itemName == null || itemName.isBlank()) {
-                itemName = (material != null ? material.getName() : "기타"); // DB가 NOT NULL이면 필수
+                itemName = (material != null ? material.getName() : "기타");
             }
 
             MenuRecipe recipe = MenuRecipe.builder()
                     .menu(menu)
-                    .material(material)  // ✅ null 가능
+                    .material(material)
                     .recipeItemName(itemName)
                     .recipeQty(it.getRecipeQty())
                     .recipeUnit(it.getRecipeUnit())
@@ -304,8 +326,6 @@ public class MenuService {
             menuRecipeRepository.save(recipe);
         }
     }
-
-
 
     private BigDecimal nvl(BigDecimal v) { return v == null ? BigDecimal.ZERO : v; }
 

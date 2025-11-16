@@ -53,7 +53,8 @@
                     <div class="row-2">
                         <div class="field pack-down col">
                             <span class="fs-ss fc-999">카테고리</span>
-                            <span th:text="*{menuCategory != null ? menuCategory.menuCategoryName : '카테고리 없음'}">카테고리</span>
+                            <span th:text="${menu.menuCategoryName != null ? menu.menuCategoryName : '카테고리 없음'}"></span>
+                        </div>
                         </div>
 
                         <div class="field pack-down col">
@@ -144,7 +145,7 @@
             <div class="button-area pack-both" style="display:flex; justify-content:space-between; gap:20px; margin-top:20px;">
                 <a href="/admin/menu/list" class="btn medium color1">목록</a>
                 <a th:href="@{/menu/modify/{id}(id=${menu.menuId})}"
-                   class="btn large color2">수정</a>
+                   class="btn medium color2">수정</a>
             </div>
         </main>
 

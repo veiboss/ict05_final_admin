@@ -24,6 +24,7 @@ public class MenuDetailDTO {
 
     /** 메뉴 카테고리 */
     private MenuCategory menuCategory;
+    private String menuCategoryName;
 
     /** 판매 상태 */
     private MenuShow menuShow;
