@@ -183,7 +183,7 @@ public class InventoryRestController {
      * <p>화면 필터(유형/기간/페이징)를 그대로 적용해 재료별 로그를 XLSX로 생성한다.</p>
      *
      * @param materialId 재료 ID
-     * @param type       로그 유형(INCOME/OUTCOME/ADJUST 등), 옵션
+     * @param type       로그 유형(INCOME/OUTGO/ADJUST 등), 옵션
      * @param startDate  시작일(포함), 옵션
      * @param endDate    종료일(포함), 옵션
      * @param page       페이지 인덱스(기본 0). 서비스 내부에서는 전체 덤프로 생성 가능

@@ -19,9 +19,9 @@
     <div id="container" class="container">
         <div class="title-bar">
             <div class="pack-both">
-                <h2 class="page-title ellipsis">본사 재고 현황</h2>
+                <h2 class="page-title ellipsis">본사 재고 목록</h2>
 
-                <a href="/admin/inventory/store/list" class="btn medium color2">가맹점 재고 현황</a>
+                <a href="/admin/inventory/store/list" class="btn medium color2">가맹점 재고 목록</a>
             </div>
         </div>
 
@@ -94,7 +94,7 @@
                 <section class="pack-down">
                     <div class="list-header pack-both">
                         <div class="pack-left">
-                            <a href="/admin/inventory/in/write" class="btn medium color2">입고등록</a>
+                            <a href="/admin/inventory/in/write" class="btn medium color2">입고 등록</a>
                         </div>
 
                         <div class="pack-left">
@@ -108,40 +108,41 @@
                     <table class="data-table">
                         <thead>
                         <tr>
+                            <th scope="col">재료코드</th>
                             <th scope="col">카테고리</th>
                             <th scope="col">재료명</th>
-                            <th scope="col">현재 수량</th>
-                            <th scope="col">적정 수량</th>
+                            <th scope="col">현재고</th>
                             <th scope="col">상태</th>
-                            <th scope="col">마지막 수정일</th>
-                            <th scope="col">상세/로트</th>
+                            <th scope="col">버튼</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="inventory : ${inventories.content}">
-                            <td th:text="${inventory.categoryName}">카테고리</td>
-                            <td th:text="${inventory.materialName}">재료명</td>
-                            <td>
+                            <td data-th="재료코드" th:text="${inventory.materialId}">재료코드</td>
+                            <td data-th="카테고리" th:text="${inventory.categoryName}">카테고리</td>
+                            <td data-th="재료명" th:text="${inventory.materialName}">재료명</td>
+                            <td data-th="현재고">
                                 <span th:text="${inventory.quantity != null ? #numbers.formatDecimal(inventory.quantity,1,'COMMA',0,'POINT') : '0'}"></span>
-                                <span th:text="${inventory.materialSalesUnit}" class="fs-s fc-999"></span>
+                                <span th:text="${inventory.materialSalesUnit}" class="fs-s fc-999">판매단위</span>
                             </td>
-                            <td>
-                                <span th:text="${inventory.optimalQuantity != null ? #numbers.formatDecimal(inventory.optimalQuantity,1,'COMMA',0,'POINT') : '0'}"></span>
-                                <span th:text="${inventory.materialSalesUnit}" class="fs-s fc-999"></span>
-                            </td>
-                            <td>
-                                <span th:class="|badge rounded-pill ${inventory.status.name() == 'SUFFICIENT' ? 'bg-success' : (inventory.status.name() == 'LOW' ? 'bg-warning' : 'bg-danger') }|"
-                                      th:text="${inventory.status.description}">
+                            <td data-th="상태">
+                                <span th:class="|badge rounded-pill ${
+                                                    inventory.status != null && inventory.status.name() == 'SUFFICIENT' ? 'bg-success' :
+                                                    (inventory.status != null && inventory.status.name() == 'LOW' ? 'bg-warning' : 'bg-danger')
+                                                }|"
+                                      th:text="${inventory.status != null ? inventory.status.description : '미지정'}">
                                 </span>
                             </td>
-                            <td th:text="${#temporals.format(inventory.updateDate, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
-                            <td>
-                                <a th:href="@{'/inventory/log/' + ${inventory.materialId}}"
-                                   class="btn small bdr-gray" title="재고의 입출고 상세">
+                            <td data-th="버튼">
+                                <!-- 입출고 로그 -->
+                                <a th:href="@{/inventory/log/{mid}(mid=${inventory.materialId})}"
+                                   class="btn small bdr-gray" title="입출고 로그">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>
-                                <a th:href="|@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}|"
-                                   class="btn small bdr-gray" title="로트별 재고 현황">
+
+                                <!-- LOT 현황 -->
+                                <a th:href="@{/inventory/batch-status/{mid}(mid=${inventory.materialId})}"
+                                   class="btn small bdr-gray" title="LOT 현황">
                                     <span class="material-symbols-outlined md-18">pallet</span>
                                 </a>
                             </td>

@@ -23,8 +23,8 @@
     <div id="container" class="container" th:data-material-id="${materialId}">
         <div class="title-bar">
             <h2 class="page-title ellipsis max-1132">
+                <span class="fw-400">재고 입출고 로그 &gt;</span>
                 <span th:text="${materialName}">재료명</span>
-                <span class="fw-400">본사 재고 로그</span>
             </h2>
         </div>
 
@@ -36,6 +36,11 @@
             <div th:if="${material.materialStatus.name() == 'STOP'}"
                  class="alert alert-warning mb-3">
                 본사에서 <strong>사용중지된 재료</strong>입니다.
+            </div>
+
+            <div class="pack-both">
+                <a th:href="@{/inventory/list}" class="btn medium bdr-color1">재고 목록</a>
+                <a th:href="@{/inventory/batch-status/{mid}(mid=${materialId})}" class="btn medium bdr-color1">LOT 현황</a>
             </div>
 
             <div class="box-wrap">
@@ -73,50 +78,50 @@
 
                 <!-- 검색 영역 -->
                 <div id="search" class="search">
-                        <form id="filterForm" onsubmit="return false;">
-                            <fieldset>
-                                <legend class="blind">검색</legend>
-                                <div class="pack-both-bottom rw-mo-direction-column">
-                                    <!-- 타입 라디오 -->
-                                    <div class="select-options r4">
-                                        <label>
-                                            <input type="radio" name="type" value="" th:checked="${selectedType == null or selectedType == ''}">
-                                            <span class="btn medium r4">전체</span>
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="type" value="INCOME" th:checked="${selectedType == 'INCOME'}">
-                                            <span class="btn medium r4">입고</span>
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="type" value="OUTGO"  th:checked="${selectedType == 'OUTGO'}">
-                                            <span class="btn medium r4">출고</span>
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="type" value="ADJUST" th:checked="${selectedType == 'ADJUST'}">
-                                            <span class="btn medium r4">조정</span>
-                                        </label>
+                    <form id="filterForm" onsubmit="return false;">
+                        <fieldset>
+                            <legend class="blind">검색</legend>
+                            <div class="pack-both-bottom rw-mo-direction-column">
+                                <!-- 타입 라디오 -->
+                                <div class="select-options r4">
+                                    <label>
+                                        <input type="radio" name="type" value="" th:checked="${selectedType == null or selectedType == ''}">
+                                        <span class="btn medium r4">전체</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="type" value="INCOME" th:checked="${selectedType == 'INCOME'}">
+                                        <span class="btn medium r4">입고</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="type" value="OUTGO"  th:checked="${selectedType == 'OUTGO'}">
+                                        <span class="btn medium r4">출고</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="type" value="ADJUST" th:checked="${selectedType == 'ADJUST'}">
+                                        <span class="btn medium r4">조정</span>
+                                    </label>
+                                </div>
+
+                                <div class="pack-down-right">
+                                    <!-- 버튼 -->
+                                    <div class="pack-left">
+                                        <button type="button" id="btnToday" class="btn small bdr-color1">오늘</button>
+                                        <button type="button" id="btn7d" class="btn small bdr-color1">7일</button>
+                                        <button type="button" id="btn30d" class="btn small bdr-color1">30일</button>
                                     </div>
 
-                                    <div class="pack-down-right">
-                                        <!-- 버튼 -->
-                                        <div class="pack-left">
-                                            <button type="button" id="btnToday" class="btn small bdr-color1">오늘</button>
-                                            <button type="button" id="btn7d" class="btn small bdr-color1">7일</button>
-                                            <button type="button" id="btn30d" class="btn small bdr-color1">30일</button>
-                                        </div>
-
-                                        <!-- 기간 -->
-                                        <div class="pack-left">
-                                            <input type="date" id="startDate" th:value="${startDate}" class="input-text medium" style="width: clamp(112px, 29.87vw, 128px)">
-                                            <span>~</span>
-                                            <input type="date" id="endDate" th:value="${endDate}" class="input-text medium" style="width: clamp(112px, 29.87vw, 128px)">
-                                            <button type="button" id="btnSearch" class="btn medium color1">검색</button>
-                                        </div>
+                                    <!-- 기간 -->
+                                    <div class="pack-left">
+                                        <input type="date" id="startDate" th:value="${startDate}" class="input-text medium" style="width: clamp(112px, 29.87vw, 128px)">
+                                        <span>~</span>
+                                        <input type="date" id="endDate" th:value="${endDate}" class="input-text medium" style="width: clamp(112px, 29.87vw, 128px)">
+                                        <button type="button" id="btnSearch" class="btn medium color1">검색</button>
                                     </div>
                                 </div>
-                            </fieldset>
-                        </form>
-                    </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
 
                 <!-- 목록 -->
                 <section class="pack-down">
@@ -132,16 +137,15 @@
                     </div>
                     <table class="data-table" id="logTable">
                         <thead>
-                        <tr>
-                            <th scope="col">날짜</th>
-                            <th scope="col">구분</th>
-                            <th scope="col">수량</th>
-                            <th scope="col">재고</th>
-                            <th scope="col">가맹점</th>
-                            <th scope="col">단가</th>
-                            <th scope="col">비고</th>
-                            <th scope="col">상세</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">로그일시</th>
+                                <th scope="col">유형</th>
+                                <th scope="col">수량</th>
+                                <th scope="col">로그 후 재고</th>
+                                <th scope="col">입고번호</th>
+                                <th scope="col">비고</th>
+                                <th scope="col">버튼</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr th:if="${logs == null or #lists.isEmpty(logs.content)}">
@@ -149,11 +153,8 @@
                             </tr>
 
                             <tr th:each="row : ${logs.content}">
-                                <!-- 날짜 -->
-                                <td th:text="${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-
-                                <!-- 구분 -->
-                                <td>
+                                <td data-th="로그일시" th:text="${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td data-th="유형">
                                     <span th:switch="${row.logType}">
                                         <span th:case="'INCOME'" class="type-in">입고</span>
                                         <span th:case="'OUTGO'"   class="type-out">출고</span>
@@ -161,47 +162,32 @@
                                         <span th:case="*">-</span>
                                     </span>
                                 </td>
-
-                                <!-- 수량 -->
-                                <td th:text="${row.quantity != null ? #numbers.formatDecimal(row.quantity,1,'COMMA',0,'POINT') : '0'}"></td>
-
-                                <!-- 재고 -->
-                                <td th:text="${row.stockAfter != null ? #numbers.formatDecimal(row.stockAfter,1,'COMMA',0,'POINT') : '0'}"></td>
-
-                                <!-- 가맹점 -->
-                                <td th:text="${row.storeName != null ? row.storeName : '-'}"></td>
-
-                                <!-- 단가 -->
-                                <td th:text="${row.unitPrice}"></td>
+                                <td data-th="수량" th:text="${row.quantity != null ? #numbers.formatDecimal(row.quantity,1,'COMMA',0,'POINT') : '0'}"></td>
+                                <td data-th="로그 후 재고" th:text="${row.stockAfter != null ? #numbers.formatDecimal(row.stockAfter,1,'COMMA',0,'POINT') : '0'}"></td>
+                                <td data-th="입고번호">
+                                    <a th:if="${row.batchId != null}"
+                                       th:href="@{/inventory/batch/{bid}(bid=${row.batchId})}"
+                                       class="link">
+                                        <span th:text="${'IN-' + row.batchId}" class="fc-primary">입고번호</span>
+                                    </a>
+                                    <span th:if="${row.batchId == null}">-</span>
+                                </td>
 
                                 <!-- 비고 -->
-                                <td th:text="${row.memo != null && row.memo != '' ? row.memo : '-'}"></td>
+                                <td data-th="비고" th:text="${row.memo != null && row.memo != '' ? row.memo : '-'}"></td>
 
-                                <!-- 상세 -->
-                                <td>
-                                    <!-- INCOME: LOT 1건 기준, batchId 필요 -->
+                                <!-- 상세 버튼: 출고/조정만 팝업 -->
+                                <td data-th="버튼">
+                                    <!-- OUTGO: 헤더 기준 -->
                                     <button type="button" class="btn log-detail-link"
-                                            th:if="${row.logType == 'INCOME' and row.batchId != null}"
+                                            th:if="${row.logType == 'OUTGO'}"
                                             onclick="modalOpen('#detailModal');"
                                             th:attr="data-log-id=${row.logId},
-                                                     data-log-type=${row.logType},
-                                                     data-batch-id=${row.batchId},
-                                                     data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
-                                        <span class="fc-primary">
-                                            LOT #[[${row.batchId}]]
-                                        </span>
-                                    </button>
-
-                                    <!-- OUTGO: 항상 헤더 기준 1행, logId만 넘김 -->
-                                    <button type="button" class="btn log-detail-link"
-                                            th:if="${row.logType == 'OUTGO' or row.logType == 'OUTCOME'}"
-                                            onclick="modalOpen('#detailModal');"
-                                            th:attr="data-log-id=${row.logId},
-                                                     data-log-type=${row.logType},
-                                                     data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
-                                        <span class="fc-primary">
-                                            출고 상세
-                                        </span>
+                                                         data-log-type=${row.logType},
+                                                         data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                            <span class="fc-primary">
+                                                출고 상세
+                                            </span>
                                     </button>
 
                                     <!-- ADJUST: 조정 상세 -->
@@ -209,11 +195,11 @@
                                             th:if="${row.logType == 'ADJUST'}"
                                             onclick="modalOpen('#detailModal');"
                                             th:attr="data-log-id=${row.logId},
-                                                     data-log-type=${row.logType},
-                                                     data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
-                                        <span class="fc-primary">
-                                            조정 상세
-                                        </span>
+                                                         data-log-type=${row.logType},
+                                                         data-log-date=${#temporals.format(row.logDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                            <span class="fc-primary">
+                                                조정 상세
+                                            </span>
                                     </button>
                                 </td>
                             </tr>
@@ -225,10 +211,6 @@
                     </div>
                 </section>
             </div>
-
-            <div class="button-area pack-both">
-                <a href="/admin/inventory/list" class="btn medium color1">목록</a>
-            </div>
         </main>
 
         <div th:replace="~{fragments/footer :: footer}"></div>
@@ -239,7 +221,7 @@
     <div class="popup">
         <div class="popup-header">
             <h2 class="popup-title">
-                <span id="detailModalTitle">로트번호</span>
+                <span id="detailModalTitle">상세 내역</span>
             </h2>
             <button type="button" class="btn transparent pop-close" onclick="modalClose('#detailModal');" title="팝업 닫기">
                 <svg viewBox="0 0 32 32" class="ico svg-close">
@@ -253,57 +235,24 @@
                 <div class="pack-down-left">
                     <table class="data-table">
                         <tbody>
-                            <tr>
-                                <th scope="row">로그 ID</th>
-                                <td class="ta-r" id="detailLogId">-</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">유형</th>
-                                <td class="ta-r" id="detailLogType">-</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">일시</th>
-                                <td class="ta-r" id="detailLogDate">-</td>
-                            </tr>
+                        <tr>
+                            <th scope="row">로그 ID</th>
+                            <td class="ta-r" id="detailLogId">-</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">유형</th>
+                            <td class="ta-r" id="detailLogType">-</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">일시</th>
+                            <td class="ta-r" id="detailLogDate">-</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!--입고-->
-            <div id="section-income" class="pack-down gap-8" style="display:none;">
-                <div class="table-wrap">
-                    <table class="data-table fs-s">
-                        <tbody>
-                        <tr>
-                            <th scope="row">LOT</th>
-                            <td class="ta-r"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">입고일</th>
-                            <td class="ta-r"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">유통기한</th>
-                            <td class="ta-r"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">입고수량</th>
-                            <td class="ta-r"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">단가</th>
-                            <td class="ta-r"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">기타</th>
-                            <td class="ta-r"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!--출고-->
+            <!-- 출고 -->
             <div id="section-outgo" class="pack-down gap-8" style="display:none;">
                 <p class="pack-right gap-8">
                     <span id="outgoSummaryQty">총 출고수량: -</span>
@@ -312,11 +261,11 @@
                 <div class="table-wrap">
                     <table class="data-table fs-s">
                         <thead>
-                        <tr>
-                            <th scope="row">LOT</th>
-                            <th scope="row">출고수량</th>
-                            <th scope="row">잔량</th>
-                        </tr>
+                            <tr>
+                                <th scope="row">LOT</th>
+                                <th scope="row">출고수량</th>
+                                <th scope="row">잔량</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr>
@@ -328,31 +277,32 @@
                     </table>
                 </div>
             </div>
-            <!--조정-->
+
+            <!-- 조정 -->
             <div id="section-adjust" class="pack-down gap-8" style="display:none;">
                 <div class="table-wrap">
                     <table class="data-table fs-s">
                         <tbody>
-                        <tr>
-                            <th scope="row">조정 전</th>
-                            <td class="ta-r">조정 전</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">조정 후</th>
-                            <td class="ta-r">조정 전</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">증감</th>
-                            <td class="ta-r">증감</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">사유코드</th>
-                            <td class="ta-r">사유코드</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">메모</th>
-                            <td class="ta-r">메모</td>
-                        </tr>
+                            <tr>
+                                <th scope="row">조정 전</th>
+                                <td class="ta-r">조정 전</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">조정 후</th>
+                                <td class="ta-r">조정 후</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">증감</th>
+                                <td class="ta-r">증감</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">사유코드</th>
+                                <td class="ta-r">사유코드</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">메모</th>
+                                <td class="ta-r">메모</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -382,7 +332,7 @@
                         </span>
                     </label>
                     <label class="field col">
-                        <span class="label medium required" >조정 사유</span>
+                        <span class="label medium required">조정 사유</span>
                         <span class="insert">
                             <select id="reasonSelect" class="select medium">
                               <option value="MANUAL">수동 수정</option>
@@ -558,12 +508,10 @@
       const materialName =
         document.querySelector('.page-title span')?.textContent.trim() || '';
 
-      // 상세 섹션/테이블
-      const sectionIncome = document.getElementById('section-income');
+      // 상세 섹션/테이블 (출고/조정만)
       const sectionOutgo = document.getElementById('section-outgo');
       const sectionAdjust = document.getElementById('section-adjust');
 
-      const incomeTbody = sectionIncome.querySelector('tbody');
       const outgoTbody = sectionOutgo.querySelector('tbody');
       const adjustTbody = sectionAdjust.querySelector('tbody');
 
@@ -572,17 +520,13 @@
       const outgoSummaryStore = document.getElementById('outgoSummaryStore');
 
       // 엔드포인트 베이스
-      const adjustBase =
-        /*[[@{/inventory/log/adjust/}]]*/ '/inventory/log/adjust/';
-      const lotBase = /*[[@{/inventory/log/lot/}]]*/ '/inventory/log/lot/';
+      const adjustBase = /*[[@{/inventory/log/adjust/}]]*/ '/inventory/log/adjust/';
       const outBase = /*[[@{/inventory/log/out/}]]*/ '/inventory/log/out/';
 
       function hideAllSections() {
-        sectionIncome.style.display = 'none';
         sectionOutgo.style.display = 'none';
         sectionAdjust.style.display = 'none';
 
-        incomeTbody.innerHTML = '';
         outgoTbody.innerHTML = '';
         adjustTbody.innerHTML = '';
 
@@ -595,9 +539,8 @@
       document.querySelectorAll('.log-detail-link').forEach((btn) => {
         btn.addEventListener('click', async (e) => {
           const typeRaw = e.currentTarget.dataset.logType || '';
-          const type = typeRaw.trim(); // OUTGO / OUTCOME / INCOME / ADJUST
+          const type = typeRaw.trim(); // OUTGO /ADJUST
           const logId = e.currentTarget.dataset.logId;
-          const batchId = e.currentTarget.dataset.batchId;
           const logDate = e.currentTarget.dataset.logDate;
 
           hideAllSections();
@@ -606,11 +549,12 @@
           logIdEl.textContent = logId || '-';
           logDateEl.textContent = logDate || '-';
 
-          if (type === 'INCOME') logTypeEl.textContent = '입고';
-          else if (type === 'OUTGO' || type === 'OUTCOME')
+          if (type === 'OUTGO')
             logTypeEl.textContent = '출고';
-          else if (type === 'ADJUST') logTypeEl.textContent = '조정';
-          else logTypeEl.textContent = type || '-';
+          else if (type === 'ADJUST')
+            logTypeEl.textContent = '조정';
+          else
+            logTypeEl.textContent = type || '-';
 
           // 제목: 재료명 + 유형
           titleEl.textContent = materialName + ' ' + logTypeEl.textContent;
@@ -655,55 +599,7 @@
                 </tr>
               `;
             };
-          } else if (type === 'INCOME') {
-            // 입고 LOT 1건 상세 (batchId 기준)
-            sectionIncome.style.display = 'block';
-            targetTbody = incomeTbody;
-
-            if (!batchId) {
-              targetTbody.innerHTML =
-                '<tr><td colspan="2">배치 ID가 없어 LOT 상세를 조회할 수 없습니다.</td></tr>';
-              return;
-            }
-
-            url = lotBase + batchId;
-
-            // detail: {lotNo, receivedDate, expirationDate, receivedQuantity, remainingQuantity, unitPrice, memo}
-            renderFn = (detail) => {
-              if (!detail) {
-                targetTbody.innerHTML =
-                  '<tr><td colspan="2">입고 LOT 상세가 없습니다.</td></tr>';
-                return;
-              }
-
-              targetTbody.innerHTML = `
-                <tr>
-                    <th scope="row">LOT</th>
-                    <td class="ta-r">${detail.lotNo || '-'}</td>
-                </tr>
-                <tr>
-                    <th scope="row">입고일</th>
-                    <td class="ta-r">${detail.receivedDate || '-'}</td>
-                </tr>
-                <tr>
-                    <th scope="row">유통기한</th>
-                    <td class="ta-r">${detail.expirationDate || '-'}</td>
-                </tr>
-                <tr>
-                    <th scope="row">입고수량</th>
-                    <td class="ta-r">${detail.receivedQuantity}</td>
-                </tr>
-                <tr>
-                    <th scope="row">단가</th>
-                    <td class="ta-r">${detail.unitPrice}</td>
-                </tr>
-                <tr>
-                    <th scope="row">기타</th>
-                    <td class="ta-r">${detail.memo || '-'}</td>
-                </tr>
-              `;
-            };
-          } else if (type === 'OUTGO' || type === 'OUTCOME') {
+          } else if (type === 'OUTGO') {
             // 출고 LOT N건 상세 (헤더 logId 기준)
             sectionOutgo.style.display = 'block';
             targetTbody = outgoTbody;

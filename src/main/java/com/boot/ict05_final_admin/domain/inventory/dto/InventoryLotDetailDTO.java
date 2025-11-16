@@ -60,6 +60,6 @@ public class InventoryLotDetailDTO {
 
     // 팝업 상단용 (필요하면)
     private Long logId;              // v_inventory_log 에서 넘겨주면 세팅
-    private String type;             // "INCOME"/"OUTCOME"
+    private String type;             // "INCOME"/"OUTGO"
     private LocalDateTime logDate;   // 해당 로그 시각
 }

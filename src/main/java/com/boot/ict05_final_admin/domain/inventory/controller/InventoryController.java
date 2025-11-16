@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 조회/삭제 전용 컨트롤러
@@ -83,7 +85,7 @@ public class InventoryController {
      * 본사 재고 로그 화면으로 이동한다.
      *
      * @param materialId 재료 ID
-     * @param type       필터: 로그 유형(INCOME/OUTCOME/ADJUST 등) 선택값(옵션)
+     * @param type       필터: 로그 유형(INCOME/OUTGO/ADJUST 등) 선택값(옵션)
      * @param startDate  필터: 시작일(옵션)
      * @param endDate    필터: 종료일(옵션)
      * @param page       페이지 인덱스(0-base)
@@ -178,6 +180,42 @@ public class InventoryController {
         return "inventory/batch_status";
     }
 
+    /**
+     * 특정 배치(LOT)의 입고/출고 상세 화면으로 이동한다.
+     *
+     * @param batchId 배치 ID (inventory_batch.inventory_batch_id)
+     * @param page    출고 이력 페이지 인덱스(0-base)
+     * @param size    페이지 크기
+     * @param model   뷰 모델
+     * @return 배치 상세 페이지(view)
+     */
+    @GetMapping("/batch/{batchId}")
+    public String batchPage(@PathVariable Long batchId,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "10") int size,
+                            Model model) {
+
+        // LOT 상단 상세
+        InventoryLotDetailDTO lot = inventoryBatchService.getLotDetail(batchId);
+
+        // 출고 이력 페이징
+        Page<InventoryOutLotHistoryRowDTO> outHistory =
+                inventoryLotService.getOutLotHistory(batchId, PageRequest.of(page, size));
+
+        model.addAttribute("lot", lot);
+        model.addAttribute("outHistory", outHistory);  // ★ 이름 outHistory 맞춰줌
+
+        model.addAttribute("batchId", batchId);
+        model.addAttribute("materialId", lot.getMaterialId());
+        model.addAttribute("materialName", lot.getMaterialName());
+
+        // pagination fragment용
+        model.addAttribute("urlBuilder", new UrlBuilderHelper());
+
+        return "inventory/batch";
+    }
+
+
     // -------------------- Read APIs (JSON) --------------------
 
     /**
@@ -250,21 +288,32 @@ public class InventoryController {
         );
     }
 
-    // 조정 상세
+    // 조정 상세 (로그 팝업용)
     @GetMapping("/log/adjust/{logId}")
     @ResponseBody
-    public InventoryAdjustDTO getAdjustDetail(@PathVariable Long logId) {
-        return inventoryAdjustmentService.getAdjustDetail(logId);
+    public ResponseEntity<?> getAdjustDetail(@PathVariable Long logId) {
+        InventoryAdjustDTO dto = inventoryAdjustmentService.getAdjustDetail(logId);
+
+        if (dto == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(
+                            "message", "조정 로그를 찾을 수 없습니다.",
+                            "logId", logId
+                    ));
+        }
+
+        return ResponseEntity.ok(dto);
     }
 
-    // LOT 상세
+    // LOT 상세 (로그 팝업용)
     @GetMapping("/log/lot/{batchId}")
     @ResponseBody
     public InventoryLotDetailDTO getLotDetail(@PathVariable Long batchId) {
         return inventoryBatchService.getLotDetail(batchId);
     }
 
-    // 출고 LOT 상세 (로그 팝업용)  --- NEW
+    // 출고 LOT 상세 (로그 팝업용)
     @GetMapping("/log/out/{outId}")
     @ResponseBody
     public List<InventoryOutLotDetailRowDTO> getOutDetail(@PathVariable Long outId) {

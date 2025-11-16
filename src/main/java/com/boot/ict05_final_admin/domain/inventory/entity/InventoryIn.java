@@ -92,7 +92,7 @@ public class InventoryIn {
 
     @Comment("트랜잭션 상태(DRAFT/CONFIRMED/CANCELLED/REVERSED)")
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "inventory_record_status", nullable = false, length = 20)
     @Builder.Default
     private InventoryRecordStatus status = InventoryRecordStatus.CONFIRMED;
 }

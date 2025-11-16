@@ -23,17 +23,21 @@
     <div id="container" class="container" th:data-material-id="${materialId}">
         <div class="title-bar">
             <h2 class="page-title ellipsis max-1132">
-                <span th:text="${materialName}">재료명</span>
-                <span class="fw-400">로트별 재고 현황</span>
+                <span class="fw-400">LOT 현황(배치 스냅샷) &gt;</span>
+                <span th:text="${materialName}">재료명 </span>
+                <span class="fw-400">현재 보유 LOT</span>
             </h2>
         </div>
 
         <main id="content" class="max-1132">
+            <div class="pack-both">
+                <a th:href="@{/inventory/log/{mid}(mid=${materialId})}" class="btn medium bdr-color1">재고 로그</a>
+                <a th:href="@{/inventory/list}" class="btn medium bdr-color1">재고 목록</a>
+            </div>
 
             <div class="box-wrap">
                 <div class="list-header pack-both">
-                    <div class="pack-left">
-                    </div>
+                    <div class="pack-left"></div>
 
                     <div class="pack-left">
                         <button type="button" class="btn medium bdr-color2"
@@ -44,33 +48,36 @@
                 <section class="pack-down">
                     <table class="data-table" id="batchTable">
                         <thead>
-                        <tr>
-                            <th scope="col">로트 번호</th>
-                            <th scope="col">입고일</th>
-                            <th scope="col">유통 기한</th>
-                            <th scope="col">입고 수량</th>
-                            <th scope="col">현재 잔량</th>
-                            <th scope="col">입고단가</th>
-                            <th scope="col">상세</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">LOT 번호</th>
+                                <th scope="col">입고일</th>
+                                <th scope="col">유통기한</th>
+                                <th scope="col">입고수량</th>
+                                <th scope="col">잔량</th>
+                                <th scope="col">입고단가</th>
+                                <th scope="col">상세</th>
+                            </tr>
                         </thead>
                         <tbody id="batchTbody">
-                        <tr th:each="b: ${batches}">
-                            <td th:text="${b.lotNo}"></td>
-                            <td th:text="${#temporals.format(b.receivedDate,'yyyy-MM-dd HH:mm')}"></td>
-                            <td th:text="${b.expirationDate != null ? #temporals.format(b.expirationDate,'yyyy-MM-dd') : '-'}"></td>
-                            <td th:text="${#numbers.formatInteger(b.receivedQuantity,1,'COMMA')}" class="ta-r"></td>
-                            <td th:text="${#numbers.formatInteger(b.quantity,1,'COMMA')}" class="ta-r"></td>
-                            <td th:text="${#numbers.formatInteger(b.unitPrice,1,'COMMA')}" class="ta-r"></td>
-                            <td>
-                                <button type="button"
-                                        class="btn small bdr-gray js-lot-out-history"
-                                        th:attr="data-batch-id=${b.id},data-lot-no=${b.lotNo}"
-                                        onclick="modalOpen('#detailModal');" title="출고 내역">
-                                    <span class="material-symbols-outlined md-18">conveyor_belt</span>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr th:if="${#lists.isEmpty(batches)}">
+                                <td colspan="7">현재 보유 LOT가 없습니다.</td>
+                            </tr>
+                            <tr th:each="b: ${batches}">
+                                <td data-th="LOT 번호" class="fs-s" th:text="${b.lotNo}"></td>
+                                <td data-th="입고일" class="fs-s" th:text="${#temporals.format(b.receivedDate,'yyyy-MM-dd HH:mm')}"></td>
+                                <td data-th="유통기한" class="fs-s" th:text="${b.expirationDate != null ? #temporals.format(b.expirationDate,'yyyy-MM-dd') : '-'}"></td>
+                                <td data-th="입고수량" th:text="${#numbers.formatInteger(b.receivedQuantity,1,'COMMA')}" class="ta-r"></td>
+                                <td data-th="잔량" th:text="${#numbers.formatInteger(b.quantity,1,'COMMA')}" class="ta-r"></td>
+                                <td data-th="입고단가" th:text="${#numbers.formatInteger(b.unitPrice,1,'COMMA')}" class="ta-r"></td>
+                                <td data-th="버튼">
+                                    <button type="button"
+                                            class="btn small bdr-gray js-lot-out-history"
+                                            th:attr="data-batch-id=${b.id},data-lot-no=${b.lotNo}"
+                                            onclick="modalOpen('#detailModal');" title="출고 내역">
+                                        <span class="material-symbols-outlined md-18">conveyor_belt</span>
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </section>
@@ -130,7 +137,7 @@
       var tbody = document.getElementById('lotOutTbody');
 
       // 제목에 로트 번호 표시
-      titleEl.textContent = lotNo ? (lotNo + ' 출고 내역') : '로트별 출고 내역';
+      titleEl.textContent = lotNo ? (lotNo) : '로트별 출고 내역';
 
       // 초기 상태
       tbody.innerHTML = '<tr><td colspan="4">출고 이력을 불러오는 중입니다.</td></tr>';
@@ -154,16 +161,20 @@
 
           // 날짜
           var dateTd = document.createElement('td');
+          dateTd.setAttribute('data-th', '출고일시');
+          dateTd.className = 'fs-s';
           dateTd.textContent = row.outDate || row.logDate || '';
           tr.appendChild(dateTd);
 
           // 가맹점명
           var storeTd = document.createElement('td');
+          storeTd.setAttribute('data-th', '가맹점');
           storeTd.textContent = row.storeName || '-';
           tr.appendChild(storeTd);
 
           // 출고 수량 (여러 필드명 fallback)
           var qtyTd = document.createElement('td');
+          qtyTd.setAttribute('data-th', '출고 수량');
           qtyTd.className = 'ta-r';
           var qtyVal =
                   (row.quantity !== undefined && row.quantity !== null) ? row.quantity :
@@ -176,6 +187,8 @@
 
           // 메모
           var memoTd = document.createElement('td');
+          memoTd.setAttribute('data-th', '메모');
+          memoTd.className = 'fs-s';
           memoTd.textContent = row.memo || '';
           tr.appendChild(memoTd);
 
