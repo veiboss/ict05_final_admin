@@ -60,12 +60,24 @@ public class InventoryRestController {
      *
      * @param materialId 재료 ID
      * @param qty        총 출고 수량
-     * @return 배치 분할 미리보기 결과
+     * @return 배치 분할 미리보기 결과 또는 수량 부족 메시지
      */
-    @PostMapping("/inventory/out/preview")
-    public List<InventoryOutPreviewItemDTO> previewOut(@RequestParam Long materialId,
-                                                       @RequestParam BigDecimal qty) {
-        return inventoryOutService.previewFifo(materialId, qty);
+    @GetMapping("/inventory/out/preview")
+    public ResponseEntity<?> previewOut(@RequestParam Long materialId, @RequestParam BigDecimal qty) {
+        // 현재 재고 조회
+        BigDecimal currentStock = inventoryService.hqRemainOfMaterial(materialId);
+        if (currentStock == null) currentStock = BigDecimal.ZERO;
+
+        // 주문 수량과 비교
+        if (currentStock.compareTo(qty) < 0) {
+            return ResponseEntity.status(400)
+                    .body("주문 수량이 현재 재고를 초과합니다. 현재 재고: " + currentStock + ", 주문 수량: " + qty);
+        }
+
+        // FIFO 미리보기 처리
+        List<InventoryOutPreviewItemDTO> plan = inventoryOutService.previewFifo(materialId, qty);
+
+        return ResponseEntity.ok(plan); // FIFO 계획 반환
     }
 
     /**

@@ -8,8 +8,6 @@ import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotRep
 import com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutRepository;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderItemDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderDetailView;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.EntityManager;
@@ -41,20 +39,30 @@ public class InventoryOutService {
     private final UnitPriceService unitPriceService;
     private final InventoryService inventoryService;
 
-    private final ReceiveOrderRepository receiveOrderRepository;
-
 
     /**
-     * FIFO 미리보기.
+     * 출고 미리보기.
      *
      * @param materialId 재료 ID
-     * @param qty   총 출고 수량
-     * @return 배치 분할 미리보기
+     * @param qty        총 출고 수량
+     * @return 배치 분할 미리보기 결과
      */
     public List<InventoryOutPreviewItemDTO> previewFifo(Long materialId, BigDecimal qty) {
+        // 현재 재고 조회
+        BigDecimal currentStock = inventoryService.hqRemainOfMaterial(materialId);
+        if (currentStock == null) currentStock = BigDecimal.ZERO;
+
+        // 주문 수량과 비교
+        if (currentStock.compareTo(qty) < 0) {
+            throw new IllegalArgumentException("주문 수량이 현재 재고를 초과합니다. 현재 재고: " +
+                    currentStock + ", 주문 수량: " + qty);
+        }
+
+        // FIFO 계획 생성
         var candidates = inventoryBatchQueryRepository.findAvailableBatchesForFifo(materialId);
         var remain = qty;
-        List<InventoryOutPreviewItemDTO> plan = new java.util.ArrayList<>();
+        List<InventoryOutPreviewItemDTO> plan = new ArrayList<>();
+
         for (var c : candidates) {
             if (remain.signum() <= 0) break;
             var take = c.getAvailable().min(remain);
@@ -68,7 +76,19 @@ public class InventoryOutService {
                 remain = remain.subtract(take);
             }
         }
+
         return plan;
+    }
+
+
+    /**
+     * 재고 수량을 확인하여 출고할 수 있는지 체크.
+     *
+     * @param materialId 재료 ID
+     * @return 재고 수량
+     */
+    public BigDecimal hqRemainOfMaterial(Long materialId) {
+        return inventoryService.hqRemainOfMaterial(materialId);
     }
 
     /**
@@ -150,8 +170,8 @@ public class InventoryOutService {
         }
 
         if (plannedSum.compareTo(totalQty) != 0) {
-            throw new IllegalStateException("FIFO 분할 합계가 요청 수량과 일치하지 않습니다. planned="
-                    + plannedSum + ", requested=" + totalQty);
+            throw new IllegalStateException("FIFO 분할 합계가 요청 수량과 일치하지 않습니다. planned=" +
+                    plannedSum + ", requested=" + totalQty);
         }
 
         // 3) 배치 차감 이후 현재고 재계산

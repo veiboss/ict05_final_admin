@@ -156,7 +156,10 @@ public class InventoryController {
      * @return 템플릿 경로
      */
     @GetMapping("/out_test")
-    public String outTestPage() {
+    public String outTestPage(Model model) {
+        model.addAttribute("categories", MaterialCategory.values());
+        model.addAttribute("inventoryList", inventoryService.findAllForSelect());
+        model.addAttribute("now", LocalDateTime.now());
         return "inventory/out_test";
     }
 

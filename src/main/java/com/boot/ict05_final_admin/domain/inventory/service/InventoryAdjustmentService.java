@@ -77,6 +77,11 @@ public class InventoryAdjustmentService {
         dto.setQuantityBefore(before);
         dto.setDifference(diff);
 
+        // 수량이 0 미만이 되는지 확인
+        if (after.compareTo(ZERO) < 0) {
+            throw new IllegalArgumentException("조정 후 수량이 0 미만일 수 없습니다. quantityAfter=" + after);
+        }
+
         // 3) 재고 수량 반영 + 상태/업데이트 일시 동기화
         inventory.setQuantity(after);
         inventory.touchAfterQuantityChange();   // InventoryBase 공통 메서드 사용
