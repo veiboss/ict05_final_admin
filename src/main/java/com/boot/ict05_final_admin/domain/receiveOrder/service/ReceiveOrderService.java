@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.receiveOrder.service;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.service.InventoryOutService;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
@@ -52,6 +53,9 @@ public class ReceiveOrderService {
 
     private final ReceiveOrderRepository receiveOrderRepository;
 
+    // 재료 재고
+    private final InventoryOutService inventoryOutService;
+
     /**
      * 수주 목록을 페이지 단위로 조회한다.
      *
@@ -89,8 +93,13 @@ public class ReceiveOrderService {
      * <p>상태 전환 순서:
      *  * RECEIVED → SHIPPING → DELIVERED<br>
      *  * 또는 RECEIVED → CANCELED</p>
+     * <p>
+     *     action 이 "SHIP" 이고 상태가 RECEIVED → SHIPPING 으로 변경될 때,
+     *     해당 수주에 대해 본사 재고에서 가맹점으로 출고를 생성한다.
+     *     출고 생성은 {@link InventoryOutService#createOutByReceiveOrder(ReceiveOrderDetailDTO)} 를 사용한다.</p>
      *
      * @param id 수주 ID
+     * @param action "SHIP" 또는 "CANCEL"
      * @throws IllegalArgumentException 수주가 존재하지 않을 경우
      * @throws IllegalStateException 이미 완료된 주문일 경우
      */
@@ -115,6 +124,15 @@ public class ReceiveOrderService {
         int updated = receiveOrderRepository.updateStatusIfCurrent(id, curr.name(), next.name());
         if (updated == 0) {
             throw new IllegalStateException("상태 업데이트 실패: id=" + id);
+        }
+
+        // RECEIVED → SHIPPING 으로 전환된 경우에만 출고 생성
+        if (next == ReceiveOrderStatus.SHIPPING) {
+            // 수주 상세 + 품목 DTO를 조회
+            ReceiveOrderDetailDTO orderDetail = getReceiveOrderDetail(id);
+
+            // 본사 → 가맹점 출고 생성 (FIFO + 현재고 반영은 InventoryOutService 가 담당)
+            inventoryOutService.createOutByReceiveOrder(orderDetail);
         }
 
         // 가맹점으로 동기화 콜 (이중 시스템일 때만)

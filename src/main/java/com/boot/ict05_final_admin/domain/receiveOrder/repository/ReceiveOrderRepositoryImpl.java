@@ -235,6 +235,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
 
         return queryFactory
                 .selectDistinct(Projections.fields(ReceiveOrderItemDTO.class,
+                        material.id.as("materialId"),              // ★ 추가
                         material.name.as("name"),
                         material.materialCategory.as("materialCategory"),
                         rod.count.as("detailCount"),

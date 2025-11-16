@@ -1,6 +1,7 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.dto;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
+import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ReceiveOrderItemDTO {
 
+    /** 자재 ID (출고/재고 연동용 FK) */
+    private Long materialId;
+    
     /** 주문 상품명 */
     public String name;
 

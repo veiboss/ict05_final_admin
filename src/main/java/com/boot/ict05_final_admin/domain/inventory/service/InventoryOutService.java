@@ -188,6 +188,82 @@ public class InventoryOutService {
         return out.getId();
     }
 
+    /**
+     * 수주 기반 본사 → 가맹점 출고 생성 유즈케이스
+     *
+     * <p>
+     * 수주 상세 DTO({@link ReceiveOrderDetailDTO})와 그 하위 품목 DTO({@link ReceiveOrderItemDTO})를 기반으로
+     * 각 자재별로 {@link #confirmOut(Long, Long, BigDecimal, LocalDateTime, String)} 을 호출하여
+     * 출고를 생성한다.
+     * </p>
+     *
+     * <p>
+     * 여러 자재가 포함된 수주의 경우 자재별로 여러 개의 {@link InventoryOut} 헤더가
+     * 생성될 수 있으며, 이 메서드는 그 중 첫 번째 헤더를 반환한다.
+     * (주요 효과는 재고 차감 및 출고/배치 로그 생성이다.)
+     * </p>
+     *
+     * @param orderDetail 출고 대상으로 하는 수주 상세 DTO (헤더 + 아이템 목록 포함)
+     * @return 생성된 출고 헤더 중 첫 번째 엔티티
+     */
+    @Transactional
+    public InventoryOut createOutByReceiveOrder(ReceiveOrderDetailDTO orderDetail) {
+        if (orderDetail == null) {
+            throw new IllegalArgumentException("수주 상세 정보가 null 입니다.");
+        }
+
+        List<ReceiveOrderItemDTO> items = orderDetail.getItems();
+        if (items == null || items.isEmpty()) {
+            throw new IllegalStateException("수주 상세 품목이 없습니다. orderId=" + orderDetail.getId()
+                    + ", orderCode=" + orderDetail.getOrderCode());
+        }
+
+        Long storeId = orderDetail.getStoreId();
+        String baseMemo = "수주 자동 출고: " + orderDetail.getOrderCode();
+        LocalDateTime outDate = LocalDateTime.now();
+
+        InventoryOut firstOut = null;
+
+        for (ReceiveOrderItemDTO item : items) {
+            if (item == null) {
+                continue;
+            }
+
+            Integer cnt = item.getDetailCount();
+            if (cnt == null || cnt <= 0) {
+                continue;
+            }
+
+            Long materialId = item.getMaterialId();
+            if (materialId == null) {
+                throw new IllegalStateException(
+                        "수주 상세 품목에 재료 ID가 없습니다. orderId=" + orderDetail.getId()
+                                + ", orderCode=" + orderDetail.getOrderCode()
+                                + ", itemName=" + item.getName()
+                );
+            }
+
+            BigDecimal qty = BigDecimal.valueOf(cnt.longValue());
+
+            Long outId = confirmOut(materialId, storeId, qty, outDate, baseMemo);
+
+            if (firstOut == null) {
+                firstOut = inventoryOutRepository.findById(outId)
+                        .orElseThrow(() ->
+                                new IllegalStateException("출고 헤더를 찾을 수 없습니다. id=" + outId));
+            }
+        }
+
+        if (firstOut == null) {
+            throw new IllegalStateException(
+                    "출고 대상 수량이 없습니다. orderId=" + orderDetail.getId()
+                            + ", orderCode=" + orderDetail.getOrderCode()
+            );
+        }
+
+        return firstOut;
+    }
+
 
     /** 출고 헤더 삭제. */
     @Transactional
