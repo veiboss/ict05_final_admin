@@ -14,13 +14,20 @@ services:
     restart: unless-stopped
     networks:
       - toastlab-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   admin-app:
     build: .
     container_name: "ict05-admin-app"
     environment:
       SPRING_PROFILES_ACTIVE: "prod,receive"
-      DB_PASSWORD: "ictpass123"
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/ict05final
+      SPRING_DATASOURCE_USERNAME: ictuser
+      SPRING_DATASOURCE_PASSWORD: ictpass123
     expose:
       - "8081"
     depends_on:
