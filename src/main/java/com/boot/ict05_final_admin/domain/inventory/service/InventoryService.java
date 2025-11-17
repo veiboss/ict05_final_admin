@@ -1,8 +1,6 @@
 package com.boot.ict05_final_admin.domain.inventory.service;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryListDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventoryLogDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.InventorySearchDTO;
+import com.boot.ict05_final_admin.domain.inventory.dto.*;
 import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryBatch;
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryLogView;
@@ -23,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,11 @@ public class InventoryService {
     private final InventoryLogViewRepository inventoryLogViewRepository;
     private final InventoryBatchRepository inventoryBatchRepository;
     private final StoreNameResolver storeNameResolver;
+
+
+    private final InventoryBatchService inventoryBatchService;
+    private final InventoryLotService inventoryLotService;
+
 
     /**
      * 재고 목록을 페이지 단위로 조회한다.
@@ -118,7 +122,7 @@ public class InventoryService {
 
         try (Workbook wb = new XSSFWorkbook(); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             Sheet sheet = wb.createSheet("본사재고");
-            String[] cols = {"ID","재료ID","재료명","카테고리","현재고","적정수량","판매단위","상태","최종변경일"};
+            String[] cols = {"재고ID","재료코드","재료명","카테고리","현재고","판매단위","상태","최종변경일"};
 
             // header
             Row h = sheet.createRow(0);
@@ -137,10 +141,9 @@ public class InventoryService {
                 row.createCell(2).setCellValue(n(v.getMaterialName()));
                 row.createCell(3).setCellValue(n(v.getCategoryName()));
                 row.createCell(4).setCellValue(v.getQuantity() == null ? 0d : v.getQuantity().doubleValue());
-                row.createCell(5).setCellValue(v.getOptimalQuantity() == null ? 0d : v.getOptimalQuantity().doubleValue());
-                row.createCell(6).setCellValue(n(v.getMaterialSalesUnit()));
-                row.createCell(7).setCellValue(String.valueOf(v.getStatus()));
-                row.createCell(8).setCellValue(v.getUpdateDate() == null ? "" : v.getUpdateDate().toString());
+                row.createCell(5).setCellValue(n(v.getMaterialSalesUnit()));
+                row.createCell(6).setCellValue(String.valueOf(v.getStatus()));
+                row.createCell(7).setCellValue(v.getUpdateDate() == null ? "" : v.getUpdateDate().toString());
             }
             for (int i = 0; i < cols.length; i++) sheet.autoSizeColumn(i);
 
@@ -255,63 +258,213 @@ public class InventoryService {
     }
 
     /**
-     * 재고 배치(로트)를 XLSX로 생성한다.
+     * 본사 재고 배치(LOT) 목록을 엑셀로 생성한다.
      *
-     * <p>리포지토리 메서드 규약에 맞춰 HQ 배치만 조회한다:
-     * {@code InventoryBatchRepository.findHqBatchesForMaterial(materialId)}.</p>
+     * <p>해당 재료의 전체 배치(잔량 0 포함)를 화면과 동일한 정렬 기준으로
+     * 덤프한다.</p>
      *
      * @param materialId 재료 ID
-     * @param pageable   페이지 파라미터(정렬 힌트 용). 엑셀은 전체 덤프
-     * @return XLSX 바이트 배열
+     * @param pageable   정렬 힌트용 페이징 정보(실제 덤프는 전체)
+     * @return XLSX 바이너리
      * @throws IOException 워크북 쓰기·닫기 중 I/O 오류
-     * @throws IllegalStateException 조회/매핑 중 런타임 오류
      */
+    @Transactional(readOnly = true)
     public byte[] downloadBatchExcel(Long materialId, Pageable pageable) throws IOException {
-        // 1) 데이터 조회
-        final List<InventoryBatch> listRaw =
-                inventoryBatchRepository.findHqBatchesForMaterial(materialId);
-        final List<InventoryBatch> list =
-                (listRaw == null) ? java.util.Collections.emptyList() : listRaw;
 
-        log.info("[BATCH-EXCEL] materialId={}, rows={}", materialId, list.size());
+        // 화면에서 사용하는 것과 동일한 배치 목록
+        List<InventoryBatch> batches =
+                inventoryBatchRepository.findAllByMaterial_IdOrderByReceivedDateDesc(materialId);
 
-        // 2) 엑셀 생성
-        try (Workbook wb = new XSSFWorkbook(); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            final Sheet sheet = wb.createSheet("재고배치_" + materialId);
-            final String[] cols = { "배치ID","LOT","입고일","유통기한","입고수량","현재수량","단가" };
+        try (Workbook wb = new XSSFWorkbook();
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
-            // Header
-            final Row h = sheet.createRow(0);
-            final CellStyle hs = wb.createCellStyle(); final Font f = wb.createFont(); f.setBold(true); hs.setFont(f);
-            for (int i = 0; i < cols.length; i++) { final Cell c = h.createCell(i); c.setCellValue(cols[i]); c.setCellStyle(hs); }
+            Sheet sheet = wb.createSheet("Batches");
+            int rowIdx = 0;
 
-            // Rows
-            int r = 1;
-            for (InventoryBatch v : list) {
-                if (v == null) continue;
-                final Row row = sheet.createRow(r++);
-                // 숫자/문자 null-safe
-                row.createCell(0).setCellValue(s(v.getId()));                      // 문자열로 넣어도 무방
-                row.createCell(1).setCellValue(n(v.getLotNo()));
-                row.createCell(2).setCellValue(v.getReceivedDate()==null ? "" : v.getReceivedDate().toString());
-                row.createCell(3).setCellValue(v.getExpirationDate()==null ? "" : v.getExpirationDate().toString());
-                row.createCell(4).setCellValue(d(v.getReceivedQuantity()));
-                row.createCell(5).setCellValue(d(v.getQuantity()));
-                row.createCell(6).setCellValue(d(v.getUnitPrice()));
+            // 헤더
+            Row header = sheet.createRow(rowIdx++);
+            int hc = 0;
+            header.createCell(hc++).setCellValue("배치ID");
+            header.createCell(hc++).setCellValue("LOT 번호");
+            header.createCell(hc++).setCellValue("입고일");
+            header.createCell(hc++).setCellValue("유통기한");
+            header.createCell(hc++).setCellValue("입고수량");
+            header.createCell(hc++).setCellValue("잔량");
+            header.createCell(hc++).setCellValue("입고단가");
+
+            // 데이터
+            DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            for (InventoryBatch b : batches) {
+                Row row = sheet.createRow(rowIdx++);
+                int c = 0;
+
+                row.createCell(c++).setCellValue(b.getId());
+                row.createCell(c++).setCellValue(
+                        b.getLotNo() != null ? b.getLotNo() : ""
+                );
+                row.createCell(c++).setCellValue(
+                        b.getReceivedDate() != null ? b.getReceivedDate().format(dtfDateTime) : ""
+                );
+                row.createCell(c++).setCellValue(
+                        b.getExpirationDate() != null ? b.getExpirationDate().format(dtfDate) : ""
+                );
+                row.createCell(c++).setCellValue(
+                        b.getReceivedQuantity() != null ? b.getReceivedQuantity().doubleValue() : 0d
+                );
+                row.createCell(c++).setCellValue(
+                        b.getQuantity() != null ? b.getQuantity().doubleValue() : 0d
+                );
+                row.createCell(c++).setCellValue(
+                        b.getUnitPrice() != null ? b.getUnitPrice().doubleValue() : 0d
+                );
             }
-            for (int i = 0; i < cols.length; i++) sheet.autoSizeColumn(i);
 
             wb.write(bos);
             return bos.toByteArray();
-        } catch (IOException ioe) {
-            log.error("[BATCH-EXCEL] IO error materialId={}", materialId, ioe);
-            throw ioe; // I/O는 그대로
-        } catch (Exception e) {
-            // 어떤 값에서 터지는지 로그로 확인
-            log.error("[BATCH-EXCEL] fail materialId={}, cause={}", materialId, e.toString(), e);
-            // 엑셀은 빈 시트라도 내려가게 하고 싶으면 주석 해제:
-            // return new byte[0];
-            throw new IllegalStateException("재고 배치 엑셀 생성 실패: materialId=" + materialId, e);
+        }
+    }
+
+    /**
+     * 특정 LOT(배치)의 출고 이력을 엑셀로 생성한다.
+     *
+     * @param batchId 배치 ID
+     * @return XLSX 바이너리
+     * @throws IOException 워크북 쓰기·닫기 중 I/O 오류
+     */
+    /**
+     * 특정 LOT(배치)의 출고 이력을 엑셀로 생성한다.
+     *
+     * @param batchId 배치 ID
+     * @return XLSX 바이너리
+     * @throws IOException 워크북 쓰기·닫기 중 I/O 오류
+     */
+    @Transactional(readOnly = true)
+    public byte[] downloadLotOutHistoryExcel(Long batchId) throws IOException {
+
+        // LOT 상세(상단 요약 + 파일명용)
+        InventoryLotDetailDTO lot = inventoryBatchService.getLotDetail(batchId);
+
+        // 출고 이력 전체 조회 (필요 시 size 조정)
+        Page<InventoryOutLotHistoryRowDTO> page =
+                inventoryLotService.getOutLotHistory(batchId, PageRequest.of(0, 1000));
+
+        List<InventoryOutLotHistoryRowDTO> rows = page.getContent();
+
+        try (Workbook wb = new XSSFWorkbook();
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+
+            Sheet sheet = wb.createSheet("LotOutHistory");
+            int rowIdx = 0;
+
+            DateTimeFormatter dtfDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            /* ================= LOT 요약 섹션 ================= */
+
+            if (lot != null) {
+                // LOT 번호
+                Row lotRow0 = sheet.createRow(rowIdx++);
+                lotRow0.createCell(0).setCellValue("LOT 번호");
+                lotRow0.createCell(1).setCellValue(
+                        lot.getLotNo() != null ? lot.getLotNo() : ""
+                );
+
+                // 입고일
+                Row lotRow1 = sheet.createRow(rowIdx++);
+                lotRow1.createCell(0).setCellValue("입고일");
+                lotRow1.createCell(1).setCellValue(
+                        lot.getReceivedDate() != null
+                                ? lot.getReceivedDate().format(dtfDateTime)
+                                : ""
+                );
+
+                // 입고수량
+                Row lotRow2 = sheet.createRow(rowIdx++);
+                lotRow2.createCell(0).setCellValue("입고수량");
+                lotRow2.createCell(1).setCellValue(
+                        lot.getReceivedQuantity() != null
+                                ? lot.getReceivedQuantity().doubleValue()
+                                : 0d
+                );
+
+                // 현재잔량
+                Row lotRow3 = sheet.createRow(rowIdx++);
+                lotRow3.createCell(0).setCellValue("현재잔량");
+                lotRow3.createCell(1).setCellValue(
+                        lot.getRemainingQuantity() != null
+                                ? lot.getRemainingQuantity().doubleValue()
+                                : 0d
+                );
+
+                // 유통기한
+                Row lotRow4 = sheet.createRow(rowIdx++);
+                lotRow4.createCell(0).setCellValue("유통기한");
+                lotRow4.createCell(1).setCellValue(
+                        lot.getExpirationDate() != null
+                                ? lot.getExpirationDate().format(dtfDate)
+                                : ""
+                );
+
+                // 입고단가
+                Row lotRow5 = sheet.createRow(rowIdx++);
+                lotRow5.createCell(0).setCellValue("입고단가");
+                lotRow5.createCell(1).setCellValue(
+                        lot.getUnitPrice() != null
+                                ? lot.getUnitPrice().doubleValue()
+                                : 0d
+                );
+
+                // 요약과 이력 사이 한 줄 비우기
+                rowIdx++;
+            }
+
+            /* ================= 출고 이력 테이블 ================= */
+
+            // 헤더
+            Row header = sheet.createRow(rowIdx++);
+            int hc = 0;
+            header.createCell(hc++).setCellValue("출고일시");
+            header.createCell(hc++).setCellValue("가맹점");
+            header.createCell(hc++).setCellValue("출고 수량");
+            header.createCell(hc++).setCellValue("메모");
+
+            for (InventoryOutLotHistoryRowDTO r : rows) {
+                Row row = sheet.createRow(rowIdx++);
+                int c = 0;
+
+                // 출고일시
+                String outDateStr = "";
+                if (r.getOutDate() != null) {
+                    outDateStr = r.getOutDate().format(dtfDateTime);
+                }
+                row.createCell(c++).setCellValue(outDateStr);
+
+                // 가맹점
+                row.createCell(c++).setCellValue(
+                        r.getStoreName() != null ? r.getStoreName() : ""
+                );
+
+                // 출고 수량 (DTO의 qty 필드만 사용)
+                BigDecimal qty = r.getQty();
+                row.createCell(c++).setCellValue(
+                        qty != null ? qty.doubleValue() : 0d
+                );
+
+                // 메모
+                row.createCell(c++).setCellValue(
+                        r.getMemo() != null ? r.getMemo() : ""
+                );
+            }
+
+            // 필요하면 자동 너비 조정
+            for (int i = 0; i < 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            wb.write(bos);
+            return bos.toByteArray();
         }
     }
 

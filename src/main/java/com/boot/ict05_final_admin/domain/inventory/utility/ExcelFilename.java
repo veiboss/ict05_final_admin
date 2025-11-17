@@ -79,6 +79,18 @@ public class ExcelFilename {
         return head + "_" + now() + ".xlsx";
     }
 
+    /**
+     * LOT 출고 이력 엑셀 파일명
+     * 예: LOT-251115-927999_출고내역_20251117113000.xlsx
+     */
+    public static String inventoryLotOutHistoryByLotNo(String lotNo) {
+        String prefix = (lotNo == null || lotNo.isBlank())
+                ? "LOT출고내역_"
+                : lotNo + "_출고내역_";
+        return sanitize(prefix + now() + ".xlsx");
+    }
+
+
     /* ================= 헤더 인코딩 보조 ================= */
 
     /** RFC5987 filename* 값 생성용 URL 인코딩 */

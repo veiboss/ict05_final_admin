@@ -41,8 +41,9 @@
 
                     <div class="pack-left">
                         <button type="button" class="btn medium bdr-color2"
-                                th:attr="data-excel-endpoint=@{'/API/inventory/' + ${materialId} + '/batch/download'}"
+                                th:attr="data-excel-endpoint=@{'/API/inventory/' + ${materialId} + '/batch-status/download'}"
                                 onclick="excelDownload(this)">엑셀다운로드</button>
+
                     </div>
                 </div>
                 <section class="pack-down">

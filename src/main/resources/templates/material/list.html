@@ -104,7 +104,7 @@
                     <table class="data-table">
                         <thead>
                         <tr>
-                            <th scope="col">CODE</th>
+                            <th scope="col">재료코드</th>
                             <th scope="col">카테고리</th>
                             <th scope="col">재료명</th>
                             <th scope="col">기본단위</th>
@@ -116,13 +116,13 @@
                         </thead>
                         <tbody>
                         <tr th:each="material, stat : ${materials.content}">
-                            <td th:text="${material.code}">CODE</td>
-                            <td th:text="${material.categoryDescription}">카테고리</td>
-                            <td>
+                            <td data-th="재료코드" th:text="${material.code}">재료코드</td>
+                            <td data-th="카테고리" th:text="${material.categoryDescription}">카테고리</td>
+                            <td data-th="재료명">
                                 <span class="fc-333 fw-600" th:text="${material.name}">재료명</span>
                             </td>
-                            <td th:text="${material.baseUnit}">기본단위</td>
-                            <td>
+                            <td data-th="기본단위" th:text="${material.baseUnit}">기본단위</td>
+                            <td data-th="판매단위">
                                 <div class="pack-down-center gap-0">
                                     <span th:text="${material.salesUnit}">판매단위</span>
                                     <span class="fs-s fc-999 pack-center gap-0">
@@ -133,11 +133,11 @@
                                     </span>
                                 </div>
                             </td>
-                            <td th:text="${material.supplier}">공급업체</td>
-                            <td>
+                            <td data-th="공급업체" th:text="${material.supplier}">공급업체</td>
+                            <td data-th="상태">
                                 <span th:class="'badge rounded-pill ' + (${material.materialStatus.name()} == 'USE' ? 'bg-primary' : '  bg-secondary')" th:text="${material.materialStatus.description}">상태</span>
                             </td>
-                            <td>
+                            <td data-th="버튼">
                                 <a th:href="@{/material/detail/{id}(id=${material.id})}" class="btn small bdr-gray">
                                     <span class="material-symbols-outlined md-18">visibility</span>
                                 </a>

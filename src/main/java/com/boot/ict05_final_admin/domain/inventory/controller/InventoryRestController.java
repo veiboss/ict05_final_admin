@@ -49,6 +49,7 @@ public class InventoryRestController {
     private final InventoryService inventoryService;
     private final InventoryInService inventoryInService;
     private final InventoryOutService inventoryOutService;
+    private final InventoryBatchService inventoryBatchService;
     private final InventoryAdjustmentService inventoryAdjustmentService;
     private final UnitPriceService unitPriceService;
     private final MaterialService materialService;
@@ -215,9 +216,10 @@ public class InventoryRestController {
 
 
     /**
-     * 본사 재고 배치(로트) 엑셀 다운로드 API
+     * 본사 재고 배치(LOT) 엑셀 다운로드 API
      *
-     * <p>HQ 배치(가맹점 미지정, 잔량 &gt; 0)를 유통기한↑ → 입고일↑ 순으로 전체 덤프한다.</p>
+     * <p>해당 재료의 전체 배치(잔량 0 포함)를 화면과 동일한 정렬 기준으로
+     * 덤프한다.</p>
      *
      * @param materialId 재료 ID
      * @param page       페이지 인덱스(기본 0). 엑셀은 전체 덤프이나 정렬 힌트로 수집
@@ -226,11 +228,12 @@ public class InventoryRestController {
      * @throws java.io.IOException 워크북 쓰기·닫기 중 I/O 오류
      */
     @Operation(summary = "본사 재고 배치 엑셀 다운로드")
-    @GetMapping("/inventory/{materialId}/batch/download")
+    @GetMapping("/inventory/{materialId}/batch-status/download")
     public ResponseEntity<byte[]> downloadInventoryBatch(@PathVariable Long materialId,
-                                                     @RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "10") int size)
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size)
             throws IOException {
+
         byte[] xlsx = inventoryService.downloadBatchExcel(materialId, PageRequest.of(page, size));
 
         // 재료명 조회 후 파일명 생성. 없으면 “재고배치_YYYY...”로 처리
@@ -241,4 +244,29 @@ public class InventoryRestController {
 
         return ExcelResponse.ok(xlsx, filename);
     }
+
+    /**
+     * 입고 LOT 출고 이력 엑셀 다운로드 API
+     *
+     * <p>특정 배치(LOT)의 출고 이력을 엑셀로 덤프한다.</p>
+     *
+     * @param batchId 배치 ID
+     * @return XLSX 바이너리 응답
+     * @throws java.io.IOException 워크북 쓰기·닫기 중 I/O 오류
+     */
+    @Operation(summary = "입고 LOT 출고 이력 엑셀 다운로드")
+    @GetMapping("/inventory/batch/{batchId}/out-history/download")
+    public ResponseEntity<byte[]> downloadInventoryLotOutHistory(@PathVariable Long batchId)
+            throws IOException {
+
+        byte[] xlsx = inventoryService.downloadLotOutHistoryExcel(batchId);
+
+        // LOT 번호 기반 파일명 생성: {LOT}_출고내역_YYYYMMDDHHMMSS.xlsx
+        InventoryLotDetailDTO lot = inventoryBatchService.getLotDetail(batchId);
+        String lotNo = lot != null ? lot.getLotNo() : null;
+        String filename = ExcelFilename.inventoryLotOutHistoryByLotNo(lotNo);
+
+        return ExcelResponse.ok(xlsx, filename);
+    }
+
 }

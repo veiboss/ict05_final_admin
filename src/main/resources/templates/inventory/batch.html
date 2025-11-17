@@ -14,6 +14,7 @@
     <link href="/admin/css/toast.css" rel="stylesheet"/>
     <script src="/admin/js/lib/jquery-3.2.1.min.js"></script>
     <script src="/admin/js/toast.js"></script>
+    <script src="/admin/js/excel-download.js" defer></script>
 </head>
 <body>
 <div id="wrap" class="frame">
@@ -85,7 +86,12 @@
 
                 <!-- LOT 출고 이력 -->
                 <section class="pack-down">
-                    <h3 class="section-title">LOT 출고 이력</h3>
+                    <div class="pack-both">
+                        <h3 class="section-title">LOT 출고 이력</h3>
+                        <button type="button" class="btn medium bdr-color2"
+                                th:attr="data-excel-endpoint=@{'/API/inventory/batch/' + ${batchId} + '/out-history/download'}"
+                                onclick="excelDownload(this)">출고 이력 엑셀 다운로드</button>
+                    </div>
                     <table class="data-table">
                         <thead>
                         <tr>
@@ -113,7 +119,6 @@
                                     가맹점명
                                 </td>
                                 <td data-th="출고 수량"
-                                    class="fs-s ta-r"
                                     th:text="${row.qty != null ? #numbers.formatDecimal(row.qty,1,'COMMA',0,'POINT') : '0'}">
                                 </td>
                             </tr>
@@ -125,11 +130,6 @@
                         <div th:replace="~{fragments/pagination :: pagination (${outHistory})}"></div>
                     </div>
                 </section>
-            </div>
-
-            <div class="button-area pack-both">
-                <button type="button" class="btn medium bdr-color1" onclick="history.back();">이전</button>
-                <a href="/admin/inventory/list" class="btn medium color1">재고 목록</a>
             </div>
         </main>
 
