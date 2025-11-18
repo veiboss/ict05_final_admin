@@ -108,6 +108,9 @@ public interface AnalyticsRepository {
      */
     Page<MaterialsRowDto> findMaterials(AnalyticsSearchDto cond, Pageable pageable);
 
+	/** 재료 조회 결과의 총 행 수를 반환한다. */
+	long countMaterials(AnalyticsSearchDto cond);
+
     // ===================== Time Analysis =====================
 
     /**

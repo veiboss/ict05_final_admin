@@ -46,7 +46,7 @@ public class MaterialsRowDto {
     private BigDecimal turnoverRate;
 
     /** 이익( Sales − Cost ) */
-    private Long profit;
+	private BigDecimal profit;
 
     /** 마진율 = Profit / Sales */
     private BigDecimal margin;
