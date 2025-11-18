@@ -22,8 +22,8 @@ import java.math.BigDecimal;
  * @author 최민진
  * @since 2025.10
  */
-@MappedSuperclass
-@Table(name = "receive_order_detail")
+@Entity
+@Table(name = "purchase_order_detail")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,7 +35,7 @@ public class ReceiveOrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "purchase_order_detail_id")
-    private Long detailId;
+    private Long id;
 
     /** 수주 시퀀스 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,7 +45,7 @@ public class ReceiveOrderDetail {
     /** 재료 재고 시퀀스 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id_fk", nullable = false)
-    private Inventory hqInventory;
+    private Inventory inventory;
 
     /** 재료 시퀀스 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,14 +54,14 @@ public class ReceiveOrderDetail {
 
     /** 수주 단가 */
     @Column(name = "purchase_order_detail_unit_price", precision = 12, scale = 2, nullable = false)
-    private BigDecimal detailUnitPrice;
+    private BigDecimal unitPrice;
 
     /** 수주 수량 */
     @Column(name = "purchase_order_detail_count", nullable = false)
-    private Integer detailCount;
+    private Integer count;
 
     /** 수주 단가 총액 */
     @Column(name = "purchase_order_detail_total_price", precision = 12, scale = 2, nullable = false)
-    private BigDecimal detailTotalPrice;
+    private BigDecimal totalPrice;
 
 }

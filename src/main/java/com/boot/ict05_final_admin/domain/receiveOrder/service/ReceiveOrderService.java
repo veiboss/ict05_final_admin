@@ -6,7 +6,6 @@ import com.boot.ict05_final_admin.domain.inventory.service.InventoryOutService;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,7 +103,7 @@ public class ReceiveOrderService {
      * @throws IllegalStateException 이미 완료된 주문일 경우
      */
     public void updateStatus(Long id, String action) {
-        ReceiveOrderView order = receiveOrderRepository.findOrderById(id)
+        ReceiveOrder order = receiveOrderRepository.findOrderById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. id=" + id));
 
         ReceiveOrderStatus curr = order.getStatus();
