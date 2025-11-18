@@ -4,7 +4,7 @@ import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderView;
+
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepositoryImpl;
 import com.boot.ict05_final_admin.domain.receiveOrder.service.ReceiveOrderService;
 import io.swagger.v3.oas.annotations.Operation;
