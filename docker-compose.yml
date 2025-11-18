@@ -21,7 +21,7 @@ services:
       retries: 3
 
   admin-app:
-    build: .
+    build: ./ict05_final_admin
     container_name: "ict05-admin-app"
     environment:
       SPRING_PROFILES_ACTIVE: "prod,receive"
@@ -37,7 +37,7 @@ services:
       - toastlab-net
 
   user-app:
-    build: ../ict05_final_user
+    build: ./ict05_final_user
     container_name: ict05-user-app
     environment:
       SPRING_PROFILES_ACTIVE: "prod,receive"
@@ -80,7 +80,7 @@ services:
       - toastlab-net
 
   pdf-app:
-    build: ./python-pdf-download
+    build: ./ict05_final_admin/python-pdf-download
     container_name: ict05-pdf-app
     expose:
       - "8001"

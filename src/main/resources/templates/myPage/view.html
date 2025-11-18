@@ -50,9 +50,9 @@
         <main id="content">
             <div class="box-wrap">
                 <div class="profile-box">
-                    <!-- 업로드 이미지 있을 때 -->
+                    <!-- 업로드 이미지 있을 때 (DB에는 파일 이름만 저장) -->
                     <img th:if="${member != null and member.memberImagePath != null}"
-                         th:src="@{${member.memberImagePath}}"
+                         th:src="@{/uploads/profile/{file}(file=${member.memberImagePath})}"
                          alt="프로필 이미지"
                          style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
 
