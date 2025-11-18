@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +35,10 @@ public class MyPageController {
 
     private final MyPageService myPageService;
     private Member member;
+
+    @Value("${file.upload-dir.profile}")
+    private String profileUploadDir;
+
     /**
      * 마이페이지 조회
      * - SecurityContext에서 memberId 자동 추출
@@ -132,21 +137,19 @@ public class MyPageController {
 
         // 기본 이미지 복원 요청 확인
         if ("true".equals(resetImage)) {
-            member.setMemberImagePath("/images/admin/default-profile.png");
+            member.setMemberImagePath(null);
         }
 
         // 프로필 이미지 업로드
         if (memberImage != null && !memberImage.isEmpty()) {
-            // 실제 서버 저장 경로
-            String uploadDir = "D:/ict05_uploads/profile/"; // 로컬 테스트용 절대경로
             String fileName = UUID.randomUUID() + "_" + memberImage.getOriginalFilename();
 
-            Path path = Paths.get(uploadDir, fileName);
+            Path path = Paths.get(profileUploadDir, fileName).toAbsolutePath().normalize();
             Files.createDirectories(path.getParent());
-            memberImage.transferTo(path.toFile()); // 실제 파일 저장
+            memberImage.transferTo(path.toFile());
 
-            // 브라우저 접근용 URL (WebConfig에서 매핑됨)
-            member.setMemberImagePath("/uploads/profile/" + fileName);
+            // DB에는 파일 이름만
+            member.setMemberImagePath(fileName);
         }
 
         // 이름, 전화번호, 이미지 경로 수정

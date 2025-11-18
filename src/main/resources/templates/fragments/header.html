@@ -150,10 +150,12 @@
                     <ul>
                         <li>
                             <button type="button" class="btn btn-toggle">
+                                <!-- 업로드 이미지 있을 때: DB에는 파일명만 있으므로 /uploads/profile/{file} 붙여서 사용 -->
                                 <img th:if="${loginMember != null and loginMember.memberImagePath != null}"
-                                     th:src="@{${loginMember.memberImagePath}}"
+                                     th:src="@{/uploads/profile/{file}(file=${loginMember.memberImagePath})}"
                                      alt="프로필 이미지"
                                      class="img profile">
+                                <!-- 업로드 이미지 없을 때: 기본 이미지 -->
                                 <img th:unless="${loginMember != null and loginMember.memberImagePath != null}"
                                      th:src="@{/images/admin/default-profile.png}"
                                      alt="프로필 미리보기"
@@ -164,7 +166,7 @@
                                     <li>
                                         <div class="item pack-left">
                                             <img th:if="${loginMember != null and loginMember.memberImagePath != null}"
-                                                 th:src="@{${loginMember.memberImagePath}}"
+                                                 th:src="@{/uploads/profile/{file}(file=${loginMember.memberImagePath})}"
                                                  alt="프로필 이미지"
                                                  class="img profile">
                                             <img th:unless="${loginMember != null and loginMember.memberImagePath != null}"
