@@ -146,7 +146,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         cfg.setAllowedOrigins(List.of(
                 "https://toastlabadmin.duckdns.org",  // ← Admin 도메인 추가
                 "http://toastlabadmin.duckdns.org",   // HTTP도 추가
-                "https://toastlab.duckdns.org",       // User 도메인도 추가
+                "https://toastlab.duckdns.org",       // User 도메인도 추가 (필요하면)
                 "http://localhost:8082", // 가맹점 프런트/게이트웨이
                 "http://localhost:3000",
                 "http://localhost:5173",
