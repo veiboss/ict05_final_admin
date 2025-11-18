@@ -4,6 +4,7 @@ import com.boot.ict05_final_admin.config.security.filter.SyncAuthFilter;
 import com.boot.ict05_final_admin.domain.auth.service.MemberUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -165,12 +166,15 @@ public class SecurityConfig implements WebMvcConfigurer {
     }
     // << ADD
 
+    @Value("${file.upload-dir.profile}")
+    private String profileUploadDir;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String location = "file:" + profileUploadDir + "/";
+
         registry.addResourceHandler("/uploads/profile/**")
-                .addResourceLocations("file:///D:/ict05_uploads/profile/");
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images/");
+                .addResourceLocations(location);
     }
 
 }
