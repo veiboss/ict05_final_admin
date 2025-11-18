@@ -235,7 +235,7 @@
               <!-- ✅ 일별 전용 -->
               <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">PurchaseOrderID</th>
               <th th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}">PurchaseOrderDate</th>
-              <!-- 공통 명칭 정정 -->
+              <th>PurchaseOrderQty</th>
               <th>PurchaseOrderAmount</th>
               <th>TurnoverRate</th>
               <th>Profit</th>
@@ -247,7 +247,7 @@
 
             <!-- 본문 -->
             <tr th:if="${#lists.isEmpty(materialrows.content)}">
-              <td colspan="11" class="ta-c">조회 결과가 없습니다.</td>
+              <td th:attr="colspan=${(analyticsSearchDto.viewBy?.name() == 'DAY') ? 12 : 10}" class="ta-c">조회 결과가 없습니다.</td>
             </tr>
             <tr th:each="r : ${materialrows.content}">
               <!-- 라벨은 Date, 값은 기존 r.orderDate 그대로 사용(서버에서 yyyy-MM 또는 yyyy-MM-dd로 가공 전달) -->
@@ -262,6 +262,7 @@
               <td th:if="${analyticsSearchDto.viewBy?.name() == 'DAY'}" th:text="${r.purchaseOrderDate}">-</td>
 
               <td class="ta-r" th:text="${#numbers.formatDecimal(r.purchaseOrderQty?:0, 0, 'COMMA', 0, 'POINT')}">0</td>
+              <td class="ta-r" th:text="${#numbers.formatDecimal(r.purchaseOrderAmount?:0, 0, 'COMMA', 0, 'POINT')}">0</td>
 
               <td class="ta-r" th:text="|${#numbers.formatDecimal(r.turnoverRate?:0, 2, 'COMMA', 2, 'POINT')} %|">0.00 %</td>
               <td class="ta-r" th:text="${#numbers.formatDecimal(r.profit?:0, 0, 'COMMA', 0, 'POINT')}">0</td>

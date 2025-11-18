@@ -1039,8 +1039,12 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 								// 원가합: SUM(count * unit_price)
 								Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
 
-								// 판매가 기준 매출합: SUM(count * selling_price)
-								Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, sm.sellingPrice)
+								// 판매가 기준 매출합: SUM(count * COALESCE(selling_price, unit_price))
+								Expressions.numberTemplate(BigDecimal.class,
+										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
+										rod.count,
+										sm.sellingPrice,
+										rod.unitPrice)
 						)
 						.from(rod)
 						.join(rod.receiveOrder, ro)
@@ -1056,6 +1060,9 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
 		// 3) 파생 계산
 		BigDecimal profit    = sellingSum.subtract(costSum);
+		if (profit.signum() < 0) {
+			log.debug("[Materials] Card profit negative: profit={}, cost={}, sales={}", profit, costSum, sellingSum);
+		}
 		BigDecimal avgMargin = divOrZero(profit, sellingSum, 2).multiply(BigDecimal.valueOf(100)); // %
 		BigDecimal turnover  = divOrZero(BigDecimal.valueOf(orderVolumeQty), totalStoreInvQty, 2); // 회전율 근사
 
@@ -1077,6 +1084,11 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 	@Override
 	@Transactional(readOnly = true)
 	public Page<MaterialsRowDto> findMaterials(AnalyticsSearchDto cond, Pageable pageable) {
+
+		long total = countMaterials(cond);
+		if (total == 0L) {
+			return new PageImpl<>(Collections.emptyList(), pageable, 0L);
+		}
 
 		// ===== 0) 공통 필터/라벨 =====
 		LocalDate start = cond.getStartDate();
@@ -1105,7 +1117,11 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 									ro.id.min(), // 대표 발주ID
 									Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
 									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
-									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, sm.sellingPrice)
+									Expressions.numberTemplate(BigDecimal.class,
+										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
+										rod.count,
+										sm.sellingPrice,
+										rod.unitPrice)
 							)
 							.from(rod)
 							.join(rod.receiveOrder, ro)
@@ -1127,7 +1143,11 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 									labelExpr,
 									Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
 									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
-									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, sm.sellingPrice)
+									Expressions.numberTemplate(BigDecimal.class,
+										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
+										rod.count,
+										sm.sellingPrice,
+										rod.unitPrice)
 							)
 							.from(rod)
 							.join(rod.receiveOrder, ro)
@@ -1142,23 +1162,47 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 			).fetch();
 		}
 
-		if (rows.isEmpty()) return new PageImpl<>(Collections.emptyList(), pageable, 0L);
+			if (rows.isEmpty()) return new PageImpl<>(Collections.emptyList(), pageable, total);
 
-		// ===== 2) 현재 재고(가맹점×재료) 맵 =====
-		// key: (storeId, materialId)
-		record Key(Long sid, Long mid) {}
-		Map<Key, BigDecimal> invMap = new HashMap<>();
-		for (Tuple invT : readHints(
-				query.select(s.id, mat.id, si.quantity.sum().coalesce(BigDecimal.ZERO))
-						.from(si)
-						.join(si.storeMaterial, sm)
-						.join(sm.store, s)
-						.join(sm.material, mat)
-						.groupBy(s.id, mat.id)
-		).fetch()) {
-			invMap.put(new Key(invT.get(0, Long.class), invT.get(1, Long.class)),
-					nz(invT.get(2, BigDecimal.class)));
-		}
+			// ===== 2) 현재 재고(가맹점×재료) 맵 =====
+			// key: (storeId, materialId)
+			record Key(Long sid, Long mid) {}
+			Set<Long> pageStoreIds = new HashSet<>();
+			Set<Long> pageMaterialIds = new HashSet<>();
+			for (Tuple t : rows) {
+				Long sid = t.get(0, Long.class);
+				Long mid = t.get(2, Long.class);
+				if (sid != null) pageStoreIds.add(sid);
+				if (mid != null) pageMaterialIds.add(mid);
+			}
+
+			Map<Key, BigDecimal> invMap = new HashMap<>();
+			if (!pageStoreIds.isEmpty() && !pageMaterialIds.isEmpty()) {
+				QStoreMaterial smInv = new QStoreMaterial("smInv");
+				QStoreInventory siInv = new QStoreInventory("siInv");
+				QStore sInv = new QStore("sInv");
+				QMaterial matInv = new QMaterial("matInv");
+
+				for (Tuple invT : readHints(
+						query.select(
+									sInv.id,
+									matInv.id,
+									smInv.quantity.coalesce(BigDecimal.ZERO),
+									siInv.quantity.sum().coalesce(BigDecimal.ZERO)
+							)
+							.from(smInv)
+							.join(smInv.store, sInv)
+							.join(smInv.material, matInv)
+							.leftJoin(siInv).on(siInv.storeMaterial.eq(smInv))
+							.where(sInv.id.in(pageStoreIds), matInv.id.in(pageMaterialIds))
+							.groupBy(sInv.id, matInv.id)
+				).fetch()) {
+					BigDecimal storeMaterialQty = nz(invT.get(2, BigDecimal.class));
+					BigDecimal storeInventoryQty = nz(invT.get(3, BigDecimal.class));
+					BigDecimal snapshot = storeMaterialQty.signum() != 0 ? storeMaterialQty : storeInventoryQty;
+					invMap.put(new Key(invT.get(0, Long.class), invT.get(1, Long.class)), snapshot);
+				}
+			}
 
 		// ===== 3) DTO 매핑 =====
 		List<MaterialsRowDto> list = new ArrayList<>(rows.size());
@@ -1171,23 +1215,39 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
 			int base = byDay ? 6 : 5;
 			Long       qtyL     = Optional.ofNullable(t.get(base + 0, Long.class)).orElse(0L);
+			BigDecimal usedBd  = BigDecimal.valueOf(qtyL);
 			BigDecimal costSum  = Optional.ofNullable(t.get(base + 1, BigDecimal.class)).orElse(BigDecimal.ZERO);
 			BigDecimal sellSum  = Optional.ofNullable(t.get(base + 2, BigDecimal.class)).orElse(BigDecimal.ZERO);
 			BigDecimal profit   = sellSum.subtract(costSum);
 			BigDecimal margin   = divOrZero(profit, sellSum, 2).multiply(BigDecimal.valueOf(100));
 
-			BigDecimal invQty   = invMap.getOrDefault(new Key(storeId, matId), BigDecimal.ZERO);
-			BigDecimal turnover = divOrZero(BigDecimal.valueOf(qtyL), invQty, 2);
-			BigDecimal avgUsage = divOrZero(BigDecimal.valueOf(qtyL), BigDecimal.valueOf(byDay ? 30 : 30), 2); // 간단 근사
+			BigDecimal snapshot = invMap.getOrDefault(new Key(storeId, matId), BigDecimal.ZERO);
+			BigDecimal opening  = snapshot.add(usedBd);
+			BigDecimal avgInventory = snapshot.add(opening).divide(BigDecimal.valueOf(2), 4, RoundingMode.HALF_UP);
+			BigDecimal turnover = divOrZero(usedBd, avgInventory, 2);
+
+			BigDecimal avgUsage;
+			if (byDay) {
+				avgUsage = usedBd; // 일별은 해당 일 사용량 그대로
+			} else {
+				YearMonth ym = YearMonth.parse(lbl);
+				avgUsage = divOrZero(usedBd, BigDecimal.valueOf(ym.lengthOfMonth()), 2);
+			}
+
+			if (profit.signum() < 0) {
+				log.debug("[Materials] Negative profit row store={} material={} label={} profit={} cost={} sales={}",
+					storeId, matId, lbl, profit, costSum, sellSum);
+			}
 
 			list.add(MaterialsRowDto.builder()
 					.orderDate(lbl)
 					.store(storeName)
 					.material(matName)
-					.storeInventoryQty(invQty.longValue())
+					.storeInventoryQty(snapshot.longValue())
 					.purchaseOrderId(byDay ? t.get(5, Long.class) : null)
 					.purchaseOrderDate(lbl)
 					.purchaseOrderQty(qtyL)
+					.purchaseOrderAmount(costSum)
 					.turnoverRate(turnover)
 					.profit(profit)
 					.margin(margin)
@@ -1234,11 +1294,15 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 			Map<String, Tuple> totals = new HashMap<>();
 			for (Tuple tt : readHints(
 					query.select(
-									labelExpr,
-									Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
-									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
-									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, sm.sellingPrice)
-							)
+								labelExpr,
+								Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
+								Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
+								Expressions.numberTemplate(BigDecimal.class,
+										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
+										rod.count,
+										sm.sellingPrice,
+										rod.unitPrice)
+						)
 							.from(rod)
 							.join(rod.receiveOrder, ro)
 							.join(ro.store, s)
@@ -1273,6 +1337,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 						.purchaseOrderId(null)
 						.purchaseOrderDate(lbl)
 						.purchaseOrderQty(tq)
+						.purchaseOrderAmount(tCost)
 						.turnoverRate(BigDecimal.ZERO)
 						.profit(tProfit)
 						.margin(tMargin)
@@ -1286,10 +1351,10 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 						.thenComparing(MaterialsRowDto::getMaterial, Comparator.nullsLast(String::compareTo)));
 				out.addAll(group);
 			}
-			return new PageImpl<>(out, pageable, list.size());
+			return new PageImpl<>(out, pageable, total);
 		}
 
-		return new PageImpl<>(list, pageable, list.size());
+		return new PageImpl<>(list, pageable, total);
 	}
 
 
