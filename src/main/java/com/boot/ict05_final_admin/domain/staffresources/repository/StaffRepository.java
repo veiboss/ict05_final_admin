@@ -15,7 +15,15 @@ public interface StaffRepository extends JpaRepository<StaffProfile, Long>, Staf
 
     boolean existsByMember_Id(Long memberId);
 
-    @EntityGraph(attributePaths = {"store"})
-    @Query("select s from StaffProfile s where s.id = :id")
-    Optional<StaffProfile> findWithStoreById(@Param("id") Long id);
+    // 기존 EntityGraph 대신 명시적 LEFT JOIN FETCH
+    @Query("""
+    select s from StaffProfile s
+    left join fetch s.store st
+    where s.id = :id
+    """)
+    Optional<StaffProfile> findWithStoreByIdLeft(@Param("id") Long id);
+
+    // 네이티브로 물리 테이블 존재 확인
+    @Query(value = "select * from staff_profile where staff_id = :id", nativeQuery = true)
+    Optional<StaffProfile> findRaw(@Param("id") Long id);
 }

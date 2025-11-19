@@ -100,7 +100,13 @@ public class StaffService {
      */
     @Transactional(readOnly = true)
     public StaffProfile detailStaff(Long id) {
-        return staffRepository.findWithStoreById(id)
+        var raw = staffRepository.findRaw(id).isPresent();
+        var left = staffRepository.findWithStoreByIdLeft(id).isPresent();
+        var plain = staffRepository.findById(id).isPresent();
+        log.warn("[STAFF-DEBUG] id={}, raw={}, leftFetch={}, plain={}", id, raw, left, plain);
+
+        return staffRepository.findWithStoreByIdLeft(id)
+                .or(() -> staffRepository.findById(id)) // 연관 무시하고 본체만이라도
                 .orElseThrow(() -> new IllegalArgumentException("해당 사원이 존재하지 않습니다."));
     }
 
