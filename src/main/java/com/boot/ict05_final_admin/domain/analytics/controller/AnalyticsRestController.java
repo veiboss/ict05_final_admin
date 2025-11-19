@@ -164,6 +164,43 @@ public class AnalyticsRestController {
 	}
 
 	/**
+	 * 재료 리스트 엑셀 다운로드.
+	 *
+	 * <p>조건에 맞는 재료 사용/발주/마진율 집계를 생성하여 XLSX 바이트로 반환한다.</p>
+	 *
+	 * @param cond     재료 분석 조회조건
+	 * @param pageable 페이지/사이즈 정보
+	 * @return XLSX 파일 바이트 리소스
+	 */
+	@Operation(
+			summary = "재료 엑셀 다운로드",
+			description = "조건(가맹점/기간/출력방식)에 맞는 재료 리스트를 XLSX 파일로 다운로드합니다."
+	)
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "다운로드 성공",
+					content = @Content(mediaType = XLSX_MIME)),
+			@ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@GetMapping(value = "/materials/download", produces = XLSX_MIME)
+	public ResponseEntity<Resource> downloadExcelMaterialsList(
+			@ParameterObject @ModelAttribute AnalyticsSearchDto cond,
+			@ParameterObject Pageable pageable
+	) {
+		byte[] excelBytes = analyticsService.downloadExcelMaterials(cond, pageable);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String filename = "Materials_" + start + "_" + end + ".xlsx";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.parseMediaType(XLSX_MIME))
+				.body(new ByteArrayResource(excelBytes));
+	}
+
+	/**
 	 * KPI 리스트 PDF 다운로드.
 	 *
 	 * <p>조회조건으로 생성된 KPI 리포트를 PDF 바이트로 반환한다.</p>
@@ -261,6 +298,42 @@ public class AnalyticsRestController {
 		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
 		String mode  = cond.getViewBy() != null ? cond.getViewBy().name() : "DAY";
 		String filename = "Time_" + mode + "_" + start + "_" + end + ".pdf";
+		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+				.header(HttpHeaders.CACHE_CONTROL, "no-cache")
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(new ByteArrayResource(pdfBytes));
+	}
+
+	/**
+	 * 재료 리스트 PDF 다운로드.
+	 *
+	 * <p>재료 분석 리포트를 PDF 바이트로 반환한다.</p>
+	 *
+	 * @param cond 재료 분석 조회조건
+	 * @return PDF 파일 바이트 리소스
+	 */
+	@Operation(
+			summary = "재료 PDF 다운로드",
+			description = "조건(가맹점/기간/일·월 모드)에 맞는 재료 분석 리포트를 PDF로 다운로드합니다."
+	)
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "다운로드 성공",
+					content = @Content(mediaType = "application/pdf")),
+			@ApiResponse(responseCode = "500", description = "서버 오류")
+	})
+	@GetMapping(value = "/materials/pdf/download", produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<Resource> downloadPdfMaterials(
+			@ParameterObject @ModelAttribute AnalyticsSearchDto cond
+	) {
+		byte[] pdfBytes = analyticsService.downloadPdfMaterials(cond);
+
+		String start = cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "start";
+		String end   = cond.getEndDate()   != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE)   : "end";
+		String mode  = cond.getViewBy() != null ? cond.getViewBy().name() : "DAY";
+		String filename = "Materials_" + mode + "_" + start + "_" + end + ".pdf";
 		String encoded  = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+","%20");
 
 		return ResponseEntity.ok()

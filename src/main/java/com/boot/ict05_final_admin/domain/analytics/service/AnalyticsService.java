@@ -412,6 +412,153 @@ public class AnalyticsService {
         }
     }
 
+    /**
+     * 재료 테이블을 엑셀(XLSX)로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 전체 건수를 선조회하여 한 번에 모두 읽어들인 뒤, 헤더/본문을 구성한다.
+     * 금액/개수/비율에 대한 서식을 적용한다.
+     * </p>
+     *
+     * @param cond     조회 조건
+     * @param pageable 페이지 정보(엑셀 내에서는 전체 다운로드를 위해 무시됨)
+     * @return XLSX 바이트 배열(없으면 길이 0)
+     * @throws RuntimeException 엑셀 생성 실패 시
+     */
+    @Transactional(readOnly = true)
+    public byte[] downloadExcelMaterials(AnalyticsSearchDto cond, Pageable pageable) {
+        long total = analyticsRepository.countMaterials(cond);
+        if (total == 0) {
+            return new byte[0];
+        }
+
+        Pageable fullPage = PageRequest.of(0, (int) total);
+        Page<MaterialsRowDto> page = analyticsRepository.findMaterials(cond, fullPage);
+        List<MaterialsRowDto> rows = page.getContent();
+
+        try (SXSSFWorkbook wb = new SXSSFWorkbook();
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+
+            Sheet sheet = wb.createSheet("Materials");
+            DataFormat df = wb.createDataFormat();
+
+            CellStyle head = createHeaderStyle(wb);
+            CellStyle text = createBodyStyle(wb);
+            CellStyle money = createMoneyStyle(wb, text, df);
+            CellStyle intStyle = createIntegerStyle(wb, text, df);
+            CellStyle dec2 = createDecimalStyle(wb, text, df, "0.00");
+            CellStyle pct2 = createPercentStyle(wb, text, df, "0.00%");
+
+            String[] headers = {"Date", "Store", "Material", "Inv. Qty", "PO ID", "PO Date", "PO Qty", "PO Amount", "Turnover", "Profit", "Margin", "Avg. Usage"};
+            Row hr = sheet.createRow(0);
+            for (int c = 0; c < headers.length; c++) {
+                Cell cell = hr.createCell(c);
+                cell.setCellValue(headers[c]);
+                cell.setCellStyle(head);
+            }
+
+            int r = 1;
+            for (MaterialsRowDto dto : rows) {
+                Row row = sheet.createRow(r++);
+                int col = 0;
+                setText(row, col++, dto.getOrderDate(), text);
+                setText(row, col++, dto.getStore(), text);
+                setText(row, col++, dto.getMaterial(), text);
+                setNum(row, col++, dto.getStoreInventoryQty(), intStyle);
+                setText(row, col++, dto.getPurchaseOrderId() != null ? dto.getPurchaseOrderId().toString() : "", text);
+                setText(row, col++, dto.getPurchaseOrderDate(), text);
+                setNum(row, col++, dto.getPurchaseOrderQty(), intStyle);
+                setNum(row, col++, dto.getPurchaseOrderAmount(), money);
+                setNum(row, col++, dto.getTurnoverRate(), dec2);
+                setNum(row, col++, dto.getProfit(), money);
+                setPct(row, col++, dto.getMargin(), pct2);
+                setNum(row, col++, dto.getAvgUsage(), dec2);
+            }
+
+            for (int c = 0; c < headers.length; c++) {
+                int w = switch (headers[c]) {
+                    case "Date", "PO Date" -> 12;
+                    case "Store", "Material" -> 20;
+                    case "Inv. Qty", "PO Qty" -> 10;
+                    case "PO ID", "Turnover", "Margin", "Avg. Usage" -> 12;
+                    case "PO Amount", "Profit" -> 14;
+                    default -> 15;
+                };
+                sheet.setColumnWidth(c, w * 256);
+            }
+
+            wb.write(bos);
+            return bos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Excel generation failed for materials", e);
+        }
+    }
+
+    /**
+     * 재료 행 데이터를 PDF로 생성하여 바이트 배열로 반환한다.
+     *
+     * <p>
+     * 총 건수가 {@link #MAX_PDF_ROWS}를 초과하면 상한까지만 전송하며,
+     * 조건 정보에 절단 여부를 포함한다.
+     * </p>
+     *
+     * @param cond 조회 조건
+     * @return PDF 바이트 배열
+     */
+    @Transactional(readOnly = true)
+    public byte[] downloadPdfMaterials(AnalyticsSearchDto cond) {
+        long total = analyticsRepository.countMaterials(cond);
+
+        boolean truncated = false;
+        int fetchSize = (int) Math.min(total, MAX_PDF_ROWS);
+        if (total > MAX_PDF_ROWS) truncated = true;
+
+        Pageable fullPage = PageRequest.of(0, Math.max(fetchSize, 1));
+        List<MaterialsRowDto> rawRows = analyticsRepository.findMaterials(cond, fullPage).getContent();
+
+        if (rawRows.size() > fetchSize && fetchSize > 0) {
+            rawRows = rawRows.subList(0, fetchSize);
+        }
+
+        List<Map<String, Object>> rows = new ArrayList<>(rawRows.size());
+        for (MaterialsRowDto d : rawRows) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("orderDate", nz(d.getOrderDate()));
+            m.put("store", nz(d.getStore()));
+            m.put("material", nz(d.getMaterial()));
+            m.put("storeInventoryQty", d.getStoreInventoryQty());
+            m.put("purchaseOrderId", d.getPurchaseOrderId());
+            m.put("purchaseOrderDate", nz(d.getPurchaseOrderDate()));
+            m.put("purchaseOrderQty", d.getPurchaseOrderQty());
+            m.put("purchaseOrderAmount", d.getPurchaseOrderAmount());
+            m.put("turnoverRate", d.getTurnoverRate());
+            m.put("profit", d.getProfit());
+            m.put("margin", d.getMargin());
+            m.put("avgUsage", d.getAvgUsage());
+            rows.add(m);
+        }
+        if (rows.isEmpty()) {
+            rows.add(new LinkedHashMap<>());
+        }
+
+        Map<String, Object> criteria = new HashMap<>();
+        criteria.put("title", "재료 분석 리포트");
+        criteria.put("viewBy", cond.getViewBy() != null ? cond.getViewBy().name() : "DAY");
+        criteria.put("startDate", cond.getStartDate() != null ? cond.getStartDate().format(DateTimeFormatter.ISO_DATE) : "");
+        criteria.put("endDate", cond.getEndDate() != null ? cond.getEndDate().format(DateTimeFormatter.ISO_DATE) : "");
+        criteria.put("rowCount", rows.size());
+        criteria.put("totalCount", total);
+        criteria.put("truncated", truncated);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("criteria", criteria);
+        payload.put("data", rows);
+
+        byte[] pdf = pythonPdfClient.generateMaterialsReportPdf(payload);
+        log.info("Materials PDF ready: total={}, sentRows={}, bytes={}", total, rows.size(), (pdf == null ? 0 : pdf.length));
+        return pdf;
+    }
+
 
     /**
      * KPI 행 데이터를 PDF로 생성하여 바이트 배열로 반환한다.
