@@ -72,6 +72,10 @@ public class CustomerOrder {
     @Column(name = "customer_order_memo")
     private String memo;
 
+    /** 고객 전화번호 */
+    @Column(name = "customer_phone")
+    private String customerPhone;
+
     @PrePersist
     void prePersist() {
         if (discount == null) discount = BigDecimal.ZERO;
