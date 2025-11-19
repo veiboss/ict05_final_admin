@@ -1,7 +1,7 @@
 package com.boot.ict05_final_admin.domain.analytics.repository;
 
 import com.boot.ict05_final_admin.domain.analytics.dto.*;
-import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
+import com.boot.ict05_final_admin.domain.inventory.entity.*;
 import com.boot.ict05_final_admin.domain.order.entity.OrderStatus;
 import com.boot.ict05_final_admin.domain.order.entity.OrderType;
 import com.boot.ict05_final_admin.domain.order.entity.QCustomerOrder;
@@ -10,9 +10,6 @@ import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrderDetail
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.boot.ict05_final_admin.domain.menu.entity.QMenu;
 import com.boot.ict05_final_admin.domain.menu.entity.QMenuCategory;
-import com.boot.ict05_final_admin.domain.inventory.entity.QStoreInventory;
-import com.boot.ict05_final_admin.domain.inventory.entity.QStoreMaterial;
-import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.QReceiveOrder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.*;
@@ -98,6 +95,8 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     private final QReceiveOrder ro = QReceiveOrder.receiveOrder;
     private final QReceiveOrderDetail rod = QReceiveOrderDetail.receiveOrderDetail;
 	private final QInventory inv = QInventory.inventory;
+	private final QInventoryOut io = QInventoryOut.inventoryOut;
+	private final QUnitPrice up = QUnitPrice.unitPrice;
 
     private static final ZoneId ZONE_SEOUL = ZoneId.of("Asia/Seoul");
 
@@ -1008,7 +1007,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         return new PageImpl<>(rows, pageable, total);
     }
 
-    /* =========================================================
+	/* =========================================================
        재료 요약 카드 / 목록
        - 추후 진행
        ========================================================= */
@@ -1030,6 +1029,14 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 				).fetchOne()
 		).orElse(BigDecimal.ZERO);
 
+		// 1-1) 본사 재고 수량 (현재 시점)
+		BigDecimal currentOfficeInvQty = Optional.ofNullable(
+				readHints(
+						query.select(inv.quantity.sum().coalesce(BigDecimal.ZERO))
+								.from(inv)
+				).fetchOne()
+		).orElse(BigDecimal.ZERO);
+
 		// 2) YTD 발주/원가/매출 집계 (receive_order_detail 기준)
 		Tuple t = readHints(
 				query.select(
@@ -1039,18 +1046,21 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 								// 원가합: SUM(count * unit_price)
 								Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
 
-								// 판매가 기준 매출합: SUM(count * COALESCE(selling_price, unit_price))
+								// 판매가 기준 매출합: SUM(count * 판매단가 또는 단가 미지정 시 발주단가)
 								Expressions.numberTemplate(BigDecimal.class,
 										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
 										rod.count,
-										sm.sellingPrice,
+										up.sellingPrice,
 										rod.unitPrice)
 						)
 						.from(rod)
 						.join(rod.receiveOrder, ro)
 						.join(ro.store, s)
 						.join(rod.material, mat)
-						.join(sm).on(sm.material.eq(mat).and(sm.store.eq(s)))
+						.leftJoin(up).on(up.material.eq(mat)
+								.and(up.type.eq(UnitPriceType.SELLING))
+								.and(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validFrom).loe(ro.actualDeliveryDate))
+								.and(up.validTo.isNull().or(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validTo).goe(ro.actualDeliveryDate))))
 						.where(betweenDateClosedOpen(ro.actualDeliveryDate, ytdStart, ytdEnd))
 		).fetchOne();
 
@@ -1058,19 +1068,29 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 		BigDecimal costSum        = (t == null) ? BigDecimal.ZERO : nz(t.get(1, BigDecimal.class));
 		BigDecimal sellingSum     = (t == null) ? BigDecimal.ZERO : nz(t.get(2, BigDecimal.class));
 
+		// 2-1) YTD 사용량 집계 (InventoryOut 기준)
+		BigDecimal totalUsedQty = Optional.ofNullable(
+				readHints(
+						query.select(io.quantity.sum().coalesce(BigDecimal.ZERO))
+								.from(io)
+								.where(betweenDateClosedOpen(io.outDate, ytdStart, ytdEnd))
+				).fetchOne()
+		).orElse(BigDecimal.ZERO);
+
 		// 3) 파생 계산
-		BigDecimal profit    = sellingSum.subtract(costSum);
+		BigDecimal profit = sellingSum.subtract(costSum);
 		if (profit.signum() < 0) {
 			log.debug("[Materials] Card profit negative: profit={}, cost={}, sales={}", profit, costSum, sellingSum);
 		}
+
 		BigDecimal avgMargin = divOrZero(profit, sellingSum, 2).multiply(BigDecimal.valueOf(100)); // %
 		BigDecimal turnover  = divOrZero(BigDecimal.valueOf(orderVolumeQty), totalStoreInvQty, 2); // 회전율 근사
 
 		return MaterialsCardsDto.builder()
-				.currentOfficeInventoryQty(0L) // (HQ 창고 테이블 없으면 0으로 유지)
+				.currentOfficeInventoryQty(currentOfficeInvQty.longValue())
 				.currentTotalStoreInventoryQty(totalStoreInvQty.longValue())
 				.orderVolumeQty(orderVolumeQty)
-				.usedQty(orderVolumeQty) // 사용량 근사
+				.usedQty(totalUsedQty.longValue())
 				.turnoverRate(turnover)
 				.salesAmount(sellingSum)
 				.profitAmount(profit)
@@ -1110,31 +1130,32 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 		if (byDay) {
 			// 일별: 대표 발주ID(최솟값) 포함
 			rows = readHints(
-					query.select(
-									s.id, s.name,
-									mat.id, mat.name,
-									labelExpr,
-									ro.id.min(), // 대표 발주ID
-									Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
-									Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
-									Expressions.numberTemplate(BigDecimal.class,
-										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
-										rod.count,
-										sm.sellingPrice,
-										rod.unitPrice)
-							)
-							.from(rod)
-							.join(rod.receiveOrder, ro)
-							.join(ro.store, s)
-							.join(rod.material, mat)
-							.join(sm).on(sm.material.eq(mat).and(sm.store.eq(s)))
-							.where(storeFilter, periodFilter)
-							.groupBy(s.id, s.name, mat.id, mat.name, labelExpr)
-							.orderBy(labelExpr.desc(), s.name.asc())
-							.offset(pageable.getOffset())
-							.limit(pageable.getPageSize())
-			).fetch();
-		} else {
+								query.select(
+										s.id, s.name,
+										mat.id, mat.name,
+										labelExpr,
+										ro.id.min(), // 대표 발주ID
+										Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
+										Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
+										Expressions.numberTemplate(BigDecimal.class,
+											"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
+											rod.count,
+											up.sellingPrice,
+											rod.unitPrice)
+									)
+									.from(rod)
+									.join(rod.receiveOrder, ro)
+									.join(ro.store, s)
+									.join(rod.material, mat)
+																							.leftJoin(up).on(up.material.eq(mat)
+																									.and(up.type.eq(UnitPriceType.SELLING))
+																									.and(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validFrom).loe(ro.actualDeliveryDate))
+																									.and(up.validTo.isNull().or(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validTo).goe(ro.actualDeliveryDate))))									.where(storeFilter, periodFilter)
+									.groupBy(s.id, s.name, mat.id, mat.name, labelExpr)
+									.orderBy(labelExpr.desc(), s.name.asc())
+									.offset(pageable.getOffset())
+									.limit(pageable.getPageSize())
+						).fetch();		} else {
 			// 월별: 발주ID는 제외
 			rows = readHints(
 					query.select(
@@ -1146,15 +1167,17 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 									Expressions.numberTemplate(BigDecimal.class,
 										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
 										rod.count,
-										sm.sellingPrice,
+										up.sellingPrice,
 										rod.unitPrice)
 							)
 							.from(rod)
 							.join(rod.receiveOrder, ro)
 							.join(ro.store, s)
 							.join(rod.material, mat)
-							.join(sm).on(sm.material.eq(mat).and(sm.store.eq(s)))
-							.where(storeFilter, periodFilter)
+													.leftJoin(up).on(up.material.eq(mat)
+															.and(up.type.eq(UnitPriceType.SELLING))
+															.and(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validFrom).loe(ro.actualDeliveryDate))
+															.and(up.validTo.isNull().or(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validTo).goe(ro.actualDeliveryDate))))							.where(storeFilter, periodFilter)
 							.groupBy(s.id, s.name, mat.id, mat.name, labelExpr)
 							.orderBy(labelExpr.desc(), s.name.asc())
 							.offset(pageable.getOffset())
@@ -1298,8 +1321,9 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 								Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),
 								Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
 								Expressions.numberTemplate(BigDecimal.class,
-										"COALESCE(SUM({0} * COALESCE({1},{2})),0)",
+										"COALESCE(SUM({0} * COALESCE({1},{2},{3})),0)",
 										rod.count,
+										up.sellingPrice,
 										sm.sellingPrice,
 										rod.unitPrice)
 						)
@@ -1307,7 +1331,11 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 							.join(rod.receiveOrder, ro)
 							.join(ro.store, s)
 							.join(rod.material, mat)
-							.join(sm).on(sm.material.eq(mat).and(sm.store.eq(s)))
+							.leftJoin(sm).on(sm.material.eq(mat).and(sm.store.eq(s)))
+							.leftJoin(up).on(up.material.eq(mat)
+									.and(up.type.eq(UnitPriceType.SELLING))
+									.and(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validFrom).loe(ro.actualDeliveryDate))
+									.and(up.validTo.isNull().or(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validTo).goe(ro.actualDeliveryDate))))
 							.where(storeFilter, periodFilter, pageWindow)
 							.groupBy(labelExpr)
 							.orderBy(orderByNull())
