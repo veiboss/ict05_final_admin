@@ -83,7 +83,7 @@ services:
     build: ./ict05_final_admin/python-pdf-download
     container_name: ict05-pdf-app
     expose:
-      - "8001"
+      - "8000"
     networks:
       - toastlab-net
 
