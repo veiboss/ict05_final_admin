@@ -83,13 +83,26 @@ services:
     build: ./ict05_final_admin/python-pdf-download
     container_name: ict05-pdf-app
     expose:
+      - "8000"
+    networks:
+      - toastlab-net
+
+  user-pdf-app:
+    build: ./ict05_final_user/python-pdf-download
+    container_name: ict05-user-pdf-app
+    expose:
       - "8001"
     networks:
       - toastlab-net
 
-
 volumes:
   db_data:
+  uploads_profile:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ubuntu/src/final/ict05_uploads/profile
 
 networks:
   toastlab-net:
