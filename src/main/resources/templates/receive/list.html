@@ -435,7 +435,6 @@
                         <th>수량</th>
                         <th>단가</th>
                         <th>총액</th>
-                        <th>재고상태</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -445,7 +444,6 @@
                         <td th:text="${item.detailCount}"></td>
                         <td th:text="${#numbers.formatInteger(item.detailUnitPrice,0,'COMMA')} + '원'"></td>
                         <td th:text="${#numbers.formatInteger(item.detailTotalPrice,0,'COMMA')} + '원'"></td>
-                        <td th:text="${item.inventoryStatus.description}"></td>
                     </tr>
                     </tbody>
                 </table>

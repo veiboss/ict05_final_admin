@@ -62,7 +62,7 @@
                         </div>
                         <div class="pack-down col">
                             <span class="fs-ss fc-999">부서</span>
-                            <span th:text="${staff.staffDepartment.description}">부서</span>
+                            <span th:text="${staff.staffDepartment != null ? staff.staffDepartment.description : '미지정'}"></span>
                         </div>
                     </div>
 
