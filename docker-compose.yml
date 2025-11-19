@@ -90,6 +90,12 @@ services:
 
 volumes:
   db_data:
+  uploads_profile:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ubuntu/src/final/ict05_uploads/profile
 
 networks:
   toastlab-net:
