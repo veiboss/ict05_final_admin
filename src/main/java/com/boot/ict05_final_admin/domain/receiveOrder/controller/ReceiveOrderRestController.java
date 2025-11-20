@@ -151,19 +151,26 @@ public class ReceiveOrderRestController {
     public ResponseEntity<Void> syncStatusFromStore(
             @RequestParam("orderCode") String orderCode,
             @RequestParam("status") String status,
-            // ★ 가맹점에서 보낸 공유 토큰 헤더 받기
+            // 가맹점에서 보낸 공유 토큰 헤더 받기
             @RequestHeader(value = "X-Sync-Auth", required = false) String token
     ) {
-        // ★ 토큰 검증: 실패 시 401을 반환(리다이렉트 없이 종료)
+        // 토큰 검증: 실패 시 401을 반환(리다이렉트 없이 종료)
         if (token == null || !token.equals(sharedSecret)) {
             log.warn("Sync 인증 실패 orderCode={}, status={}, token={}", orderCode, status, token);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        try {
+            receiveOrderService.applyStatusFromStore(orderCode, status);
+        } catch (IllegalArgumentException e) {
+            // 잘못된 status 또는 없는 orderCode 모두 400으로 처리
+            return ResponseEntity.badRequest().build();
+        }
+
         log.info("Sync 수신 orderCode={}, status={}", orderCode, status);
         receiveOrderService.applyStatusFromStore(orderCode, status);
 
-        // ★ 본문 없는 성공은 204가 더 깔끔
+        // 본문 없는 성공은 204가 더 깔끔
         return ResponseEntity.noContent().build();
     }
 

@@ -120,7 +120,7 @@ public class ReceiveOrderService {
             default: throw new IllegalArgumentException("unknown action");
         }
 
-        int updated = receiveOrderRepository.updateStatusIfCurrent(id, curr.name(), next.name());
+        int updated = receiveOrderRepository.updateStatusIfCurrent(id, curr, next);
         if (updated == 0) {
             throw new IllegalStateException("상태 업데이트 실패: id=" + id);
         }
@@ -130,8 +130,14 @@ public class ReceiveOrderService {
             // 수주 상세 + 품목 DTO를 조회
             ReceiveOrderDetailDTO orderDetail = getReceiveOrderDetail(id);
 
+            try {
+                inventoryOutService.createOutByReceiveOrder(orderDetail);
+            }catch (IllegalStateException e) {
+                log.error("[updateStatus] 출고 생성 중 예외 발생 id={} msg={}", id, e.getMessage(), e);
+                throw e; // 그대로 던져서 409 유지
+            }
             // 본사 → 가맹점 출고 생성 (FIFO + 현재고 반영은 InventoryOutService 가 담당)
-            inventoryOutService.createOutByReceiveOrder(orderDetail);
+            // inventoryOutService.createOutByReceiveOrder(orderDetail);
         }
 
         // 가맹점으로 동기화 콜 (이중 시스템일 때만)
@@ -140,7 +146,7 @@ public class ReceiveOrderService {
 
     public void applyStatusFromStore(String orderCode, String status) {
         ReceiveOrderStatus next = ReceiveOrderStatus.valueOf(status.toUpperCase());
-        int updated = receiveOrderRepository.updateStatusByOrderCode(orderCode, next.name());
+        int updated = receiveOrderRepository.updateStatusByOrderCode(orderCode, next);
         if (updated == 0) throw new IllegalArgumentException("해당 주문코드 없음: " + orderCode);
     }
 

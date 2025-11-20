@@ -2,9 +2,11 @@ package com.boot.ict05_final_admin.domain.receiveOrder.repository;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.QInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.QMaterial;
+import com.boot.ict05_final_admin.domain.inventory.entity.QStoreMaterial;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.*;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -90,6 +92,17 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                 .where(rod.receiveOrder.eq(ro))
                 .exists();
 
+        // 품목수 서브쿼리: 현재 수주 건의 detail 수량 합
+        //   - 품목 라인 수로 쓰고 싶으면 rod.id.count()
+        //   - 주문 총 개수로 쓰고 싶으면 rod.count.sum()
+        var totalItemCountExpr = ExpressionUtils.as(
+                JPAExpressions
+                        .select(rod.count.sum().coalesce(0))     // null 이면 0으로
+                        .from(rod)
+                        .where(rod.receiveOrder.eq(ro)),
+                "totalCount"
+        );
+
         // 데이터 목록 조회
         List<ReceiveOrderListDTO> content = queryFactory
                 .select(Projections.fields(ReceiveOrderListDTO.class,
@@ -100,7 +113,7 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         ro.status,
                         ro.priority,
                         ro.totalPrice,
-                        ro.totalCount.as("totalCount"),
+                        totalItemCountExpr,
                         ro.actualDeliveryDate
                 ))
                 .from(ro)
@@ -228,12 +241,13 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     @Override
     public List<ReceiveOrderItemDTO> findItemsByOrderId(Long id) {
         QReceiveOrderDetail rod = QReceiveOrderDetail.receiveOrderDetail;
+        QStoreMaterial sm = QStoreMaterial.storeMaterial;
         QMaterial material = QMaterial.material;
         QInventory hq = QInventory.inventory;
 
         return queryFactory
                 .selectDistinct(Projections.fields(ReceiveOrderItemDTO.class,
-                        material.id.as("materialId"),              // ★ 추가
+                        material.id.as("materialId"),
                         material.name.as("name"),
                         material.materialCategory.as("materialCategory"),
                         rod.count.as("detailCount"),
@@ -242,8 +256,9 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
                         hq.status.as("inventoryStatus")
                 ))
                 .from(rod)
-                .leftJoin(rod.material, material)
-                .leftJoin(rod.inventory, hq)
+                .join(rod.storeMaterial, sm)       // purchase_order_detail.material_id_fk → store_material
+                .leftJoin(sm.material, material)   // store_material.material_id_fk → HQ material (nullable)
+                .leftJoin(rod.inventory, hq)            // HQ 재고 (nullable)
                 .where(rod.receiveOrder.id.eq(id))
                 .fetch();
     }
