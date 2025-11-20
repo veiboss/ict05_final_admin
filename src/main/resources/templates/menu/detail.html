@@ -102,7 +102,7 @@
                                             항목명
                                         </span>
                                         <span class="qty">
-                                            <span th:text="${it.recipeQty != null ? #numbers.formatInteger(it.recipeQty.longValue(), 0, 'NONE') : 0}">0</span>
+                                            <span th:text="${it.recipeQty != null ?  #numbers.formatDecimal(it.recipeQty, 1, 2) : '0.00'}">0.00</span>
                                             <span th:text="${it.recipeUnit}">g</span>
                                         </span>
                             </li>
@@ -124,7 +124,7 @@
                                             항목명
                                         </span>
                                         <span class="qty">
-                                            <span th:text="${it.recipeQty != null ? #numbers.formatInteger(it.recipeQty.longValue(), 0, 'NONE') : 0}">0</span>
+                                            <span th:text="${it.recipeQty != null ? #numbers.formatDecimal(it.recipeQty, 1, 2) : '0.00'}">0.00</span>
                                             <span th:text="${it.recipeUnit}">g</span>
                                          </span>
                                     </li>

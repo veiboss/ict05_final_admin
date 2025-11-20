@@ -178,7 +178,7 @@
                                         </div>
 
                                         <div class="col-3">
-                                            <input type="number" min="0" step="1" class="form-control"
+                                            <input type="number" min="0" step="0.01" class="form-control"
                                                    th:name="'mainMaterials[' + ${iStat.index} + '].recipeQty'"
                                                    th:value="${it.recipeQty}"/>
                                         </div>
@@ -233,7 +233,7 @@
                                         </div>
 
                                         <div class="col-3">
-                                            <input type="number" min="0" step="1" class="form-control"
+                                            <input type="number" min="0" step="0.01" class="form-control"
                                                    th:name="'sauceMaterials[' + ${iStat.index} + '].recipeQty'"
                                                    th:value="${it.recipeQty}"/>
                                         </div>

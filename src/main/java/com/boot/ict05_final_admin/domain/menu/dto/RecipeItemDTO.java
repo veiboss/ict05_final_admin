@@ -2,6 +2,7 @@ package com.boot.ict05_final_admin.domain.menu.dto;
 
 import com.boot.ict05_final_admin.domain.menu.entity.RecipeUnit;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ public class RecipeItemDTO {
 
     /** 수량 */
     @DecimalMin(value = "0.0", inclusive = false, message = "수량은 0보다 커야 합니다")
+    @Digits(integer = 8, fraction = 2, message = "수량은 소수 둘째 자리까지 입력 가능합니다.")
     private BigDecimal recipeQty;
 
     /** 단위 (g/ml/개/장) */
