@@ -103,29 +103,6 @@ public class InventoryInService {
         return in.getId();
     }
 
-    /**
-     * 구 시그니처 호환. 점진 폐기 예정.
-     */
-    @Deprecated
-    @Transactional
-    public Long receiveToHq(Long materialId,
-                            BigDecimal unitPrice,
-                            BigDecimal sellingPrice,
-                            LocalDateTime inDate,
-                            LocalDateTime expirationDateTime,
-                            String memo) {
-
-        InventoryInWriteDTO dto = new InventoryInWriteDTO();
-        dto.setMaterialId(materialId);
-        dto.setQuantity(BigDecimal.ZERO); // 호출부가 수량을 모른다면 명시적으로 세팅 필요
-        dto.setUnitPrice(unitPrice);
-        dto.setSellingPrice(sellingPrice);
-        dto.setInDate(inDate);
-        dto.setExpirationDate(expirationDateTime != null ? expirationDateTime.toLocalDate() : null);
-        dto.setMemo(memo);
-        return insertInventoryIn(dto);
-    }
-
     /** 입고 삭제. 배치/재고 롤백은 별도 정책에 따름. */
     @Transactional
     public void deleteIn(Long inId) {
