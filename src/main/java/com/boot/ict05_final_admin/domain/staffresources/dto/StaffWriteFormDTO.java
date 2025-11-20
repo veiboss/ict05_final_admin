@@ -36,6 +36,7 @@ public class StaffWriteFormDTO {
     @NotNull(message = "근무 형태를 선택해주세요")
     private StaffEmploymentType staffEmploymentType;
 
+
     /** 사원 부서 (관리팀, 판매팀) */
     @NotNull(message = "직원 부서를 선택해주세요")
     private StaffDepartment staffDepartment;

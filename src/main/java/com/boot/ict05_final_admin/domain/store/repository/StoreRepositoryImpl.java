@@ -4,11 +4,9 @@ import com.boot.ict05_final_admin.domain.auth.entity.QMember;
 import com.boot.ict05_final_admin.domain.staffresources.entity.QStaffProfile;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffDepartment;
 import com.boot.ict05_final_admin.domain.staffresources.entity.StaffEmploymentType;
-import com.boot.ict05_final_admin.domain.staffresources.entity.StaffProfile;
 import com.boot.ict05_final_admin.domain.store.dto.*;
 import com.boot.ict05_final_admin.domain.store.entity.QStore;
 import com.boot.ict05_final_admin.domain.store.entity.StoreStatus;
-import com.querydsl.core.QueryFactory;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,13 +23,33 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-
+/**
+ * {@link StoreRepositoryCustom} 구현체.
+ *
+ * <p>
+ * Querydsl을 이용해 동적 쿼리, 프로젝션, 집계 쿼리 등을 수행한다.<br>
+ * 복잡한 검색/통계 로직은 여기서 처리하고, 서비스/컨트롤러에서는 DTO만 사용한다.
+ * </p>
+ */
 @Repository
 @RequiredArgsConstructor
 public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
+    /** Querydsl JPAQueryFactory (생성자 주입) */
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * 검색 조건과 페이징 정보를 이용해 매장 목록을 조회한다.
+     *
+     * <p>
+     * - {@link StoreListDTO} 프로젝션으로 필요한 필드만 조회<br>
+     * - 점주명은 {@link QStaffProfile} 서브쿼리를 사용하여 OWNER 1명을 가져온다.
+     * </p>
+     *
+     * @param storeSearchDTO 검색 조건(키워드, 상태 등)
+     * @param pageable       페이징 정보
+     * @return               매장 목록 페이지
+     */
     @Override
     public Page<StoreListDTO> listStore(StoreSearchDTO storeSearchDTO, Pageable pageable) {
         QStore store = QStore.store;
@@ -77,7 +95,18 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return new PageImpl<>(content, pageable, total == null ? 0L : total);
     }
 
-    /** 키워드: id or name 부분일치(대소문자 무시), 공백/널 방지 */
+    /**
+     * 키워드 검색 조건을 생성한다.
+     *
+     * <p>
+     * - id 또는 name 에 대해 부분 일치 검색<br>
+     * - null/공백이면 조건을 적용하지 않는다(null 반환)
+     * </p>
+     *
+     * @param dto   검색 조건 DTO
+     * @param store QStore 엔티티 Q타입
+     * @return      BooleanExpression 또는 null
+     */
     private BooleanExpression eqSearchStore(StoreSearchDTO dto, QStore store) {
         String keyword = dto.getKeyword();
         if (keyword == null || keyword.isBlank()) return null;
@@ -86,11 +115,23 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .or(store.name.containsIgnoreCase(keyword));
     }
 
-    /** 상태 필터 */
+    /**
+     * 상태 필터 검색 조건을 생성한다.
+     *
+     * @param dto   검색 조건 DTO
+     * @param store QStore 엔티티 Q타입
+     * @return      상태가 지정된 경우 조건, 아니면 null
+     */
     private BooleanExpression eqStatus(StoreSearchDTO dto, QStore store) {
         return dto.getStatus() != null ? store.status.eq(dto.getStatus()) : null;
     }
 
+    /**
+     * 검색 조건에 해당하는 전체 매장 수를 반환한다.
+     *
+     * @param storeSearchDTO 검색 조건
+     * @return               총 개수
+     */
     @Override
     public long countStore(StoreSearchDTO storeSearchDTO) {
         QStore store = QStore.store;
@@ -105,6 +146,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return total == null ? 0L : total;
     }
 
+    /**
+     * 매장 ID/이름 목록을 조회한다.
+     *
+     * @return {@link FindStoreDTO} 리스트
+     */
     @Override
     public List<FindStoreDTO> findStoreName() {
         QStore store = QStore.store;
@@ -118,6 +164,16 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
     }
 
+    /**
+     * 매장 ID 기준으로 상세 정보를 조회한다.
+     *
+     * <p>
+     * 매장 기본 정보 + 점주명 + 본사 담당자 정보까지 함께 조회한다.
+     * </p>
+     *
+     * @param id 매장 ID
+     * @return   {@link StoreDetailDTO}, 없으면 null
+     */
     @Override
     public StoreDetailDTO findByStoreDetail(Long id) {
         QStore store = QStore.store;
@@ -162,6 +218,12 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .where(store.id.eq(id))
                 .fetchOne();
     }
+
+    /**
+     * 점주(OWNER) 직원 목록을 조회한다.
+     *
+     * @return 점주의 ID/이름 리스트
+     */
     @Override
     public List<StaffNameDTO> ownerStaffOptions() {
         QStaffProfile staffProfile = QStaffProfile.staffProfile;
@@ -177,6 +239,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
     }
 
+    /**
+     * 본사 근무자(HQ WORKER + OFFICE 부서) 직원 목록을 조회한다.
+     *
+     * @return 본사 근무자 ID/이름 리스트
+     */
     @Override
     public List<StaffNameDTO> hqWorkerStaffOptions() {
         QStaffProfile staffProfile = QStaffProfile.staffProfile;
@@ -187,8 +254,10 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         staffProfile.staffName.as("staffName")
                 ))
                 .from(staffProfile)
-                .where(staffProfile.staffEmploymentType.eq(StaffEmploymentType.WORKER)
-                        , staffProfile.staffDepartment.eq(StaffDepartment.OFFICE))
+                .where(
+                        staffProfile.staffEmploymentType.eq(StaffEmploymentType.WORKER),
+                        staffProfile.staffDepartment.eq(StaffDepartment.OFFICE)
+                )
                 .orderBy(staffProfile.id.desc())
                 .fetch();
     }
@@ -197,6 +266,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     // 요약 카드용 집계 4종
     // =========================
 
+    /**
+     * 전체 가맹점 수를 반환한다.
+     *
+     * @return 전체 매장 수
+     */
     @Override
     public long countStoreAll() {
         QStore store = QStore.store;
@@ -207,6 +281,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return v == null ? 0L : v;
     }
 
+    /**
+     * 운영 중(OPERATING) 가맹점 수를 반환한다.
+     *
+     * @return 운영 매장 수
+     */
     @Override
     public long countActiveStore() {
         QStore store = QStore.store;
@@ -218,6 +297,13 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return v == null ? 0L : v;
     }
 
+    /**
+     * 전체 가맹점의 월 매출 평균을 반환한다.
+     *
+     * <p>NULL인 경우 0으로 처리하며, 소수점은 0자리로 반올림한다.</p>
+     *
+     * @return 평균 월 매출(반올림된 정수 형태)
+     */
     @Override
     public BigDecimal avgMonthlySales() {
         QStore store = QStore.store;
@@ -232,6 +318,13 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return v.setScale(0, RoundingMode.HALF_UP);
     }
 
+    /**
+     * 전체 재직 직원 수를 반환한다.
+     *
+     * <p>퇴직일이 NULL인 인원만 집계한다.</p>
+     *
+     * @return 재직 중인 전체 직원 수
+     */
     @Override
     public long totalEmployees() {
         QStaffProfile sp = QStaffProfile.staffProfile;
@@ -245,6 +338,12 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return v == null ? 0L : v;
     }
 
+    /**
+     * 이메일로 회원을 조회하여 ID/이메일 정보를 반환한다.
+     *
+     * @param email 이메일 주소
+     * @return      {@link FindMemberEmailtoIdDTO}, 없으면 null
+     */
     @Override
     public FindMemberEmailtoIdDTO findMemberByEmail(String email) {
         QMember m = QMember.member;

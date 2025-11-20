@@ -26,6 +26,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom{
 
     @Override
     public Page<StaffListDTO> listStaff(StaffSearchDTO staffSearchDTO, Pageable pageable) {
+
         QStaffProfile staffProfile = QStaffProfile.staffProfile;
 
         // 데이터 목록 조회
