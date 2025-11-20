@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 @SpringBootTest
-class InventoryOutServiceRandomOutTest {
+class InventoryOutServiceTest {
 
     @Autowired private InventoryOutService inventoryOutService;
     @Autowired private MaterialRepository materialRepository;
