@@ -2,7 +2,7 @@ package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
-import com.boot.ict05_final_admin.domain.store.entity.Store;
+import com.boot.ict05_final_admin.domain.inventory.entity.StoreMaterial;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,7 +50,7 @@ public class ReceiveOrderDetail {
     /** 재료 시퀀스 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id_fk", nullable = false)
-    private Material material;
+    private StoreMaterial storeMaterial;
 
     /** 수주 단가 */
     @Column(name = "purchase_order_detail_unit_price", precision = 12, scale = 2, nullable = false)

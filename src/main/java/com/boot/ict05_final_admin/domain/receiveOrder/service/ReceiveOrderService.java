@@ -1,7 +1,5 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.service;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.MaterialListDTO;
-import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
 import com.boot.ict05_final_admin.domain.inventory.service.InventoryOutService;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.*;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
@@ -52,7 +50,6 @@ public class ReceiveOrderService {
 
     private final ReceiveOrderRepository receiveOrderRepository;
 
-    // 재료 재고
     private final InventoryOutService inventoryOutService;
 
     /**
@@ -120,7 +117,7 @@ public class ReceiveOrderService {
             default: throw new IllegalArgumentException("unknown action");
         }
 
-        int updated = receiveOrderRepository.updateStatusIfCurrent(id, curr.name(), next.name());
+        int updated = receiveOrderRepository.updateStatusIfCurrent(id, curr, next);
         if (updated == 0) {
             throw new IllegalStateException("상태 업데이트 실패: id=" + id);
         }
@@ -130,17 +127,33 @@ public class ReceiveOrderService {
             // 수주 상세 + 품목 DTO를 조회
             ReceiveOrderDetailDTO orderDetail = getReceiveOrderDetail(id);
 
-            // 본사 → 가맹점 출고 생성 (FIFO + 현재고 반영은 InventoryOutService 가 담당)
-            inventoryOutService.createOutByReceiveOrder(orderDetail);
+            try {
+                // 본사 → 가맹점 출고 생성 (FIFO + 현재고 반영은 InventoryOutService 가 담당)
+                inventoryOutService.createOutByReceiveOrder(orderDetail);
+            }catch (IllegalStateException e) {
+                log.error("[updateStatus] 출고 생성 중 예외 발생 id={} msg={}", id, e.getMessage(), e);
+                throw e; // 그대로 던져서 409 유지
+            }
         }
-
         // 가맹점으로 동기화 콜 (이중 시스템일 때만)
         // orderSyncService.syncFromHQ(order.getOrderCode(), next);
     }
 
+    /**
+     * 가맹점 시스템에서 전달한 상태를 본사 수주 상태에 반영한다.
+     *
+     * <p>
+     * 주로 가맹점 측에서 배송 완료/취소 등 이벤트가 발생했을 때,
+     * 주문코드 기준으로 본사 수주 상태를 동기화하는 용도로 사용한다.
+     * </p>
+     *
+     * @param orderCode 가맹점/본사 공통으로 사용하는 주문 번호
+     * @param status    변경할 상태 문자열 (RECEIVED, SHIPPING, DELIVERED, CANCELED 등)
+     * @throws IllegalArgumentException 해당 주문 코드가 없을 경우
+     */
     public void applyStatusFromStore(String orderCode, String status) {
         ReceiveOrderStatus next = ReceiveOrderStatus.valueOf(status.toUpperCase());
-        int updated = receiveOrderRepository.updateStatusByOrderCode(orderCode, next.name());
+        int updated = receiveOrderRepository.updateStatusByOrderCode(orderCode, next);
         if (updated == 0) throw new IllegalArgumentException("해당 주문코드 없음: " + orderCode);
     }
 

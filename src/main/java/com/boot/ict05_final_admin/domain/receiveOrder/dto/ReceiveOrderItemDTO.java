@@ -1,7 +1,6 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.dto;
 
 import com.boot.ict05_final_admin.domain.inventory.entity.InventoryStatus;
-import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

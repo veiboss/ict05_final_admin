@@ -12,6 +12,7 @@ import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRep
 import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InventoryOutService {
 
     private final InventoryBatchQueryRepository inventoryBatchQueryRepository;
@@ -148,6 +150,8 @@ public class InventoryOutService {
         // 1) 현재 HQ 재고
         BigDecimal currentStock = inventoryService.hqRemainOfMaterial(materialId);
         if (currentStock == null) currentStock = BigDecimal.ZERO;
+        log.info("[confirmOut] materialId={}, storeId={}, totalQty={}, currentStock={}",
+                materialId, storeId, totalQty, currentStock);
         if (currentStock.compareTo(totalQty) < 0) {
             throw new IllegalArgumentException("출고 수량이 현재고를 초과합니다. current=" +
                     currentStock + ", out=" + totalQty);
@@ -159,6 +163,8 @@ public class InventoryOutService {
         BigDecimal plannedSum = BigDecimal.ZERO;
         for (InventoryOutPreviewItemDTO p : plan) {
             plannedSum = plannedSum.add(p.getQty());
+            log.info("[confirmOut] plan item batchId={}, qty={}", p.getBatchId(), p.getQty());
+
 
             // 배치 조회 + 차감 + 저장
             InventoryBatch batch = inventoryBatchRepository.findById(p.getBatchId())
@@ -168,6 +174,8 @@ public class InventoryOutService {
             batch.subtractQuantity(p.getQty());
             inventoryBatchRepository.save(batch); // DynamicUpdate 덕분에 quantity만 UPDATE
         }
+
+        log.info("[confirmOut] plannedSum={}, requested={}", plannedSum, totalQty);
 
         if (plannedSum.compareTo(totalQty) != 0) {
             throw new IllegalStateException("FIFO 분할 합계가 요청 수량과 일치하지 않습니다. planned=" +

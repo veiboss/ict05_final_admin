@@ -1,16 +1,12 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.controller;
 
-import com.boot.ict05_final_admin.domain.inventory.dto.MaterialSearchDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
-import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrder;
 
 import com.boot.ict05_final_admin.domain.receiveOrder.repository.ReceiveOrderRepositoryImpl;
 import com.boot.ict05_final_admin.domain.receiveOrder.service.ReceiveOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * 수주(Receive Order) 관련 REST API 컨트롤러.
@@ -47,7 +41,7 @@ import java.util.List;
 @RequestMapping("/API")
 @Tag(name = "수주현황 API", description = "본사 수주 현황 관리용 REST API (상태 변경, 엑셀 다운로드 제공)")
 @Slf4j
-// ★ 프런트용 CORS 명시(전역 CORS와 중복돼도 무방, 여기선 확실히 보장)
+// 프런트용 CORS 명시(전역 CORS와 중복돼도 무방, 여기선 확실히 보장)
 @CrossOrigin(
         origins = {
                 "http://localhost:3000",
@@ -66,7 +60,7 @@ public class ReceiveOrderRestController {
     private final ReceiveOrderService receiveOrderService;
     private final ReceiveOrderRepositoryImpl receiveOrderRepository;
 
-    // ★ 공유 시크릿 주입(없으면 local-dev-secret 사용)
+    // 공유 시크릿 주입(없으면 local-dev-secret 사용)
     @Value("${sync.shared-secret:local-dev-secret}")
     private String sharedSecret;
 
@@ -89,8 +83,6 @@ public class ReceiveOrderRestController {
      * @since 2025.11
      * @author 최민진
      */
-
-
     @PutMapping("/receive/status/{id}")
     @Operation(
             summary = "수주 배송 상태 변경 또는 취소",
@@ -151,19 +143,26 @@ public class ReceiveOrderRestController {
     public ResponseEntity<Void> syncStatusFromStore(
             @RequestParam("orderCode") String orderCode,
             @RequestParam("status") String status,
-            // ★ 가맹점에서 보낸 공유 토큰 헤더 받기
+            // 가맹점에서 보낸 공유 토큰 헤더 받기
             @RequestHeader(value = "X-Sync-Auth", required = false) String token
     ) {
-        // ★ 토큰 검증: 실패 시 401을 반환(리다이렉트 없이 종료)
+        // 토큰 검증: 실패 시 401을 반환(리다이렉트 없이 종료)
         if (token == null || !token.equals(sharedSecret)) {
             log.warn("Sync 인증 실패 orderCode={}, status={}, token={}", orderCode, status, token);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        try {
+            receiveOrderService.applyStatusFromStore(orderCode, status);
+        } catch (IllegalArgumentException e) {
+            // 잘못된 status 또는 없는 orderCode 모두 400으로 처리
+            return ResponseEntity.badRequest().build();
+        }
+
         log.info("Sync 수신 orderCode={}, status={}", orderCode, status);
         receiveOrderService.applyStatusFromStore(orderCode, status);
 
-        // ★ 본문 없는 성공은 204가 더 깔끔
+        // 본문 없는 성공은 204가 더 깔끔
         return ResponseEntity.noContent().build();
     }
 
