@@ -110,6 +110,17 @@ public class PythonPdfClient {
     }
 
     /**
+     * 재료 분석 리포트 PDF를 생성한다.
+     *
+     * @param payload 재료 분석 요청 페이로드
+     * @return PDF 바이트 배열
+     * @throws IllegalStateException FastAPI 서버 오류 또는 빈 응답 발생 시
+     */
+    public byte[] generateMaterialsReportPdf(Object payload) {
+        return postPdfOrThrow("/pdf/materials", payload);
+    }
+
+    /**
      * 공통 POST 요청 메서드.
      *
      * <p>

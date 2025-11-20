@@ -52,7 +52,7 @@ public class MyPageController {
         // 마이페이지 조회
         MyPageDTO dto = myPageService.getMyPage(memberId);
         model.addAttribute("member", dto);
-        return "mypage/view";
+        return "myPage/view";
     }
 
     /**
@@ -109,7 +109,7 @@ public class MyPageController {
 
         MyPageDTO dto = myPageService.getMyPage(memberId);
         model.addAttribute("member", dto);
-        return "mypage/modify";
+        return "myPage/modify";
     }
 
     /**

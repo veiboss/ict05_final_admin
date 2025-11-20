@@ -1,47 +1,48 @@
-// firebase-messaging-sw.js (서비스워커: 백그라운드 수신 전용)
-// v9+ 모듈을 SW에서 쓰려면 module SW 설정이 필요하므로, SW는 compat로 가는 게 안정적
-importScripts('https://www.gstatic.com/firebasejs/12.5.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/12.5.0/firebase-messaging-compat.js');
+// src/main/resources/static/firebase-messaging-sw.js
 
-// ✅ 너의 Firebase 설정 그대로
-firebase.initializeApp({
-  apiKey: "AIzaSyA7m5jVdo-w7TBG6h6wW4h6mc5gbNjqYlU",
-  authDomain: "ict05-final.firebaseapp.com",
-  projectId: "ict05-final",
-  storageBucket: "ict05-final.firebasestorage.app",
-  messagingSenderId: "382264607725",
-  appId: "1:382264607725:web:da28516c4a49f92e045de4",
-  measurementId: "G-YEHZ8996H8"
-});
+// Firebase SDK (CDN)
+importScripts('https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging-compat.js');
 
+// TODO: Firebase 프로젝트 설정 (head.html의 window.firebaseConfig와 동일하게 설정)
+// 서비스 워커는 window 객체에 접근할 수 없으므로 여기에 직접 정의해야 합니다.
+const firebaseConfig = {
+    apiKey: "AIzaSyA7m5jVdo-w7TBG6h6wW4h6mc5gbNjqYlU",
+    authDomain: "ict05-final.firebaseapp.com",
+    projectId: "ict05-final",
+    storageBucket: "ict05-final.firebasestorage.app",
+    messagingSenderId: "382264607725",
+    appId: "1:382264607725:web:da28516c4a49f92e045de4",
+    measurementId: "G-YEHZ8996H8"
+};
+
+// Firebase 앱 초기화
+const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 백그라운드 수신 시 알림 표시
-messaging.onBackgroundMessage(({ notification, data }) => {
-  const title = notification?.title || data?.title || '알림';
-  const body  = notification?.body  || data?.body  || '';
-  const icon  = '/admin/icon-192.png'; // 있으면 지정, 없으면 생략
+// 백그라운드 메시지 수신 처리
+messaging.onBackgroundMessage((payload) => {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-  self.registration.showNotification(title, {
-    body,
-    icon,
-    data // 클릭 시 라우팅에 활용
-  });
-});
+    const notificationTitle = payload.notification?.title || payload.data?.title || "알림";
+    const notificationOptions = {
+        body: payload.notification?.body || payload.data?.body || "",
+        icon: payload.notification?.icon || payload.data?.icon || '/admin/images/fcm/toastlab.png',
+        badge: payload.notification?.badge || payload.data?.badge || '/admin/images/fcm/badge-72.png',
+        data: payload.data,
+        requireInteraction: true // 사용자가 클릭할 때까지 알림 유지
+    };
 
-// 알림 클릭 처리 (딥링크 열기/포커스)
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  const link = event.notification?.data?.link || '/admin';
-  event.waitUntil((async () => {
-    // 열린 탭 있으면 포커스, 없으면 새 창
-    const allClients = await clients.matchAll({ type: 'window', includeUncontrolled: true });
-    const target = allClients.find(c => c.url.includes('/admin'));
-    if (target) {
-      target.focus();
-      target.navigate(link);
-    } else {
-      clients.openWindow(link);
-    }
-  })());
+    // 알림 클릭 시 동작 정의
+    self.addEventListener('notificationclick', (event) => {
+        event.notification.close(); // 알림 닫기
+        const clickedNotification = event.notification;
+        const link = clickedNotification.data?.link || '/admin'; // 알림에 포함된 링크 또는 기본 링크
+
+        event.waitUntil(
+            clients.openWindow(link) // 새 탭으로 링크 열기
+        );
+    });
+
+    return self.registration.showNotification(notificationTitle, notificationOptions);
 });

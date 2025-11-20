@@ -40,13 +40,16 @@ public class MaterialsRowDto {
     /** 발주 수량 */
     private Long purchaseOrderQty;
 
+    /** 발주 금액(원가 합계) */
+    private BigDecimal purchaseOrderAmount;
+
     // ===== 계산/지표 =====
 
     /** 회전율 = Used / AvgInventory (소수, % 변환은 뷰에서) */
     private BigDecimal turnoverRate;
 
     /** 이익( Sales − Cost ) */
-    private Long profit;
+	private BigDecimal profit;
 
     /** 마진율 = Profit / Sales */
     private BigDecimal margin;
