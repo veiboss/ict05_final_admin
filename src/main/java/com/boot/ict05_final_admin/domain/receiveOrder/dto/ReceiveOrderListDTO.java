@@ -2,7 +2,6 @@ package com.boot.ict05_final_admin.domain.receiveOrder.dto;
 
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderPriority;
 import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -3,7 +3,6 @@ package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 import com.boot.ict05_final_admin.domain.inventory.entity.Inventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.entity.StoreMaterial;
-import com.boot.ict05_final_admin.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.*;
 
