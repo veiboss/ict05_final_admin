@@ -25,6 +25,7 @@ import java.util.List;
 
 public interface StoreRepositoryCustom {
     Page<StoreListDTO> listStore (StoreSearchDTO storeSearchDTO, Pageable pageable);
+
     /**
      * 검색 조건에 해당하는 전체 건수를 반환한다.
      * <p>페이징 total 계산에 사용되며, 목록 쿼리와 동일한 WHERE 조건을 적용해야 한다.</p>

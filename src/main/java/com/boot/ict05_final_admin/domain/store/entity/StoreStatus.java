@@ -1,38 +1,40 @@
 package com.boot.ict05_final_admin.domain.store.entity;
 
-/**
- * 가맹점 운영 상태를 표현하는 열거형(Enum).
- *
- * <p>JPA 엔티티에서 {@code @Enumerated(EnumType.STRING)}과 함께 사용하면
- * DB에는 상수명(OPERATING/PREPARING/CLOSED)으로 저장되고,
- * 화면에는 한국어 라벨({@link #description})을 표시할 수 있다.</p>
- */
+import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * 가맹점 운영 상태 Enum.
+ *
+ * <p>
+ * JPA에서 {@code @Enumerated(EnumType.STRING)} 으로 저장되며,<br>
+ * DB는 영문 상수명(OPERATING)으로 저장하고,<br>
+ * 화면에서는 한국어 라벨({@link #description})로 표시할 수 있다.
+ * </p>
+ */
+@Schema(description = "가맹점 운영 상태 Enum")
 public enum StoreStatus {
 
-    /** 운영 중인 가맹점 */
+    /** 운영 중 */
+    @Schema(description = "운영 중인 매장")
     OPERATING("운영"),
 
-    /** 개점 준비 중인 가맹점 */
+    /** 개점 준비 */
+    @Schema(description = "개점 준비 중인 매장")
     PREPARING("개점준비"),
 
-    /** 폐업한 가맹점 */
+    /** 폐업 상태 */
+    @Schema(description = "폐업한 매장")
     CLOSED("폐업");
 
-    /** 각 상태의 한국어 라벨(뷰 표시용) */
+    /** 한글 라벨 */
     private final String description;
 
-    /**
-     * 열거형 생성자.
-     *
-     * @param description 상태의 한국어 라벨(예: "운영")
-     */
-    StoreStatus(String description) { this.description = description; }
+    StoreStatus(String description) {
+        this.description = description;
+    }
 
-    /**
-     * 상태의 한국어 라벨을 반환한다.
-     *
-     * @return 한국어 라벨(예: "운영", "개점준비", "폐업")
-     */
-    public String getDescription() { return description; }
+    /** 한국어 라벨 반환 */
+    public String getDescription() {
+        return description;
+    }
 }

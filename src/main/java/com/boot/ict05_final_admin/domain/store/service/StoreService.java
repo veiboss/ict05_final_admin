@@ -21,14 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 가맹점 관련 비즈니스 로직을 처리하는 서비스 클래스
+ * 가맹점 관련 비즈니스 로직을 처리하는 서비스 클래스.
  *
- * <p>특징</p>
- * <ul>
- *   <li>컨트롤러와 리포지토리 사이에서 트랜잭션과 도메인 규칙을 담당</li>
- *   <li>목록/단건 조회 등 읽기 기능 제공(추후 등록/수정/삭제 확장)</li>
- * </ul>
- *
+ * <p>
+ * 컨트롤러와 리포지토리 사이에서 트랜잭션 관리와 도메인 규칙을 담당하며,<br>
+ * 가맹점의 등록, 수정, 조회, 통계(헤더 카드용) 기능을 제공한다.
+ * </p>
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -36,30 +34,44 @@ import java.util.Map;
 @Transactional
 public class StoreService {
 
-    private final StoreRepository storeRepository; // 데이터 접근(기본 CRUD + 커스텀 쿼리) 의존성
+    /** 가맹점 데이터 접근(기본 CRUD + 커스텀 쿼리) */
+    private final StoreRepository storeRepository;
+    /** 직원(점주/본사 담당자) 조회용 리포지토리 */
     private final StaffRepository staffRepository;
+    /** Member 엔티티 조회용 리포지토리 */
     private final MemberRepository memberRepository;
 
     @PersistenceContext
     private EntityManager em;
 
-
     /**
-     * 가맹점 이름으로 필터링하여 공지사항 목록을 페이지 단위로 조회한다.
+     * 검색 조건과 페이징 정보를 이용하여 가맹점 목록을 조회한다.
      *
-     * @param storeSearchDTO 작성자 이름 (선택, null 가능)
+     * <p>
+     * 내부적으로 {@link StoreRepository#listStore(StoreSearchDTO, Pageable)} 를 호출하여
+     * Querydsl 기반 동적 쿼리를 수행한다.
+     * </p>
+     *
+     * @param storeSearchDTO 가맹점 검색 조건 DTO
      * @param pageable       페이지 정보 (페이지 번호, 크기, 정렬)
-     * @return 페이징 처리된 공지사항 리스트 DTO
+     * @return               페이징 처리된 가맹점 목록 DTO
      */
     public Page<StoreListDTO> selectAllOfficeStore(StoreSearchDTO storeSearchDTO, Pageable pageable) {
-        return storeRepository.listStore(storeSearchDTO, pageable);   // Querydsl 커스텀 리포지토리 호출
+        return storeRepository.listStore(storeSearchDTO, pageable);
     }
 
     /**
      * 새로운 가맹점을 등록한다.
      *
-     * @param dto 가맹점 등록 정보
-     * @return 저장된 가맹점 ID
+     * <p>
+     * - 주소(userAddress1, userAddress2)를 하나의 location으로 합친 뒤 저장<br>
+     * - 선택된 본사 담당자(ID) → {@link StaffProfile} → 이메일 → {@link Member} 매핑<br>
+     * - 매핑된 Member를 {@link Store} 엔티티의 member 필드에 연결하여 저장한다.
+     * </p>
+     *
+     * @param dto 가맹점 등록 정보 DTO
+     * @return    저장된 가맹점 ID
+     * @throws IllegalArgumentException 본사 담당자 정보가 없거나 Member 매핑에 실패한 경우
      */
     public Long insertOfficeStore(StoreWriteFormDTO dto) {
         // ✅ 1. 주소 결합
@@ -113,21 +125,32 @@ public class StoreService {
         return saved.getId();
     }
 
+    /**
+     * 점주(OWNER)에 해당하는 직원 목록을 조회한다.
+     *
+     * @return 점주 ID/이름 리스트
+     */
     @Transactional(readOnly = true)
     public List<StaffNameDTO> ownerOptions() {
         return storeRepository.ownerStaffOptions();
     }
 
+    /**
+     * 본사 근무자(HQ WORKER + OFFICE 부서) 직원 목록을 조회한다.
+     *
+     * @return 본사 근무자 ID/이름 리스트
+     */
     @Transactional(readOnly = true)
     public List<StaffNameDTO> hqWorkerOptions() {
         return storeRepository.hqWorkerStaffOptions();
     }
 
-
     /**
-     * 가맹점의 이름(및 필요 시 식별자 등 최소 필드)을 DTO로 조회한다.
+     * 가맹점의 이름(및 간단 정보)을 조회한다.
      *
-     * @return 가맹점 표시용 DTO 리스트. 데이터가 없으면 일반적으로 빈 리스트를 반환.
+     * <p>주로 드롭다운, 선택 리스트 등에 사용된다.</p>
+     *
+     * @return 가맹점 표시용 DTO 리스트. 데이터가 없으면 빈 리스트 반환.
      * @see com.boot.ict05_final_admin.domain.store.repository.StoreRepository#findStoreName()
      */
     public List<FindStoreDTO> findStoreName() {
@@ -137,18 +160,18 @@ public class StoreService {
     /**
      * 가맹점 상세 정보를 조회한다.
      *
-     * @param id 재료 ID
-     * @return 가맹점 엔티티, 존재하지 않으면 null
+     * @param id 가맹점 ID
+     * @return   상세 정보 DTO, 없으면 null
      */
     public StoreDetailDTO detailOfficeStore(Long id) {
         return storeRepository.findByStoreDetail(id);
     }
 
     /**
-     * ID를 기준으로 가맹점을 조회한다.
+     * ID를 기준으로 가맹점 엔티티를 조회한다.
      *
      * @param id 가맹점 ID
-     * @return 가맹점 엔티티, 존재하지 않으면 null
+     * @return   {@link Store} 엔티티, 존재하지 않으면 null
      */
     @Transactional(readOnly = true)
     public Store findById(Long id) {
@@ -158,8 +181,14 @@ public class StoreService {
     /**
      * 기존 가맹점 정보를 수정한다.
      *
-     * @param dto 수정할 데이터
-     * @return 수정된 가맹점 엔티티
+     * <p>
+     * - 주소(userAddress1, userAddress2)를 다시 합쳐 storeLocation으로 세팅<br>
+     * - ID로 기존 {@link Store} 를 조회한 후, {@link Store#updateStore(StoreModifyFormDTO)} 호출로 변경한다.
+     * </p>
+     *
+     * @param dto 수정할 데이터 DTO
+     * @return    수정된 가맹점 엔티티
+     * @throws IllegalArgumentException 대상 가맹점이 존재하지 않을 경우
      */
     public Store storeModify(StoreModifyFormDTO dto) {
 
@@ -177,24 +206,32 @@ public class StoreService {
         return store;
     }
 
+    /**
+     * 대시보드 헤더(요약 카드)에 보여줄 통계 데이터를 조회한다.
+     *
+     * <p>
+     * - 전체 가맹점 수<br>
+     * - 운영 중인 가맹점 수<br>
+     * - 평균 월 매출<br>
+     * - 전체 직원 수<br>
+     * 를 키/값 형태의 Map으로 반환한다.
+     * </p>
+     *
+     * @return 통계 값 맵 (totalStore, activeStore, avgMonthlySales, totalStaff)
+     */
     @Transactional(readOnly = true)
     public Map<String, Object> listHeaderStats() {
-        long total       = storeRepository.countStoreAll();     // ✅ 인스턴스 호출
-        long active      = storeRepository.countActiveStore();  // ✅
-        BigDecimal avg   = storeRepository.avgMonthlySales();   // ✅ BigDecimal
-        long totalStaff  = storeRepository.totalEmployees();    // ✅ long
+        long total       = storeRepository.countStoreAll();
+        long active      = storeRepository.countActiveStore();
+        BigDecimal avg   = storeRepository.avgMonthlySales();
+        long totalStaff  = storeRepository.totalEmployees();
 
         return Map.of(
                 "totalStore",       total,
                 "activeStore",      active,
-                "avgMonthlySales",  avg,        // 키도 의미 맞게
+                "avgMonthlySales",  avg,
                 "totalStaff",       totalStaff
         );
     }
 
 }
-
-
-
-
-
