@@ -4,6 +4,7 @@ import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderDetailDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderListDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSearchDTO;
 import com.boot.ict05_final_admin.domain.receiveOrder.dto.ReceiveOrderSummaryDTO;
+import com.boot.ict05_final_admin.domain.receiveOrder.entity.ReceiveOrderStatus;
 import com.boot.ict05_final_admin.domain.receiveOrder.service.ReceiveOrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +74,7 @@ public class ReceiveOrderController {
         model.addAttribute("urlBuilder", ServletUriComponentsBuilder.fromRequest(request));
         model.addAttribute("receiveOrderSearchDTO", receiveOrderSearchDTO);
         model.addAttribute("summary", summary);
+        model.addAttribute("statusList", ReceiveOrderStatus.adminVisibleStatuses());
 
         return "receive/list";
     }

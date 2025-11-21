@@ -30,8 +30,7 @@ public class MenuWriteFormDTO {
     private Long menuCategoryId;
 
     /** 카테고리 */
-     @NotNull(message = "카테고리를 선택해주세요")
-     private String menuCategoryName;
+    private String menuCategoryName;
 
     /** 판매 상태 */
     @NotNull(message = "판매상태를 선택해주세요")

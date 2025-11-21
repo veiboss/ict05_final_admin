@@ -1,5 +1,8 @@
 package com.boot.ict05_final_admin.domain.receiveOrder.entity;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 수주 상태(Enum)
  *
@@ -23,6 +26,8 @@ package com.boot.ict05_final_admin.domain.receiveOrder.entity;
  * @since 2025.10
  */
 public enum ReceiveOrderStatus {
+
+    PENDING("대기"),
 
     /** 접수됨 */
     RECEIVED("접수"),
@@ -53,4 +58,9 @@ public enum ReceiveOrderStatus {
      */
     public String getDescription() { return description; }
 
+    public static List<ReceiveOrderStatus> adminVisibleStatuses() {
+        return Arrays.stream(values())
+                .filter(status -> status != PENDING)
+                .toList();
+    }
 }
