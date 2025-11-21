@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long> {
     List<MenuCategory> findAllByMenuCategoryLevel(Integer menuCategoryLevel, Sort sort);
     Optional<MenuCategory> findByMenuCategoryName(String menuCategoryName);
-    List<MenuCategory> findByMenuCategoryLevelOrderByMenuCategoryNameAsc(int level);
 
     /** ✅ 세트메뉴 + 레벨3 카테고리만 조회 (단품메뉴, 메뉴는 제외) */
     @Query("""

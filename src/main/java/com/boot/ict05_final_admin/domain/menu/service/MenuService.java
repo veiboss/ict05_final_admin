@@ -3,21 +3,14 @@ package com.boot.ict05_final_admin.domain.menu.service;
 import com.boot.ict05_final_admin.domain.inventory.entity.Material;
 import com.boot.ict05_final_admin.domain.inventory.repository.MaterialRepository;
 import com.boot.ict05_final_admin.domain.menu.dto.*;
-import com.boot.ict05_final_admin.domain.menu.entity.Menu;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuCategory;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuRecipe;
-import com.boot.ict05_final_admin.domain.menu.entity.MenuShow;
-
-// 🔹 가맹점/가맹점메뉴 관련 import (패키지명 프로젝트에 맞게 필요하면 수정)
-import com.boot.ict05_final_admin.domain.store.entity.Store;
-import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
-import com.boot.ict05_final_admin.domain.menu.entity.StoreMenu;
-import com.boot.ict05_final_admin.domain.menu.entity.StoreMenuSoldout;
-import com.boot.ict05_final_admin.domain.menu.repository.StoreMenuRepository;
+import com.boot.ict05_final_admin.domain.menu.entity.*;
 
 import com.boot.ict05_final_admin.domain.menu.repository.MenuCategoryRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRecipeRepository;
 import com.boot.ict05_final_admin.domain.menu.repository.MenuRepository;
+import com.boot.ict05_final_admin.domain.menu.repository.StoreMenuRepository;
+import com.boot.ict05_final_admin.domain.store.entity.Store;
+import com.boot.ict05_final_admin.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,14 +24,14 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * 메뉴 관련 비즈니스 로직을 처리하는 서비스 클래스
+ * 본사 메뉴 도메인의 비즈니스 로직을 담당하는 서비스.
  *
- * <p>메뉴 등록, 수정, 조회 등의 기능을 제공한다.</p>
+ * <p>메뉴 등록, 수정, 상세/목록 조회, 레시피 저장, 신규 메뉴 생성 시 가맹점별 기본 상태 행 생성 등을 처리한다.</p>
  */
 @Service
 @RequiredArgsConstructor
-@Transactional      // DB 작업은 하나의 트랜잭션 단위로 처리 - 중간에 에러 나면 모두 취소
-@Slf4j  // 로그를 찍을 수 있음
+@Transactional
+@Slf4j
 public class MenuService {
 
     private final MenuRepository menuRepository;
@@ -51,7 +44,11 @@ public class MenuService {
     private final StoreMenuRepository storeMenuRepository;
 
     /**
-     * 작성자 이름으로 필터링하여 메뉴 목록을 페이지 단위로 조회한다.
+     * 메뉴 목록을 페이지 단위로 조회한다.
+     *
+     * @param menuSearchDTO 검색/필터 조건
+     * @param pageable      페이징/정렬 정보
+     * @return 페이징 처리된 메뉴 목록 DTO
      */
     public Page<MenuListDTO> selectAllStoreMenu(MenuSearchDTO menuSearchDTO, Pageable pageable) {
         var menus = menuRepository.listMenu(menuSearchDTO, pageable);
@@ -67,8 +64,11 @@ public class MenuService {
     /**
      * 새로운 메뉴를 등록한다.
      *
+     * <p>메뉴 엔티티 저장 이후 레시피를 저장하고, 모든 가맹점에 기본 판매 상태(ON_SALE)로 {@code StoreMenu} 행을 생성한다.</p>
+     *
      * @param dto 메뉴 등록 정보
      * @return 저장된 메뉴 ID
+     * @throws IllegalArgumentException 카테고리가 없는 경우
      */
     @Transactional
     public Long insertStoreMenu(MenuWriteFormDTO dto) {
@@ -88,36 +88,38 @@ public class MenuService {
                 .menuCategory(category)
                 .build();
 
-        menu = menuRepository.save(menu);   // 🔹 저장 후 PK 확보
+        // 저장 후 PK 확보
+        menu = menuRepository.save(menu);
 
-        // 레시피 저장 (자유 입력: material FK 없음)
+        // 레시피 저장 (자유 입력: material FK 없을 수 있음)
         saveRecipes(menu, dto.getMainMaterials(),  MenuRecipe.RecipeRole.MAIN);
         saveRecipes(menu, dto.getSauceMaterials(), MenuRecipe.RecipeRole.SAUCE);
 
-        // 🔥 새 메뉴가 등록되면, 모든 가맹점에 대해 StoreMenu ON_SALE 생성
+        // 모든 가맹점에 StoreMenu 기본값 생성
         createStoreMenusForNewMenu(menu);
 
         return menu.getMenuId();
     }
 
     /**
-     * 새로 등록된 본사 메뉴에 대해, 모든 가맹점의 StoreMenu row 를
-     * 기본값 ON_SALE 로 생성한다.
+     * 새로 등록된 본사 메뉴에 대해 모든 가맹점의 {@code StoreMenu} 행을 기본값 {@code ON_SALE}로 생성한다.
+     *
+     * @param menu 대상 메뉴
      */
     private void createStoreMenusForNewMenu(Menu menu) {
-        List<Store> stores = storeRepository.findAll();   // 필요하면 활성 매장만 필터링
+        List<Store> stores = storeRepository.findAll();
 
         int created = 0;
         for (Store store : stores) {
-
-            // 혹시 중복 생성 방지
+            // 중복 방지
             boolean exists = storeMenuRepository.existsByStoreAndMenu(store, menu);
             if (exists) continue;
 
+            // ✅ 엔티티 타입으로 선언
             StoreMenu sm = StoreMenu.builder()
                     .store(store)
                     .menu(menu)
-                    .storeMenuSoldout(StoreMenuSoldout.ON_SALE)  // 기본: 판매중
+                    .storeMenuSoldout(StoreMenuSoldout.ON_SALE)
                     .build();
 
             storeMenuRepository.save(sm);
@@ -128,15 +130,25 @@ public class MenuService {
                 menu.getMenuId(), stores.size(), created);
     }
 
+
     /**
-     * ID를 기준으로 메뉴를 조회한다.
+     * ID로 메뉴를 조회한다.
+     *
+     * @param menuId 메뉴 ID
+     * @return 메뉴 엔티티, 없으면 {@code null}
      */
     public Menu findMenuById(Long menuId) {
         return menuRepository.findById(menuId).orElse(null);
     }
 
     /**
-     * 기존 메뉴 수정
+     * 기존 메뉴를 수정한다.
+     *
+     * <p>기본 필드를 갱신하고, 레시피는 전량 삭제 후 전달된 항목으로 재생성한다.</p>
+     *
+     * @param dto 수정 정보
+     * @return 수정된 메뉴 엔티티
+     * @throws IllegalArgumentException 메뉴 ID 없거나, 메뉴/카테고리가 존재하지 않는 경우
      */
     @Transactional
     public Menu menuModify(MenuModifyFormDTO dto) {
@@ -162,7 +174,7 @@ public class MenuService {
             menu.setMenuShow(dto.getMenuShow());
         }
 
-        // 카테고리: ID만 처리(있을 때만)
+        // 카테고리: ID 있을 때만 처리
         if (dto.getMenuCategoryId() != null) {
             menu.setMenuCategory(
                     menuCategoryRepository.findById(dto.getMenuCategoryId())
@@ -232,6 +244,10 @@ public class MenuService {
 
     /**
      * 메뉴 상세 정보를 조회한다.
+     *
+     * @param menuId 메뉴 ID
+     * @return 상세 DTO
+     * @throws IllegalArgumentException 메뉴가 존재하지 않는 경우
      */
     public MenuDetailDTO MenuDetail(Long menuId) {
         Menu m = menuRepository.findById(menuId)
@@ -287,7 +303,13 @@ public class MenuService {
     }
 
     /**
-     * 자유입력 레시피 저장 유틸
+     * 레시피 저장 유틸리티.
+     *
+     * <p>유효성 검사 후 {@code MenuRecipe}를 생성하여 저장한다.</p>
+     *
+     * @param menu  대상 메뉴
+     * @param items 레시피 항목 목록
+     * @param role  레시피 역할(MAIN/SAUCE)
      */
     private void saveRecipes(Menu menu,
                              List<RecipeItemDTO> items,
@@ -327,6 +349,7 @@ public class MenuService {
         }
     }
 
+    /** BigDecimal NVL 유틸. */
     private BigDecimal nvl(BigDecimal v) { return v == null ? BigDecimal.ZERO : v; }
 
 }

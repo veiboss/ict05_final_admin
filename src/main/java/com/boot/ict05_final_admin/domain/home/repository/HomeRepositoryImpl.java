@@ -105,7 +105,7 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 ).fetchOne();
 
         // 전월 동기간(MTD)
@@ -114,7 +114,7 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, prevMonthStart, prevTo),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 ).fetchOne();
 
         Long curOrderCnt = QueryFactory
@@ -122,15 +122,15 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 ).fetchOne();
 
         Long activeStores = QueryFactory
-                .select(customerOrder.storeIdFk.id.countDistinct())
+                .select(customerOrder.store.id.countDistinct())
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 ).fetchOne();
 
         long curRevenue  = curSum  == null ? 0L : curSum.longValue();
@@ -164,7 +164,7 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 )
                 .groupBy(bucket)
                 .orderBy(bucket.asc())
@@ -192,7 +192,7 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 )
                 .groupBy(bucket)
                 .orderBy(bucket.asc())
@@ -243,24 +243,24 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
 
         List<Tuple> rows = QueryFactory
                 .select(
-                        customerOrder.storeIdFk.id,      // Long
-                        customerOrder.storeIdFk.name,    // String
+                        customerOrder.store.id,      // Long
+                        customerOrder.store.name,    // String
                         sumExpr                          // BigDecimal sum
                 )
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, from, to),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 )
-                .groupBy(customerOrder.storeIdFk.id, customerOrder.storeIdFk.name)
+                .groupBy(customerOrder.store.id, customerOrder.store.name)
                 .orderBy(sumExpr.desc())
                 .limit(limit)
                 .fetch();
 
         return rows.stream()
                 .map(t -> new StoreRevenue(
-                        t.get(customerOrder.storeIdFk.id),
-                        t.get(customerOrder.storeIdFk.name),
+                        t.get(customerOrder.store.id),
+                        t.get(customerOrder.store.name),
                         (t.get(sumExpr) == null ? 0L : t.get(sumExpr).longValue())
                 ))
                 .toList();
@@ -279,23 +279,23 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
         // 현재 기간 합계 (storeId, storeName, sum)
         List<Tuple> curRows = QueryFactory
                 .select(
-                        customerOrder.storeIdFk.id,
-                        customerOrder.storeIdFk.name,
+                        customerOrder.store.id,
+                        customerOrder.store.name,
                         sumExpr
                 )
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, curFrom, curTo),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 )
-                .groupBy(customerOrder.storeIdFk.id, customerOrder.storeIdFk.name)
+                .groupBy(customerOrder.store.id, customerOrder.store.name)
                 .fetch();
 
         Map<Long, Agg> cur = curRows.stream().collect(
                 java.util.stream.Collectors.toMap(
-                        t -> t.get(customerOrder.storeIdFk.id),
+                        t -> t.get(customerOrder.store.id),
                         t -> new Agg(
-                                t.get(customerOrder.storeIdFk.name),
+                                t.get(customerOrder.store.name),
                                 (t.get(sumExpr) == null ? 0L : t.get(sumExpr).longValue())
                         )
                 )
@@ -304,20 +304,20 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
         // 이전 기간 합계 (storeId, sum) — 이름은 현재 쪽에서 사용
         List<Tuple> prevRows = QueryFactory
                 .select(
-                        customerOrder.storeIdFk.id,
+                        customerOrder.store.id,
                         sumExpr
                 )
                 .from(customerOrder)
                 .where(
                         range(customerOrder.orderedAt, prevFrom, prevTo),
-                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                        storeFilter(storeIds, customerOrder.store.id)
                 )
-                .groupBy(customerOrder.storeIdFk.id)
+                .groupBy(customerOrder.store.id)
                 .fetch();
 
         Map<Long, Long> prev = prevRows.stream().collect(
                 java.util.stream.Collectors.toMap(
-                        t -> t.get(customerOrder.storeIdFk.id),
+                        t -> t.get(customerOrder.store.id),
                         t -> (t.get(sumExpr) == null ? 0L : t.get(sumExpr).longValue())
                 )
         );
@@ -359,7 +359,7 @@ public class HomeRepositoryImpl implements HomeRepositoryCustom{
                                 .from(customerOrder)
                                 .where(
                                         range(customerOrder.orderedAt, from, to),
-                                        storeFilter(storeIds, customerOrder.storeIdFk.id)
+                                        storeFilter(storeIds, customerOrder.store.id)
                                 )
                                 .groupBy(bucket)
                                 .orderBy(bucket.asc())

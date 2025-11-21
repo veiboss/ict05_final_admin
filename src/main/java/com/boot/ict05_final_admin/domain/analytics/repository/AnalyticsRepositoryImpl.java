@@ -374,7 +374,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                 co.id.countDistinct()   // trx
                         )
                         .from(co)
-                        .join(co.storeIdFk, s)
+                        .join(co.store, s)
                         .where(baseFilter)
                         .groupBy(s.id, s.name, labelExpr)
                         .orderBy(
@@ -400,7 +400,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                         )
                         .from(cod)
                         .join(cod.order, co)
-                        .join(co.storeIdFk, s)
+                        .join(co.store, s)
                         .where(baseFilter)
                         .groupBy(s.id, labelExpr)
         ).fetch();
@@ -799,7 +799,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             ))
                             .from(cod)
                             .join(cod.order, co)
-                            .join(co.storeIdFk, s)
+                            .join(co.store, s)
                             .where(filter)
                             // 그룹핑은 파생문자열(monthLabel)이 아닌 YEAR/MONTH 정수 표현식으로 묶어 정렬 일관성/성능 확보
                             .groupBy(s.id, s.name, yExpr, mExpr)
@@ -826,7 +826,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             ))
                             .from(cod)
                             .join(cod.order, co)
-                            .join(co.storeIdFk, s)
+                            .join(co.store, s)
                             .join(cod.menuIdFk, m)
                             .join(m.menuCategory, mc)
                             .where(filter)
@@ -891,7 +891,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
             // 월별: (YEAR, MONTH, STORE) 버킷 집계
             List<Tuple> bucketAgg = readHints(
                     query.select(s.id, labelKey, co.id.countDistinct(), co.totalPrice.sum())
-                            .from(co).join(co.storeIdFk, s)
+                            .from(co).join(co.store, s)
                             .where(filter, s.id.in(sids), pageWindow)
                             .groupBy(s.id, yExpr, mExpr)
             ).fetch();
@@ -914,7 +914,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
             List<Tuple> bucketAgg = readHints(
                     query.select(s.id, labelKey, co.orderType, co.id.countDistinct(), co.totalPrice.sum())
-                            .from(co).join(co.storeIdFk, s)
+                            .from(co).join(co.store, s)
                             .where(
                                     filter,
                                     s.id.in(sids),
@@ -949,7 +949,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                     query.select(labelKey, cod.quantity.sum(), cod.lineTotal.sum())
                             .from(cod)
                             .join(cod.order, co)
-                            .join(co.storeIdFk, s)
+                            .join(co.store, s)
                             .where(filter, pageWindow)
                             .groupBy(byMonth ? new Expression<?>[]{ yExpr, mExpr } : new Expression<?>[]{ co.orderedAt })
                             .orderBy(orderByNull()) // filesort 회피(페이징 정렬과 무관)
@@ -961,7 +961,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
             Map<String, Tuple> orderTotalsByLabel = new HashMap<>();
             for (Tuple t : readHints(
                     query.select(labelKey, co.id.countDistinct(), co.totalPrice.sum())
-                            .from(co).join(co.storeIdFk, s)
+                            .from(co).join(co.store, s)
                             .where(filter, pageWindow)
                             .groupBy(byMonth ? new Expression<?>[]{ yExpr, mExpr } : new Expression<?>[]{ co.orderedAt })
                             .orderBy(orderByNull())
@@ -1518,7 +1518,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                     co.orderType.stringValue().as("orderType")
                             ))
                             .from(co)
-                            .join(co.storeIdFk, s)
+                            .join(co.store, s)
                             // 날짜 범위 인덱스 스캔 이후 HOUR 필터 적용됨.
                             // 매우 대용량에서 추가 최적화가 필요하면 “기간을 더 조밀하게” 제한하는 방식 권장.
                             .where(filter, H.between(8, 22))
@@ -1553,7 +1553,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                     co.orderType.stringValue().as("orderType"),
                                     ExpressionUtils.as(orderDateStr, "orderDate")
                             ))
-                            .from(cod).join(cod.order, co).join(co.storeIdFk, s)
+                            .from(cod).join(cod.order, co).join(co.store, s)
                             .join(cod.menuIdFk, m).join(m.menuCategory, mc)
                             .where(filter)
                             // 최근 주문시간순 보장(체감 요구사항)
@@ -1622,7 +1622,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                             Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0}),0)", co.totalPrice)
                     )
                     .from(co)
-                    .join(co.storeIdFk, s)
+                    .join(co.store, s)
                     .where(filter, pageWindow, H.goe(8).and(H.loe(22)));
 
             if (byMonth) {
@@ -1815,7 +1815,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
          * --------------------------------------------------------- */
         List<Tuple> hourTotal = readHints(
                 query.select(H, co.orderType, co.totalPrice.sum())
-                        .from(co).join(co.storeIdFk, s)
+                        .from(co).join(co.store, s)
                         .where(base)
                         .groupBy(H, co.orderType)
                         .orderBy(orderByNull())
@@ -1823,7 +1823,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
         List<Tuple> dowTotal = readHints(
                 query.select(D, co.orderType, co.totalPrice.sum())
-                        .from(co).join(co.storeIdFk, s)
+                        .from(co).join(co.store, s)
                         .where(base)
                         .groupBy(D, co.orderType)
                         .orderBy(orderByNull())
@@ -1838,7 +1838,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         if (filteredStores) {
             hourByStore = readHints(
                     query.select(s.id, s.name, H, co.orderType, co.totalPrice.sum())
-                            .from(co).join(co.storeIdFk, s)
+                            .from(co).join(co.store, s)
                             .where(base)
                             .groupBy(s.id, s.name, H, co.orderType)
                             .orderBy(orderByNull())
@@ -1846,7 +1846,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
             dowByStore = readHints(
                     query.select(s.id, s.name, D, co.orderType, co.totalPrice.sum())
-                            .from(co).join(co.storeIdFk, s)
+                            .from(co).join(co.store, s)
                             .where(base)
                             .groupBy(s.id, s.name, D, co.orderType)
                             .orderBy(orderByNull())
@@ -2368,7 +2368,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                 sumIf(betweenDateClosedOpen(co.orderedAt, ytdStart,  ytdEnd),  co.totalPrice), // idx 2 = Y
                                 sumIf(betweenDateClosedOpen(co.orderedAt, lytdStart, lytdEnd), co.totalPrice)  // idx 3 = LY
                         )
-                        .from(co).join(co.storeIdFk, s) // 명시적 조인(점포 필터/멀티테넌시 대비)
+                        .from(co).join(co.store, s) // 명시적 조인(점포 필터/멀티테넌시 대비)
                         .where(base)
         ).fetchOne();
 
@@ -2449,7 +2449,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                 sumIf(betweenDateClosedOpen(co.orderedAt, ytdStart,  ytdEnd),  co.totalPrice),
                                 sumIf(betweenDateClosedOpen(co.orderedAt, lytdStart, lytdEnd), co.totalPrice)
                         )
-                        .from(co).join(co.storeIdFk, s) // 명시적 조인(크로스 조인 방지)
+                        .from(co).join(co.store, s) // 명시적 조인(크로스 조인 방지)
                         .where(
                                 co.status.eq(OrderStatus.COMPLETED),
                                 s.id.in(sidsOnPage),                                   // 현재 페이지 점포만 대상
@@ -2600,7 +2600,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         return Optional.ofNullable(
                 readHints(
                         query.select(Expressions.numberTemplate(Long.class, "COUNT(DISTINCT {0})", groupKey))
-                                .from(co).join(co.storeIdFk, s)
+                                .from(co).join(co.store, s)
                                 .where(baseFilter)
                 ).fetchOne()
         ).orElse(0L); // null 방어(결과 없을 때 0)
@@ -2665,7 +2665,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                 // 월별: co + s만 조인 (매출/거래 집계 키와 동일)
                                 ? query.select(Expressions.numberTemplate(Long.class,
                                         "COUNT(DISTINCT CONCAT_WS('|', {0}, {1}, {2}))", s.id, yExpr, mExpr))
-                                .from(co).join(co.storeIdFk, s)
+                                .from(co).join(co.store, s)
                                 .where(filter)
 
                                 // 일별: 메뉴 단위 키이므로 cod + m 조인 필요
@@ -2674,7 +2674,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                         s.id, m.menuId, co.orderedAt, co.orderType))
                                 .from(co)
                                 .join(cod).on(cod.order.eq(co))
-                                .join(co.storeIdFk, s)
+                                .join(co.store, s)
                                 .join(cod.menuIdFk, m)
                                 .where(filter)
                 ).fetchOne()
@@ -2736,7 +2736,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                             "COUNT(DISTINCT CONCAT_WS('|',{0},{1},{2},{3},{4},{5}))",
                                             s.id, Y, M, H, D, co.orderType))
                                     .from(co)
-                                    .join(co.storeIdFk, s)
+                                    .join(co.store, s)
                                     .where(filter, H.between(8, 22)) // 시간대 슬라이싱
                     ).fetchOne()
             ).orElse(0L);
@@ -2752,7 +2752,7 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                                             s.id, m.menuId, co.orderedAt, co.orderType))
                                     .from(co)
                                     .join(cod).on(cod.order.eq(co))
-                                    .join(co.storeIdFk, s)
+                                    .join(co.store, s)
                                     .join(cod.menuIdFk, m)
                                     .where(filter)
                     ).fetchOne()

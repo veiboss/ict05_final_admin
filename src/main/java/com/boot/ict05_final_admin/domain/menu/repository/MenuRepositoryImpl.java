@@ -17,6 +17,12 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+/**
+ * 메뉴 목록 조회 커스텀 리포지토리 구현체.
+ *
+ * <p>QueryDSL을 사용하여 검색/필터/정렬/페이징을 수행하고
+ * 필요한 경우 재료명까지 조인하여 한 번에 조회한다.</p>
+ */
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -24,6 +30,13 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * 메뉴 목록을 검색/필터/정렬/페이징 조건과 함께 조회한다.
+     *
+     * @param dto      검색/필터 조건
+     * @param pageable 페이징 및 정렬 정보
+     * @return 페이지 객체(요약 DTO 목록 포함)
+     */
     @Override
     public Page<MenuListDTO> listMenu(MenuSearchDTO dto, Pageable pageable) {
         if (dto == null) dto = new MenuSearchDTO();
@@ -33,14 +46,12 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         QMenuRecipe recipe = QMenuRecipe.menuRecipe;
         QMaterial material = QMaterial.material;
 
-        // WHERE 조건
         BooleanExpression where = andAll(
                 eqNameOrInfo(dto, menu),
                 eqCategory(dto, menu),
                 eqShow(dto, menu)
         );
 
-        // 정렬 (기본: menuId DESC)
         Sort sort = (pageable.getSort().isSorted())
                 ? pageable.getSort()
                 : Sort.by(Sort.Direction.DESC, "menuId");
@@ -49,7 +60,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         List<Long> pageIds = queryFactory
                 .select(menu.menuId)
                 .from(menu)
-                .leftJoin(menu.menuCategory, category) // 카테고리 정렬/필터 시 필요
+                .leftJoin(menu.menuCategory, category)
                 .where(where)
                 .orderBy(toOrderSpec(menu, sort))
                 .offset(pageable.getOffset())
@@ -59,7 +70,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         log.info("[listMenu] pageIds size={}, ids={}", pageIds.size(), pageIds);
 
         if (pageIds.isEmpty()) {
-            log.info("[listMenu] pageIds empty -> return empty page");            // ★ 추가
+            log.info("[listMenu] pageIds empty -> return empty page");
             return new PageImpl<>(List.of(), pageable, 0);
         }
 
@@ -117,9 +128,13 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
 
-    // ====== 아래는 헬퍼 메서드들 (클래스 안에 위치해야 함) ======
-
-    /** 이름 또는 설명 검색 */
+    /**
+     * 이름 또는 설명 조건을 생성한다.
+     *
+     * @param dto  검색 조건
+     * @param menu QMenu
+     * @return 조건 식(없으면 null)
+     */
     private BooleanExpression eqNameOrInfo(MenuSearchDTO dto, QMenu menu) {
         String kw = dto.getS();
         if (!StringUtils.hasText(kw)) return null;
@@ -127,25 +142,40 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         String type = Optional.ofNullable(dto.getType()).orElse("all");
         return switch (type) {
             case "name" -> menu.menuName.containsIgnoreCase(kw);
-            //case "info" -> menu.menuInformation.containsIgnoreCase(kw); // 필드명 확인
             default -> menu.menuName.containsIgnoreCase(kw);
-                    //.or(menu.menuInformation.containsIgnoreCase(kw));    // 필드명 확인
         };
     }
 
-    /** 카테고리 필터 */
+    /**
+     * 카테고리 필터 조건을 생성한다.
+     *
+     * @param dto  검색 조건
+     * @param menu QMenu
+     * @return 조건 식(없으면 null)
+     */
     private BooleanExpression eqCategory(MenuSearchDTO dto, QMenu menu) {
         if (dto.getMenuCategoryId() == null || dto.getMenuCategoryId() == 0) return null;
         return menu.menuCategory.menuCategoryId.eq(dto.getMenuCategoryId());
     }
 
-    /** 판매상태 필터 */
+    /**
+     * 판매 상태 필터 조건을 생성한다.
+     *
+     * @param dto  검색 조건
+     * @param menu QMenu
+     * @return 조건 식(없으면 null)
+     */
     private BooleanExpression eqShow(MenuSearchDTO dto, QMenu menu) {
         if (dto.getMenuShow() == null) return null;
         return menu.menuShow.eq(dto.getMenuShow());
     }
 
-    /** 여러 조건 and 결합 */
+    /**
+     * 여러 조건을 AND로 결합한다.
+     *
+     * @param exps 조건 배열
+     * @return 결합된 조건(없으면 null)
+     */
     private BooleanExpression andAll(BooleanExpression... exps) {
         BooleanExpression result = null;
         for (BooleanExpression exp : exps) {
@@ -155,7 +185,13 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         return result;
     }
 
-    // 정렬 변환 (pageable Sort → QueryDSL OrderSpecifier[])
+    /**
+     * Pageable의 Sort를 QueryDSL {@code OrderSpecifier[]}로 변환한다.
+     *
+     * @param menu QMenu
+     * @param sort 정렬 정보
+     * @return OrderSpecifier 배열
+     */
     private com.querydsl.core.types.OrderSpecifier<?>[] toOrderSpec(QMenu menu, Sort sort) {
         return sort.stream()
                 .map(order -> {
@@ -163,11 +199,11 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                             ? com.querydsl.core.types.Order.ASC
                             : com.querydsl.core.types.Order.DESC;
                     return switch (order.getProperty()) {
-                        case "menuId"   -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuId);
-                        case "menuName" -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuName);
-                        case "menuPrice"-> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuPrice);
-                        case "menuKcal" -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuKcal);
-                        default         -> new com.querydsl.core.types.OrderSpecifier<>(com.querydsl.core.types.Order.DESC, menu.menuId);
+                        case "menuId"    -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuId);
+                        case "menuName"  -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuName);
+                        case "menuPrice" -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuPrice);
+                        case "menuKcal"  -> new com.querydsl.core.types.OrderSpecifier<>(direction, menu.menuKcal);
+                        default          -> new com.querydsl.core.types.OrderSpecifier<>(com.querydsl.core.types.Order.DESC, menu.menuId);
                     };
                 })
                 .toArray(com.querydsl.core.types.OrderSpecifier[]::new);
