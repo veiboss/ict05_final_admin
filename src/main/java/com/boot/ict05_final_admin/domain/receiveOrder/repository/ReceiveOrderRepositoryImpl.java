@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -172,11 +173,16 @@ public class ReceiveOrderRepositoryImpl implements ReceiveOrderRepositoryCustom{
     public int updateStatusByOrderCode(String orderCode, ReceiveOrderStatus status) {
         QReceiveOrder ro = QReceiveOrder.receiveOrder;
 
-        long updated = queryFactory
+        var updateClause = queryFactory
                 .update(ro)
                 .set(ro.status, status)
-                .where(ro.orderCode.eq(orderCode))
-                .execute();
+                .where(ro.orderCode.eq(orderCode));
+
+        if (status == ReceiveOrderStatus.DELIVERED) {
+            updateClause.set(ro.actualDeliveryDate, LocalDate.now());
+        }
+
+        long updated = updateClause.execute();
 
         em.flush();
         em.clear();
