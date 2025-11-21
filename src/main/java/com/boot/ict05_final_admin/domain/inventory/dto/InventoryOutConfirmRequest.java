@@ -7,19 +7,17 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * 출고 확정 요청 DTO
+ * 출고 확정 요청 DTO.
  *
- * <p>출고 확정 API 호출 시 사용되는 데이터 전송 객체(DTO)이다.</p>
+ * <p>출고 확정 API 호출 시 사용한다. 배치 자동할당(FIFO) 또는
+ * 배치별 강제 할당(수동)을 모두 지원한다.</p>
  *
- * <p>주요 필드:</p>
+ * <p>스케일/정책:</p>
  * <ul>
- *   <li>materialId: 출고 대상 재료 ID</li>
- *   <li>storeId: 출고 대상 가맹점 ID(선택, 내부 사용/폐기 등은 null)</li>
- *   <li>totalQty: 총 출고 수량</li>
- *   <li>outDate: 출고일시(선택, 미전달 시 서비스에서 now 적용)</li>
- *   <li>memo: 비고(선택)</li>
- *   <li>allocation: 배치별 출고 수량 강제 지정 맵(선택). key=배치ID, value=수량.
- *       미전달 또는 빈 맵이면 서비스에서 FIFO 할당을 수행한다.</li>
+ *   <li>{@code totalQty} 및 {@code allocation} 수량 값은 DECIMAL(15,3) 스케일 가정</li>
+ *   <li>{@code outDate} 미지정 시 서비스에서 now()로 보정 가능</li>
+ *   <li>{@code storeId} 미지정 시 내부 사용/폐기 등 비매장 출고로 처리</li>
+ *   <li>{@code allocation} 미지정 또는 비어 있으면 FIFO로 자동 배치 할당</li>
  * </ul>
  */
 @Getter
@@ -35,10 +33,10 @@ public class InventoryOutConfirmRequest {
     /** 출고 대상 가맹점 ID(선택, 내부 사용/폐기 등은 null) */
     private Long storeId;
 
-    /** 총 출고 수량 */
+    /** 총 출고 수량(DECIMAL(15,3)) */
     private BigDecimal totalQty;
 
-    /** 출고일시(선택, 미전달 시 now 적용) */
+    /** 출고 일시(선택, 미전달 시 now 적용) */
     private LocalDateTime outDate;
 
     /** 비고(선택) */
@@ -46,7 +44,7 @@ public class InventoryOutConfirmRequest {
 
     /**
      * 배치별 출고 수량 강제 지정 맵(선택).
-     * <p>key: 배치ID, value: 출고 수량</p>
+     * <p>key: 배치 ID, value: 출고 수량(DECIMAL(15,3))</p>
      * <p>미전달 또는 비어 있으면 서비스에서 FIFO로 자동 배치 할당.</p>
      */
     private Map<Long, BigDecimal> allocation;

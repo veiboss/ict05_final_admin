@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
- * 본사가 가맹점 재고 현황을 조회하는 컨트롤러
+ * 본사가 가맹점 재고 현황을 조회하는 컨트롤러.
  *
- * <p>조회 전용 (수정/삭제 없음)</p>
+ * <p>조회 전용(SSR). 수정/삭제 기능은 포함하지 않는다.</p>
+ *
+ * @author 김주연
+ * @since 2025.10.27
  */
 @Controller
 @RequiredArgsConstructor
@@ -31,13 +34,15 @@ public class StoreInventoryController {
     private final StoreService storeService;
 
     /**
-     * 가맹점 재고 목록 조회
+     * 가맹점 재고 목록 화면(SSR).
      *
-     * @param searchDTO 검색 조건 (상태, 검색어 등)
-     * @param pageable 페이징 객체
-     * @param model 모델 객체
-     * @param request 요청 정보
-     * @return inventory/list_store.html
+     * <p>검색 조건과 페이징 정보를 받아 서버 사이드 렌더링으로 목록을 반환한다.</p>
+     *
+     * @param searchDTO 검색 조건(상태, 검색어 등), 선택
+     * @param pageable  페이징 정보(기본 page=1, size=10, id DESC). 1-base 페이지 인덱스를 사용한다.
+     * @param model     뷰 모델
+     * @param request   현재 요청(페이지네이션 링크 생성을 위해 사용)
+     * @return 템플릿 경로 {@code inventory/list_store}
      */
     @GetMapping({"/list"})
     public String listStoreInventories(StoreInventorySearchDTO searchDTO,
@@ -46,7 +51,7 @@ public class StoreInventoryController {
                                        Model model,
                                        HttpServletRequest request) {
 
-        // 페이징 설정 (1페이지 → 0 index)
+        // 1-base → 0-base 변환
         PageRequest pageRequest = PageRequest.of(
                 pageable.getPageNumber() - 1,
                 pageable.getPageSize(),

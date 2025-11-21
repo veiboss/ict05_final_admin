@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
 /**
- * 관리자 재료 관리 컨트롤러
- * <p>
- * 재료 등록, 목록 조회, 상세 조회, 수정 화면을 제공한다.
+ * 관리자 재료 관리 컨트롤러.
+ *
+ * <p>재료 등록/목록/상세/수정 화면(SSR)을 제공한다.</p>
+ *
+ * @author 김주연
+ * @since 2025.10.15
  */
 @Controller
 @RequiredArgsConstructor
@@ -38,8 +40,8 @@ public class MaterialController {
     /**
      * 재료 등록 화면을 표시한다.
      *
-     * @param model 뷰에 전달할 모델 객체
-     * @return 공지사항 작성 페이지 뷰 이름
+     * @param model 뷰 모델
+     * @return 재료 작성 템플릿 경로
      */
     @GetMapping("/write")
     public String addOfficeMaterial(Model model) {
@@ -50,12 +52,15 @@ public class MaterialController {
     }
 
     /**
-     * 재료 목록을 페이징 처리하여 조회한다.
+     * 재료 목록을 페이징으로 조회한다.
      *
-     * @param materialSearchDTO   (선택) 작성자 이름으로 검색할 경우 전달되는 값
-     * @param pageable 페이지 번호, 크기, 정렬 조건을 포함한 페이징 객체
-     * @param model    뷰에 전달할 모델 객체
-     * @return 재료 목록 페이지 뷰 이름
+     * <p>검색 조건과 페이징 정보를 받아 서버 사이드 렌더링으로 목록을 반환한다.</p>
+     *
+     * @param materialSearchDTO 검색 조건(재료명/카테고리/상태 등), 옵션
+     * @param pageable          페이징 정보(기본 page=1, size=10, id DESC). 1-base 페이지 인덱스를 사용한다.
+     * @param model             뷰 모델
+     * @param request           현재 요청(페이지네이션 링크 생성을 위해 사용)
+     * @return 재료 목록 템플릿 경로
      */
     @GetMapping("/list")
     public String listMaterial(MaterialSearchDTO materialSearchDTO,
@@ -64,15 +69,22 @@ public class MaterialController {
                                HttpServletRequest request) {
         System.out.println("MaterialController - listMaterial()");
 
+        // 최초 진입 여부 판단(필터/페이지 파라미터 부재)
         boolean isFirstLoad = request.getParameter("status") == null
                 && request.getParameter("s") == null
                 && request.getParameter("page") == null;
+
+        // 빈 문자열로 넘어온 status 방지
         if (materialSearchDTO.getStatus() != null &&
                 materialSearchDTO.getStatus().toString().trim().isEmpty()) {
             materialSearchDTO.setStatus(null);
         }
 
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of(
+                pageable.getPageNumber() - 1,
+                pageable.getPageSize(),
+                Sort.by("id").descending()
+        );
         Page<MaterialListDTO> materials = materialService.selectAllMaterial(materialSearchDTO, pageRequest);
 
         model.addAttribute("materials", materials);
@@ -83,26 +95,25 @@ public class MaterialController {
     }
 
     /**
-     * 재료의 상세 내용을 조회한다.
+     * 재료 상세 화면을 표시한다.
      *
      * @param id    재료 ID
-     * @param model 뷰에 전달할 모델 객체
-     * @return 재료 상세 페이지 뷰 이름
+     * @param model 뷰 모델
+     * @return 재료 상세 템플릿 경로
      */
     @GetMapping("/detail/{id}")
     public String detailOfficeMaterial(@PathVariable Long id, Model model) {
         Material material = materialService.detailMaterial(id);
         model.addAttribute("material", material);
-
         return "material/detail";
     }
 
     /**
-     * 재료의 수정 화면을 표시한다.
+     * 재료 수정 화면을 표시한다.
      *
      * @param id    재료 ID
-     * @param model 뷰에 전달할 모델 객체
-     * @return 재료 수정 페이지 뷰 이름
+     * @param model 뷰 모델
+     * @return 재료 수정 템플릿 경로
      */
     @GetMapping("/modify/{id}")
     public String modifyOfficeMaterial(@PathVariable Long id, Model model) {
@@ -116,7 +127,15 @@ public class MaterialController {
         return "material/modify";
     }
 
-
+    /**
+     * 재료를 삭제하고 목록으로 리다이렉트한다.
+     *
+     * <p>주의: GET 요청으로 삭제를 수행한다. CSRF/의도치 않은 호출 방지를 위해
+     * 운영 환경에서는 POST/DELETE + CSRF 토큰 사용을 권장한다.</p>
+     *
+     * @param id 재료 ID
+     * @return 목록 페이지로 리다이렉트
+     */
     @GetMapping("/delete/{id}")
     public String deleteOfficeMaterial(@PathVariable Long id, Model model) {
         materialService.deleteMaterial(id);

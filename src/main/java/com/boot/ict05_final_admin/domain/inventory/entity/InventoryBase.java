@@ -12,9 +12,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 재고 공통 베이스
+ * 재고 공통 베이스.
  *
- * <p>공통 필드와 공통 동작만 제공. 상태 계산은 {@link InventoryStatus}에 위임한다.</p>
+ * <p>본사/가맹점 재고 엔티티가 상속하는 공통 속성 컨테이너.
+ * 수량/적정수량/상태/갱신시각을 보유하며, 상태 계산은 {@link InventoryStatus}에 위임한다.</p>
+ *
+ * <p>정책/규칙:</p>
+ * <ul>
+ *   <li>{@code quantity}, {@code optimalQuantity}: DECIMAL(15,3) 스케일 가정</li>
+ *   <li>{@code status}: {@code InventoryStatus.from(quantity, optimalQuantity)}로 즉시 재계산</li>
+ *   <li>{@code updateDate}: 수량 변경/업데이트 훅에서 now()로 갱신</li>
+ * </ul>
  *
  * @author 김주연
  * @since 2025-11-11
@@ -58,7 +66,7 @@ public abstract class InventoryBase {
     /**
      * 재고 상태를 즉시 재계산해 반영한다.
      *
-     * <p>수량 또는 적정 수량이 변경된 직후 호출한다.</p>
+     * <p>수량 또는 적정 수량 변경 직후 호출한다.</p>
      * <ul>
      *   <li>수량 ≤ 0 → {@link InventoryStatus#SHORTAGE}</li>
      *   <li>적정 수량이 null → 수량 &gt; 0 이면 {@link InventoryStatus#SUFFICIENT}</li>
@@ -73,8 +81,8 @@ public abstract class InventoryBase {
     /**
      * 수량 변경 후 상태와 업데이트 시각을 동기화한다.
      *
-     * <p>서비스 계층에서 수량을 갱신한 뒤 반드시 호출한다.
-     * 내부적으로 {@link #updateStatusNow()}를 호출하고 {@code updateDate}를 현재 시각으로 갱신한다.</p>
+     * <p>서비스 계층에서 수량 갱신 뒤 반드시 호출한다.
+     * 내부적으로 {@link #updateStatusNow()} 수행 후 {@code updateDate=now()}로 갱신한다.</p>
      */
     public final void touchAfterQuantityChange() {
         this.updateStatusNow();
@@ -85,7 +93,7 @@ public abstract class InventoryBase {
      * 영속화 직전 훅.
      *
      * <p>{@code updateDate}가 비어 있으면 현재 시각으로 채우고,
-     * 상태가 비어 있으면 {@link #updateStatusNow()}로 초기 상태를 확정한다.</p>
+     * {@code status}가 비어 있으면 {@link #updateStatusNow()}로 초기 상태를 확정한다.</p>
      */
     @PrePersist
     protected void onCreate() {
@@ -96,8 +104,8 @@ public abstract class InventoryBase {
     /**
      * 업데이트 직전 훅.
      *
-     * <p>{@code updateDate}를 현재 시각으로 갱신하고
-     * 상태가 비어 있으면 {@link #updateStatusNow()}로 보정한다.</p>
+     * <p>{@code updateDate}를 현재 시각으로 갱신하고,
+     * {@code status}가 비어 있으면 {@link #updateStatusNow()}로 보정한다.</p>
      */
     @PreUpdate
     protected void onUpdate() {

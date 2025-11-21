@@ -10,92 +10,93 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * 본사 재고(InventoryBase) 커스텀 Repository 구현체.
- * 분리 완료로 역할 종료. 즉시 삭제 가능.
+ * 본사 재고 커스텀 리포지토리 구현(QueryDSL).
  */
 @Repository
 @RequiredArgsConstructor
 public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
-    private final JPAQueryFactory queryFactory;
+
+    private final JPAQueryFactory qf;
+
+    private static final QInventory inv = QInventory.inventory;
+    private static final QMaterial  m   = QMaterial.material;
 
     @Override
-    public Page<InventoryListDTO> listInventory(InventorySearchDTO inventorySearchDTO, Pageable pageable) {
-        QInventory inv = QInventory.inventory;
-        QMaterial material = QMaterial.material;
+    public Page<InventoryListDTO> listInventory(InventorySearchDTO dto, Pageable pageable) {
+        // 정렬 힌트: 클라이언트가 넘기지 않으면 updateDate DESC
+        Sort sort = (pageable != null && pageable.getSort().isSorted())
+                ? pageable.getSort()
+                : Sort.by(Sort.Direction.DESC, "updateDate");
+        Pageable p = PageRequest.of(
+                pageable != null ? pageable.getPageNumber() : 0,
+                pageable != null ? pageable.getPageSize() : 20,
+                sort
+        );
 
-        List<InventoryListDTO> content = queryFactory
+        List<InventoryListDTO> content = qf
                 .select(Projections.fields(InventoryListDTO.class,
                         inv.id,
-                        material.id.as("materialId"),
-                        material.name.as("materialName"),
-                        material.materialCategory.stringValue().as("categoryName"),
+                        m.id.as("materialId"),
+                        m.name.as("materialName"),
+                        m.materialCategory.stringValue().as("categoryName"),
                         inv.quantity,
-                        material.optimalQuantity.as("optimalQuantity"),
-                        material.salesUnit.as("materialSalesUnit"),
+                        m.optimalQuantity.as("optimalQuantity"),
+                        m.salesUnit.as("materialSalesUnit"),
                         inv.status,
                         inv.updateDate))
                 .from(inv)
-                .join(inv.material, material)
-                .where(applyFilter(inventorySearchDTO))
-                .orderBy(inv.updateDate.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .join(inv.material, m)
+                .where(filter(dto))
+                .orderBy(inv.updateDate.desc(), inv.id.desc())
+                .offset(p.getOffset())
+                .limit(p.getPageSize())
                 .fetch();
 
-        // 상태 재계산: Java 레벨에서 InventoryStatus.calculate() 호출
-        for (InventoryListDTO dto : content) {
-            dto.setStatus(
-                    InventoryStatus.calculate(dto.getQuantity(), dto.getOptimalQuantity())
-            );
+        // 상태 재계산(요청 사항 반영)
+        for (InventoryListDTO row : content) {
+            row.setStatus(InventoryStatus.calculate(row.getQuantity(), row.getOptimalQuantity()));
         }
 
-        long total = countInventory(inventorySearchDTO);
-        return new PageImpl<>(content, pageable, total);
+        long total = countInventory(dto);
+        return new PageImpl<>(content, p, total);
     }
 
     @Override
-    public long countInventory(InventorySearchDTO inventorySearchDTO) {
-        QInventory inv = QInventory.inventory;
-
-        Long total = queryFactory
-                .select(inv.count())
+    public long countInventory(InventorySearchDTO dto) {
+        Long total = qf.select(inv.count())
                 .from(inv)
-                .where(applyFilter(inventorySearchDTO))
+                .join(inv.material, m)
+                .where(filter(dto))
                 .fetchOne();
-
         return total != null ? total : 0L;
     }
 
-    /**
-     * 검색 필터 구성
-     */
-    private BooleanExpression applyFilter(InventorySearchDTO dto) {
-        QInventory inv = QInventory.inventory;
-        QMaterial material = QMaterial.material;
+    // ----- helpers -----
 
-        BooleanExpression condition = Expressions.asBoolean(true).isTrue();
+    private BooleanExpression filter(InventorySearchDTO dto) {
+        BooleanExpression w = Expressions.TRUE.isTrue();
+        if (dto == null) return w;
 
-        // 검색어(s)
-        if (dto.getS() != null && !dto.getS().isEmpty()) {
-            condition = condition.and(
-                    material.name.containsIgnoreCase(dto.getS())
-                            .or(material.materialCategory.stringValue().containsIgnoreCase(dto.getS()))
+        // 검색어(s): 재료명 / 카테고리명
+        if (dto.getS() != null && !dto.getS().isBlank()) {
+            String s = dto.getS();
+            w = w.and(
+                    m.name.containsIgnoreCase(s)
+                            .or(m.materialCategory.stringValue().containsIgnoreCase(s))
             );
         }
 
-        // 상태 필터
+        // 상태
         if (dto.getStatus() != null) {
-            condition = condition.and(inv.status.eq(dto.getStatus()));
+            w = w.and(inv.status.eq(dto.getStatus()));
         }
 
-        return condition;
+        return w;
     }
 }

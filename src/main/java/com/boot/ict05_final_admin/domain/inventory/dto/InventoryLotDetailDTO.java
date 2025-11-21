@@ -8,9 +8,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 본사 재고 LOT 상세 DTO
+ * 본사 재고 LOT 상세 DTO.
  *
- * <p>inventory_batch 1건에 대한 상세 정보.</p>
+ * <p>{@code inventory_batch} 단일 행(배치/LOT)에 대한 상세 정보를 담는다.</p>
+ *
+ * <p>스케일/형식 규칙:</p>
+ * <ul>
+ *   <li>{@code receivedQuantity}, {@code remainingQuantity}, {@code unitPrice}: DECIMAL(15,3) 스케일 가정</li>
+ *   <li>{@code receivedDate}: ISO-8601 LocalDateTime</li>
+ *   <li>{@code expirationDate}: ISO-8601 LocalDate</li>
+ * </ul>
  */
 @Data
 public class InventoryLotDetailDTO {
@@ -35,31 +42,33 @@ public class InventoryLotDetailDTO {
     @Comment("LOT 번호")
     private String lotNo;
 
-    /** 입고일시 */
+    /** 입고 일시(ISO-8601 LocalDateTime) */
     @Comment("입고일시")
     private LocalDateTime receivedDate;
 
-    /** 유통기한(유효일자) */
+    /** 유통기한(ISO-8601 LocalDate) */
     @Comment("유통기한")
     private LocalDate expirationDate;
 
-    /** 입고 수량 */
+    /** 입고 수량(DECIMAL(15,3)) */
     @Comment("입고 수량")
     private BigDecimal receivedQuantity;
 
-    /** 현재 잔량 */
+    /** 현재 잔량(DECIMAL(15,3)) */
     @Comment("현재 잔량")
     private BigDecimal remainingQuantity;
 
-    /** 단가 */
+    /** 입고 단가/매입가(DECIMAL(15,3)) */
     @Comment("단가")
     private BigDecimal unitPrice;
 
+    // ---------- 로그 팝업 상단 표시용(선택) ----------
+    /** 연동된 로그 ID (v_inventory_log 에서 전달되는 경우 세팅) */
+    private Long logId;
 
+    /** 로그 유형(예: "INCOME", "OUTGO") */
+    private String type;
 
-
-    // 팝업 상단용 (필요하면)
-    private Long logId;              // v_inventory_log 에서 넘겨주면 세팅
-    private String type;             // "INCOME"/"OUTGO"
-    private LocalDateTime logDate;   // 해당 로그 시각
+    /** 해당 로그 발생 시각 */
+    private LocalDateTime logDate;
 }

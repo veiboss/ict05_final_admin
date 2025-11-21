@@ -9,23 +9,48 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 본사 재고 배치(LOT) 조회 서비스.
+ *
+ * <p>
+ * 화면에서 사용하는 배치 목록/상세 조회를 제공한다.
+ * 모든 메서드는 읽기 전용 트랜잭션으로 수행된다.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class InventoryBatchService {
+
     private final InventoryBatchRepository inventoryBatchRepository;
 
-    public List<InventoryBatch> getBatchesByMaterial(Long materialId) {
+    /**
+     * 재료별 배치 목록을 조회한다.
+     *
+     * <p>정렬 기준: 입고일(desc).</p>
+     *
+     * @param materialId 재료 ID(필수)
+     * @return 해당 재료의 배치 목록(잔량 0 포함)
+     * @throws IllegalArgumentException materialId가 null일 때
+     */
+    public List<InventoryBatch> getBatchesByMaterial(final Long materialId) {
+        if (materialId == null) {
+            throw new IllegalArgumentException("materialId is required");
+        }
         return inventoryBatchRepository.findAllByMaterial_IdOrderByReceivedDateDesc(materialId);
     }
 
     /**
-     * LOT(배치) 상세 조회
+     * 단일 배치(LOT) 상세를 조회한다.
      *
-     * @param batchId inventory_batch.id (또는 v_inventory_log 에서 넘어오는 LOT 기준 ID)
+     * @param batchId 배치 PK(필수)
+     * @return LOT 상세 DTO
+     * @throws IllegalArgumentException 배치를 찾을 수 없을 때
      */
-    @Transactional(readOnly = true)
-    public InventoryLotDetailDTO getLotDetail(Long batchId) {
+    public InventoryLotDetailDTO getLotDetail(final Long batchId) {
+        if (batchId == null) {
+            throw new IllegalArgumentException("batchId is required");
+        }
 
         InventoryBatch b = inventoryBatchRepository.findById(batchId)
                 .orElseThrow(() ->
@@ -45,6 +70,4 @@ public class InventoryBatchService {
 
         return dto;
     }
-
-
 }

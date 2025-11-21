@@ -11,25 +11,33 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 단가 이력 커스텀 구현(QueryDSL).
+ *
+ * <p>유효 기간(validFrom <= ts < validTo(NULL 허용)) 기준으로 최신 값을 조회한다.</p>
+ */
 @Repository
 @RequiredArgsConstructor
 public class UnitPriceRepositoryImpl implements UnitPriceRepositoryCustom {
+
     private final JPAQueryFactory qf;
     private static final QUnitPrice p = QUnitPrice.unitPrice;
 
     @Override
     public Optional<UnitPrice> findLatestPurchasePrice(Long materialId, LocalDateTime at) {
         LocalDateTime ts = at != null ? at : LocalDateTime.now();
+
         UnitPrice row = qf.selectFrom(p)
                 .where(
                         p.material.id.eq(materialId),
                         p.type.eq(UnitPriceType.PURCHASE),
                         p.validFrom.loe(ts),
-                        p.validTo.isNull().or(p.validTo.gt(ts))   // 기간 종료가 없거나, ts 이후
+                        p.validTo.isNull().or(p.validTo.gt(ts))
                 )
-                .orderBy(p.validFrom.desc(), p.id.desc())     // validFrom 기준 최신
+                .orderBy(p.validFrom.desc(), p.id.desc())
                 .limit(1)
                 .fetchOne();
+
         return Optional.ofNullable(row);
     }
 
@@ -45,37 +53,24 @@ public class UnitPriceRepositoryImpl implements UnitPriceRepositoryCustom {
                 .fetch();
     }
 
-
-    /**
-     * 최신 출고가 조회
-     *
-     * @param materialId 재료 ID
-     * @param at         기준 시각
-     * @return 최신 출고가
-     */
     @Override
     public Optional<UnitPrice> findLatestSellingPrice(Long materialId, LocalDateTime at) {
         LocalDateTime ts = at != null ? at : LocalDateTime.now();
+
         UnitPrice row = qf.selectFrom(p)
                 .where(
                         p.material.id.eq(materialId),
                         p.type.eq(UnitPriceType.SELLING),
                         p.validFrom.loe(ts),
-                        p.validTo.isNull().or(p.validTo.gt(ts))   // 기간 종료가 없거나, ts 이후
+                        p.validTo.isNull().or(p.validTo.gt(ts))
                 )
-                .orderBy(p.validFrom.desc(), p.id.desc())     // validFrom 기준 최신
+                .orderBy(p.validFrom.desc(), p.id.desc())
                 .limit(1)
                 .fetchOne();
+
         return Optional.ofNullable(row);
     }
 
-    /**
-     * 출고가 이력 조회
-     *
-     * @param materialId 재료 ID
-     * @param limit      최대 행 수
-     * @return 출고가 이력
-     */
     @Override
     public List<UnitPrice> historySellingPrice(Long materialId, int limit) {
         return qf.selectFrom(p)

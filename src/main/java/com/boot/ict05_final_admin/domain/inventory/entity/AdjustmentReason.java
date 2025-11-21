@@ -1,16 +1,16 @@
 package com.boot.ict05_final_admin.domain.inventory.entity;
 
 /**
- * 재고 조정 사유 Enum
+ * 재고 조정 사유 Enum.
  *
  * <p>재고 조정 시 선택 가능한 사유를 정의하며, 각 항목은 한글 설명(description)을 가진다.</p>
  *
  * <p>조정 사유:</p>
  * <ul>
- *     <li>MANUAL: 수동 수정</li>
- *     <li>DAMAGE: 파손</li>
- *     <li>LOSS: 분실</li>
- *     <li>ERROR: 데이터 오류 정정</li>
+ *   <li>MANUAL: 수동 수정</li>
+ *   <li>DAMAGE: 파손</li>
+ *   <li>LOSS: 분실</li>
+ *   <li>ERROR: 데이터 오류 정정</li>
  * </ul>
  */
 public enum AdjustmentReason {
@@ -31,9 +31,9 @@ public enum AdjustmentReason {
     private final String description;
 
     /**
-     * 생성자
+     * 생성자.
      *
-     * @param description 각 조정 사유의 한글 설명
+     * @param description 조정 사유의 한글 설명
      */
     AdjustmentReason(String description) {
         this.description = description;
@@ -42,7 +42,7 @@ public enum AdjustmentReason {
     /**
      * 조정 사유의 한글 설명을 반환한다.
      *
-     * @return 조정 사유 설명
+     * @return 한글 설명 문자열
      */
     public String getDescription() {
         return description;

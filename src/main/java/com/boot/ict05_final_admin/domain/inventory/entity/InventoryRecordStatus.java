@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 /**
- * 재고 입·출고/조정 헤더 상태
+ * 재고 입·출고/조정 헤더 상태.
  *
  * <p>DRAFT: 재고 반영 전(임시)</p>
  * <p>CONFIRMED: 재고 반영 완료</p>

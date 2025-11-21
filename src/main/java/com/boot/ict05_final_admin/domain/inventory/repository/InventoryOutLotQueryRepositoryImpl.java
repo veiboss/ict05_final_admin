@@ -8,33 +8,35 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 출고-LOT 커스텀 쿼리 구현(QueryDSL).
+ */
 @Repository
 @RequiredArgsConstructor
 public class InventoryOutLotQueryRepositoryImpl implements InventoryOutLotQueryRepository {
 
     private final JPAQueryFactory qf;
-    private final com.boot.ict05_final_admin.domain.inventory.repository.InventoryOutLotRepository outLotRepo;
+    private static final QInventoryOutLot ol = QInventoryOutLot.inventoryOutLot;
+    private static final QInventoryOut    o  = QInventoryOut.inventoryOut;
 
     @Override
-    public Page<BatchOutRowDTO> pageOutHistoryByBatch(Long batchId, Pageable pageable) {
-        var ol = QInventoryOutLot.inventoryOutLot;
-        var o  = QInventoryOut.inventoryOut;
-
+    public Page<BatchOutRowDTO> pageOutHistoryByBatch(final Long batchId, final Pageable pageable) {
         Long total = qf.select(ol.id.count())
                 .from(ol)
                 .where(ol.batch.id.eq(batchId))
                 .fetchOne();
-        long totalCount = total != null ? total : 0L;
+        long totalCount = (total != null) ? total : 0L;
 
         var rows = qf.select(Projections.constructor(
                         BatchOutRowDTO.class,
-                        o.id,
-                        o.store.id,
-                        o.store.name,
-                        ol.quantity,
-                        o.outDate
+                        o.id,          // outId
+                        o.store.id,    // storeId
+                        o.store.name,  // storeName
+                        ol.quantity,   // qty
+                        o.outDate      // outDate
                 ))
                 .from(ol)
                 .join(ol.out, o)
@@ -44,12 +46,6 @@ public class InventoryOutLotQueryRepositoryImpl implements InventoryOutLotQueryR
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new org.springframework.data.domain.PageImpl<>(rows, pageable, totalCount);
-    }
-
-    @Override
-    @org.springframework.transaction.annotation.Transactional
-    public void deleteOutById(Long lotId) {
-        outLotRepo.deleteById(lotId);
+        return new PageImpl<>(rows, pageable, totalCount);
     }
 }

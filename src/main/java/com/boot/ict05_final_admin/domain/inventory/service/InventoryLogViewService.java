@@ -15,11 +15,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 로그 뷰 서비스 (InventoryLogViewService)
+ * 재고 로그 뷰 서비스.
  *
- * <p>화면용 집계/뷰 테이블 페이징을 제공한다.</p>
+ * <p>
+ * 화면용 집계/뷰 테이블(v_inventory_log)의 페이징 조회를 제공한다.
+ * </p>
  */
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,36 +29,53 @@ public class InventoryLogViewService {
     private final InventoryLogViewRepository inventoryLogViewRepository;
 
     /**
-     * 재료ID + 기간 페이징 조회
+     * 재료/유형/기간 조건으로 로그를 페이징 조회한다.
+     *
+     * <p>
+     * 리포지토리에서 {@link InventoryLogView} 페이지를 조회한 뒤,
+     * 화면/엑셀 공용 DTO({@link InventoryLogDTO})로 매핑하여 반환한다.
+     * </p>
+     *
+     * @param materialId 재료 ID(옵션)
+     * @param type       로그 유형(옵션, 예: IN/OUT/ADJUST 등)
+     * @param startDate  시작일(옵션, 포함)
+     * @param endDate    종료일(옵션, 포함)
+     * @param pageable   페이지/정렬 파라미터
+     * @return 매핑된 DTO 페이지
      */
     @Transactional(readOnly = true)
-    public Page<InventoryLogDTO> getFilteredLogs(Long materialId,
-                                                 String type,
-                                                 LocalDate startDate,
-                                                 LocalDate endDate,
-                                                 Pageable pageable) {
+    public Page<InventoryLogDTO> getFilteredLogs(final Long materialId,
+                                                 final String type,
+                                                 final LocalDate startDate,
+                                                 final LocalDate endDate,
+                                                 final Pageable pageable) {
 
-        Page<InventoryLogView> page = inventoryLogViewRepository
-                .findLogsByFilter(materialId, type, startDate, endDate, pageable);
+        Page<InventoryLogView> page =
+                inventoryLogViewRepository.findLogsByFilter(materialId, type, startDate, endDate, pageable);
 
         List<InventoryLogDTO> dtoList = page.getContent().stream()
                 .map(this::toDto)
                 .toList();
 
-        // 디버그용 로그
+        // 디버그 로그(필요 시 레벨 조정)
         dtoList.forEach(d ->
-                log.info("LOG DTO => id={}, type={}, qty={}",
-                        d.getLogId(), d.getLogType(), d.getQuantity())
+                log.info("LOG DTO => id={}, type={}, qty={}", d.getLogId(), d.getLogType(), d.getQuantity())
         );
 
         return new PageImpl<>(dtoList, pageable, page.getTotalElements());
     }
 
     /**
-     * v_inventory_log 엔티티 → 화면/엑셀 공용 DTO.
-     * logType 은 절대 재계산하지 않고 뷰 값을 그대로 쓴다.
+     * v_inventory_log 행을 화면/엑셀 공용 DTO로 변환한다.
+     *
+     * <p>
+     * {@code logType}은 재계산하지 않고 뷰의 값을 그대로 사용한다.
+     * </p>
+     *
+     * @param row 뷰 엔티티
+     * @return 변환된 DTO
      */
-    private InventoryLogDTO toDto(InventoryLogView row) {
+    private InventoryLogDTO toDto(final InventoryLogView row) {
         return InventoryLogDTO.builder()
                 .logId(row.getRowId())
                 .logDate(row.getDate())

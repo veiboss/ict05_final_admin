@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * 출고-로트 아이템 저장소
+ * 출고-LOT JPA 리포지토리.
  *
- * <p>조회는 QueryDSL 구현(Impl) 사용.</p>
+ * <p>기본 CRUD + 서비스에서 사용하는 커스텀(출고ID 기준 조회)만 유지.</p>
  */
 @Repository
 public interface InventoryOutLotRepository

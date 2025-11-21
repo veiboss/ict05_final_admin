@@ -5,28 +5,27 @@ import com.boot.ict05_final_admin.domain.inventory.entity.QInventoryBatch;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 배치(LOT) 커스텀 리포지토리 구현.
+ *
+ * <p>QueryDSL 기반 정렬/필터 최적화.</p>
+ */
 @Repository
 @RequiredArgsConstructor
 public class InventoryBatchRepositoryImpl implements InventoryBatchRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
-    private final EntityManager em;
-
+    private final JPAQueryFactory qf;
     private static final QInventoryBatch b = QInventoryBatch.inventoryBatch;
 
     @Override
     public List<InventoryBatch> findHqBatchesForMaterial(Long materialId) {
-        List<InventoryBatch> rows = queryFactory
+        List<InventoryBatch> rows = qf
                 .selectFrom(b)
                 .where(
                         b.material.id.eq(materialId),
@@ -34,9 +33,12 @@ public class InventoryBatchRepositoryImpl implements InventoryBatchRepositoryCus
                         b.quantity.gt(BigDecimal.ZERO)
                 )
                 .orderBy(
-                        // null은 뒤로(= not-null 먼저)
+                        // 만료일 오름차순, NULL(미지정)은 뒤로
                         new OrderSpecifier<>(Order.ASC, b.expirationDate, OrderSpecifier.NullHandling.NullsLast),
-                        b.receivedDate.asc()
+                        // 동일 만료일이면 먼저 들어온 배치부터
+                        b.receivedDate.asc(),
+                        // 동일 입고일이면 PK 오름차순
+                        b.id.asc()
                 )
                 .fetch();
         return rows != null ? rows : java.util.Collections.emptyList();
@@ -44,38 +46,7 @@ public class InventoryBatchRepositoryImpl implements InventoryBatchRepositoryCus
 
     @Override
     public List<InventoryBatch> findFifoCandidates(Long materialId) {
+        // 정책 동일 — 필요 시 조건/정렬 분리 가능
         return findHqBatchesForMaterial(materialId);
     }
-
-    @Override
-    @Transactional
-    public int decrementQuantity(Long batchId, BigDecimal delta) {
-        long updated = queryFactory
-                .update(b)
-                .set(b.quantity, b.quantity.subtract(delta))
-                .where(
-                        b.id.eq(batchId),
-                        b.quantity.goe(delta)
-                )
-                .execute();
-        return (int) updated;
-    }
-
-    @Override
-    public long countByMaterialAndDate(Long materialId, LocalDate targetDate) {
-        LocalDateTime start = targetDate.atStartOfDay();
-        LocalDateTime end = start.plusDays(1);
-        Long cnt = queryFactory
-                .select(b.id.count())
-                .from(b)
-                .where(
-                        b.material.id.eq(materialId),
-                        b.store.isNull(),
-                        b.receivedDate.goe(start),
-                        b.receivedDate.lt(end)
-                )
-                .fetchOne();
-        return cnt != null ? cnt : 0L;
-    }
-
 }

@@ -7,17 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * 출고 헤더 저장소
+ * 출고 헤더(InventoryOut) JPA 리포지토리.
  *
- * <p>조회는 QueryDSL 구현(Impl) 사용.</p>
+ * <p>현재 사용 범위: 기본 CRUD + 재료 기준 최신 출고 1건 조회.</p>
  */
 @Repository
-public interface InventoryOutRepository
-        extends JpaRepository<InventoryOut, Long>, InventoryOutRepositoryCustom {
+public interface InventoryOutRepository extends JpaRepository<InventoryOut, Long> {
 
     /**
-     * 해당 재료의 가장 최근 출고 1건 조회
-     * (출고일시 → ID 역순)
+     * 해당 재료의 가장 최근 출고 1건 조회 (출고일시 ↓, ID ↓).
      */
     Optional<InventoryOut> findTopByMaterial_IdOrderByOutDateDescIdDesc(Long materialId);
 }

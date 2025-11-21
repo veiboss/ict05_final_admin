@@ -11,19 +11,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * HQ 로트 현황 DTO
+ * HQ 배치(LOT) 현황 DTO.
  *
- * <p>본사 재고의 로트(배치) 단위 상태를 표시한다.</p>
+ * <p>본사 재고의 배치(LOT) 단위 상태를 표현한다.</p>
  *
- * <p>주요 필드:</p>
+ * <p>필드 설명/규칙:</p>
  * <ul>
- *   <li>batchId: 배치 고유 ID</li>
- *   <li>lotNo: 로트 번호(예: LOT251107-003)</li>
- *   <li>receivedDate: 입고일시</li>
- *   <li>expirationDate: 유통기한(일 단위)</li>
- *   <li>receivedQty: 입고 수량</li>
- *   <li>remainQty: 현재 잔량</li>
- *   <li>unitPrice: 입고 단가(매입가)</li>
+ *   <li>{@code batchId}: 배치 고유 ID</li>
+ *   <li>{@code lotNo}: LOT 번호(예: {@code LOT251107-003})</li>
+ *   <li>{@code receivedDate}: 입고 일시(ISO-8601)</li>
+ *   <li>{@code expirationDate}: 유통기한(일 단위, ISO-8601)</li>
+ *   <li>{@code receivedQty}: 입고 수량(DECIMAL(15,3) 스케일 준수)</li>
+ *   <li>{@code remainQty}: 현재 잔량(DECIMAL(15,3) 스케일 준수)</li>
+ *   <li>{@code unitPrice}: 입고 단가(매입가, 금액 단위는 시스템 공통 정책 따름)</li>
  * </ul>
  */
 @AllArgsConstructor
@@ -35,10 +35,10 @@ public class BatchStatusRowDTO {
     /** 배치 고유 ID */
     private Long batchId;
 
-    /** 로트 번호 */
+    /** LOT 번호(예: LOT251107-003) */
     private String lotNo;
 
-    /** 입고일시 */
+    /** 입고 일시 */
     @Schema(type = "string", format = "date-time")
     private LocalDateTime receivedDate;
 
@@ -46,10 +46,10 @@ public class BatchStatusRowDTO {
     @Schema(type = "string", format = "date")
     private LocalDate expirationDate;
 
-    /** 입고 수량 */
+    /** 입고 수량(DECIMAL(15,3)) */
     private BigDecimal receivedQty;
 
-    /** 현재 잔량 */
+    /** 현재 잔량(DECIMAL(15,3)) */
     private BigDecimal remainQty;
 
     /** 입고 단가(매입가) */

@@ -10,16 +10,17 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * FIFO 후보 배치 DTO
+ * FIFO 후보 배치 DTO.
  *
- * <p>출고 미리보기(FIFO) 계산을 위해 재고가 남아있는 배치(로트)를 표현한다.</p>
+ * <p>출고 미리보기(FIFO) 계산을 위해 재고 잔량이 남아있는 배치(LOT)를 표현한다.
+ * 서비스 계층에서 유통기한/입고일 기준 정렬 우선순위를 적용해 사용한다.</p>
  *
- * <p>주요 필드:</p>
+ * <p>필드 규칙:</p>
  * <ul>
- *   <li>batchId: 배치 ID</li>
- *   <li>lotNo: 로트 번호</li>
- *   <li>expirationDate: 유통기한(선택)</li>
- *   <li>available: 배치 잔량</li>
+ *   <li>{@code batchId}: 배치 ID</li>
+ *   <li>{@code lotNo}: LOT 번호</li>
+ *   <li>{@code expirationDate}: 유통기한(선택, 없을 수 있음)</li>
+ *   <li>{@code available}: 현재 배치 잔량(DECIMAL(15,3) 스케일 준수)</li>
  * </ul>
  */
 @AllArgsConstructor
@@ -27,16 +28,17 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class FifoCandidateDTO {
+
     /** 배치 ID */
     private Long batchId;
 
-    /** 로트 번호 */
+    /** LOT 번호 */
     private String lotNo;
 
-    /** 유통기한 */
+    /** 유통기한(선택) */
     @Schema(type = "string", format = "date")
     private LocalDate expirationDate;
 
-    /** 배치 잔량 */
+    /** 현재 배치 잔량(DECIMAL(15,3)) */
     private BigDecimal available;
 }

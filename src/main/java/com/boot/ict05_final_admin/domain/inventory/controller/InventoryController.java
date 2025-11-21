@@ -24,11 +24,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 조회/삭제 전용 컨트롤러
+ * 조회/삭제 전용 컨트롤러.
  *
- * - 페이지 라우팅(Thymeleaf)
- * - 조회용 GET API
- * - 삭제 DELETE API
+ * <p>
+ * - SSR 페이지 라우팅(Thymeleaf)<br>
+ * - 조회용 GET JSON API<br>
+ * - 삭제 전용 DELETE API
+ * </p>
+ *
+ * <p>트랜잭션은 서비스 계층에서 처리한다.</p>
+ *
+ * @author 김주연
+ * @since 2025.10.23
  */
 @Controller
 @RequestMapping("/inventory")
@@ -44,19 +51,18 @@ public class InventoryController {
     private final InventoryBatchService inventoryBatchService;
     private final InventoryAdjustmentService inventoryAdjustmentService;
 
-
     // -------------------- View routing --------------------
 
     /**
-     * 본사 재고 목록을 페이징 처리하여 조회한다.
+     * 본사 재고 목록(SSR)을 페이징으로 조회한다.
      *
-     * <p>검색 조건과 페이징 정보를 받아 SSR로 목록을 렌더링한다.</p>
+     * <p>검색 조건과 페이징 정보를 받아 서버 사이드 렌더링으로 목록을 반환한다.</p>
      *
-     * @param inventorySearchDTO 검색 조건 DTO (재료명, 상태 등)
-     * @param pageable           페이징 정보 (페이지 번호, 크기, 정렬 기준)
-     * @param model              뷰에 전달할 모델 객체
-     * @param request            현재 요청 정보
-     * @return 재고 목록 페이지(view)
+     * @param inventorySearchDTO 검색 조건 DTO(재료명, 상태 등)
+     * @param pageable           페이징 정보(페이지 번호, 크기, 정렬 기준). 1-base 페이지 인덱스를 사용한다.
+     * @param model              뷰 모델
+     * @param request            현재 요청(페이지네이션 링크 생성을 위해 사용)
+     * @return 재고 목록 템플릿 경로
      */
     @GetMapping("/list")
     public String listInventory(InventorySearchDTO inventorySearchDTO,
@@ -74,7 +80,9 @@ public class InventoryController {
         return "inventory/list";
     }
 
-    // 로그 화면에서 fragments/pagination 이 기대하는 urlBuilder 변수를 주입하기 위한 헬퍼
+    /**
+     * 로그 화면의 fragments/pagination 이 기대하는 {@code urlBuilder} 변수를 주입하기 위한 헬퍼.
+     */
     static final class UrlBuilderHelper {
         public ServletUriComponentsBuilder fromCurrentRequest() {
             return ServletUriComponentsBuilder.fromCurrentRequest();
@@ -82,24 +90,24 @@ public class InventoryController {
     }
 
     /**
-     * 본사 재고 로그 화면으로 이동한다.
+     * 본사 재고 로그 화면(SSR)으로 이동한다.
      *
-     * @param materialId 재료 ID
-     * @param type       필터: 로그 유형(INCOME/OUTGO/ADJUST 등) 선택값(옵션)
-     * @param startDate  필터: 시작일(옵션)
-     * @param endDate    필터: 종료일(옵션)
+     * @param materialId 재료 ID(필수)
+     * @param type       로그 유형 필터(INCOME/OUTGO/ADJUST 등), 선택
+     * @param startDate  시작일(선택, ISO yyyy-MM-dd)
+     * @param endDate    종료일(선택, ISO yyyy-MM-dd)
      * @param page       페이지 인덱스(0-base)
      * @param size       페이지 크기
      * @param model      뷰 모델
-     * @return 재고 로그 페이지(view)
+     * @return 재고 로그 템플릿 경로
      */
     @GetMapping("/log/{materialId}")
     public String logPage(@PathVariable Long materialId,
                           @RequestParam(required = false) String type,
                           @RequestParam(required = false)
-                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                           @RequestParam(required = false)
-                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                           @RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "20") int size,
                           Model model) {
@@ -109,11 +117,10 @@ public class InventoryController {
         String materialName = material != null ? material.getName() : "";
 
         // 재고: Optional → 실제 엔티티(or null)로 변환
-        // findByMaterialId가 Optional<Inventory>를 리턴한다고 가정
         var inventoryOpt = inventoryService.findByMaterialId(materialId); // Optional<Inventory>
         var inventory = inventoryOpt != null ? inventoryOpt.orElse(null) : null;
 
-        // 로그 페이징 (기존 그대로)
+        // 로그 페이징
         Page<InventoryLogDTO> logs = inventoryLogViewService.getFilteredLogs(
                 materialId, type, startDate, endDate, PageRequest.of(page, size));
 
@@ -121,27 +128,23 @@ public class InventoryController {
         model.addAttribute("logs", logs);
         model.addAttribute("materialId", materialId);
         model.addAttribute("materialName", materialName);
-
         model.addAttribute("material", material);
         model.addAttribute("inventory", inventory);
-
         model.addAttribute("selectedType", type);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
-
         model.addAttribute("urlBuilder", new UrlBuilderHelper());
 
         return "inventory/log";
     }
 
     /**
-     * 본사 재고 입고 등록 페이지
+     * 본사 재고 입고 등록 화면(SSR).
      *
-     * <p>입고 대상 재료를 선택하고, 입고 수량 및 단가를 입력할 수 있는
-     * 입고 등록 화면을 렌더링한다.</p>
+     * <p>입고 대상 재료 선택 및 수량/단가 입력 폼을 렌더링한다.</p>
      *
-     * @param model 뷰에 전달할 모델 객체
-     * @return 입고 등록 페이지(view)
+     * @param model 뷰 모델
+     * @return 입고 등록 템플릿 경로
      */
     @GetMapping("/in/write")
     public String showInventoryInForm(Model model) {
@@ -151,11 +154,11 @@ public class InventoryController {
         return "inventory/inventory_in_write";
     }
 
-
     /**
-     * 본사 출고 테스트 화면으로 이동한다.
+     * 본사 출고 테스트 화면(SSR).
      *
-     * @return 템플릿 경로
+     * @param model 뷰 모델
+     * @return 출고 테스트 템플릿 경로
      */
     @GetMapping("/out_test")
     public String outTestPage(Model model) {
@@ -166,11 +169,11 @@ public class InventoryController {
     }
 
     /**
-     * 재료별 배치 현황 화면으로 이동한다.
-     * * @param materialId 재료 ID
+     * 재료별 배치 현황 화면(SSR).
+     *
+     * @param materialId 재료 ID
      * @param model      뷰 모델
-     * @return 템플릿 경로
-     * @return 재료별 배치
+     * @return 배치 현황 템플릿 경로
      */
     @GetMapping("/batch-status/{materialId}")
     public String batchStatusPage(@PathVariable Long materialId, Model model) {
@@ -181,13 +184,13 @@ public class InventoryController {
     }
 
     /**
-     * 특정 배치(LOT)의 입고/출고 상세 화면으로 이동한다.
+     * 특정 배치(LOT)의 입고/출고 상세 화면(SSR).
      *
-     * @param batchId 배치 ID (inventory_batch.inventory_batch_id)
+     * @param batchId 배치 ID(inventory_batch.inventory_batch_id)
      * @param page    출고 이력 페이지 인덱스(0-base)
      * @param size    페이지 크기
      * @param model   뷰 모델
-     * @return 배치 상세 페이지(view)
+     * @return 배치 상세 템플릿 경로
      */
     @GetMapping("/batch/{batchId}")
     public String batchPage(@PathVariable Long batchId,
@@ -203,7 +206,7 @@ public class InventoryController {
                 inventoryLotService.getOutLotHistory(batchId, PageRequest.of(page, size));
 
         model.addAttribute("lot", lot);
-        model.addAttribute("outHistory", outHistory);  // ★ 이름 outHistory 맞춰줌
+        model.addAttribute("outHistory", outHistory);
 
         model.addAttribute("batchId", batchId);
         model.addAttribute("materialId", lot.getMaterialId());
@@ -215,11 +218,10 @@ public class InventoryController {
         return "inventory/batch";
     }
 
-
     // -------------------- Read APIs (JSON) --------------------
 
     /**
-     * 재료별 배치 현황을 조회한다.
+     * 재료별 배치 현황(LOT) 목록을 조회한다.
      *
      * @param materialId 재료 ID
      * @return 배치 현황 행 리스트
@@ -242,7 +244,7 @@ public class InventoryController {
     }
 
     /**
-     * 특정 배치의 출고 이력을 페이징 조회한다.
+     * 특정 배치의 출고 이력(JSON)을 페이징 조회한다.
      *
      * @param batchId 배치 ID
      * @param page    페이지 번호(0-base)
@@ -258,13 +260,13 @@ public class InventoryController {
     }
 
     /**
-     * 본사 재고 로그를 필터로 페이징 조회한다.
+     * 본사 재고 로그(JSON)를 필터로 페이징 조회한다.
      *
      * @param materialId 재료 ID
      * @param type       구분(입고/출고/조정) 문자열, null 가능
      * @param startDate  시작일(yyyy-MM-dd), null 가능
      * @param endDate    종료일(yyyy-MM-dd), null 가능
-     * @param page       페이지 번호
+     * @param page       페이지 번호(0-base)
      * @param size       페이지 크기
      * @return 로그 페이지
      */
@@ -288,7 +290,12 @@ public class InventoryController {
         );
     }
 
-    // 조정 상세 (로그 팝업용)
+    /**
+     * 조정 상세(JSON). 로그 팝업에서 사용.
+     *
+     * @param logId 재고 조정 로그 ID
+     * @return 200 OK: {@link InventoryAdjustDTO}, 404 NOT_FOUND: 오류 메시지
+     */
     @GetMapping("/log/adjust/{logId}")
     @ResponseBody
     public ResponseEntity<?> getAdjustDetail(@PathVariable Long logId) {
@@ -306,14 +313,24 @@ public class InventoryController {
         return ResponseEntity.ok(dto);
     }
 
-    // LOT 상세 (로그 팝업용)
+    /**
+     * LOT 상세(JSON). 로그 팝업에서 사용.
+     *
+     * @param batchId 배치 ID
+     * @return LOT 상세 DTO
+     */
     @GetMapping("/log/lot/{batchId}")
     @ResponseBody
     public InventoryLotDetailDTO getLotDetail(@PathVariable Long batchId) {
         return inventoryBatchService.getLotDetail(batchId);
     }
 
-    // 출고 LOT 상세 (로그 팝업용)
+    /**
+     * 출고 LOT 상세(JSON). 로그 팝업에서 사용.
+     *
+     * @param outId 출고 헤더 ID
+     * @return 출고 LOT 상세 행 리스트
+     */
     @GetMapping("/log/out/{outId}")
     @ResponseBody
     public List<InventoryOutLotDetailRowDTO> getOutDetail(@PathVariable Long outId) {
@@ -323,7 +340,7 @@ public class InventoryController {
     // -------------------- Delete APIs --------------------
 
     /**
-     * 출고 헤더를 삭제한다.
+     * 출고 헤더 삭제.
      *
      * @param outId 출고 ID
      */
@@ -334,7 +351,7 @@ public class InventoryController {
     }
 
     /**
-     * 입고 헤더를 삭제한다.
+     * 입고 헤더 삭제.
      *
      * @param inId 입고 ID
      */
@@ -345,7 +362,7 @@ public class InventoryController {
     }
 
     /**
-     * 출고 로트 아이템을 삭제한다.
+     * 출고-로트 아이템 삭제.
      *
      * @param lotId 출고-로트 아이템 ID
      */
