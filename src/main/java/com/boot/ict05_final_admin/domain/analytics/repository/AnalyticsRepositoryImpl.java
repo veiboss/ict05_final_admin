@@ -1009,10 +1009,48 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         return new PageImpl<>(rows, pageable, total);
     }
 
-	/* =========================================================
-       재료 요약 카드 / 목록
-       - 추후 진행
-       ========================================================= */
+
+    /**
+     * 재료 요약 카드 데이터를 조회한다.
+     *
+     * <p>
+     * 본 메서드는 Asia/Seoul 기준 YTD(당해 1/1 ~ 어제까지)를 대상으로
+     * 재고/발주/원가/매출/이익/마진/회전율 등의 핵심 지표를 계산하여
+     * 대시보드 카드에 바로 사용할 수 있는 형태의 {@link MaterialsCardsDto}를 반환한다.
+     * </p>
+     *
+     * <h3>집계 범위</h3>
+     * <ul>
+     *   <li><b>기간</b>: {@code [올해 1월 1일, 오늘)} → 어제까지 포함</li>
+     *   <li><b>대상 테이블</b>:
+     *     <ul>
+     *       <li>가맹점 현재 재고: {@code store_material} + {@code store_inventory}</li>
+     *       <li>본사 현재 재고: {@code inventory}</li>
+     *       <li>발주/원가/매출: {@code receive_order} + {@code receive_order_detail} (+ 판매가 {@code unit_price}/{@code store_material})</li>
+     *       <li>사용량(출고): {@code store_inventory_out}</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * <h3>반환 항목(요약)</h3>
+     * <ul>
+     *   <li>currentOfficeInventoryQty, currentTotalStoreInventoryQty</li>
+     *   <li>orderVolumeQty(발주 수량), usedQty(출고 수량)</li>
+     *   <li>salesAmount(매출), profitAmount(이익), avgMargin(%), turnoverRate</li>
+     * </ul>
+     *
+     * <h3>쿼리/성능 노트</h3>
+     * <ul>
+     *   <li>필요 집계를 각각 전용 쿼리로 수행하여 조인 폭을 최소화</li>
+     *   <li>판매가 계산: {@code unit_price(유효기간 내 SELLING) → store_material.selling_price → unit_price(원가)} 우선순위</li>
+     *   <li>{@link #readHints(com.querydsl.jpa.impl.JPAQuery)} 적용으로 readOnly/flushMode/timeout 힌트 부여</li>
+     *   <li>NULL/0 보호: {@code COALESCE}, 내부 유틸 {@code nz}, {@code divOrZero} 사용</li>
+     * </ul>
+     *
+     * @return {@link MaterialsCardsDto} 재료 요약 카드 데이터
+     * @since 2025-11-21
+     * @author 이경욱
+     */
     @Override
     @Transactional(readOnly = true)
     public MaterialsCardsDto findMaterialsSummary() {
@@ -1105,7 +1143,46 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
     }
 
 
-
+    /**
+     * 재료 집계 목록을 페이지 단위로 조회한다.
+     *
+     * <p>
+     * 조회 조건({@link AnalyticsSearchDto})의 기간·점포·보기모드(일별/월별)에 따라
+     * 발주 상세를 기준으로 수량/원가/매출(판매가)·이익·마진·회전율 등을 계산하여
+     * 표 렌더링에 적합한 {@code Page<}{@link MaterialsRowDto}{@code >}를 반환한다.
+     * </p>
+     *
+     * <h3>조회 모드</h3>
+     * <ul>
+     *   <li><b>일별({@code ViewBy.DAY})</b> …</li>
+     *     (점포 × 재료 × 일자) 버킷으로 그룹핑, 대표 발주ID 포함</li>
+     *   <li><b>월별({@code ViewBy.MONTH})</b> …</li>
+     *     (점포 × 재료 × 연/월) 버킷으로 그룹핑, 라벨은 {@code yyyy-MM}</li>
+     * </ul>
+     *
+     * <h3>주요 로직</h3>
+     * <ol>
+     *   <li>메인 집계: {@code receive_order_detail → receive_order}만으로 FK 기반 집계(대량 경로 단순화)</li>
+     *   <li>2차 조회: 표시에 필요한 점포명/재료명/판매가/재고 스냅샷은 별도 소량 쿼리로 조회 후 매핑</li>
+     *   <li>판매금액 = 집계수량 × 판매가(store_material.selling_price 기준)</li>
+     *   <li>회전율 = 기간 사용량 대비 평균재고(스냅샷/기초 기준) 계산</li>
+     *   <li>{@code showTotal=true}일 때, 현재 페이지 라벨 범위에 대해 자바 측 재집계 Total 행 삽입</li>
+     * </ol>
+     *
+     * <h3>쿼리/성능 노트</h3>
+     * <ul>
+     *   <li>기간 필터: {@code betweenDateClosedOpen(start, end)} 사용(닫힌-열린, 인덱스 친화)</li>
+     *   <li>정렬/그룹핑: 일별은 원본 DATE 키, 월별은 YEAR/MONTH 정수 표현식 권장</li>
+     *   <li>filesort 회피: 불필요한 정렬 제거 및 {@link #readHints(com.querydsl.jpa.impl.JPAQuery)} 적용</li>
+     *   <li>NULL/0 보호: {@code COALESCE}, 내부 유틸 {@code nz}, {@code divOrZero} 사용</li>
+     * </ul>
+     *
+     * @param cond 조회 조건(점포 목록, 시작/종료일, 보기 모드, showTotal)
+     * @param pageable 페이지네이션 정보
+     * @return {@code Page<}{@link MaterialsRowDto}{@code >} 페이지 결과
+     * @since 2025-11-21
+     * @author 이경욱
+     */
 
     @Override
     @Transactional(readOnly = true)
