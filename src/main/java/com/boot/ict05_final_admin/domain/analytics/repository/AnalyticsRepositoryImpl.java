@@ -1058,63 +1058,83 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         final LocalDate ytdStart = LocalDate.of(today.getYear(), 1, 1);
         final LocalDate ytdEndEx = today; // 어제까지 포함 ↔ exclusive 오늘
 
-        // 1) 가맹점 전체 재고(현재)
+        // 1) 가맹점 전체 재고(현재) — 불필요 조인 제거
         BigDecimal totalStoreInvQty = Optional.ofNullable(
                 readHints(
                         query.select(si.quantity.sum().coalesce(BigDecimal.ZERO))
                                 .from(si)
-                                .join(si.storeMaterial, sm)
-                                .join(sm.store, s)
+                                .orderBy(orderByNull())
                 ).fetchOne()
         ).orElse(BigDecimal.ZERO);
 
         // 1-1) 본사 재고(현재)
         BigDecimal currentOfficeInvQty = Optional.ofNullable(
-                readHints(query.select(inv.quantity.sum().coalesce(BigDecimal.ZERO)).from(inv)).fetchOne()
+                readHints(
+                        query.select(inv.quantity.sum().coalesce(BigDecimal.ZERO))
+                                .from(inv)
+                                .orderBy(orderByNull())
+                ).fetchOne()
         ).orElse(BigDecimal.ZERO);
 
-        // 2) YTD 발주/원가/매출 (판매가 up 조인은 여기서는 유지)
+        // 2) YTD 발주/원가/매출 — 열에 함수 금지 + 최신 단가 선택
         final QUnitPrice up2 = new QUnitPrice("up2");
-        var upJoin = up.material.eq(sm.material)
-                .and(up.type.eq(UnitPriceType.SELLING))
-                .and(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validFrom).loe(ro.actualDeliveryDate))
-                .and(up.validTo.isNull()
-                        .or(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up.validTo).goe(ro.actualDeliveryDate)))
-                .and(up.validFrom.eq(
-                        JPAExpressions.select(up2.validFrom.max())
-                                .from(up2)
-                                .where(
-                                        up2.material.eq(sm.material),
-                                        up2.type.eq(UnitPriceType.SELLING),
-                                        Expressions.dateTemplate(LocalDate.class, "DATE({0})", up2.validFrom).loe(ro.actualDeliveryDate),
-                                        up2.validTo.isNull()
-                                                .or(Expressions.dateTemplate(LocalDate.class, "DATE({0})", up2.validTo).goe(ro.actualDeliveryDate))
-                                )
-                ));
 
+        // ro.actualDeliveryDate (DATE) → TIMESTAMP 승격
+        var roDateTs = Expressions.dateTimeTemplate(
+                java.time.LocalDateTime.class,
+                "cast({0} as timestamp)",
+                ro.actualDeliveryDate
+        );
+        // HQL 표준: timestampadd(DAY, 1, cast(... as timestamp))
+        var roDatePlus1Ts = Expressions.dateTimeTemplate(
+                java.time.LocalDateTime.class,
+                "timestampadd(DAY, 1, cast({0} as timestamp))",
+                ro.actualDeliveryDate
+        );
+
+        // 윈도우 조건(열에 함수 미적용, 닫힌-열린)
+        BooleanExpression upWindow =
+                up.material.eq(sm.material)
+                        .and(up.type.eq(UnitPriceType.SELLING))
+                        .and(up.validFrom.loe(roDatePlus1Ts))
+                        .and(up.validTo.isNull().or(roDateTs.lt(up.validTo)));
+
+        // 최신 validFrom 선택
+        var maxValidFromSubq =
+                JPAExpressions.select(up2.validFrom.max())
+                        .from(up2)
+                        .where(
+                                up2.material.eq(sm.material),
+                                up2.type.eq(UnitPriceType.SELLING),
+                                up2.validFrom.loe(roDatePlus1Ts),
+                                up2.validTo.isNull().or(roDateTs.lt(up2.validTo))
+                        );
+
+        BooleanExpression upPickLatest = up.validFrom.eq(maxValidFromSubq);
+
+        // 집계 쿼리 (filesort 제거)
         Tuple t = readHints(
                 query.select(
-                                Expressions.numberTemplate(Long.class, "COALESCE(SUM({0}),0)", rod.count),                    // 발주 수량
-                                Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice), // 원가 합
-                                Expressions.numberTemplate(BigDecimal.class,                                                  // 매출 합(판매가 우선순위)
+                                // 발주 수량(정밀도 보존: BigDecimal)
+                                Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0}),0)", rod.count),
+                                // 원가 합: 수량 * 입고단가
+                                Expressions.numberTemplate(BigDecimal.class, "COALESCE(SUM({0} * {1}),0)", rod.count, rod.unitPrice),
+                                // 매출 합: up.sellingPrice → sm.sellingPrice → rod.unitPrice
+                                Expressions.numberTemplate(BigDecimal.class,
                                         "COALESCE(SUM({0} * COALESCE({1},{2},{3})),0)",
-                                        rod.count,
-                                        up.sellingPrice,
-                                        sm.sellingPrice,
-                                        rod.unitPrice)
+                                        rod.count, up.sellingPrice, sm.sellingPrice, rod.unitPrice)
                         )
                         .from(rod)
                         .join(rod.receiveOrder, ro)
-                        .join(ro.store, s)
                         .join(rod.storeMaterial, sm)
-                        .leftJoin(up).on(upJoin)
-                        .where(betweenDateClosedOpen(ro.actualDeliveryDate, ytdStart, ytdEndEx))
+                        .leftJoin(up).on(upWindow.and(upPickLatest))
+                        .where(betweenDateClosedOpen(ro.actualDeliveryDate, ytdStart, ytdEndEx)) // [start,end)
                         .orderBy(orderByNull())
         ).fetchOne();
 
-        long       orderVolumeQty = (t == null) ? 0L              : nz(t.get(0, Long.class));
-        BigDecimal costSum        = (t == null) ? BigDecimal.ZERO : nz(t.get(1, BigDecimal.class));
-        BigDecimal sellingSum     = (t == null) ? BigDecimal.ZERO : nz(t.get(2, BigDecimal.class));
+        BigDecimal orderVolumeQtyBD = (t == null) ? BigDecimal.ZERO : nz(t.get(0, BigDecimal.class));
+        BigDecimal costSum          = (t == null) ? BigDecimal.ZERO : nz(t.get(1, BigDecimal.class));
+        BigDecimal sellingSum       = (t == null) ? BigDecimal.ZERO : nz(t.get(2, BigDecimal.class));
 
         // 3) YTD 사용량(출고)
         BigDecimal totalUsedQty = Optional.ofNullable(
@@ -1122,13 +1142,17 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                         query.select(io.quantity.sum().coalesce(BigDecimal.ZERO))
                                 .from(io)
                                 .where(betweenDateClosedOpen(io.outDate, ytdStart, ytdEndEx))
+                                .orderBy(orderByNull())
                 ).fetchOne()
         ).orElse(BigDecimal.ZERO);
 
         // 4) 파생
         BigDecimal profit    = sellingSum.subtract(costSum);
         BigDecimal avgMargin = divOrZero(profit, sellingSum, 2).multiply(BigDecimal.valueOf(100));
-        BigDecimal turnover  = divOrZero(BigDecimal.valueOf(orderVolumeQty), totalStoreInvQty, 2);
+        BigDecimal turnover  = divOrZero(orderVolumeQtyBD, totalStoreInvQty, 2);
+
+        // DTO 스펙이 long 필드면 변환
+        long orderVolumeQty = orderVolumeQtyBD.longValue();
 
         return MaterialsCardsDto.builder()
                 .currentOfficeInventoryQty(currentOfficeInvQty.longValue())
@@ -1141,6 +1165,9 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
                 .avgMargin(avgMargin)
                 .build();
     }
+
+
+
 
 
     /**
@@ -2860,30 +2887,65 @@ public class AnalyticsRepositoryImpl implements AnalyticsRepository {
         final LocalDate end   = cond.getEndDate();    // inclusive
         final boolean byDay = (cond.getViewBy() == null || cond.getViewBy() == ViewBy.DAY);
 
-        final BooleanExpression periodFilter = betweenDateClosedOpen(ro.actualDeliveryDate, start, end);
+        // [start, end) 닫힌–열린 규약(열에 함수 X)  → 인덱스 효율 확보
+        final BooleanExpression periodFilter =
+                betweenDateClosedOpen(ro.actualDeliveryDate, start, end);
+
+        // 점포 필터(없으면 생략). 스키마에 스칼라 FK가 있다면 그걸 쓰면 더 좋음(조인 회피).
         final BooleanExpression storeFilter =
-                (cond.getStoreIds() == null || cond.getStoreIds().isEmpty()) ? null : ro.store.id.in(cond.getStoreIds());
+                (cond.getStoreIds() == null || cond.getStoreIds().isEmpty())
+                        ? null
+                        : ro.store.id.in(cond.getStoreIds());
 
-        // DISTINCT 라벨 키: 일=DATE(...), 월=DATE_FORMAT(...,'%Y-%m')  ← JPQL 안전
-        final Expression<?> labelKey = byDay
-                ? Expressions.dateTemplate(LocalDate.class, "DATE({0})", ro.actualDeliveryDate)
-                : dateFormat(ro.actualDeliveryDate, "%Y-%m");
+        if (byDay) {
+            // [DAY] 키 = (storeId, materialId, actualDeliveryDate)
+            //  - DATE() 불필요: actualDeliveryDate가 DATE 컬럼이면 원본 사용
+            NumberTemplate<Long> total = Expressions.numberTemplate(
+                    Long.class,
+                    "COUNT(DISTINCT {0}, {1}, {2})",
+                    ro.store.id,
+                    rod.storeMaterial.id,
+                    ro.actualDeliveryDate
+            );
 
-        NumberTemplate<Long> total = Expressions.numberTemplate(
-                Long.class, "COUNT(DISTINCT {0}, {1}, {2})", ro.store.id, rod.storeMaterial.id, labelKey
-        );
+            Long res = readHints(
+                    query.select(total)
+                            .from(rod)
+                            .join(rod.receiveOrder, ro)
+                            .where(storeFilter, periodFilter)
+                            .orderBy(orderByNull())
+            ).fetchOne();
 
-        Long res = readHints(
-                query.select(total)
-                        .from(rod)
-                        .join(rod.receiveOrder, ro)
-                        // store/material 엔티티 조인 불필요 — FK로 카운트 가능
-                        .where(storeFilter, periodFilter)
-                        .orderBy(orderByNull())
-        ).fetchOne();
+            return (res == null) ? 0L : res;
 
-        return (res == null) ? 0L : res;
+        } else {
+            // [MONTH] 키 = (storeId, materialId, YEAR(actualDeliveryDate), MONTH(actualDeliveryDate))
+            //  - YEAR/MONTH는 "라벨 전용" 계산(WHERE/GROUP BY에 사용 안 함) → #4 준수
+            NumberExpression<Integer> Y =
+                    Expressions.numberTemplate(Integer.class, "YEAR({0})", ro.actualDeliveryDate);
+            NumberExpression<Integer> M =
+                    Expressions.numberTemplate(Integer.class, "MONTH({0})", ro.actualDeliveryDate);
+
+            NumberTemplate<Long> total = Expressions.numberTemplate(
+                    Long.class,
+                    "COUNT(DISTINCT {0}, {1}, {2}, {3})",
+                    ro.store.id,
+                    rod.storeMaterial.id,
+                    Y, M
+            );
+
+            Long res = readHints(
+                    query.select(total)
+                            .from(rod)
+                            .join(rod.receiveOrder, ro)
+                            .where(storeFilter, periodFilter)
+                            .orderBy(orderByNull())
+            ).fetchOne();
+
+            return (res == null) ? 0L : res;
+        }
     }
+
 
 
 
