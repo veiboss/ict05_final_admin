@@ -2,7 +2,6 @@ package com.boot.ict05_final_admin.domain.inventory.entity;
 
 import com.boot.ict05_final_admin.domain.inventory.dto.MaterialModifyFormDTO;
 import jakarta.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -19,10 +18,11 @@ import java.time.LocalDateTime;
 /**
  * 재료(Material) 엔티티.
  *
- * <p>재료 코드, 명칭, 카테고리, 단위, 공급업체, 보관 온도, 상태, 적정 재고 등
- * 마스터 속성을 관리한다.</p>
+ * <p>본사 재료 마스터를 표현하는 엔티티로, 재료 코드, 명칭, 카테고리, 단위,
+ * 공급업체, 보관 온도, 상태, 적정 재고 등 마스터 속성을 관리한다.</p>
  *
- * <p>{@link #updateMaterial(MaterialModifyFormDTO)}로 변경 가능 속성을 갱신한다.</p>
+ * <p>재료 수정 시 {@link #updateMaterial(MaterialModifyFormDTO)}를 통해
+ * 변경 가능 속성을 갱신한다.</p>
  *
  * @author 김주연
  * @since 2025-10-15
@@ -105,7 +105,13 @@ public class Material {
     @Comment("수정일시")
     private LocalDateTime modifyDate;
 
-    /** 본사 기준 적정 재고 수량 */
+    /**
+     * 본사 기준 적정 재고 수량.
+     *
+     * <p>DECIMAL(15,3) 스케일을 사용하며, 엔티티 기본값은 0이다.
+     * 수정 시 {@link MaterialModifyFormDTO#getOptimalQuantity()}가
+     * null인 경우 기존 값을 유지한다.</p>
+     */
     @Setter
     @Builder.Default
     @Column(name = "material_optimal_quantity", precision = 15, scale = 3,
@@ -116,8 +122,9 @@ public class Material {
     /**
      * 재료 정보를 수정한다.
      *
-     * <p>전달된 {@link MaterialModifyFormDTO}의 값으로 변경 가능 속성을 갱신하고
-     * {@code modifyDate}를 현재 시각으로 갱신한다.</p>
+     * <p>전달된 {@link MaterialModifyFormDTO}의 값으로 변경 가능 속성을 갱신한다.
+     * 적정 재고량({@code optimalQuantity})의 경우 DTO 값이 null이면
+     * 현재 값을 그대로 유지하고, null이 아니면 해당 값으로 덮어쓴다.</p>
      *
      * @param dto 수정 데이터 DTO
      */
@@ -130,7 +137,10 @@ public class Material {
         this.supplier = dto.getSupplier();
         this.materialTemperature = dto.getMaterialTemperature();
         this.materialStatus = dto.getMaterialStatus();
-        this.optimalQuantity = dto.getOptimalQuantity();
         this.modifyDate = LocalDateTime.now();
+
+        if (dto.getOptimalQuantity() != null) {
+            this.optimalQuantity = dto.getOptimalQuantity();
+        }
     }
 }

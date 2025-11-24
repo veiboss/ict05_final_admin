@@ -28,7 +28,7 @@
 
         <main id="content" class="max-1132">
             <div class="write-form box-wrap">
-                <form name="frm" id="frm">
+                <form name="frm" id="frm" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="id" th:value="${material.id}">
 
                     <fieldset class="pack-down gap-12">
@@ -91,9 +91,12 @@
                             <div class="row col-3">
                                 <div class="pack-down col">
                                     <label class="fs-ss fc-999" for="materialOptimalQuantity">적정 수량</label>
-                                    <input type="text" name="optimalQuantity" id="materialOptimalQuantity" class="input-text medium"
+                                    <input type="number" step="0.001" inputmode="decimal"
+                                           name="optimalQuantity" id="materialOptimalQuantity"
+                                           class="input-text medium"
                                            th:value="${material.optimalQuantity}"
                                            title="적정 수량" placeholder="적정 수량 입력" />
+                                    <p id="optimalQuantityError" class="warning"></p>
                                 </div>
 
                                 <div class="pack-down col">
@@ -162,20 +165,37 @@
             method: "POST",
             body: formData
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("서버 응답 오류: " + response.status);
+        .then(async (res) => {
+            const data = await res.json().catch(() => ({}));
+
+            // 기존 에러 표식 초기화
+            document.querySelectorAll(".warning").forEach(el => el.textContent = "");
+
+            if (!res.ok) {
+                // 서버 검증 에러 맵을 폼에 표시
+                if (data && data.errors) {
+                    Object.entries(data.errors).forEach(([field, msg]) => {
+                        const input = document.querySelector(`[name="${field}"]`);
+                        if (input) {
+                            // 필드 옆 warning이 있으면 그쪽에 출력
+                            const container = input.closest(".pack-down") || input.parentElement;
+                            const warn = container && container.querySelector(".warning");
+                            if (warn) warn.textContent = msg;
+                        }
+                    });
                 }
-                return response.json();
-            })
-            .then(data => {
-                alert("수정 성공 : " + data.id);
-                window.location.href = "/admin/material/detail/" + data.id;
-            })
-            .catch(error => {
-                console.error("에러 발생:", error);
-                alert("등록 실패");
-            });
+                throw new Error("서버 응답 오류: " + res.status);
+            }
+
+            // 성공 처리
+            alert("수정 성공 : " + data.id);
+            window.location.href = "/admin/material/detail/" + data.id;
+        })
+        .catch((err) => {
+            console.error("에러 발생:", err);
+            // 여기서는 alert를 유지하되, 필드별 경고는 위에서 이미 표시됨
+        });
+
     });
 </script>
 </body>

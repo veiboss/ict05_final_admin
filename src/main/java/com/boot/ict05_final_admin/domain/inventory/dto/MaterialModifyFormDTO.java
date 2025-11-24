@@ -3,6 +3,7 @@ package com.boot.ict05_final_admin.domain.inventory.dto;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialCategory;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialStatus;
 import com.boot.ict05_final_admin.domain.inventory.entity.MaterialTemperature;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -17,10 +18,13 @@ import java.math.BigDecimal;
  * <p>검증/정책:</p>
  * <ul>
  *   <li>{@code name}, {@code baseUnit}, {@code salesUnit}: 공백 불가</li>
- *   <li>{@code materialCategory}, {@code conversionRate}, {@code materialStatus}, {@code optimalQuantity}: 필수</li>
- *   <li>{@code optimalQuantity}: DECIMAL(15,3) 스케일 가정(서버/DB 정책에 맞춰 반올림)</li>
+ *   <li>{@code materialCategory}, {@code conversionRate}, {@code materialStatus}: 필수</li>
+ *   <li>{@code optimalQuantity}: 선택 입력, DECIMAL(15,3) 스케일 가정(서버/DB 정책에 맞춰 반올림)</li>
  *   <li>{@code materialTemperature}, {@code supplier}: 선택</li>
  * </ul>
+ *
+ * <p>적정 재고량({@code optimalQuantity}) 필드는 수정 시 비워서 제출하면
+ * 기존 값을 유지(미변경)하는 정책을 따른다.</p>
  */
 @Data
 public class MaterialModifyFormDTO {
@@ -61,7 +65,11 @@ public class MaterialModifyFormDTO {
     @NotNull(message = "상태를 선택해주세요")
     private MaterialStatus materialStatus;
 
-    /** 본사 기준 적정 재고 수량(필수, DECIMAL(15,3) 가정) */
-    @NotNull(message = "적정 수량을 입력해주세요")
+    /**
+     * 본사 기준 적정 재고 수량(선택, DECIMAL(15,3) 가정).
+     *
+     * <p>null 허용: 비워서 제출 시 기존 적정 재고값을 그대로 유지(미변경).</p>
+     */
+    @Digits(integer = 15, fraction = 3)
     private BigDecimal optimalQuantity;
 }
