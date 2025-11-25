@@ -7,6 +7,7 @@ import com.boot.ict05_final_admin.domain.inventory.entity.StoreInventory;
 import com.boot.ict05_final_admin.domain.inventory.entity.StoreMaterial;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.Disabled;
@@ -39,7 +40,7 @@ class OutToStoreInboundApplyTest {
     @Commit
     @Transactional
     @DisplayName("본사 출고분을 가맹점 재고로 가산 (EntityManager 버전)")
-        // @Disabled("1회 시딩 완료")
+    @Disabled("1회 시딩 완료")
     void applyHqOutToStoreInventory_byEntityManager() {
         LocalDateTime cutoff = LocalDateTime.now(ZONE).minusYears(2);
 
